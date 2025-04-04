@@ -1,109 +1,63 @@
-// Ensure GSAP is loaded
-if (typeof gsap !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-} else {
-  console.error("GSAP not found. Make sure it's included in your project.");
-  // Handle the case where GSAP is not available, perhaps by providing a fallback
-  // or preventing further execution of the script.
-}
+// Make ScrollTrigger available globally for use in GSAP animations
+gsap.registerPlugin(ScrollTrigger);
 
+// Select the HTML elements needed for the animation
+const scrollSections = document.querySelectorAll('.scroll-section');
 
-let tl; // Declare tl outside to make it accessible in the resize handler
+scrollSections.forEach((section) => {
+    const wrapper = section.querySelector('.wrapper');
+    const items = wrapper.querySelectorAll('.item');
 
-function initializeCardScroll() {
-  const cards = document.querySelectorAll(".card");
-  if (!cards || cards.length === 0) {
-      console.error("No card elements found. Make sure includeHTML has finished.");
-      return;
-  }
+    let direction = null;
 
-  const cardsContainer = document.querySelector("#cards-container");
-  const windowHeight = window.innerHeight;
-  const cardHeight = cards[0].offsetHeight;
-  const initialY = windowHeight - cardHeight / 2;
+    if (section.classList.contains('vertical-section')) {
+        direction = 'vertical';
+    } else if (section.classList.contains('horizontal-section')) {
+        direction = 'horizontal';
+    }
 
-  gsap.set(cards, {
-      y: initialY,
-      opacity: 0,
-      scale: 1,
-      rotation: 0,
-      zIndex: (i) => cards.length - i
-  });
-
-  gsap.set(cards[0], { opacity: 1 });
-
-  const rotations = [5, -7, 4, -6, 8, -5];
-  const stackOffsets = [0, -10, -20, -30, -40, -50];
-
-
-  tl = gsap.timeline({ // Now tl is assigned within the function
-      scrollTrigger: {
-          trigger: "#scroll-height",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-          pin: cardsContainer,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-              const activeIndex = Math.min(
-                  Math.floor(self.progress * cards.length),
-                  cards.length - 1
-              );
-
-              cards.forEach((card, i) => {
-                  if (i === activeIndex) {
-                      card.classList.add("card-active");
-                  } else {
-                      card.classList.remove("card-active");
-                  }
-              });
-          }
-      }
-  });
-
-
-  const sectionDuration = 1 / cards.length;
-
-  cards.forEach((card, index) => {
-      // ... (rest of the animation code remains the same)
-  });
-
-
-  window.addEventListener("resize", () => {
-      if (tl && tl.scrollTrigger) {
-          const progress = ScrollTrigger.getById(tl.scrollTrigger.id)?.progress;
-
-          if (progress !== undefined) {
-              // Previous resize logic using progress
-              const newWindowHeight = window.innerHeight;
-              const newCardHeight = cards[0].offsetHeight;
-              const newInitialY = newWindowHeight - newCardHeight / 2;
-
-              cards.forEach((card, index) => {
-                  const cardIndex = Math.floor(progress * cards.length);
-
-                  if (index > cardIndex) {
-                      gsap.set(card, { y: newInitialY });
-                  }
-              });
-          } else {
-              console.warn("ScrollTrigger progress is undefined during resize. Possibly before initialization.");
-          }
-
-          ScrollTrigger.refresh(); // Keep this line to refresh ScrollTrigger
-      }
-  });
-
-
-  if ('ontouchstart' in window || navigator.maxTouchPoints) {
-      document.body.style.touchAction = "pan-y";
-      document.documentElement.style.touchAction = "pan-y";
-  }
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  includeHTML().then(initializeCardScroll);
+    initScroll(section, items, direction);
+    
 });
 
+function initScroll(section, items, direction) {
+    items.forEach((item, index) => {
+        if (index !== 0) {
+            direction == "horizontal"
+                ? gsap.set(item, {xPercent: 100})
+                : gsap.set(item, {yPercent: 100});
+        }
+    });
+    
+    const timeline = gsap.timeline({
+        scrollTrigger: {
+            trigger: section,
+            pin: true,
+            start: "top top",
+            end: () => `+=${items.length * 100}%`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            // markers: true,
+        },
+        defaults: { ease: "none" },
+    });
+    
+    items.forEach((item, index) => {
+        timeline.to(item, {
+            scale: 0.8,
+            // rotate slightly to the right/left
+        })
+    });
+
+    direction == "horizontal"
+        ? timeline.to(items[index + 1], {
+            xPercent: 0,
+        }, 
+        "<"
+        )
+        : timeline.to(items[index + 1], {
+            yPercent: 0,
+        },
+        "<"
+        )
+}

@@ -1,34 +1,60 @@
-.cards-container {
+/* Base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Scroll container */
+.scroll-container {
     position: relative;
+    overflow-x: hidden;
+}
+
+/* Card styling */
+.card {
+    will-change: transform;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.card img {
     width: 100%;
     height: 100%;
-    overflow: hidden;
-}
-
-.card {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 80vw;
-    max-width: 500px;
-    border: 1px solid black;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transform: translateX(-50%) translateY(100%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    /* For objects like images that might need this */
-    object-fit: contain;
+    object-fit: cover;
+    pointer-events: none;
     user-select: none;
-    -webkit-user-drag: none;
 }
 
-.card.active {
-    /* Active class used for tracking */
+/* Card shadow enhancement when centered */
+.card-active {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-/* Media query for smaller screens */
+/* Ensure smooth scrolling on mobile */
 @media (max-width: 768px) {
+    html, body {
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .card {
-        width: 90vw;
+        width: 85vw !important;
+        height: 85vw !important;
+        max-width: 300px;
+        max-height: 300px;
     }
 }
+
+/* Hide scrollbar but allow scrolling */
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+  

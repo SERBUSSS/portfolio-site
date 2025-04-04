@@ -17,15 +17,25 @@ scrollSections.forEach((section) => {
     }
 
     initScroll(section, items, direction);
-    
 });
 
 function initScroll(section, items, direction) {
+    // Start with only the first card visible
     items.forEach((item, index) => {
-        if (index !== 0) {
-            direction == "horizontal"
-                ? gsap.set(item, {xPercent: 100})
-                : gsap.set(item, {yPercent: 100});
+        if (index === 0) {
+            gsap.set(item, { 
+                scale: 1, 
+                opacity: 1,
+                y: 0,
+                rotation: 0
+            });
+        } else {
+            gsap.set(item, { 
+                scale: 0.8, 
+                opacity: 0,
+                y: '100vh', // Start off-screen below
+                rotation: index % 2 === 0 ? 5 : -5 // Alternate rotation
+            });
         }
     });
     
@@ -39,25 +49,29 @@ function initScroll(section, items, direction) {
             invalidateOnRefresh: true,
             // markers: true,
         },
-        defaults: { ease: "none" },
+        defaults: { ease: "power2.inOut" }, // Smoother easing
     });
     
+    // For each card, create sequential animations
     items.forEach((item, index) => {
-        timeline.to(item, {
-            scale: 0.8,
-            // rotate slightly to the right/left
-        })
+        if (index < items.length - 1) {
+            // First move the current card up and fade it out
+            timeline.to(item, {
+                scale: 0.8,
+                y: '-30vh', // Move up and away
+                opacity: 0,
+                rotation: index % 2 === 0 ? -5 : 5, // Alternate rotation
+                duration: 1
+            });
+            
+            // Then bring in the next card
+            timeline.to(items[index + 1], {
+                y: 0,
+                scale: 1,
+                opacity: 1,
+                rotation: 0,
+                duration: 1
+            }, "<0.5"); // Overlap with previous animation
+        }
     });
-
-    direction == "horizontal"
-        ? timeline.to(items[index + 1], {
-            xPercent: 0,
-        }, 
-        "<"
-        )
-        : timeline.to(items[index + 1], {
-            yPercent: 0,
-        },
-        "<"
-        )
 }

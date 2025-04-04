@@ -20,20 +20,20 @@ scrollSections.forEach((section) => {
 });
 
 function initScroll(section, items, direction) {
-    // Start with only the first card visible
+    // Set initial state for all cards
+    // We'll keep their original vertical position (top: 80vh) and modify other properties
     items.forEach((item, index) => {
         if (index === 0) {
             gsap.set(item, { 
                 scale: 1, 
                 opacity: 1,
-                y: 0,
                 rotation: 0
             });
         } else {
             gsap.set(item, { 
                 scale: 0.8, 
                 opacity: 0,
-                y: '100vh', // Start off-screen below
+                y: '50vh', // Additional offset from their 80vh position
                 rotation: index % 2 === 0 ? 5 : -5 // Alternate rotation
             });
         }
@@ -47,7 +47,7 @@ function initScroll(section, items, direction) {
             end: () => `+=${items.length * 100}%`,
             scrub: 1,
             invalidateOnRefresh: true,
-            // markers: true,
+            // markers: true (uncomment to debug)
         },
         defaults: { ease: "power2.inOut" }, // Smoother easing
     });
@@ -58,7 +58,7 @@ function initScroll(section, items, direction) {
             // First move the current card up and fade it out
             timeline.to(item, {
                 scale: 0.8,
-                y: '-30vh', // Move up and away
+                y: '-50vh', // Move up from its current position
                 opacity: 0,
                 rotation: index % 2 === 0 ? -5 : 5, // Alternate rotation
                 duration: 1
@@ -66,7 +66,7 @@ function initScroll(section, items, direction) {
             
             // Then bring in the next card
             timeline.to(items[index + 1], {
-                y: 0,
+                y: 0, // Return to its original position
                 scale: 1,
                 opacity: 1,
                 rotation: 0,

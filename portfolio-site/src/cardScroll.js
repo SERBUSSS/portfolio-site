@@ -3,38 +3,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Select the HTML elements needed for the animation
 const scrollSections = document.querySelectorAll('.scroll-section');
-// Select the background element to keep it fixed during scroll
-const background = document.querySelector('.background');
 
-// Pin the background in place so it stays centered in section-1
-gsap.timeline({
-    scrollTrigger: {
-        trigger: '.section-1',
-        start: "top top",
-        end: "bottom top",
-        pin: background,
-        pinSpacing: false
-    }
-});
-
-scrollSections.forEach((section) => {
-    const wrapper = section.querySelector('.wrapper');
-    const items = wrapper.querySelectorAll('.item');
-
-    let direction = null;
-
-    if (section.classList.contains('vertical-section')) {
-        direction = 'vertical';
-    } else if (section.classList.contains('horizontal-section')) {
-        direction = 'horizontal';
-    }
-
-    initScroll(section, items, direction);
-});
-
+// Function to initialize scroll animations
 function initScroll(section, items, direction) {
     // Set initial state for all cards
-    // We'll keep their original vertical position (top: 80vh) and modify other properties
     items.forEach((item, index) => {
         if (index === 0) {
             gsap.set(item, { 
@@ -52,15 +24,21 @@ function initScroll(section, items, direction) {
         }
     });
     
+    // Calculate the total duration based on number of cards
+    const cardCount = items.length;
+    const totalDuration = `+=${cardCount * 100}%`;
+    
+    // Create the timeline with ScrollTrigger
     const timeline = gsap.timeline({
         scrollTrigger: {
             trigger: section,
             pin: true,
             start: "top top",
-            end: () => `+=${(items.length + 1) * 100}%`, // Added +1 to account for final animation
+            end: totalDuration,
             scrub: 1,
             invalidateOnRefresh: true,
-            // markers: true (uncomment to debug)
+            // markers: true, // Uncomment for debugging
+            pinSpacing: true
         },
         defaults: { ease: "power2.inOut" }, // Smoother easing
     });
@@ -85,12 +63,15 @@ function initScroll(section, items, direction) {
                 rotation: 0,
                 duration: 1
             }, "<0.5"); // Overlap with previous animation
-        } else {
-            // For the last card, add a bit more scroll space before finishing
-            timeline.to({}, { duration: 0.5 }); // Empty tween just to create some space
         }
     });
-    
-    // Add a final animation to ensure we have a clean transition to the next section
-    timeline.to({}, { duration: 0.5 });
 }
+
+// Initialize the animations once the page is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    scrollSections.forEach((section) => {
+        const items = section.querySelectorAll('.item');
+        let direction = section.classList.contains('vertical-section') ? 'vertical' : 'horizontal';
+        initScroll(section, items, direction);
+    });
+});

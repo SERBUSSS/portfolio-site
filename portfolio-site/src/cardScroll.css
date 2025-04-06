@@ -5,23 +5,21 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Background styling */
-.background-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    will-change: opacity;
+/* Section styling */
+.section-0, .section-1, .section-2 {
+    position: relative;
+    width: 100%;
 }
 
-/* Section styling */
-.section {
+/* Scroll section styling */
+.scroll-section {
     position: relative;
     overflow: hidden;
 }
 
 .wrapper {
-    height: 100vh;
     position: relative;
+    height: 100vh;
 }
 
 .list {
@@ -54,13 +52,4 @@ html, body {
 html {
     scrollbar-width: none;
     -ms-overflow-style: none;
-}
-
-/* Add smooth transition between sections */
-.section-2, 
-.section-3, 
-.section-4, 
-.section-5 {
-    position: relative;
-    z-index: 20;
 }

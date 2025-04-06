@@ -32,7 +32,7 @@ function initScroll(section, items, direction) {
         } else {
             gsap.set(item, { 
                 scale: 0.8, 
-                opacity: 0,
+                opacity: 1,
                 y: '50vh', // Additional offset from their 80vh position
                 rotation: index % 2 === 0 ? 5 : -5 // Alternate rotation
             });
@@ -59,7 +59,7 @@ function initScroll(section, items, direction) {
             timeline.to(item, {
                 scale: 0.8,
                 y: '-50vh', // Move up from its current position
-                opacity: 0,
+                opacity: 1,
                 rotation: index % 2 === 0 ? -5 : 5, // Alternate rotation
                 duration: 1
             });

@@ -5,7 +5,17 @@ html, body {
     overflow-x: hidden;
 }
 
+/* Background styling */
+.background-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    will-change: opacity;
+}
+
+/* Section styling */
 .section {
+    position: relative;
     overflow: hidden;
 }
 
@@ -22,17 +32,18 @@ html, body {
     align-items: center;
 }
 
+/* Card styling */
 .item {
-    display: flex;
     position: absolute;
-    box-shadow: rgb(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     overflow: hidden;
     will-change: transform, opacity;
     transition: box-shadow 0.3s ease;
+    z-index: 5;
 }
 
 .item:hover {
-    box-shadow: rgb(100, 100, 111, 0.3) 0px 12px 30px;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 12px 30px;
 }
 
 /* Hide scrollbar but allow scrolling */
@@ -43,4 +54,13 @@ html, body {
 html {
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+/* Add smooth transition between sections */
+.section-2, 
+.section-3, 
+.section-4, 
+.section-5 {
+    position: relative;
+    z-index: 20;
 }

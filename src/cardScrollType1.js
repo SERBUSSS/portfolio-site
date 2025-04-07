@@ -6,9 +6,6 @@ window.addEventListener('load', function() {
     // Select the project sections
     const projectSections = document.querySelectorAll('[id^="project-"]');
     
-    // Background section to use with project-1
-    const backgroundSection = document.querySelectorAll('[id^="background-p-"]');
-    
     // Map of project IDs to their corresponding background sections
     const backgroundMap = {
         'project-1': 'background-p-1',

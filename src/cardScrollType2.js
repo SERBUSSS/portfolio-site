@@ -4,14 +4,14 @@ window.addEventListener('load', function() {
     gsap.registerPlugin(ScrollTrigger);
     
     // Select our section and cards
-    const section3 = document.getElementById('section-3');
-    const section3Cards = section3.querySelectorAll('.item');
+    const section = document.getElementById('process');
+    const sectionCards = section.querySelectorAll('.item');
     
     // Only initialize if we have cards to work with
-    if (!section3Cards.length) return;
+    if (!sectionCards.length) return;
     
     // Set initial states - all cards start off-screen at the bottom
-    section3Cards.forEach((card, index) => {
+    sectionCards.forEach((card, index) => {
         gsap.set(card, { 
             y: '80vh', // Start below the viewport
             scale: 1,   // Full size initially
@@ -24,12 +24,12 @@ window.addEventListener('load', function() {
     const rotationAngles = [-8, 9, -6, 8];
     
     // Create the timeline for section-3
-    const section3Timeline = gsap.timeline({
+    const sectionTimeline = gsap.timeline({
         scrollTrigger: {
-            trigger: section3,
+            trigger: section,
             pin: true,
             start: "top top",
-            end: `+=${section3Cards.length * 100}%`,
+            end: `+=${sectionCards.length * 100}%`,
             scrub: 1,
             anticipatePin: 1,
             fastScrollEnd: true,
@@ -39,15 +39,15 @@ window.addEventListener('load', function() {
     });
     
     // Add animations to timeline for each card
-    section3Cards.forEach((card, index) => {
+    sectionCards.forEach((card, index) => {
         // First bring the card to center
-        section3Timeline.to(card, {
+        sectionTimeline.to(card, {
             y: '-10vh',
             duration: 0.6
         });
         
         // Then "place it down" with rotation and scale
-        section3Timeline.to(card, {
+        sectionTimeline.to(card, {
             scale: 0.8,
             rotation: rotationAngles[index % rotationAngles.length],
             y: '0vh', // Move slightly down to simulate placing
@@ -55,8 +55,8 @@ window.addEventListener('load', function() {
         });
         
         // If it's not the last card, add a small pause before next card
-        if (index < section3Cards.length - 1) {
-            section3Timeline.to({}, {
+        if (index < sectionCards.length - 1) {
+            sectionTimeline.to({}, {
                 duration: 0.2
             });
         }
@@ -70,8 +70,8 @@ window.addEventListener('load', function() {
         { x: '0vw', y: '15vh' }
     ];
     
-    section3Cards.forEach((card, index) => {
-        section3Timeline.to(card, {
+    sectionCards.forEach((card, index) => {
+        sectionTimeline.to(card, {
             x: finalPositions[index].x,
             y: finalPositions[index].y,
             duration: 0.5,

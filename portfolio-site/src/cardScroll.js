@@ -4,7 +4,7 @@ window.addEventListener('load', function() {
     gsap.registerPlugin(ScrollTrigger);
     
     // Select our section and cards
-    const section1 = document.getElementById('section-1');
+    const section1 = document.getElementById('section-1.1');
     const section1Cards = section1.querySelectorAll('.item');
     
     // Only initialize if we have cards to work with

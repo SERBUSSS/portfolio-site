@@ -12,12 +12,84 @@
         <link rel="stylesheet" href="/src/cardScroll.css">
     </head>
     <body>
-        <header id="nav-bar" class="w-full h-auto flex pr-4 pl-4 absolute top-0 left-0">
-            <div class="w-full flex flex-col items-center justify-between pt-8 pb-4">
-                <div class="w-full h-auto flex justify-center">
-                    <a href="#services" class="w-full h-auto flex justify-center items-center">
+        <header id="nav-bar" class="w-full h-auto flex p-4 pt-6 absolute top-0 left-0">
+            <div class="w-full inline-flex items-center justify-between pt-4 pb-4">
+                <div class="basis-1/3">
+                    <a href="">
+                        <img src="" alt="">
+                    </a>
+                </div>
+                <div class="basis-1/3 h-auto flex justify-center">
+                    <a href="" class="w-full h-auto flex justify-center items-center">
                         <img src="/src/icons/LogoV1.svg" alt="Buștiuc Sergiu Logo" class="h-12">
                     </a>
+                </div>
+                <div class="basis-1/3 flex justify-end">
+                    <a href="">
+                        <img src="/src/icons/ham-menu.svg" alt="menu icon">
+                    </a>
+                </div>
+            </div>
+
+            <!-- open state of the menu -->
+            <div class="hidden w-full h-auto p-8 pt-6 absolute top-0 left-0">
+                <div class="w-full inline-flex items-center justify-between pt-8 pb-8">
+                    <div class="basis-1/2 h-auto flex justify-center">
+                        <a href="" class="w-full h-auto flex justify-start items-center">
+                            <img src="/src/icons/LogoV1.svg" alt="Buștiuc Sergiu Logo" class="h-16">
+                        </a>
+                    </div>
+                    <div class="basis-1/2 flex justify-end">
+                        <a href="">
+                            <img src="/src/icons/close-x.svg" alt="close icon">
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full h-auto inline-flex flex-col justify-between items-start">
+                    <div class="w-full h-auto inline-flex flex-col justify-start items-start gap-8">
+                        <div class="w-full h-auto inline-flex flex-col justify-start items-start gap-4">
+                            <div class="w-full inline-flex gap-1 ">
+                                <p class="w-4 justify-start text-black text-xl font-normal font-display leading-snug">1.</p>
+                                <h4 class="w-full self-stretch justify-start text-black text-xl font-normal font-display leading-snug">Projects
+                                </h4>
+                            </div>
+                            <div class="w-full inline-flex gap-1 ">
+                                <p class="w-4 justify-start text-black text-xl font-normal font-display leading-snug">2.</p>
+                                <h4 class="w-full self-stretch justify-start text-black text-xl font-normal font-display leading-snug">Work w/ me
+                                </h4>
+                            </div>
+                            <div class="w-full inline-flex gap-1 ">
+                                <p class="w-4 justify-start text-black text-xl font-normal font-display leading-snug">3.</p>
+                                <h4 class="w-full self-stretch justify-start text-black text-xl font-normal font-display leading-snug">Services
+                                </h4>
+                            </div>
+                            <div class="w-full inline-flex gap-1 ">
+                                <p class="w-4 justify-start text-black text-xl font-normal font-display leading-snug">4.</p>
+                                <h4 class="w-full self-stretch justify-start text-black text-xl font-normal font-display leading-snug">FAQ
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="w-full h-auto self-stretch flex flex-col justify-center items-center gap-2">
+                            <div class="w-full h-auto bg-white hover:shadow-2xl hover:drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 border-2 border-black">
+                                <a href="" class="justify-start text-black text-base font-bold font-sans leading-5">start project</a>
+                            </div>
+                            <p class="w-full justify-center text-center text-[#5a5a5a] text-sm font-light font-sans leading-5">start a project by filling out the inquiry form!</p>
+                        </div>
+                    </div>
+                    <div class="self-stretch inline-flex flex-col justify-start items-center gap-6">
+                        <p class="w-full self-stretch text-center justify-start text-black text-base font-normal font-sans leading-5">Follow my journey on:</p>
+                        <div class="self-stretch inline-flex justify-between items-center">
+                            <a href="" class="social 1">
+                                <img src="" alt="">
+                            </a>
+                            <a href="" class="social 2">
+                                <img src="" alt="">
+                            </a>
+                            <a href="" class="social 3">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -199,18 +271,9 @@
         </section>
 
         <section id="background-process" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-between pt-10 pb-10">
-                <div class="w-full h-auto flex justify-center">
-                    
-                </div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
-                    <div class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">Working with me</div>
-                    <div class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Lorem ipsum dolor sit amet consectetur. Placerat sagittis elementum et tincidunt. Sit pellentesque neque eleifend quis sapien.</div>
-                </div>
-                <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
-                    <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
-                    <img src="/src/icons/down-arrow.svg" alt="arrow down" class="w-full h-8">
-                </div>
+            <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
+                <div class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">Working with me</div>
+                <div class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Lorem ipsum dolor sit amet consectetur. Placerat sagittis elementum et tincidunt. Sit pellentesque neque eleifend quis sapien.</div>
             </div>
         </section>
 
@@ -514,5 +577,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
         <script src="/src/cardScrollType1.js" defer></script>
         <script src="/src/cardScrollType2.js" defer></script>
+        <script src="/src/headerAnimation.js" defer></script>
     </body>
 </html>

@@ -1,4 +1,4 @@
-// Animation for section-3 cards
+// Animation for process section with static background
 window.addEventListener('load', function() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
@@ -10,8 +10,34 @@ window.addEventListener('load', function() {
     // Only initialize if we have cards to work with
     if (!sectionCards.length) return;
     
+    // Get background section
+    const backgroundElement = document.getElementById('background-process');
+    
+    // If we have a background element for this section
+    if (backgroundElement) {
+        // Style the background element
+        gsap.set(backgroundElement, {
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            top: 0,
+            left: 0,
+            zIndex: -1
+        });
+        
+        // Clone and insert the background into the project section
+        const bgClone = backgroundElement.cloneNode(true);
+        bgClone.id = 'background-process-clone';
+        bgClone.style.position = 'absolute';
+        bgClone.style.zIndex = '-1';
+        section.insertBefore(bgClone, section.firstChild);
+        
+        // Hide the original background section
+        backgroundElement.style.display = 'none';
+    }
+    
     // Set initial states - all cards start off-screen at the bottom
-    sectionCards.forEach((card, index) => {
+    sectionCards.forEach((card) => {
         gsap.set(card, { 
             y: '80vh', // Start below the viewport
             scale: 1,   // Full size initially
@@ -23,7 +49,7 @@ window.addEventListener('load', function() {
     // Define rotation angles for each card (alternating directions)
     const rotationAngles = [-8, 9, -6, 8];
     
-    // Create the timeline for section-3
+    // Create the timeline for process section
     const sectionTimeline = gsap.timeline({
         scrollTrigger: {
             trigger: section,

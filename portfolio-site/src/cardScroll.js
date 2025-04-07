@@ -1,83 +1,126 @@
-// Animation for section-1 cards
+// Animation for project sections with static backgrounds
 window.addEventListener('load', function() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     
-    // Select our section and cards
-    const section1 = document.getElementById('section-1.1');
-    const section1Cards = section1.querySelectorAll('.item');
+    // Select the project sections
+    const projectSections = document.querySelectorAll('[id^="project-"]');
     
-    // Only initialize if we have cards to work with
-    if (!section1Cards.length) return;
+    // Background section to use with project-1
+    const backgroundSection = document.querySelectorAll('[id^="background-p-"]');
     
-    // Set initial states - all cards start off-screen at the bottom
-    section1Cards.forEach((card, index) => {
-        gsap.set(card, { 
-            y: '100vh', // Start below the viewport
-            scale: 1,   // Full size initially
-            opacity: 1,
-            rotation: 0
-        });
-    });
+    // Map of project IDs to their corresponding background sections
+    const backgroundMap = {
+        'project-1': 'background-p-1',
+        'project-2': 'background-p-2',
+        'project-3': 'background-p-3',
+        'project-4': 'background-p-4'
+    };
     
-    // Define rotation angles for each card (alternating directions)
-    const rotationAngles = [-10, 12, -10, 8, -6, 9];
-    
-    // Create the timeline for section-1
-    const section1Timeline = gsap.timeline({
-        scrollTrigger: {
-            trigger: section1,
-            pin: true,
-            start: "top top",
-            end: `+=${section1Cards.length * 100}%`,
-            scrub: 1,
-            anticipatePin: 1,
-            fastScrollEnd: true,
-            preventOverlaps: true,
-            // markers: true // Uncomment for debugging
-        }
-    });
-    
-    // Add animations to timeline for each card
-    section1Cards.forEach((card, index) => {
-        // First bring the card to center
-        section1Timeline.to(card, {
-            y: '-10vh',
-            duration: 1
-        });
+    // Process each project section
+    projectSections.forEach(section => {
+        const sectionCards = section.querySelectorAll('.item');
+        const sectionId = section.id;
         
-        // Then "place it down" with rotation and scale
-        section1Timeline.to(card, {
-            scale: 0.6,
-            rotation: rotationAngles[index % rotationAngles.length],
-            y: '0vh', // Move slightly down to simulate placing
-            duration: 0.5
-        });
+        // Only initialize if we have cards to work with
+        if (!sectionCards.length) return;
         
-        // If it's not the last card, add a small pause before next card
-        if (index < section1Cards.length - 1) {
-            section1Timeline.to({}, {
-                duration: 0.2
+        // Get background section if one is mapped
+        const backgroundId = backgroundMap[sectionId];
+        const backgroundElement = backgroundId ? document.getElementById(backgroundId) : null;
+        
+        // If we have a background element for this section
+        if (backgroundElement) {
+            // Style the background element
+            gsap.set(backgroundElement, {
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                top: 0,
+                left: 0,
+                zIndex: -1
             });
+            
+            // Clone and insert the background into the project section
+            const bgClone = backgroundElement.cloneNode(true);
+            bgClone.id = `${backgroundId}-clone`;
+            bgClone.style.position = 'absolute';
+            bgClone.style.zIndex = '-1';
+            section.insertBefore(bgClone, section.firstChild);
+            
+            // Hide the original background section
+            backgroundElement.style.display = 'none';
         }
-    });
-    
-    // Add a final animation to spread cards out in a staggered pattern
-    const finalPositions = [
-        { x: '-20vw', y: '-20vh' }, 
-        { x: '-5vw', y: '-10vh' }, 
-        { x: '10vw', y: '-0vh' }, 
-        { x: '20vw', y: '10vh' },
-        { x: '10vw', y: '20vh' },
-        { x: '-5vw', y: '30vh' }
-    ];
-    
-    section1Cards.forEach((card, index) => {
-        section1Timeline.to(card, {
-            x: finalPositions[index].x,
-            y: finalPositions[index].y,
-            duration: 0.8,
-            ease: "power1.out"
-        }, index > 0 ? "<0.1" : ">");
+        
+        // Set initial states for cards
+        sectionCards.forEach(card => {
+            gsap.set(card, { 
+                y: '100vh', // Start below the viewport
+                scale: 1,   // Full size initially
+                opacity: 1,
+                rotation: 0
+            });
+        });
+        
+        // Define rotation angles for each card (alternating directions)
+        const rotationAngles = [-10, 12, -10, 8, -6, 9];
+        
+        // Create the timeline for this section
+        const sectionTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: section,
+                pin: true,
+                start: "top top",
+                end: `+=${sectionCards.length * 100}%`,
+                scrub: 1,
+                anticipatePin: 1,
+                fastScrollEnd: true,
+                preventOverlaps: true,
+                // markers: true // Uncomment for debugging
+            }
+        });
+        
+        // Add animations to timeline for each card
+        sectionCards.forEach((card, index) => {
+            // First bring the card to center
+            sectionTimeline.to(card, {
+                y: '-10vh',
+                duration: 1
+            });
+            
+            // Then "place it down" with rotation and scale
+            sectionTimeline.to(card, {
+                scale: 0.6,
+                rotation: rotationAngles[index % rotationAngles.length],
+                y: '0vh', // Move slightly down to simulate placing
+                duration: 0.5
+            });
+            
+            // If it's not the last card, add a small pause before next card
+            if (index < sectionCards.length - 1) {
+                sectionTimeline.to({}, {
+                    duration: 0.2
+                });
+            }
+        });
+        
+        // Add a final animation to spread cards out in a staggered pattern
+        const finalPositions = [
+            { x: '-20vw', y: '-20vh' }, 
+            { x: '-5vw', y: '-10vh' }, 
+            { x: '10vw', y: '-0vh' }, 
+            { x: '20vw', y: '10vh' },
+            { x: '10vw', y: '20vh' },
+            { x: '-5vw', y: '30vh' }
+        ];
+        
+        sectionCards.forEach((card, index) => {
+            sectionTimeline.to(card, {
+                x: finalPositions[index % finalPositions.length].x,
+                y: finalPositions[index % finalPositions.length].y,
+                duration: 0.8,
+                ease: "power1.out"
+            }, index > 0 ? "<0.1" : ">");
+        });
     });
 });

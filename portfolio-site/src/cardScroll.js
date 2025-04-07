@@ -1,77 +1,70 @@
-// Make ScrollTrigger available globally for use in GSAP animations
+// IMPORTANT: This is a complete rewrite to fix duplication issues
+
+// Register the ScrollTrigger plugin with GSAP
 gsap.registerPlugin(ScrollTrigger);
 
-// Select the HTML elements needed for the animation
-const scrollSections = document.querySelectorAll('.scroll-section');
-
-// Function to initialize scroll animations
-function initScroll(section, items, direction) {
-    // Set initial state for all cards
-    items.forEach((item, index) => {
-        if (index === 0) {
-            gsap.set(item, { 
-                scale: 1, 
-                opacity: 1,
-                rotation: 0
-            });
-        } else {
-            gsap.set(item, { 
-                scale: 0.8, 
-                opacity: 1,
-                y: '50vh', // Additional offset from their 80vh position
-                rotation: index % 2 === 0 ? 5 : -5 // Alternate rotation
-            });
-        }
+// Wait for everything to be fully loaded before initializing
+window.addEventListener('load', function() {
+    // First, let's kill any existing ScrollTrigger instances to prevent conflicts
+    ScrollTrigger.getAll().forEach(st => st.kill());
+    
+    // Select our elements
+    const section1 = document.getElementById('section-1');
+    const cards = section1.querySelectorAll('.item');
+    
+    // Important: Only initialize if we have cards to work with
+    if (!cards.length) return;
+    
+    // Set initial states
+    gsap.set(cards[0], { 
+        scale: 1, 
+        opacity: 1,
+        rotation: 0
     });
     
-    // Calculate the total duration based on number of cards
-    const cardCount = items.length;
-    const totalDuration = `+=${cardCount * 100}%`;
+    for (let i = 1; i < cards.length; i++) {
+        gsap.set(cards[i], { 
+            scale: 0.8, 
+            opacity: 1,
+            y: '50vh',
+            rotation: i % 2 === 0 ? 5 : -5
+        });
+    }
     
-    // Create the timeline with ScrollTrigger
+    // Create the animation timeline
     const timeline = gsap.timeline({
         scrollTrigger: {
-            trigger: section,
+            trigger: section1,
             pin: true,
             start: "top top",
-            end: totalDuration,
+            end: `+=${cards.length * 100}%`,
             scrub: 1,
-            invalidateOnRefresh: true,
-            // markers: true, // Uncomment for debugging
-            pinSpacing: true
-        },
-        defaults: { ease: "power2.inOut" }, // Smoother easing
-    });
-    
-    // For each card, create sequential animations
-    items.forEach((item, index) => {
-        // First move the current card up and fade it out
-        timeline.to(item, {
-            scale: 0.8,
-            y: '-50vh', // Move up from its current position
-            opacity: 1,
-            rotation: index % 2 === 0 ? -5 : 5, // Alternate rotation
-            duration: 1
-        });
-        
-        // Then bring in the next card if it exists
-        if (index < items.length - 1) {
-            timeline.to(items[index + 1], {
-                y: 0, // Return to its original position
-                scale: 1,
-                opacity: 1,
-                rotation: 0,
-                duration: 1
-            }, "<0.5"); // Overlap with previous animation
+            anticipatePin: 1,
+            fastScrollEnd: true,
+            preventOverlaps: true,
+            // markers: true // Uncomment for debugging
         }
     });
-}
-
-// Initialize the animations once the page is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    scrollSections.forEach((section) => {
-        const items = section.querySelectorAll('.item');
-        let direction = section.classList.contains('vertical-section') ? 'vertical' : 'horizontal';
-        initScroll(section, items, direction);
+    
+    // Add card animations to timeline
+    cards.forEach((card, index) => {
+        // Move current card up
+        timeline.to(card, {
+            scale: 0.8,
+            y: '-50vh',
+            rotation: index % 2 === 0 ? -5 : 5
+        });
+        
+        // Bring in next card if available
+        if (index < cards.length - 1) {
+            timeline.to(cards[index + 1], {
+                y: 0,
+                scale: 1,
+                rotation: 0
+            }, "<0.5");
+        }
     });
 });
+
+// Block any other scripts from running duplicate initializations
+window.cardScrollInitialized = true;

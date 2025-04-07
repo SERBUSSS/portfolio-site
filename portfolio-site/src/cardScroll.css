@@ -1,20 +1,27 @@
-/* Base styles */
+/* Reset and base styles */
 html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
 }
 
+body {
+    position: relative;
+}
+
 /* Section styling */
-.section-0, .section-1, .section-2 {
+.section {
     position: relative;
     width: 100%;
 }
 
-/* Scroll section styling */
-.scroll-section {
-    position: relative;
+/* Card styling */
+.item {
+    position: absolute;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     overflow: hidden;
+    will-change: transform, opacity;
+    transition: box-shadow 0.3s ease;
 }
 
 .wrapper {
@@ -28,20 +35,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Card styling */
-.item {
-    position: absolute;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    overflow: hidden;
-    will-change: transform, opacity;
-    transition: box-shadow 0.3s ease;
-    z-index: 5;
-}
-
-.item:hover {
-    box-shadow: rgba(100, 100, 111, 0.3) 0px 12px 30px;
 }
 
 /* Hide scrollbar but allow scrolling */

@@ -55,7 +55,7 @@ window.addEventListener('load', function() {
         // Set initial states for cards
         sectionCards.forEach(card => {
             gsap.set(card, { 
-                y: '100vh', // Start below the viewport
+                y: '80vh', // Start below the viewport
                 scale: 1,   // Full size initially
                 opacity: 1,
                 rotation: 0
@@ -93,7 +93,7 @@ window.addEventListener('load', function() {
                 scale: 0.6,
                 rotation: rotationAngles[index % rotationAngles.length],
                 y: '0vh', // Move slightly down to simulate placing
-                duration: 0.2
+                duration: 0.15
             });
             
             // If it's not the last card, add a small pause before next card
@@ -118,7 +118,7 @@ window.addEventListener('load', function() {
             sectionTimeline.to(card, {
                 x: finalPositions[index % finalPositions.length].x,
                 y: finalPositions[index % finalPositions.length].y,
-                duration: 0.8,
+                duration: 0.5,
                 ease: "power1.out"
             }, index > 0 ? "<0.1" : ">");
         });

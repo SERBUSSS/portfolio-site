@@ -13,7 +13,7 @@ window.addEventListener('load', function() {
     // Set initial states - all cards start off-screen at the bottom
     section3Cards.forEach((card, index) => {
         gsap.set(card, { 
-            y: '100vh', // Start below the viewport
+            y: '80vh', // Start below the viewport
             scale: 1,   // Full size initially
             opacity: 1,
             rotation: 0
@@ -43,7 +43,7 @@ window.addEventListener('load', function() {
         // First bring the card to center
         section3Timeline.to(card, {
             y: '-10vh',
-            duration: 1
+            duration: 0.6
         });
         
         // Then "place it down" with rotation and scale
@@ -51,7 +51,7 @@ window.addEventListener('load', function() {
             scale: 0.8,
             rotation: rotationAngles[index % rotationAngles.length],
             y: '0vh', // Move slightly down to simulate placing
-            duration: 0.5
+            duration: 0.3
         });
         
         // If it's not the last card, add a small pause before next card
@@ -74,7 +74,7 @@ window.addEventListener('load', function() {
         section3Timeline.to(card, {
             x: finalPositions[index].x,
             y: finalPositions[index].y,
-            duration: 0.8,
+            duration: 0.5,
             ease: "power1.out"
         }, index > 0 ? "<0.1" : ">");
     });

@@ -1,17 +1,17 @@
-// Animation for section-1 cards
+// Animation for section-3 cards
 window.addEventListener('load', function() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     
     // Select our section and cards
-    const section1 = document.getElementById('section-1');
-    const section1Cards = section1.querySelectorAll('.item');
+    const section3 = document.getElementById('section-3');
+    const section3Cards = section3.querySelectorAll('.item');
     
     // Only initialize if we have cards to work with
-    if (!section1Cards.length) return;
+    if (!section3Cards.length) return;
     
     // Set initial states - all cards start off-screen at the bottom
-    section1Cards.forEach((card, index) => {
+    section3Cards.forEach((card, index) => {
         gsap.set(card, { 
             y: '100vh', // Start below the viewport
             scale: 1,   // Full size initially
@@ -21,15 +21,15 @@ window.addEventListener('load', function() {
     });
     
     // Define rotation angles for each card (alternating directions)
-    const rotationAngles = [-10, 12, -10, 8, -6, 9];
+    const rotationAngles = [-8, 9, -6, 8];
     
-    // Create the timeline for section-1
-    const section1Timeline = gsap.timeline({
+    // Create the timeline for section-3
+    const section3Timeline = gsap.timeline({
         scrollTrigger: {
-            trigger: section1,
+            trigger: section3,
             pin: true,
             start: "top top",
-            end: `+=${section1Cards.length * 100}%`,
+            end: `+=${section3Cards.length * 100}%`,
             scrub: 1,
             anticipatePin: 1,
             fastScrollEnd: true,
@@ -39,24 +39,24 @@ window.addEventListener('load', function() {
     });
     
     // Add animations to timeline for each card
-    section1Cards.forEach((card, index) => {
+    section3Cards.forEach((card, index) => {
         // First bring the card to center
-        section1Timeline.to(card, {
+        section3Timeline.to(card, {
             y: '-10vh',
             duration: 1
         });
         
         // Then "place it down" with rotation and scale
-        section1Timeline.to(card, {
-            scale: 0.6,
+        section3Timeline.to(card, {
+            scale: 0.8,
             rotation: rotationAngles[index % rotationAngles.length],
             y: '0vh', // Move slightly down to simulate placing
             duration: 0.5
         });
         
         // If it's not the last card, add a small pause before next card
-        if (index < section1Cards.length - 1) {
-            section1Timeline.to({}, {
+        if (index < section3Cards.length - 1) {
+            section3Timeline.to({}, {
                 duration: 0.2
             });
         }
@@ -64,16 +64,14 @@ window.addEventListener('load', function() {
     
     // Add a final animation to spread cards out in a staggered pattern
     const finalPositions = [
-        { x: '-20vw', y: '-20vh' }, 
-        { x: '-5vw', y: '-10vh' }, 
-        { x: '10vw', y: '-0vh' }, 
-        { x: '20vw', y: '10vh' },
-        { x: '10vw', y: '20vh' },
-        { x: '-5vw', y: '30vh' }
+        { x: '0vw', y: '-15vh' }, 
+        { x: '0vw', y: '-5vh' }, 
+        { x: '0vw', y: '5vh' }, 
+        { x: '0vw', y: '15vh' }
     ];
     
-    section1Cards.forEach((card, index) => {
-        section1Timeline.to(card, {
+    section3Cards.forEach((card, index) => {
+        section3Timeline.to(card, {
             x: finalPositions[index].x,
             y: finalPositions[index].y,
             duration: 0.8,

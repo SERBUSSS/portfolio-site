@@ -85,7 +85,7 @@ window.addEventListener('load', function() {
             // First bring the card to center
             sectionTimeline.to(card, {
                 y: '-10vh',
-                duration: 1
+                duration: 0.6
             });
             
             // Then "place it down" with rotation and scale
@@ -93,7 +93,7 @@ window.addEventListener('load', function() {
                 scale: 0.6,
                 rotation: rotationAngles[index % rotationAngles.length],
                 y: '0vh', // Move slightly down to simulate placing
-                duration: 0.5
+                duration: 0.2
             });
             
             // If it's not the last card, add a small pause before next card

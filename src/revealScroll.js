@@ -1,6 +1,21 @@
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize GSAP
+// Wait for window to fully load (including all resources)
+window.addEventListener('load', function() {
+    console.log("Window loaded - checking for GSAP");
+    
+    // Check if GSAP and ScrollTrigger are loaded
+    if (typeof gsap === 'undefined') {
+        console.error('GSAP not loaded');
+        return;
+    }
+    
+    if (typeof ScrollTrigger === 'undefined') {
+        console.error('ScrollTrigger not loaded');
+        return;
+    }
+    
+    console.log("GSAP and ScrollTrigger are available");
+    
+    // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     
     // Get the elements we want to animate
@@ -12,79 +27,161 @@ document.addEventListener('DOMContentLoaded', function() {
     const serviceThree = document.querySelector('#s3-SMM');
     const serviceThreeDivider = document.querySelector('#s3-divider');
     
-    // Set initial state of elements - invisible and slightly scaled down
-    gsap.set([servicesIntro, serviceOne, serviceOneDivider, serviceTwo, 
-             serviceTwoDivider, serviceThree, serviceThreeDivider], {
-      opacity: 0,
-      scale: 0.95,
-      y: 20 // Small vertical offset for a nicer entrance
+    // Debug - Check if elements are found
+    console.log('Services elements found:', {
+        servicesIntro: servicesIntro ? true : false,
+        serviceOne: serviceOne ? true : false,
+        serviceOneDivider: serviceOneDivider ? true : false,
+        serviceTwo: serviceTwo ? true : false,
+        serviceTwoDivider: serviceTwoDivider ? true : false,
+        serviceThree: serviceThree ? true : false,
+        serviceThreeDivider: serviceThreeDivider ? true : false
     });
     
-    // Create timeline for each element with ScrollTrigger
-    // Services intro animation
-    gsap.to(servicesIntro, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: servicesIntro,
-        start: "top 80%", // Start animation when the top of the element reaches 80% from the top of viewport
-        end: "top 40%",   // Complete animation when the top of the element reaches 40% from the top
-        toggleActions: "play none none none",
-        scrub: 0.5        // Smooth animation tied to scroll
-      }
+    // Verify services section exists
+    const servicesSection = document.querySelector('#services');
+    if (!servicesSection) {
+        console.error('Services section (#services) not found');
+        return;
+    }
+    
+    console.log('Services section found, setting up animations');
+    
+    // Set initial state with inline styles to ensure they take effect
+    const elements = [servicesIntro, serviceOne, serviceOneDivider, serviceTwo, 
+                     serviceTwoDivider, serviceThree, serviceThreeDivider];
+    
+    elements.forEach(el => {
+        if (el) {
+            el.style.opacity = "0";
+            el.style.transform = "scale(0.95) translateY(20px)";
+        }
     });
     
-    // Web Design section animation
-    gsap.to([serviceOne, serviceOneDivider], {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      stagger: 0.1,       // Slight delay between elements
-      scrollTrigger: {
-        trigger: serviceOne,
-        start: "top 80%",
-        end: "top 40%",
-        toggleActions: "play none none none",
-        scrub: 0.5
-      }
+    // Force a layout recalculation
+    servicesSection.offsetHeight;
+    
+    console.log('Initial states set, creating timelines');
+    
+    // Create a timeline for services intro
+    const introTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '#services',
+            start: "top 80%",
+            end: "top 20%",
+            toggleActions: "play none none reverse",
+            // markers: true, // Enable markers for debugging
+            id: "services-intro"
+        }
     });
     
-    // Branding section animation
-    gsap.to([serviceTwo, serviceTwoDivider], {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: serviceTwo,
-        start: "top 80%",
-        end: "top 40%",
-        toggleActions: "play none none none",
-        scrub: 0.5
-      }
-    });
+    if (servicesIntro) {
+        introTl.to(servicesIntro, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+    }
     
-    // Social Media Marketing section animation
-    gsap.to([serviceThree, serviceThreeDivider], {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: serviceThree,
-        start: "top 80%",
-        end: "top 40%",
-        toggleActions: "play none none none",
-        scrub: 0.5
-      }
-    });
-  });
+    // Create a timeline for service one
+    if (serviceOne) {
+        const serviceTl1 = gsap.timeline({
+            scrollTrigger: {
+                trigger: serviceOne,
+                start: "top 85%",
+                end: "top 15%",
+                toggleActions: "play none none reverse",
+                // markers: true, // Enable markers for debugging
+                id: "service-one"
+            }
+        });
+        
+        serviceTl1.to(serviceOne, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+        
+        if (serviceOneDivider) {
+            serviceTl1.to(serviceOneDivider, {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.6");
+        }
+    }
+    
+    // Create a timeline for service two
+    if (serviceTwo) {
+        const serviceTl2 = gsap.timeline({
+            scrollTrigger: {
+                trigger: serviceTwo,
+                start: "top 85%",
+                end: "top 15%",
+                toggleActions: "play none none reverse",
+                // markers: true, // Enable markers for debugging
+                id: "service-two"
+            }
+        });
+        
+        serviceTl2.to(serviceTwo, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+        
+        if (serviceTwoDivider) {
+            serviceTl2.to(serviceTwoDivider, {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.6");
+        }
+    }
+    
+    // Create a timeline for service three
+    if (serviceThree) {
+        const serviceTl3 = gsap.timeline({
+            scrollTrigger: {
+                trigger: serviceThree,
+                start: "top 85%",
+                end: "top 15%",
+                toggleActions: "play none none reverse",
+                // markers: true, // Enable markers for debugging
+                id: "service-three"
+            }
+        });
+        
+        serviceTl3.to(serviceThree, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+        
+        if (serviceThreeDivider) {
+            serviceTl3.to(serviceThreeDivider, {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.6");
+        }
+    }
+    
+    // Force ScrollTrigger to recalculate all scroll positions
+    ScrollTrigger.refresh();
+    console.log('ScrollTrigger refreshed');
+});

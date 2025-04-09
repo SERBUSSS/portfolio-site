@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const menuClose = document.querySelector('.menu-close');
     const mobileNavContainer = document.querySelector('.mobile-nav-container');
+    const header = document.getElementById('nav-bar');
     const navLinks = mobileNavContainer.querySelectorAll('a[href^="#"]');
     
     // Function to open the menu - simplified
@@ -12,11 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simply show the menu with flex display
         mobileNavContainer.style.display = 'flex';
         mobileNavContainer.style.flexDirection = 'column';
+        header.style.display = 'none';
         
         // Add a blur effect to the background
         const sections = document.querySelectorAll('section');
         sections.forEach(section => {
-            section.classList.add('blur-sm', 'opacity-20');
+            section.classList.add('blur-sm', 'opacity-40');
         });
     }
     
@@ -26,11 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Simply hide the menu
         mobileNavContainer.style.display = 'none';
+        header.style.display = 'inline-flex';
         
         // Remove blur effect
         const sections = document.querySelectorAll('section');
         sections.forEach(section => {
-            section.classList.remove('blur-sm', 'opacity-20');
+            section.classList.remove('blur-sm', 'opacity-40');
         });
     }
     
@@ -53,8 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Scroll to the target section smoothly
             if (targetSection) {
                 setTimeout(() => {
+                    const offset = 100; // Adjust this value as needed
+                    const targetPosition = targetSection.offsetTop - offset;
                     window.scrollTo({
-                        top: targetSection.offsetTop,
+                        top: targetPosition,
                         behavior: 'smooth'
                     });
                 }, 100); // Small delay to ensure menu is closed first
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 gsap.to(window, {
                     duration: 1, 
-                    scrollTo: "#process",
+                    scrollTo: { y: "#process"},
                     ease: "power2.inOut"
                 });
             }, 100);

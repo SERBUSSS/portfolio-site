@@ -5,7 +5,7 @@ window.addEventListener('load', function() {
     
     // Get the header element
     const header = document.getElementById('nav-bar');
-    const headerLogo = header.querySelector('img');
+    const headerLogo = document.getElementById('head-logo');
     
     // Set initial state
     gsap.set(header, {
@@ -34,8 +34,8 @@ window.addEventListener('load', function() {
                 if (scrollDirection === 'down' && headerVisible) {
                     // Scrolling down - minimize header
                     gsap.to(header, {
-                        paddingTop: '8px',
-                        paddingBottom: '8px',
+                        paddingTop: '16px',
+                        paddingBottom: '16px',
                         background: 'rgba(255, 255, 255, 0.9)',
                         backdropFilter: 'blur(10px)',
                         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
@@ -43,7 +43,7 @@ window.addEventListener('load', function() {
                     });
                     
                     gsap.to(headerLogo, {
-                        height: '32px',
+                        height: '40px',
                         duration: 0.3
                     });
                     

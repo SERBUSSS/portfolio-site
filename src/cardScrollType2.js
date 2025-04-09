@@ -49,13 +49,21 @@ window.addEventListener('load', function() {
     // Define rotation angles for each card (alternating directions)
     const rotationAngles = [-8, 9, -6, 8];
     
+    // Define final positions for each card
+    const finalPositions = [
+        { x: '0vw', y: '-15vh' }, 
+        { x: '0vw', y: '-5vh' }, 
+        { x: '0vw', y: '5vh' }, 
+        { x: '0vw', y: '15vh' }
+    ];
+    
     // Create the timeline for process section
     const sectionTimeline = gsap.timeline({
         scrollTrigger: {
             trigger: section,
             pin: true,
             start: "top top",
-            end: `+=${sectionCards.length * 100}%`,
+            end: `+=${sectionCards.length * 100 + 25}%`,
             scrub: 1,
             anticipatePin: 1,
             fastScrollEnd: true,
@@ -72,11 +80,12 @@ window.addEventListener('load', function() {
             duration: 0.6
         });
         
-        // Then "place it down" with rotation and scale
+        // Then directly place it in its final position with rotation and scale
         sectionTimeline.to(card, {
             scale: 0.8,
             rotation: rotationAngles[index % rotationAngles.length],
-            y: '0vh', // Move slightly down to simulate placing
+            x: finalPositions[index].x,
+            y: finalPositions[index].y,
             duration: 0.3
         });
         
@@ -87,21 +96,13 @@ window.addEventListener('load', function() {
             });
         }
     });
-    
-    // Add a final animation to spread cards out in a staggered pattern
-    const finalPositions = [
-        { x: '0vw', y: '-15vh' }, 
-        { x: '0vw', y: '-5vh' }, 
-        { x: '0vw', y: '5vh' }, 
-        { x: '0vw', y: '15vh' }
-    ];
-    
-    sectionCards.forEach((card, index) => {
-        sectionTimeline.to(card, {
-            x: finalPositions[index].x,
-            y: finalPositions[index].y,
-            duration: 0.5,
-            ease: "power1.out"
-        }, index > 0 ? "<0.1" : ">");
+
+     // Add a delay at the end before unpinning the section
+     sectionTimeline.to({}, {
+        duration: 0.2, // This creates a pause at the end
+        onComplete: function() {
+            // Optional: You could add any final animation here
+            console.log("Animation sequence complete");
+        }
     });
 });

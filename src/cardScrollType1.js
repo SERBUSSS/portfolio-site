@@ -55,12 +55,23 @@ window.addEventListener('load', function() {
                 y: '80vh', // Start below the viewport
                 scale: 1,   // Full size initially
                 opacity: 1,
-                rotation: 0
+                rotation: 0,
+                x: 0       // Start with no horizontal offset
             });
         });
         
         // Define rotation angles for each card (alternating directions)
         const rotationAngles = [-10, 12, -10, 8, -6, 9];
+        
+        // Define final positions for the staggered pattern
+        const finalPositions = [
+            { x: '-20vw', y: '-20vh' }, 
+            { x: '-5vw', y: '-10vh' }, 
+            { x: '10vw', y: '-0vh' }, 
+            { x: '20vw', y: '10vh' },
+            { x: '10vw', y: '20vh' },
+            { x: '-5vw', y: '30vh' }
+        ];
         
         // Create the timeline for this section
         const sectionTimeline = gsap.timeline({
@@ -68,7 +79,7 @@ window.addEventListener('load', function() {
                 trigger: section,
                 pin: true,
                 start: "top top",
-                end: `+=${sectionCards.length * 100}%`,
+                end: `+=${sectionCards.length * 100 + 25}%`,
                 scrub: 1,
                 anticipatePin: 1,
                 fastScrollEnd: true,
@@ -79,45 +90,37 @@ window.addEventListener('load', function() {
         
         // Add animations to timeline for each card
         sectionCards.forEach((card, index) => {
-            // First bring the card to center
+            // Step 1: First bring the card to center
             sectionTimeline.to(card, {
                 y: '-10vh',
                 duration: 0.6
             });
             
-            // Then "place it down" with rotation and scale
+            // Step 2: Then place it directly at its final position with rotation and scale
+            // (combining the original steps 2 and 3)
             sectionTimeline.to(card, {
                 scale: 0.6,
                 rotation: rotationAngles[index % rotationAngles.length],
-                y: '0vh', // Move slightly down to simulate placing
-                duration: 0.15
+                x: finalPositions[index % finalPositions.length].x,
+                y: finalPositions[index % finalPositions.length].y,
+                duration: 0.3
             });
             
             // If it's not the last card, add a small pause before next card
-            if (index < sectionCards.length - 1) {
+            if (index == sectionCards.length) {
                 sectionTimeline.to({}, {
                     duration: 0.2
                 });
             }
         });
-        
-        // Add a final animation to spread cards out in a staggered pattern
-        const finalPositions = [
-            { x: '-20vw', y: '-20vh' }, 
-            { x: '-5vw', y: '-10vh' }, 
-            { x: '10vw', y: '-0vh' }, 
-            { x: '20vw', y: '10vh' },
-            { x: '10vw', y: '20vh' },
-            { x: '-5vw', y: '30vh' }
-        ];
-        
-        sectionCards.forEach((card, index) => {
-            sectionTimeline.to(card, {
-                x: finalPositions[index % finalPositions.length].x,
-                y: finalPositions[index % finalPositions.length].y,
-                duration: 0.5,
-                ease: "power1.out"
-            }, index > 0 ? "<0.1" : ">");
-        });
+    });
+
+    // Add a delay at the end before unpinning the section
+    sectionTimeline.to({}, {
+        duration: 0.2, // This creates a pause at the end
+        onComplete: function() {
+            // Optional: You could add any final animation here
+            console.log("Animation sequence complete");
+        }
     });
 });

@@ -117,7 +117,7 @@ window.addEventListener('load', function() {
 
     // Add a delay at the end before unpinning the section
     sectionTimeline.to({}, {
-        duration: 0.2, // This creates a pause at the end
+        duration: 1, // This creates a pause at the end
         onComplete: function() {
             // Optional: You could add any final animation here
             console.log("Animation sequence complete");

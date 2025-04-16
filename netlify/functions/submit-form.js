@@ -66,8 +66,8 @@ exports.handler = async (event, context) => {
     
     // Email to you
     const emailToYou = {
-      to: 'your-email@example.com', // Replace with your email
-      from: 'your-verified-email@yourdomain.com', // Must be verified in SendGrid
+      to: 's1.bustiuc@gmail.com', // Replace with your email
+      from: 'sergiu@bustiuc.digital', // Must be verified in SendGrid
       subject: `New Project Inquiry from ${data.name}`,
       html: `
         <h1>New Project Inquiry</h1>
@@ -78,7 +78,7 @@ exports.handler = async (event, context) => {
     // Email to the client
     const emailToClient = {
       to: data.email,
-      from: 'your-verified-email@yourdomain.com', // Must be verified in SendGrid
+      from: 'sergiu@bustiuc.digital', // Must be verified in SendGrid
       subject: 'Thank you for your project inquiry!',
       html: `
         <h1>Thank You for Your Project Inquiry</h1>

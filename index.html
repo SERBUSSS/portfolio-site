@@ -575,7 +575,311 @@
                 </div>
             </div>
         </section>
-        
+
+        <section class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white shadow-lg rounded-lg p-6 md:p-10">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Project Inquiry</h1>
+                
+                <!-- Progress Bar -->
+                <div class="mb-10">
+                <div class="relative">
+                    <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+                    <div id="progress-bar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 w-1/4 transition-all duration-500"></div>
+                    </div>
+                    <div class="flex justify-between">
+                    <span class="text-xs font-semibold inline-block text-blue-500">Step <span id="current-step">1</span> of 4</span>
+                    <span id="progress-percent" class="text-xs font-semibold inline-block text-blue-500">25%</span>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Form -->
+                <form id="inquiry-form" class="space-y-6">
+                <!-- Honeypot field for spam protection -->
+                <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
+                
+                <!-- Step 1: Basic Info -->
+                <div id="step-1" class="step">
+                    <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                    </div>
+                    </div>
+                    <div class="pt-5">
+                    <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Continue
+                    </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Project Type -->
+                <div id="step-2" class="step hidden">
+                    <div>
+                    <label for="projectType" class="block text-sm font-medium text-gray-700">What type of project are you looking for?</label>
+                    <select name="projectType" id="projectType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <option value="" disabled selected>Select a project type</option>
+                        <option value="website">Website Design</option>
+                        <option value="app">Mobile App</option>
+                        <option value="logo">Logo Design</option>
+                        <option value="other">Other (specify in description)</option>
+                    </select>
+                    </div>
+                    <div class="pt-5 flex justify-between">
+                    <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Back
+                    </button>
+                    <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Continue
+                    </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Project Details -->
+                <div id="step-3" class="step hidden">
+                    <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Project Description</label>
+                    <textarea name="description" id="description" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                    </div>
+                    <div class="pt-5 flex justify-between">
+                    <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Back
+                    </button>
+                    <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Continue
+                    </button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Timeline and Budget -->
+                <div id="step-4" class="step hidden">
+                    <div class="space-y-4">
+                    <div>
+                        <label for="timeline" class="block text-sm font-medium text-gray-700">Project Timeline</label>
+                        <select name="timeline" id="timeline" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <option value="" disabled selected>Select timeline</option>
+                        <option value="ASAP">As soon as possible</option>
+                        <option value="1-month">Within 1 month</option>
+                        <option value="3-months">Within 3 months</option>
+                        <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="budget" class="block text-sm font-medium text-gray-700">Budget Range</label>
+                        <select name="budget" id="budget" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <option value="" disabled selected>Select budget range</option>
+                        <option value="<1000">Under $1,000</option>
+                        <option value="1000-5000">$1,000 - $5,000</option>
+                        <option value="5000-10000">$5,000 - $10,000</option>
+                        <option value=">10000">Over $10,000</option>
+                        <option value="unsure">Not sure yet</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="pt-5 flex justify-between">
+                    <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Back
+                    </button>
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Submit Inquiry
+                    </button>
+                    </div>
+                </div>
+                </form>
+                
+                <!-- Success Message (Hidden by default) -->
+                <div id="success-message" class="hidden">
+                <div class="rounded-md bg-green-50 p-4">
+                    <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-green-800">Inquiry Submitted Successfully</h3>
+                        <div class="mt-2 text-sm text-green-700">
+                        <p>Thank you for your inquiry! I've received your information and will be in touch with you shortly. A confirmation has been sent to your email.</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Error Message (Hidden by default) -->
+                <div id="error-message" class="hidden">
+                <div class="rounded-md bg-red-50 p-4">
+                    <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">There was an error submitting your inquiry</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                        <p>Please try again later or contact me directly via email.</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const form = document.getElementById('inquiry-form');
+              const successMessage = document.getElementById('success-message');
+              const errorMessage = document.getElementById('error-message');
+              
+              // Form submission handler
+              form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const jsonData = {};
+                
+                formData.forEach((value, key) => {
+                  jsonData[key] = value;
+                });
+                
+                try {
+                  // The URL will be relative to your site
+                  const response = await fetch('/.netlify/functions/submit-form', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                  });
+                  
+                  const result = await response.json();
+                  
+                  if (response.ok) {
+                    // Show success message
+                    form.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                  } else {
+                    // Show error message
+                    errorMessage.classList.remove('hidden');
+                    console.error('Form submission error:', result);
+                  }
+                } catch (error) {
+                  // Show error message
+                  errorMessage.classList.remove('hidden');
+                  console.error('Form submission error:', error);
+                }
+              });
+            });
+        </script>
+        <!-- 2nd script
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const form = document.getElementById('inquiry-form');
+              const steps = document.querySelectorAll('.step');
+              const progressBar = document.getElementById('progress-bar');
+              const progressPercent = document.getElementById('progress-percent');
+              const currentStepEl = document.getElementById('current-step');
+              const successMessage = document.getElementById('success-message');
+              const errorMessage = document.getElementById('error-message');
+              let currentStep = 0;
+              
+              // Next button click
+              document.querySelectorAll('.next-button').forEach(button => {
+                button.addEventListener('click', function() {
+                  // Validate current step
+                  const inputs = steps[currentStep].querySelectorAll('input, select, textarea');
+                  let valid = true;
+                  
+                  inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value) {
+                      input.classList.add('border-red-500');
+                      valid = false;
+                    } else {
+                      input.classList.remove('border-red-500');
+                    }
+                  });
+                  
+                  if (!valid) return;
+                  
+                  // Show next step
+                  steps[currentStep].classList.add('hidden');
+                  currentStep++;
+                  steps[currentStep].classList.remove('hidden');
+                  
+                  // Update progress
+                  updateProgress();
+                });
+              });
+              
+              // Previous button click
+              document.querySelectorAll('.prev-button').forEach(button => {
+                button.addEventListener('click', function() {
+                  steps[currentStep].classList.add('hidden');
+                  currentStep--;
+                  steps[currentStep].classList.remove('hidden');
+                  
+                  // Update progress
+                  updateProgress();
+                });
+              });
+              
+              // Update progress indicators
+              function updateProgress() {
+                const percent = ((currentStep + 1) / steps.length) * 100;
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${percent}%`;
+                currentStepEl.textContent = currentStep + 1;
+              }
+              
+              // Form submission
+              form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const jsonData = {};
+                
+                formData.forEach((value, key) => {
+                  jsonData[key] = value;
+                });
+                
+                try {
+                  // Replace with your API Gateway URL
+                  const response = await fetch('https://your-api-gateway-url/prod/submit', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                  });
+                  
+                  const result = await response.json();
+                  
+                  if (response.ok) {
+                    // Show success message
+                    form.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                  } else {
+                    // Show error message
+                    errorMessage.classList.remove('hidden');
+                    console.error('Form submission error:', result);
+                  }
+                } catch (error) {
+                  // Show error message
+                  errorMessage.classList.remove('hidden');
+                  console.error('Form submission error:', error);
+                }
+              });
+            });
+        </script>
+         -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>

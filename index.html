@@ -576,50 +576,94 @@
             </div>
         </section>
 
-        <section class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="bg-white shadow-lg rounded-lg p-6 md:p-10">
-                <h1 class="text-2xl font-bold text-gray-900 mb-6">Project Inquiry</h1>
-                
-                <!-- Progress Bar -->
-                <div class="mb-10">
-                    <div class="relative">
-                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
-                            <div id="progress-bar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 w-1/4 transition-all duration-500"></div>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-xs font-semibold inline-block text-blue-500">Step <span id="current-step">1</span> of 4</span>
-                            <span id="progress-percent" class="text-xs font-semibold inline-block text-blue-500">25%</span>
-                        </div>
-                    </div>
-                </div>
-                
+        <section id="c-form" class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white w-full h-auto p-6 rounded-lg shadow-md">
                 <!-- Form -->
                 <form id="inquiry-form" class="space-y-6">
                     <!-- Honeypot field for spam protection -->
                     <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
                     
-                    <!-- Step 1: Basic Info -->
+                    <!-- Each step will be a separate card, similar to the projects cards, with the same animation, except this time, the animation will not be on scroll, but on the press of the next button, or the back arrow. On the close button, the cards will be swept to the left, leaving just the background. Notice that each step has it's own progress bar. We will update these as mentioned in the progress bar's classes and ids. -->
+                    <!-- Step 1: before we start, name and email -->
                     <div id="step-1" class="step">
-                        <div class="space-y-4">
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-0" class="">
+                            <div id="back">
+                                <button type="button" class="hidden prev-button justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="closed"></div>
+                                <div id="step-2" class="closed"></div>
+                                <div id="step-3" class="closed"></div>
+                                <div id="step-4" class="closed"></div>
+                            </div>
+                            <div id="close"></div>
+                        </div>
+                        <div id="card-header">
+                            <div id="header-cont">
+                                <h1 id="card-title" class="text-2xl font-bold text-gray-900 mb-6">Before we start</h1>
+                                <p id="card-subtitle" class="hidden"></p>
+                            </div>
+                            <p id="card-guide">Completing this form, you will provide basic information about you, about the business, services needed and your vision and budget for the project.</p>
+                        </div>
+                        <div id="form-inputs" class="pt-5 space-y-4">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                                <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="John Doe">
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="john.doe@example.com">
                             </div>
                         </div>
                         <div class="pt-5">
-                            <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Continue
-                            </button>
+                            <div class="w-full h-auto self-stretch flex flex-col justify-start gap-2">
+                                <p>Tip!</p>
+                                <p>You’ll be asked to share a mood board or any sources of inspiration. You can do it at a later date too, if you don’t have one right now.</p>
+                            </div>
+                            <div class="pt-5">
+                                <button type="button" class="next-button inline-flex w-full justify-center items-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <span class="font-bold">Next: </span> Contact Details
+                                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Step 2: Project Type -->
+                    <!-- Step 2: contact details -->
                     <div id="step-2" class="step hidden">
-                        <div>
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-1" class="">
+                            <div id="back">
+                                <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="open"></div>
+                                <div id="step-2" class="closed"></div>
+                                <div id="step-3" class="closed"></div>
+                                <div id="step-4" class="closed"></div>
+                            </div>
+                            <div id="close"></div>
+                        </div>
+                        <div id="card-header">
+                            <div id="header-cont">
+                                <h1 id="card-title" class="text-2xl font-bold text-gray-900 mb-6">Your Contact Details</h1>
+                                <p id="card-subtitle" class="hidden"></p>
+                            </div>
+                            <p id="card-guide">This first step collects basic information so we can contact you.</p>
+                        </div>
+                        <div id="form-inputs" class="pt-5">
+                            <!-- Here, I need the following: a simple input for Business Name and one dropdown where the users will select their social media platforms and will write their respective handle/name, with the following options: Instagram, Facebook, Tiktok, Website, Linkedin, Pinterest, Youtube, Other; with the option to add more dropdowns for more social media platforms. They could have multiple accounts of the same platform, so do not limit them to one account per platform. -->
+                            <div>
+                                <label for="business-name" class="block text-sm font-medium text-gray-700">Business Name</label>
+                                <input type="text" name="business-name" id="business-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="John Doe’s Business">
+                            </div>
                             <label for="projectType" class="block text-sm font-medium text-gray-700">What type of project are you looking for?</label>
                             <select name="projectType" id="projectType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                                 <option value="" disabled selected>Select a project type</option>
@@ -629,44 +673,148 @@
                                 <option value="other">Other (specify in description)</option>
                             </select>
                         </div>
-                        <div class="pt-5 flex justify-between">
-                            <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Back
-                            </button>
-                            <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Continue
-                            </button>
+                        <div class="pt-5">
+                            <div class="">
+                                <button type="button" class="next-button inline-flex w-full justify-center items-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <span class="font-bold">Next: </span> About Your Business
+                                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Step 3: Project Details -->
+                    <!-- Step 3: About their business -->
                     <div id="step-3" class="step hidden">
-                        <div>
-                            <label for="description" class="block text-sm font-medium text-gray-700">Project Description</label>
-                            <textarea name="description" id="description" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-2" class="">
+                            <div id="back">
+                                <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="done"></div>
+                                <div id="step-2" class="open"></div>
+                                <div id="step-3" class="closed"></div>
+                                <div id="step-4" class="closed"></div>
+                            </div>
+                            <div id="close"></div>
                         </div>
-                        <div class="pt-5 flex justify-between">
-                            <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Back
-                            </button>
-                            <button type="button" class="next-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Continue
-                            </button>
+                        <div id="card-header">
+                            <div id="header-cont">
+                                <h1 id="card-title" class="text-2xl font-bold text-gray-900 mb-6">About Your Business</h1>
+                                <p id="card-subtitle" class="hidden"></p>
+                            </div>
+                            <p id="card-guide">In this step, we focus on understanding the nature and context of your business.</p>
+                        </div>
+                        <div id="form-inputs" class="pt-5">
+                            <!-- Here, we will have 2 text areas, 1 for "Describe your business: What products or services do you offer?" and one for "What are the main challenges of your business? What aspects do you want to improve?" -->
+                            <div>
+                                <label for="business-description">Describe your business: What products or services do you offer?</label>
+                                <textarea name="business-description" id="business-description" class="w-full" rows="4" placeholder="We offer [...] products/services to [...] ... "></textarea>
+                            </div>
+                            <div>
+                                <label for="business-challenges">What are the main challenges of your business? What aspects do you want to improve?</label>
+                                <textarea name="business-challenges" id="business-challenges" class="w-full" rows="4" placeholder="We are currently facing [problem] ..."></textarea>
+                            </div>
+                        </div>
+                        <div class="pt-5">
+                            <div class="">
+                                <button type="button" class="next-button inline-flex w-full justify-center items-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <span class="font-bold">Next: </span> Project Objectives
+                                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Project objectives -->
+                    <div id="step-4" class="step hidden">
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-3" class="">
+                            <div id="back">
+                                <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="done"></div>
+                                <div id="step-2" class="done"></div>
+                                <div id="step-3" class="open"></div>
+                                <div id="step-4" class="closed"></div>
+                            </div>
+                            <div id="close"></div>
+                        </div>
+                        <div id="card-header">
+                            <div id="header-cont">
+                                <h1 id="card-title" class="text-2xl font-bold text-gray-900 mb-6">Project Objectives</h1>
+                                <p id="card-subtitle" class="hidden"></p>
+                            </div>
+                            <p id="card-guide">Here you choose which services you are interested in and clarify your objectives.</p>
+                        </div>
+                        <div id="form-inputs" class="pt-5">
+                            <!-- Here, we will have one checkbox for each service. The services will be: Web Design (when this will be checked, the Development checkbox will become available to be checked, it's initial state being disabled), Brand Strategy, Rebranding, Other (speficy below). And a text area for "What objectives do you want to achieve with this project?" -->
+                            <div class="flex flex-col gap-2 w-full">
+                                <div class="flex flex-col gap-2 w-full">
+                                    <p> for="services-checkboxes">Desired Services:<p>
+                                    <p>Select one or more options:</p>
+                                </div>
+                                <div class="flex-inlne gap-2 w-full">
+                                    <input type="checkbox" id="service-1" name="web-design" value="web-design">
+                                    <label for="web-design">Web Design</label>
+                                    <input type="checkbox" id="option-1" name="web-dev" value="web-dev">
+                                    <label for="web-dev">Development</label>
+                                </div>
+                                <input type="checkbox" id="service-2" name="brand-strategy" value="brand-strategy">
+                                <label for="brand-strategy">Brand Strategy</label>
+                                <input type="checkbox" id="service-3" name="rebranding" value="rebranding">
+                                <label for="rebranding">Rebranding</label>
+                                <input type="checkbox" id="service-4" name="other" value="other">
+                                <label for="other">Other (speficy below)</label>
+                            </div>
+                            <div>
+                                <label for="business-objectives">What objectives do you want to achieve with this project?</label>
+                                <textarea name="business-objectives" id="business-objectives" class="w-full" rows="4" placeholder="For example: increasing the number of clients, improving online presence, etc."></textarea>
+                            </div>
+                        </div>
+                        <div class="pt-5">
+                            <div class="">
+                                <button type="button" class="next-button inline-flex w-full justify-center items-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <span class="font-bold">Next: </span> Vision and Budget
+                                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Step 4: Timeline and Budget -->
-                    <div id="step-4" class="step hidden">
-                        <div class="space-y-4">
+                    <!-- Step 5: vision and Budget -->
+                    <div id="step-5" class="step hidden">
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-4" class="">
+                            <div id="back">
+                                <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="done"></div>
+                                <div id="step-2" class="done"></div>
+                                <div id="step-3" class="done"></div>
+                                <div id="step-4" class="open"></div>
+                            </div>
+                            <div id="close"></div>
+                        </div>
+                        <div id="form-inputs" class="space-y-4">
+                            <!-- Here, we will need a textarea for them to include "What is your vision for the new website/branding?", and in this textarea, they can include links, and we need to make sure these links are safe and not malicious. and below that we will have the project investment (their budget). -->
                             <div>
-                                <label for="timeline" class="block text-sm font-medium text-gray-700">Project Timeline</label>
-                                <select name="timeline" id="timeline" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                    <option value="" disabled selected>Select timeline</option>
-                                    <option value="ASAP">As soon as possible</option>
-                                    <option value="1-month">Within 1 month</option>
-                                    <option value="3-months">Within 3 months</option>
-                                    <option value="flexible">Flexible</option>
-                                </select>
+                                <label for="project-vision">What is your vision for the new website/branding?</label>
+                                <textarea name="project-vision" id="project-vision" class="w-full" rows="4" placeholder="Explain your vison and describe your perfect result of this project. You can also attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."></textarea>
                             </div>
                             <div>
                                 <label for="budget" class="block text-sm font-medium text-gray-700">Budget Range</label>
@@ -681,11 +829,45 @@
                             </div>
                         </div>
                         <div class="pt-5 flex justify-between">
-                            <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Back
-                            </button>
-                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                Submit Inquiry
+                            <div class="">
+                                <button type="button" class="next-button inline-flex w-full justify-center items-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    Complete Form 
+                                    <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: form processing and optional questions -->
+                    <div id="step-6" class="final-step hidden">
+                        <!-- Progress Bar -->
+                        <div id="progress-bar-5" class="">
+                            <div id="back">
+                                <button type="button" class="prev-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Back
+                                </button>
+                            </div>
+                            <div id="progress-bar" class="">
+                                <div id="step-1" class="done"></div>
+                                <div id="step-2" class="done"></div>
+                                <div id="step-3" class="done"></div>
+                                <div id="step-4" class="done"></div>
+                            </div>
+                            <div id="close"></div>
+                        </div>
+                        <div id="form-inputs" class="space-y-4">
+                            <!-- Here, they can answer if they want to help me understand how did they find me and why do they want to work with me. "How did you hear about me and why do you want to collaborate with me?". this will be optional and kind of hidden. They will need to click a dropdown to show this question. This will futher help me understand who is willing to work with me and put in the effort and who is not. Those who help me, will be prioritized over those who don't. -->
+                            <label for="business-challenges">How did you hear about me and why do you want to collaborate with me?</label>
+                            <textarea name="business-challenges" id="business-challenges" class="w-full" rows="4" placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"></textarea>
+                        </div>
+                        <div class="pt-5 flex justify-between">
+                            <button type="submit" class="inline-flex justify-center gap-2 py-2 px-4 shadow-sm text-sm font-medium rounded-md text-black  hover:bg-gray-100 border-2 border-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Send Form 
+                                <svg width="24" height="24" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.79999 11.1531L19.1433 12.0837M14.661 6.5C15.8461 7.77601 18.8809 10.1742 19.1931 12.2C19.3423 13.1677 17.0149 14.5902 16.4415 15.1211C15.3597 16.1227 14.1282 17.5918 12.644 17.9" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -693,19 +875,30 @@
                 
                 <!-- Success Message (Hidden by default) -->
                 <div id="success-message" class="hidden">
-                    <div class="rounded-md bg-green-50 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-green-800">Inquiry Submitted Successfully</h3>
-                                <div class="mt-2 text-sm text-green-700">
-                                    <p>Thank you for your inquiry! I've received your information and will be in touch with you shortly. A confirmation has been sent to your email.</p>
-                                </div>
-                            </div>
+                    <div class="flex-inline justify-between items-center">
+                        <div id="empty"></div>
+                        <div class="flex flex-col justify-center items-center gap-2">
+                            <h1 id="card-title" class="text-2xl font-bold text-gray-900 mb-6">Form Sent!</h1>
+                            <p id="card-subtitle" class="hidden"></p>
+                        </div>
+                        <div id="close"></div>
+                    </div>
+                    <div class="">
+                        <p>Congrats, your form was sent successfully!</p>
+                        <p>I will review it and will get back to you as soon as possible. Thank you!</p>
+                    </div>
+                    <div>
+                        <p>While you wait, check out my socials:</p>
+                        <div class="self-stretch inline-flex justify-evenly items-center">
+                            <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social 1">
+                                <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-10 h-auto">
+                            </a>
+                            <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social 2">
+                                <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-10 h-auto">
+                            </a>
+                            <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social 3">
+                                <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-10 h-auto">
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -584,9 +584,9 @@
                     <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">This form will guide you through a few simple questions to help me better understand your business and what you want to achieve. At the end, you will have a clear picture of your project, and I will receive all the information necessary to evaluate the collaboration.
                     </p>
                 </div>
-                <div class="w-full h-auto flex justify-center items-center gap-2">
-                    <div class="w-full h-auto z-10 bg-white shadow-2xl drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 mb-8 border-2 border-black">
-                        <a href="#process" class="text-black text-xl font-bold font-sans leading-5">Complete Form<span class="text-[#ff1414] text-xl font-bold font-sans leading-5">*</span></a>
+                <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
+                    <div class="w-full h-auto bg-white shadow-2xl drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 mb-8 border-2 border-black">
+                        <button id="complete-form-button" type="button" class="text-black text-xl font-bold font-sans leading-5">Complete Form<span class="text-[#ff1414] text-xl font-bold font-sans leading-5">*</span></button>
                     </div>
                     <p class="w-full justify-center text-center text-[#5a5a5a] text-sm font-light font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
                 </div>
@@ -602,7 +602,7 @@
                     <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
                     
                     <!-- Step 1: Before we start, name and email -->
-                    <div id="step-1" class="step p-8">
+                    <div id="step-1" class="step p-8 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (hidden on first step) -->
@@ -685,7 +685,7 @@
                     </div>
                 
                     <!-- Step 2: Contact Details -->
-                    <div id="step-2" class="step p-8 hidden">
+                    <div id="step-2" class="step p-8 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (visible on second step) -->
@@ -770,7 +770,7 @@
                     </div>
                     
                     <!-- Step 3: About Your Business -->
-                    <div id="step-3" class="step p-8 hidden">
+                    <div id="step-3" class="step p-8 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -895,7 +895,7 @@
                     </div>
 
                     <!-- Step 4: Project Objectives -->
-                    <div id="step-4" class="step p-8 hidden">
+                    <div id="step-4" class="step p-8 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1076,7 +1076,7 @@
                     </div>
                     
                     <!-- Step 5: Vision and Budget -->
-                    <div id="step-5" class="step p-8 hidden">
+                    <div id="step-5" class="step p-8 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1244,7 +1244,7 @@
                     </div>
 
                     <!-- Step 6: Form Completed -->
-                    <div id="step-6" class="step p-8 hidden">
+                    <div id="step-6" class="step p-8 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1358,7 +1358,7 @@
                     </div>
                     
                     <!-- Success Message (Hidden by default) -->
-                    <div id="success-message" class="hidden p-8">
+                    <div id="success-message" class="hidden p-8 bg-white">
                         <div class="flex justify-between items-center mb-6">
                             <div></div>
                             <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
@@ -1387,7 +1387,7 @@
                     </div>
                     
                     <!-- Error Message (Hidden by default) -->
-                    <div id="error-message" class="hidden p-8">
+                    <div id="error-message" class="hidden p-8 bg-white">
                         <div class="rounded-md bg-red-50 p-6 mb-6">
                             <div class="flex">
                                 <div class="flex-shrink-0">

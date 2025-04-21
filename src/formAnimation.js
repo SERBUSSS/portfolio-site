@@ -1,5 +1,4 @@
-// Form animation script - derived from cardScrollType1.js
-// but adapted for form steps and button navigation
+// Enhanced form animation script
 document.addEventListener('DOMContentLoaded', function() {
     // Make sure GSAP is available
     if (typeof gsap === 'undefined') {
@@ -15,53 +14,162 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Get form elements
+    const formSection = document.getElementById('c-form');
     const formContainer = document.querySelector('#c-form .bg-white');
     const formSteps = document.querySelectorAll('#inquiry-form .step');
     const successMessage = document.getElementById('success-message');
     const errorMessage = document.getElementById('error-message');
+    const completeFormButton = document.getElementById('complete-form-button');
+    const startProjectButton = document.getElementById('start-project-button');
     
-    // Set up background animation if a background element exists
-    setupFormBackground();
+    // Create an array to store the completed steps
+    let completedSteps = [];
+    const stepsStack = [];
     
-    // Initialize form card animations
-    initializeFormCards();
+    // Hide the form section initially
+    if (formSection) {
+      gsap.set(formSection, { 
+        autoAlpha: 0,
+        display: 'none'
+      });
+    }
     
-    /**
-     * Set up the form background animation
-     */
-    function setupFormBackground() {
-      const backgroundElement = document.getElementById('background-form');
-      
-      if (backgroundElement && formContainer) {
-        // Style the background element
-        gsap.set(backgroundElement, {
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          top: 0,
-          left: 0,
-          zIndex: -1,
-          opacity: 0.8
-        });
-        
-        // Create a subtle parallax effect on the background
-        gsap.to(backgroundElement, {
-          y: '10%',
-          scrollTrigger: {
-            trigger: '#c-form',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
+    // Add event listener to the "Complete Form" button
+    if (completeFormButton) {
+      completeFormButton.addEventListener('click', function() {
+        showFormWithAnimation();
+      });
+    }
+    
+    // Add event listener to the "Start a Project" button
+    if (startProjectButton) {
+      startProjectButton.addEventListener('click', function() {
+        // Scroll to the background-form section
+        const backgroundFormSection = document.getElementById('background-form');
+        if (backgroundFormSection) {
+          backgroundFormSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+    
+    // Connect all "start project" buttons throughout the page to navigate to the form
+    document.querySelectorAll('a[href="#process"]').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const backgroundFormSection = document.getElementById('background-form');
+        if (backgroundFormSection) {
+          backgroundFormSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // Find buttons with "start project" text
+    document.querySelectorAll('button').forEach(button => {
+      if (button.textContent.toLowerCase().includes('start project') && button.id !== 'start-project-button') {
+        button.addEventListener('click', function() {
+          const backgroundFormSection = document.getElementById('background-form');
+          if (backgroundFormSection) {
+            backgroundFormSection.scrollIntoView({ behavior: 'smooth' });
           }
         });
       }
+    });
+    
+    /**
+     * Show the form with an entrance animation
+     */
+    function showFormWithAnimation() {
+      if (!formSection || !formContainer) return;
+      
+      // Position the form directly over the background form
+      const backgroundFormSection = document.getElementById('background-form');
+      if (backgroundFormSection) {
+        // Set form position to overlay the background
+        gsap.set(formSection, { 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100vh',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          autoAlpha: 0,
+          overflow: 'hidden'
+        });
+      }
+      
+      // First make the form section visible but transparent
+      gsap.set(formSection, { 
+        display: 'flex', 
+        autoAlpha: 0 
+      });
+      
+      // Position the form container in the center of the screen
+      gsap.set(formContainer, {
+        position: 'relative',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        margin: 'auto'
+      });
+      
+      // Create a timeline for the entrance animation
+      const tl = gsap.timeline({
+        onComplete: function() {
+          // Initialize the form steps after the container is visible
+          initializeFormSteps();
+        }
+      });
+      
+      // Fade in the form section
+      tl.to(formSection, {
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: 'power2.inOut'
+      });
+      
+      // Animate the form container from the right
+      tl.fromTo(formContainer, 
+        { 
+          x: '100%',
+          opacity: 0,
+          scale: 0.9
+        }, 
+        { 
+          x: '0%',
+          opacity: 1,
+          scale: 1,
+          duration: 0.7,
+          ease: 'back.out(1.2)'
+        }
+      );
     }
     
     /**
-     * Initialize the form card animations
+     * Initialize the form steps and their animations
      */
-    function initializeFormCards() {
+    function initializeFormSteps() {
       if (!formSteps.length) return;
+      
+      // Create div for stacked cards
+      const stackContainer = document.createElement('div');
+      stackContainer.className = 'stack-container';
+      stackContainer.style.position = 'absolute';
+      stackContainer.style.top = '50%';
+      stackContainer.style.transform = 'translate(-50%, -50%)';
+      stackContainer.style.width = '100%';
+      stackContainer.style.height = '100%';
+      stackContainer.style.pointerEvents = 'none';
+      stackContainer.style.zIndex = '1';
+      
+      if (formContainer) {
+        formContainer.style.position = 'relative';
+        formContainer.style.backgroundColor = 'white';
+        formContainer.style.borderRadius = '10px';
+        formContainer.appendChild(stackContainer);
+      }
       
       // Set initial states for form steps
       formSteps.forEach((step, index) => {
@@ -69,19 +177,26 @@ document.addEventListener('DOMContentLoaded', function() {
           // First step is visible initially
           gsap.set(step, { 
             opacity: 1,
+            x: 0,
             y: 0,
             scale: 1,
             rotation: 0,
-            transformOrigin: 'center center'
+            transformOrigin: 'center center',
+            position: 'relative',
+            zIndex: 20,
+            display: 'block'
           });
         } else {
-          // Hide other steps initially
+          // Hide other steps initially and position them off-screen to the right
           gsap.set(step, { 
             opacity: 0,
-            y: 80,
-            scale: 0.95,
+            x: '100%',
+            scale: 0.9,
             rotation: 0,
-            transformOrigin: 'center center'
+            transformOrigin: 'center center',
+            display: 'none',
+            position: 'relative',
+            zIndex: 20 - index
           });
         }
       });
@@ -99,10 +214,21 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
           const currentStep = this.closest('.step');
           const currentIndex = Array.from(formSteps).indexOf(currentStep);
-          const nextIndex = currentIndex + 1;
           
-          if (nextIndex < formSteps.length) {
-            animateStepTransition(currentIndex, nextIndex);
+          // Use the validateStep function from formFunctionality.js
+          if (window.validateStep && typeof window.validateStep === 'function') {
+            if (window.validateStep(currentIndex)) {
+              const nextIndex = currentIndex + 1;
+              if (nextIndex < formSteps.length) {
+                animateStepTransition(currentIndex, nextIndex);
+              }
+            }
+          } else {
+            // Fallback if validateStep is not available
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < formSteps.length) {
+              animateStepTransition(currentIndex, nextIndex);
+            }
           }
         });
       });
@@ -137,9 +263,15 @@ document.addEventListener('DOMContentLoaded', function() {
           // Prevent the default form submission
           e.preventDefault();
           
-          // Get the current visible step
+          // Use the validateStep function for the final step
           const currentStep = Array.from(formSteps).find(step => !step.classList.contains('hidden'));
-          if (!currentStep) return;
+          const currentIndex = Array.from(formSteps).indexOf(currentStep);
+          
+          if (window.validateStep && typeof window.validateStep === 'function') {
+            if (!window.validateStep(currentIndex)) {
+              return;
+            }
+          }
           
           // Get form data for submission
           const formData = new FormData(form);
@@ -159,23 +291,94 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
+     * Create a clone of the step to be added to the stack
+     */
+    function addStepToStack(step, index) {
+      const stackContainer = document.querySelector('.stack-container');
+      if (!stackContainer) return;
+      
+      // Create a clone of the step
+      const stepClone = step.cloneNode(true);
+      stepClone.classList.add('stack-card');
+      stepClone.style.position = 'absolute';
+      stepClone.style.top = '50%';
+      stepClone.style.left = '50%';
+      stepClone.style.transform = 'translate(-50%, -50%)';
+      stepClone.style.width = '100%';
+      stepClone.style.height = 'auto';
+      stepClone.style.pointerEvents = 'none';
+      stepClone.style.zIndex = 10 - stepsStack.length;
+      stepClone.style.backgroundColor = 'white';
+      stepClone.style.borderRadius = '10px';
+      
+      // Remove any event listeners by replacing form elements
+      const formElements = stepClone.querySelectorAll('input, textarea, button, select');
+      formElements.forEach(el => {
+        el.disabled = true;
+        el.tabIndex = -1;
+      });
+      
+      // Apply alternating rotation and offset
+      const rotation = stepsStack.length % 2 === 0 ? -5 : 5;
+      const offsetX = stepsStack.length % 2 === 0 ? -5 : 5;
+      const offsetY = 10 + (stepsStack.length * 5);
+      
+      gsap.set(stepClone, {
+        y: offsetY,
+        x: offsetX,
+        rotation: rotation,
+        scale: 0.95 - (stepsStack.length * 0.03),
+        opacity: 1,
+        transformOrigin: 'center center'
+      });
+      
+      // Add to the stack container
+      stackContainer.appendChild(stepClone);
+      
+      // Add to our tracking array
+      stepsStack.push({
+        element: stepClone,
+        index: index
+      });
+      
+      return stepClone;
+    }
+    
+    /**
      * Animate transition between steps
      */
     function animateStepTransition(currentIndex, targetIndex, isPrevious = false) {
       const currentStep = formSteps[currentIndex];
       const targetStep = formSteps[targetIndex];
       
-      // Direction of animation
-      const direction = isPrevious ? -1 : 1;
-      
-      // Initial state for target step
-      gsap.set(targetStep, {
-        opacity: 0,
-        y: 50 * direction,
-        scale: 0.95,
-        rotation: 0,
-        display: 'block'
-      });
+      if (!isPrevious) {
+        // Going forward - add the current step to the stack
+        completedSteps.push(currentIndex);
+      } else {
+        // Going backward - remove the target step from completed list
+        const index = completedSteps.indexOf(targetIndex);
+        if (index > -1) {
+          completedSteps.splice(index, 1);
+        }
+        
+        // Remove the last card from the stack
+        if (stepsStack.length > 0) {
+          const lastStackItem = stepsStack.pop();
+          if (lastStackItem && lastStackItem.element) {
+            gsap.to(lastStackItem.element, {
+              x: '100%',
+              opacity: 0,
+              duration: 0.4,
+              ease: 'power2.inOut',
+              onComplete: function() {
+                if (lastStackItem.element.parentNode) {
+                  lastStackItem.element.parentNode.removeChild(lastStackItem.element);
+                }
+              }
+            });
+          }
+        }
+      }
       
       // Timeline for the transition
       const tl = gsap.timeline({
@@ -189,23 +392,71 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       
-      // Animate current step out
-      tl.to(currentStep, {
-        opacity: 0,
-        y: -50 * direction,
-        scale: 0.95,
-        duration: 0.4,
-        ease: 'power2.inOut'
-      });
-      
-      // Animate target step in
-      tl.to(targetStep, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.4,
-        ease: 'power2.inOut'
-      }, '-=0.2'); // Slight overlap for smoother transition
+      if (isPrevious) {
+        // Going back to previous step
+        
+        // Make target step visible but with starting animation values
+        gsap.set(targetStep, {
+          display: 'block',
+          opacity: 0,
+          x: '100%',
+          rotation: 0,
+          scale: 0.9,
+          zIndex: 20
+        });
+        
+        // Animate current step out to the right
+        tl.to(currentStep, {
+          x: '100%',
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.inOut'
+        });
+        
+        // Animate previous step in from the right
+        tl.to(targetStep, {
+          opacity: 1,
+          x: '0%',
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.2)'
+        }, '-=0.3'); // Slight overlap for smoother transition
+        
+      } else {
+        // Going forward to next step
+        
+        // Save current position data
+        const currentRect = currentStep.getBoundingClientRect();
+        
+        // Create a clone to add to the stack
+        const stepClone = addStepToStack(currentStep, currentIndex);
+        
+        // Make target step visible but off screen to the right
+        gsap.set(targetStep, {
+          display: 'block',
+          opacity: 0,
+          x: '100%',
+          y: 0,
+          rotation: 0,
+          scale: 0.9,
+          zIndex: 20
+        });
+        
+        // Hide the current step immediately after it's cloned
+        gsap.set(currentStep, {
+          opacity: 0,
+          display: 'none'
+        });
+        
+        // Animate next step in from the right
+        tl.to(targetStep, {
+          x: '0%',
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.2)'
+        });
+      }
     }
     
     /**
@@ -214,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function animateFormClose() {
       const visibleStep = Array.from(formSteps).find(step => !step.classList.contains('hidden'));
       
-      if (!visibleStep || !formContainer) return;
+      if (!visibleStep || !formContainer || !formSection) return;
       
       // Timeline for closing animation
       const tl = gsap.timeline({
@@ -223,25 +474,51 @@ document.addEventListener('DOMContentLoaded', function() {
           const form = document.getElementById('inquiry-form');
           if (form) form.reset();
           
-          // Hide the form container
-          formContainer.classList.add('hidden');
+          // Clear the stack
+          const stackContainer = document.querySelector('.stack-container');
+          if (stackContainer) {
+            stackContainer.innerHTML = '';
+          }
+          stepsStack.length = 0;
+          completedSteps.length = 0;
+          
+          // Hide the form container and section
+          formSection.style.display = 'none';
         }
       });
       
       // Animate the visible step away
       tl.to(visibleStep, {
-        opacity: 0,
         x: '100%',
-        duration: 0.5,
+        opacity: 0,
+        duration: 0.4,
         ease: 'power2.inOut'
       });
+      
+      // Animate the stacked cards
+      const stackCards = document.querySelectorAll('.stack-card');
+      if (stackCards.length) {
+        tl.to(stackCards, {
+          x: '-100%',
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.3,
+          ease: 'power2.inOut'
+        }, '-=0.2');
+      }
       
       // Animate the form container
       tl.to(formContainer, {
         opacity: 0,
         scale: 0.9,
-        duration: 0.3
-      }, '-=0.3');
+        duration: 0.4
+      }, '-=0.2');
+      
+      // Fade out the entire form section
+      tl.to(formSection, {
+        autoAlpha: 0,
+        duration: 0.4
+      }, '-=0.2');
     }
     
     /**
@@ -300,13 +577,24 @@ document.addEventListener('DOMContentLoaded', function() {
       // Timeline for success animation
       const tl = gsap.timeline();
       
+      // Animate the stacked cards
+      const stackCards = document.querySelectorAll('.stack-card');
+      if (stackCards.length) {
+        tl.to(stackCards, {
+          x: '-100%',
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.3,
+          ease: 'power2.inOut'
+        });
+      }
+      
       // Animate current step out
       tl.to(visibleStep, {
+        x: '100%',
         opacity: 0,
-        y: -30,
-        scale: 0.95,
-        duration: 0.4
-      });
+        duration: 0.5
+      }, '-=0.2');
       
       // Show success message
       tl.add(() => {
@@ -328,8 +616,20 @@ document.addEventListener('DOMContentLoaded', function() {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.5,
+        duration: 0.6,
         ease: 'back.out(1.2)'
+      });
+      
+      // Add a celebratory effect
+      tl.add(() => {
+        // Create a subtle bounce effect on the success message
+        gsap.to(successMessage, {
+          y: '-10px',
+          duration: 0.3,
+          repeat: 1,
+          yoyo: true,
+          ease: 'power2.inOut'
+        });
       });
     }
     
@@ -386,4 +686,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
     }
-});
+    
+    // Make validateStep accessible from this script
+    if (window.validateStep) {
+      console.log('Form validation function detected');
+    } else {
+      console.warn('Form validation function not found. Proceeding without validation.');
+      
+      // Create a simple validation function as fallback
+      window.validateStep = function(stepIndex) {
+        const currentStepElement = formSteps[stepIndex];
+        const requiredInputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        let isValid = true;
+        
+        requiredInputs.forEach(input => {
+          if (!input.value.trim()) {
+            isValid = false;
+            input.classList.add('border-red-500');
+          } else {
+            input.classList.remove('border-red-500');
+          }
+        });
+        
+        return isValid;
+      };
+    }
+  });

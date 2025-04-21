@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
     const data = JSON.parse(event.body);
     
     // Basic validation
-    if (!data.name || !data.email || !data.description) {
+    if (!data.fullName || !data.email) {
       return {
         statusCode: 400,
         headers,
@@ -56,19 +56,24 @@ exports.handler = async (event, context) => {
     // Format the email content
     const formattedDetails = `
       <h2>Project Inquiry Details</h2>
-      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Name:</strong> ${data.fullName}</p>
       <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Project Type:</strong> ${data.projectType || 'Not specified'}</p>
-      <p><strong>Description:</strong> ${data.description}</p>
-      <p><strong>Timeline:</strong> ${data.timeline || 'Not specified'}</p>
+      <p><strong>Business Name:</strong> ${data.businessName || 'Not specified'}</p>
+      <p><strong>Social Media:</strong> ${data.instagramProfile || 'Not specified'}</p>
+      <p><strong>Business Description:</strong> ${data.businessDescription || 'Not specified'}</p>
+      <p><strong>Business Challenges:</strong> ${data.businessChallenges || 'Not specified'}</p>
+      <p><strong>Services Requested:</strong> ${data.services || 'Not specified'}</p>
+      <p><strong>Project Objectives:</strong> ${data.projectObjectives || 'Not specified'}</p>
+      <p><strong>Project Vision:</strong> ${data.projectVision || 'Not specified'}</p>
       <p><strong>Budget Range:</strong> ${data.budget || 'Not specified'}</p>
+      <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
     
     // Email to you
     const emailToYou = {
-      to: 's1.bustiuc@gmail.com', // Replace with your email
+      to: 's1.bustiuc@gmail.com', // Your email
       from: 'sergiu@bustiuc.digital', // Must be verified in SendGrid
-      subject: `New Project Inquiry from ${data.name}`,
+      subject: `New Project Inquiry from ${data.fullName}`,
       html: `
         <h1>New Project Inquiry</h1>
         ${formattedDetails}
@@ -82,7 +87,7 @@ exports.handler = async (event, context) => {
       subject: 'Thank you for your project inquiry!',
       html: `
         <h1>Thank You for Your Project Inquiry</h1>
-        <p>Hello ${data.name},</p>
+        <p>Hello ${data.fullName},</p>
         <p>I've received your project inquiry and will review it shortly. 
            I'll be in touch within 2 business days to discuss the next steps.</p>
         
@@ -91,8 +96,8 @@ exports.handler = async (event, context) => {
         ${formattedDetails}
         
         <p>Best regards,</p>
-        <p>Your Name</p>
-        <p>Your Website</p>
+        <p>Sergiu Buștiuc</p>
+        <p><a href="https://bustiuc.digital">bustiuc.digital</a></p>
       `
     };
     

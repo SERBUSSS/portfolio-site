@@ -51,6 +51,7 @@
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
     --drop-shadow-xs: 0 1px 1px rgb(0 0 0 / 0.05);
+    --animate-spin: spin 1s linear infinite;
     --blur-sm: 8px;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -244,6 +245,9 @@
   .left-1\/2 {
     left: calc(1/2 * 100%);
   }
+  .-z-10 {
+    z-index: calc(10 * -1);
+  }
   .z-0 {
     z-index: 0;
   }
@@ -312,6 +316,9 @@
   }
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
+  }
+  .-ml-1 {
+    margin-left: calc(var(--spacing) * -1);
   }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
@@ -452,6 +459,9 @@
   }
   .transform {
     transform: var(--tw-rotate-x) var(--tw-rotate-y) var(--tw-rotate-z) var(--tw-skew-x) var(--tw-skew-y);
+  }
+  .animate-spin {
+    animation: var(--animate-spin);
   }
   .cursor-not-allowed {
     cursor: not-allowed;
@@ -785,6 +795,9 @@
   .text-red-400 {
     color: var(--color-red-400);
   }
+  .text-red-500 {
+    color: var(--color-red-500);
+  }
   .text-red-700 {
     color: var(--color-red-700);
   }
@@ -800,8 +813,14 @@
   .opacity-0 {
     opacity: 0%;
   }
+  .opacity-25 {
+    opacity: 25%;
+  }
   .opacity-40 {
     opacity: 40%;
+  }
+  .opacity-75 {
+    opacity: 75%;
   }
   .shadow-2xl {
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
@@ -1215,4 +1234,9 @@
 @property --tw-backdrop-sepia {
   syntax: "*";
   inherits: false;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -104,3 +104,42 @@
       transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 }
+
+body.form-active {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.card-enter-active {
+    transition: all 0.5s ease;
+}
+
+.card-enter {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.card-enter-to {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.card-leave-active {
+    transition: all 0.5s ease;
+}
+
+.card-leave {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.card-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.form-overlay-active {
+    backdrop-filter: blur(5px);
+}

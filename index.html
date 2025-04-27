@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="src/cardScroll.css">
     </head>
     <body>
+        <div id="form-overlay" class="fixed inset-0 bg-white opacity-0 z-40 hidden"></div>
         <header id="nav-bar-cont" class="w-full h-auto flex absolute top-0 left-0">
             <div id="nav-bar" class="w-full inline-flex items-center justify-between p-4 pt-10 pb-4">
                 <div class="basis-1/3">
@@ -586,7 +587,7 @@
                 </div>
                 <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
                     <div class="w-full h-auto bg-white shadow-2xl drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 mb-8 border-2 border-black">
-                        <button id="complete-form-button" type="button" class="text-black text-xl font-bold font-sans leading-5">Complete Form<span class="text-[#ff1414] text-xl font-bold font-sans leading-5">*</span></button>
+                        <button data-open-form="true" id="complete-form-button" type="button" class="text-black text-xl font-bold font-sans leading-5">Complete Form<span class="text-[#ff1414] text-xl font-bold font-sans leading-5">*</span></button>
                     </div>
                     <p class="w-full justify-center text-center text-[#5a5a5a] text-sm font-light font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
                 </div>
@@ -594,15 +595,15 @@
         </section>
 
         <!-- Form Section with updated progress indicators, step structure, and textarea handling -->
-        <section id="c-form" class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative">
-            <div class="bg-white w-full h-auto p-6 rounded-lg shadow-md">
+        <section id="c-form" class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-50">
+            <div id="form-container" class="bg-white w-full h-auto p-6 rounded-lg shadow-md">
                 <!-- Form -->
-                <form id="inquiry-form" class="space-y-6">
+                <form id="inquiry-form" class="space-y-6" aria-live="polite">
                     <!-- Honeypot field for spam protection -->
                     <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
                     
                     <!-- Step 1: Before we start, name and email -->
-                    <div id="step-1" class="step p-8 bg-white">
+                    <div id="step-1" class="step bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (hidden on first step) -->
@@ -685,7 +686,7 @@
                     </div>
                 
                     <!-- Step 2: Contact Details -->
-                    <div id="step-2" class="step p-8 hidden bg-white">
+                    <div id="step-2" class="step hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (visible on second step) -->
@@ -732,27 +733,23 @@
                                 >
                             </div>
                             
-                            <div>
-                                <label for="socialMedia" class="block text-xl font-medium text-gray-900 mb-2">Link to Website or Social Media Profiles:</label>
-                                <div class="space-y-2 social-media-fields">
-                                    <div class="social-media-field">
-                                        <div class="flex rounded-xl border border-gray-300 overflow-hidden">
-                                            <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
-                                                <span class="flex items-center">
-                                                    <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                                    </svg>
-                                                    Instagram:
-                                                </span>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                name="instagramProfile" 
-                                                class="flex-grow px-4 py-3 bg-white" 
-                                                placeholder="e.g. @johndoe"
-                                            >
-                                        </div>
+                            <div class="social-media-field">
+                                <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+                                    <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
+                                        <select name="social-media-type" class="bg-gray-100 border-none focus:ring-0">
+                                            <option value="instagram">Instagram</option>
+                                            <option value="facebook">Facebook</option>
+                                            <option value="twitter">Twitter</option>
+                                            <option value="linkedin">LinkedIn</option>
+                                            <option value="website">Website</option>
+                                        </select>
                                     </div>
+                                    <input 
+                                        type="text" 
+                                        name="social-media-profile" 
+                                        class="flex-grow px-4 py-3 bg-white" 
+                                        placeholder="e.g. @username or website URL"
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -770,7 +767,7 @@
                     </div>
                     
                     <!-- Step 3: About Your Business -->
-                    <div id="step-3" class="step p-8 hidden bg-white">
+                    <div id="step-3" class="step hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -895,7 +892,7 @@
                     </div>
 
                     <!-- Step 4: Project Objectives -->
-                    <div id="step-4" class="step p-8 hidden bg-white">
+                    <div id="step-4" class="step hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1076,7 +1073,7 @@
                     </div>
                     
                     <!-- Step 5: Vision and Budget -->
-                    <div id="step-5" class="step p-8 hidden bg-white">
+                    <div id="step-5" class="step hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1244,7 +1241,7 @@
                     </div>
 
                     <!-- Step 6: Form Completed -->
-                    <div id="step-6" class="step p-8 hidden bg-white">
+                    <div id="step-6" class="step hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1321,7 +1318,6 @@
                                         name="projectVision" 
                                         id="projectVision" 
                                         rows="6"
-                                        required 
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
@@ -1358,7 +1354,7 @@
                     </div>
                     
                     <!-- Success Message (Hidden by default) -->
-                    <div id="success-message" class="hidden p-8 bg-white">
+                    <div id="success-message" class="hidden bg-white">
                         <div class="flex justify-between items-center mb-6">
                             <div></div>
                             <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
@@ -1387,7 +1383,7 @@
                     </div>
                     
                     <!-- Error Message (Hidden by default) -->
-                    <div id="error-message" class="hidden p-8 bg-white">
+                    <div id="error-message" class="hidden bg-white">
                         <div class="rounded-md bg-red-50 p-6 mb-6">
                             <div class="flex">
                                 <div class="flex-shrink-0">
@@ -1427,6 +1423,6 @@
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
         <script type="module" src="src/formFunctionality.js" defer></script>
-        <script type="module" src="src/formAnimation.js" defer></script>
+        <!-- <script type="module" src="src/formAnimation.js" defer></script> -->
     </body>
 </html>

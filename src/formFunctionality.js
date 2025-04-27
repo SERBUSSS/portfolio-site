@@ -1,42 +1,16 @@
-// formCardSystem.js - Main form functionality and animations for multi-step form cards
+// formFunctionality.js - Handles the form validation, data collection, and submission
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if GSAP is available
-  if (typeof gsap === 'undefined') {
-      console.warn('GSAP not found. Animations will be disabled.');
-      return;
-  }
-  
-  // Register GSAP plugins if needed
-  if (gsap.registerPlugin && typeof ScrollTrigger !== 'undefined') {
-      gsap.registerPlugin(ScrollTrigger);
-  }
-  
   // Form elements
-  const formContainer = document.querySelector('#c-form .bg-white');
-  const formBackground = document.getElementById('background-form');
   const form = document.getElementById('inquiry-form');
   const steps = document.querySelectorAll('#inquiry-form .step');
-  const successMessage = document.getElementById('success-message');
-  const errorMessage = document.getElementById('error-message');
   
-  // State management
-  let currentStep = 0;
-  const totalSteps = steps.length;
-  let isFormVisible = false;
-  
-  // Initialize the form system
+  // Initialize the form functionality
   initializeForm();
   
   /**
    * Main Form Initialization
    */
   function initializeForm() {
-      // Set up initial card states
-      setupCardStates();
-      
-      // Initialize form backgrounds
-      setupFormBackground();
-      
       // Initialize special interactions for textareas
       initializeTextareas();
       
@@ -49,68 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Initialize optional question toggle
       initializeOptionalQuestion();
       
-      // Initialize navigation buttons
-      initializeNavigation();
-      
       // Initialize form submission
       initializeFormSubmission();
-      
-      // Set up trigger buttons across the site
-      setupTriggerButtons();
-  }
-  
-  /**
-   * Set up initial card animation states
-   */
-  function setupCardStates() {
-      // Initially hide all cards except the first one
-      steps.forEach((step, index) => {
-          if (index === 0) {
-              gsap.set(step, { 
-                  opacity: 0,
-                  x: '100%',
-                  scale: 1,
-                  rotation: 0
-              });
-          } else {
-              gsap.set(step, { 
-                  opacity: 0,
-                  x: '100%',
-                  scale: 1,
-                  rotation: 0,
-                  display: 'none'
-              });
-          }
-      });
-      
-      // Also set up success and error messages
-      if (successMessage) {
-          gsap.set(successMessage, { opacity: 0, display: 'none' });
-      }
-      if (errorMessage) {
-          gsap.set(errorMessage, { opacity: 0, display: 'none' });
-      }
-  }
-  
-  /**
-   * Set up form background and overlay
-   */
-  function setupFormBackground() {
-      if (formBackground) {
-          gsap.set(formBackground, {
-              opacity: 0.8,
-              filter: 'blur(0px)'
-          });
-      }
-      
-      // Set up form container
-      if (formContainer) {
-          gsap.set(formContainer, {
-              opacity: 0,
-              scale: 0.9,
-              display: 'none'
-          });
-      }
   }
   
   /**
@@ -178,19 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
               }
           });
-      });
-      
-      // Initialize questions that might already have answers
-      document.querySelectorAll('.textarea-container textarea').forEach(textarea => {
-          if (textarea.value.trim()) {
-              const questionContainer = textarea.closest('.question-container');
-              if (!questionContainer) return;
-              
-              const statusElement = questionContainer.querySelector('.question-status');
-              if (statusElement) {
-                  statusElement.classList.remove('hidden');
-              }
-          }
       });
   }
   
@@ -348,293 +249,115 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   /**
-   * Handle navigation between form steps
+   * Handle validation and form submission
    */
-  function initializeNavigation() {
-      // Handle "Next" button clicks
+  function initializeFormSubmission() {
+      if (!form) return;
+      
+      // Handle next buttons with validation
       document.querySelectorAll('.next-button').forEach(button => {
           button.addEventListener('click', function() {
-              // Validate current step before proceeding
+              const currentStep = window.formCardAnimations ? window.formCardAnimations.getCurrentStep() : 0;
+              
+              // Validate before allowing animation
               if (validateStep(currentStep)) {
-                  animateToNextStep();
+                  // Animation is handled by formCardAnimation.js
+              } else {
+                  // Don't proceed if validation fails
+                  event.stopPropagation();
               }
           });
       });
       
-      // Handle "Previous" button clicks
-      document.querySelectorAll('.prev-button').forEach(button => {
-          button.addEventListener('click', function() {
-              animateToPreviousStep();
-          });
-      });
-      
-      // Close button functionality
-      document.querySelectorAll('.close-button').forEach(button => {
-          button.addEventListener('click', function() {
-              // Here you might want to add a confirmation dialog
-              if (confirm('Are you sure you want to close the form? Your progress will be lost.')) {
-                  animateFormClose();
+      // Form submission
+      form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const currentStep = window.formCardAnimations ? window.formCardAnimations.getCurrentStep() : 0;
+          if (!validateStep(currentStep)) return;
+          
+          // Show loading state
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (!submitButton) return;
+          
+          const originalText = submitButton.innerHTML;
+          submitButton.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Submitting...</span>';
+          submitButton.disabled = true;
+          
+          // Collect form data
+          const formData = new FormData(form);
+          const formObject = {};
+          
+          formData.forEach((value, key) => {
+              // Skip editing-view textareas
+              if (!key.includes('-editing')) {
+                  formObject[key] = value;
               }
           });
-      });
-  }
-  
-  /**
-   * Set up the form opening trigger buttons across the site
-   */
-  function setupTriggerButtons() {
-      // Set up trigger buttons (buttons that open the form)
-      document.querySelectorAll('a[href="#process"], button[data-open-form]').forEach(button => {
-          button.addEventListener('click', function(e) {
-              // Prevent default anchor behavior
-              e.preventDefault();
-              
-              // Show form
-              showForm();
+          
+          // Handle custom budget field
+          if (formObject.budget === 'custom') {
+              formObject.budget = formObject.customBudget || 'Custom (not specified)';
+          }
+          
+          // Format services as a comma-separated list
+          const selectedServices = [];
+          document.querySelectorAll('input[name="services"]:checked').forEach(checkbox => {
+              selectedServices.push(checkbox.value);
           });
-      });
-  }
-  
-  /**
-   * Animate and show the form
-   */
-  function showForm() {
-      if (isFormVisible) return;
-      isFormVisible = true;
-      
-      // Prevent background scrolling
-      document.body.style.overflow = 'hidden';
-      
-      // Make form container visible
-      formContainer.style.display = 'block';
-      
-      // Animate the background
-      gsap.to(formBackground, {
-          opacity: 0.8,
-          filter: 'blur(5px)',
-          duration: 0.5
-      });
-      
-      // Animate the form container
-      gsap.to(formContainer, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.5,
-          ease: 'power1.out'
-      });
-      
-      // Reset to first step if needed
-      currentStep = 0;
-      updateProgressIndicators();
-      
-      // Animate the first card coming in from the right
-      steps[0].style.display = 'block';
-      gsap.fromTo(steps[0], 
-          { opacity: 0, x: '100%', scale: 1, rotation: 0 },
-          { opacity: 1, x: '0%', scale: 1, rotation: 0, duration: 0.5, ease: 'power2.out' }
-      );
-  }
-  
-  /**
-   * Animate and close the form
-   */
-  function animateFormClose() {
-      if (!isFormVisible) return;
-      isFormVisible = false;
-      
-      // Allow background scrolling again
-      document.body.style.overflow = '';
-      
-      // Animate the current step out to the left
-      gsap.to(steps[currentStep], {
-          x: '-100%',
-          opacity: 0,
-          duration: 0.5,
-          ease: 'power2.in'
-      });
-      
-      // Animate the container and background
-      gsap.to(formContainer, {
-          opacity: 0,
-          scale: 0.9,
-          duration: 0.5,
-          onComplete: function() {
-              // Reset form state
-              form.reset();
-              formContainer.style.display = 'none';
+          formObject.services = selectedServices.join(', ');
+          
+          // URL validation for project vision
+          const visionTextarea = document.getElementById('projectVision');
+          if (visionTextarea) {
+              visionTextarea.value = validateAndSanitizeUrls(visionTextarea.value);
+          }
+          
+          // Submit data to Netlify function
+          try {
+              const response = await fetch('/.netlify/functions/submit-form', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(formObject)
+              });
               
-              // Reset all steps to initial state
-              steps.forEach((step, index) => {
-                  if (index === 0) {
-                      gsap.set(step, { 
-                          opacity: 0,
-                          x: '100%',
-                          scale: 1,
-                          rotation: 0
-                      });
-                  } else {
-                      step.style.display = 'none';
-                      gsap.set(step, { 
-                          opacity: 0,
-                          x: '100%',
-                          scale: 1,
-                          rotation: 0
-                      });
+              const result = await response.json();
+              
+              if (response.ok) {
+                  // Show success message via animation system
+                  if (window.formCardAnimations) {
+                      window.formCardAnimations.animateSuccessState();
                   }
-              });
-              
-              // Reset textareas
-              document.querySelectorAll('.question-status').forEach(status => {
-                  status.classList.add('hidden');
-              });
-              
-              // Reset all editing views
-              document.querySelectorAll('.editing-view').forEach(view => {
-                  view.classList.add('hidden');
-              });
-              
-              document.querySelectorAll('.textarea-container').forEach(container => {
-                  container.classList.remove('hidden');
-              });
-              
-              // Reset checkboxes
-              document.querySelectorAll('.checkbox-icon').forEach(icon => {
-                  icon.classList.add('hidden');
-              });
-              
-              // Reset radio buttons
-              document.querySelectorAll('.radio-selected').forEach(indicator => {
-                  indicator.classList.add('hidden');
-              });
-              
-              // Reset form progress
-              currentStep = 0;
-              updateProgressIndicators();
-              
-              // Hide any error/success messages
-              if (successMessage) {
-                  successMessage.classList.add('hidden');
+              } else {
+                  // Show error message via animation system
+                  if (window.formCardAnimations) {
+                      window.formCardAnimations.animateErrorState();
+                  }
+                  console.error('Form submission error:', result);
               }
-              if (errorMessage) {
-                  errorMessage.classList.add('hidden');
+          } catch (error) {
+              // Show error message via animation system
+              if (window.formCardAnimations) {
+                  window.formCardAnimations.animateErrorState();
               }
+              console.error('Form submission error:', error);
+          } finally {
+              // Restore button state
+              submitButton.innerHTML = originalText;
+              submitButton.disabled = false;
           }
       });
       
-      // Animate the background
-      gsap.to(formBackground, {
-          filter: 'blur(0px)',
-          duration: 0.5
-      });
-  }
-  
-  /**
-   * Animate to next step
-   */
-  function animateToNextStep() {
-      if (currentStep >= steps.length - 1) return;
-      
-      const currentStepElement = steps[currentStep];
-      const nextStepElement = steps[currentStep + 1];
-      
-      // Make next step visible before animation
-      nextStepElement.style.display = 'block';
-      
-      // Create random slight rotation for card "resting" position
-      const randomRotation = (Math.random() * 10 - 5); // Random between -5 and 5 degrees
-      
-      // Animate current step out (scaling down and rotating slightly)
-      gsap.to(currentStepElement, {
-          scale: 0.8,
-          rotation: randomRotation,
-          opacity: 0.7,
-          y: '30vh', // Move down
-          duration: 0.5,
-          ease: 'power2.in'
-      });
-      
-      // Animate next step in from the right
-      gsap.fromTo(nextStepElement, 
-          { opacity: 0, x: '100%', scale: 1, rotation: 0 },
-          { 
-              opacity: 1, 
-              x: '0%', 
-              scale: 1, 
-              rotation: 0, 
-              duration: 0.5, 
-              ease: 'power2.out',
-              onComplete: function() {
-                  // Update current step after animation
-                  currentStep++;
-                  updateProgressIndicators();
-              }
-          }
-      );
-  }
-  
-  /**
-   * Animate to previous step
-   */
-  function animateToPreviousStep() {
-      if (currentStep <= 0) return;
-      
-      const currentStepElement = steps[currentStep];
-      const prevStepElement = steps[currentStep - 1];
-      
-      // Animate current step off to the right
-      gsap.to(currentStepElement, {
-          x: '100%',
-          opacity: 0,
-          duration: 0.5,
-          ease: 'power2.in',
-          onComplete: function() {
-              currentStepElement.style.display = 'none';
-              gsap.set(currentStepElement, { x: '100%' });
-          }
-      });
-      
-      // Make previous step visible 
-      prevStepElement.style.display = 'block';
-      
-      // Animate previous step from "resting" position to active
-      gsap.to(prevStepElement, {
-          scale: 1,
-          rotation: 0,
-          opacity: 1,
-          y: '0',
-          x: '0%',
-          duration: 0.5,
-          ease: 'power2.out',
-          onComplete: function() {
-              // Update current step after animation
-              currentStep--;
-              updateProgressIndicators();
-          }
-      });
-  }
-  
-  /**
-   * Update progress indicators based on current step
-   */
-  function updateProgressIndicators() {
-      steps.forEach((step, index) => {
-          const progressIndicators = step.querySelectorAll('.flex.space-x-2 > div');
-          
-          if (!progressIndicators.length) return;
-          
-          progressIndicators.forEach((indicator, indicatorIndex) => {
-              // Reset all indicators
-              indicator.className = 'h-1 w-12 bg-gray-300 rounded';
-              
-              if (indicatorIndex < currentStep) {
-                  // Previous steps - green filled
-                  indicator.className = 'h-6 w-12 bg-green-500 rounded';
-              } else if (indicatorIndex === currentStep) {
-                  // Current step - outlined
-                  indicator.className = 'h-6 w-12 border-2 border-black rounded';
-              }
+      // Try again button functionality
+      const tryAgainButton = document.getElementById('try-again-button');
+      const errorMessage = document.getElementById('error-message');
+      if (tryAgainButton && errorMessage) {
+          tryAgainButton.addEventListener('click', function() {
+              errorMessage.classList.add('hidden');
           });
-      });
+      }
   }
   
   /**
@@ -693,225 +416,72 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       radioGroups.forEach(groupName => {
-          const groupButtons = currentStepElement.querySelectorAll(`input[name="${groupName}"]`);
-          const isGroupValid = Array.from(groupButtons).some(r => r.checked);
-          
-          if (!isGroupValid) {
-              isValid = false;
-              
-              // Add error message if it doesn't exist
-              const container = groupButtons[0].closest('div.space-y-4');
-              if (container) {
-                  let errorMessage = container.querySelector('.error-message');
-                  if (!errorMessage) {
-                      errorMessage = document.createElement('p');
-                      errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
-                      errorMessage.textContent = 'Please select an option';
-                      container.appendChild(errorMessage);
-                  }
-                  
-                  // Add listener to remove error when user selects an option
-                  groupButtons.forEach(radio => {
-                      radio.addEventListener('change', function() {
-                          const errorMsg = container.querySelector('.error-message');
-                          if (errorMsg) {
-                              errorMsg.remove();
-                          }
-                      }, { once: true });
-                  });
-              }
-          }
-      });
-      
-      return isValid;
-  }
-  
-  /**
-   * Initialize form submission
-   */
-  function initializeFormSubmission() {
-      if (!form) return;
-      
-      form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          if (!validateStep(currentStep)) return;
-          
-          // Show loading state
-          const submitButton = document.querySelector('button[type="submit"]');
-          if (!submitButton) return;
-          
-          const originalText = submitButton.innerHTML;
-          submitButton.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Submitting...</span>';
-          submitButton.disabled = true;
-          
-          // Collect form data
-          const formData = new FormData(form);
-          const formObject = {};
-          
-          formData.forEach((value, key) => {
-              // Skip editing-view textareas
-              if (!key.includes('-editing')) {
-                  formObject[key] = value;
-              }
-          });
-          
-          // Handle custom budget field
-          if (formObject.budget === 'custom') {
-              formObject.budget = formObject.customBudget || 'Custom (not specified)';
-          }
-          
-          // Format services as a comma-separated list
-          const selectedServices = [];
-          document.querySelectorAll('input[name="services"]:checked').forEach(checkbox => {
-              selectedServices.push(checkbox.value);
-          });
-          formObject.services = selectedServices.join(', ');
-          
-          // URL validation for project vision
-          const visionTextarea = document.getElementById('projectVision');
-          if (visionTextarea) {
-              visionTextarea.value = validateAndSanitizeUrls(visionTextarea.value);
-          }
-          
-          // Submit data to Netlify function
-          try {
-              const response = await fetch('/.netlify/functions/submit-form', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(formObject)
-              });
-              
-              const result = await response.json();
-              
-              if (response.ok) {
-                  // Show success message
-                  animateSuccessState();
-              } else {
-                  // Show error message
-                  animateErrorState();
-                  console.error('Form submission error:', result);
-              }
-          } catch (error) {
-              // Show error message
-              animateErrorState();
-              console.error('Form submission error:', error);
-          } finally {
-              // Restore button state
-              submitButton.innerHTML = originalText;
-              submitButton.disabled = false;
-          }
-      });
-      
-      // Try again button functionality
-      const tryAgainButton = document.getElementById('try-again-button');
-      if (tryAgainButton && errorMessage) {
-          tryAgainButton.addEventListener('click', function() {
-              errorMessage.classList.add('hidden');
-              gsap.set(errorMessage, { opacity: 0 });
-          });
-      }
-  }
-  
-  /**
-   * Animate success state
-   */
-  function animateSuccessState() {
-      if (!successMessage || !formContainer) return;
-      
-      // Get the visible step
-      const visibleStep = steps[currentStep];
-      if (!visibleStep) return;
-      
-      // Hide form
-      gsap.to(visibleStep, {
-          opacity: 0,
-          y: -30,
-          scale: 0.95,
-          duration: 0.4,
-          onComplete: function() {
-              // Hide the form
-              form.classList.add('hidden');
-              visibleStep.classList.add('hidden');
-              
-              // Show success message
-              successMessage.classList.remove('hidden');
-              
-              // Animate success message in
-              gsap.fromTo(successMessage,
-                  { opacity: 0, y: 30, scale: 0.95 },
-                  { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.2)' }
-              );
-          }
-      });
-  }
-  
-  /**
-   * Animate error state
-   */
-  function animateErrorState() {
-      if (!errorMessage) return;
-      
-      // Show and animate error message
-      errorMessage.classList.remove('hidden');
-      
-      // Set initial state for error message
-      gsap.set(errorMessage, {
-          opacity: 0,
-          y: 20
-      });
-      
-      // Animate in
-      gsap.to(errorMessage, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          ease: 'power2.out'
-      });
-      
-      // Add a shake effect to highlight the error
-      gsap.to(errorMessage, {
-          x: [-10, 10, -8, 8, -5, 5, 0],
-          duration: 0.6,
-          ease: 'power1.inOut'
-      });
-  }
-  
-  /**
-   * URL validation helper
-   * @param {string} text - Text to validate
-   * @returns {string} - Sanitized text
-   */
-  function validateAndSanitizeUrls(text) {
-      if (!text) return text;
-      
-      // Basic URL pattern
-      const urlPattern = /(https?:\/\/[^\s]+)/g;
-      
-      // Find all URLs in the text
-      const urls = text.match(urlPattern) || [];
-      
-      // Check each URL for basic safety
-      urls.forEach(url => {
-          try {
-              // Parse the URL
-              const parsedUrl = new URL(url);
-              
-              // Check for common safe domains
-              const safeDomains = ['pinterest.com', 'pinterest.ca', 'behance.net', 'dribbble.com', 'instagram.com'];
-              const isSafeDomain = safeDomains.some(domain => parsedUrl.hostname.includes(domain));
-              
-              if (!isSafeDomain) {
-                  console.warn('Potentially unsafe URL detected:', url);
-                  // You could replace with a sanitized version or add a warning
-              }
-          } catch (e) {
-              console.error('Invalid URL:', url, e);
-          }
-      });
-      
-      return text;
-  }
+        const groupButtons = currentStepElement.querySelectorAll(`input[name="${groupName}"]`);
+        const isGroupValid = Array.from(groupButtons).some(r => r.checked);
+        
+        if (!isGroupValid) {
+            isValid = false;
+            
+            // Add error message if it doesn't exist
+            const container = groupButtons[0].closest('div.space-y-4');
+            if (container) {
+                let errorMessage = container.querySelector('.error-message');
+                if (!errorMessage) {
+                    errorMessage = document.createElement('p');
+                    errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+                    errorMessage.textContent = 'Please select an option';
+                    container.appendChild(errorMessage);
+                }
+                
+                // Add listener to remove error when user selects an option
+                groupButtons.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        const errorMsg = container.querySelector('.error-message');
+                        if (errorMsg) {
+                            errorMsg.remove();
+                        }
+                    }, { once: true });
+                });
+            }
+        }
+    });
+    
+    return isValid;
+}
+
+/**
+ * URL validation helper
+ * @param {string} text - Text to validate
+ * @returns {string} - Sanitized text
+ */
+function validateAndSanitizeUrls(text) {
+    if (!text) return text;
+    
+    // Basic URL pattern
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    
+    // Find all URLs in the text
+    const urls = text.match(urlPattern) || [];
+    
+    // Check each URL for basic safety
+    urls.forEach(url => {
+        try {
+            // Parse the URL
+            const parsedUrl = new URL(url);
+            
+            // Check for common safe domains
+            const safeDomains = ['pinterest.com', 'pinterest.ca', 'behance.net', 'dribbble.com', 'instagram.com'];
+            const isSafeDomain = safeDomains.some(domain => parsedUrl.hostname.includes(domain));
+            
+            if (!isSafeDomain) {
+                console.warn('Potentially unsafe URL detected:', url);
+                // You could replace with a sanitized version or add a warning
+            }
+        } catch (e) {
+            console.error('Invalid URL:', url, e);
+        }
+    });
+    
+    return text;
+}
 });

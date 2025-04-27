@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="src/cardScroll.css">
     </head>
     <body>
-        <div id="form-overlay" class="fixed inset-0 bg-white opacity-0 z-40 hidden"></div>
+        <div id="form-overlay" class="hidden opacity-0"></div>
         <header id="nav-bar-cont" class="w-full h-auto flex absolute top-0 left-0">
             <div id="nav-bar" class="w-full inline-flex items-center justify-between p-4 pt-10 pb-4">
                 <div class="basis-1/3">
@@ -68,7 +68,7 @@
                         </div>
                         <div class="w-full h-auto self-stretch flex flex-col justify-center items-center gap-2 mt-8">
                             <div class="w-full h-auto bg-white hover:shadow-2xl hover:drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 border-2 border-black">
-                                <a href="#process" class="justify-start text-black text-base font-bold font-sans leading-5">start project</a>
+                                <a href="#background-form" class="justify-start text-black text-base font-bold font-sans leading-5">start project</a>
                             </div>
                             <p class="w-full justify-center text-center text-[#5a5a5a] text-sm font-light font-sans leading-5">start a project by filling out the inquiry form!</p>
                         </div>
@@ -595,15 +595,15 @@
         </section>
 
         <!-- Form Section with updated progress indicators, step structure, and textarea handling -->
-        <section id="c-form" class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-50">
-            <div id="form-container" class="bg-white w-full h-auto p-6 rounded-lg shadow-md">
+        <section id="c-form" class="pointer-events-none">
+            <div id="form-container" class=" p-4 hidden">
                 <!-- Form -->
                 <form id="inquiry-form" class="space-y-6" aria-live="polite">
                     <!-- Honeypot field for spam protection -->
                     <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
                     
                     <!-- Step 1: Before we start, name and email -->
-                    <div id="step-1" class="step bg-white">
+                    <div id="step-1" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (hidden on first step) -->
@@ -686,7 +686,7 @@
                     </div>
                 
                     <!-- Step 2: Contact Details -->
-                    <div id="step-2" class="step hidden bg-white">
+                    <div id="step-2" class="step p-4 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button (visible on second step) -->
@@ -767,7 +767,7 @@
                     </div>
                     
                     <!-- Step 3: About Your Business -->
-                    <div id="step-3" class="step hidden bg-white">
+                    <div id="step-3" class="step p-4 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -892,7 +892,7 @@
                     </div>
 
                     <!-- Step 4: Project Objectives -->
-                    <div id="step-4" class="step hidden bg-white">
+                    <div id="step-4" class="step p-4 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1073,7 +1073,7 @@
                     </div>
                     
                     <!-- Step 5: Vision and Budget -->
-                    <div id="step-5" class="step hidden bg-white">
+                    <div id="step-5" class="step p-4 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1241,7 +1241,7 @@
                     </div>
 
                     <!-- Step 6: Form Completed -->
-                    <div id="step-6" class="step hidden bg-white">
+                    <div id="step-6" class="step p-4 hidden bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
                             <!-- Back button -->
@@ -1354,7 +1354,7 @@
                     </div>
                     
                     <!-- Success Message (Hidden by default) -->
-                    <div id="success-message" class="hidden bg-white">
+                    <div id="success-message" class="hidden p-4 bg-white">
                         <div class="flex justify-between items-center mb-6">
                             <div></div>
                             <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
@@ -1383,7 +1383,7 @@
                     </div>
                     
                     <!-- Error Message (Hidden by default) -->
-                    <div id="error-message" class="hidden bg-white">
+                    <div id="error-message" class="hidden p-4 bg-white">
                         <div class="rounded-md bg-red-50 p-6 mb-6">
                             <div class="flex">
                                 <div class="flex-shrink-0">
@@ -1423,6 +1423,6 @@
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
         <script type="module" src="src/formFunctionality.js" defer></script>
-        <!-- <script type="module" src="src/formAnimation.js" defer></script> -->
+        <script type="module" src="src/formcardAnimation.js" defer></script>
     </body>
 </html>

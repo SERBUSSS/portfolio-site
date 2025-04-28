@@ -12,7 +12,8 @@
         <link rel="stylesheet" href="src/cardScroll.css">
     </head>
     <body>
-        <div id="form-overlay" class="hidden opacity-0"></div>
+        <div id="form-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
         <header id="nav-bar-cont" class="w-full h-auto flex absolute top-0 left-0">
             <div id="nav-bar" class="w-full inline-flex items-center justify-between p-4 pt-10 pb-4">
                 <div class="basis-1/3">
@@ -594,9 +595,9 @@
             </div>
         </section>
 
-        <!-- Form Section with updated progress indicators, step structure, and textarea handling -->
-        <section id="c-form" class="pointer-events-none">
-            <div id="form-container" class=" p-4 hidden">
+        <!-- Form Section with proper structure -->
+        <section id="c-form" class="hidden fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
+            <div id="form-container" class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto">
                 <!-- Form -->
                 <form id="inquiry-form" class="space-y-6" aria-live="polite">
                     <!-- Honeypot field for spam protection -->
@@ -615,7 +616,7 @@
                             
                             <!-- Progress indicators -->
                             <div class="flex space-x-2">
-                                <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
@@ -684,22 +685,22 @@
                             </svg>
                         </button>
                     </div>
-                
+
                     <!-- Step 2: Contact Details -->
-                    <div id="step-2" class="step p-4 hidden bg-white">
+                    <div id="step-2" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (visible on second step) -->
+                            <!-- Back button (hidden on first step) -->
                             <button type="button" class="prev-button">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators (first one green, second active, rest closed) -->
+                            <!-- Progress indicators -->
                             <div class="flex space-x-2">
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
                             </div>
@@ -765,23 +766,23 @@
                             </svg>
                         </button>
                     </div>
-                    
+
                     <!-- Step 3: About Your Business -->
-                    <div id="step-3" class="step p-4 hidden bg-white">
+                    <div id="step-3" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button -->
+                            <!-- Back button (hidden on first step) -->
                             <button type="button" class="prev-button">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators (first two green, third active, last closed) -->
+                            <!-- Progress indicators -->
                             <div class="flex space-x-2">
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                                 <div class="h-1 w-12 bg-gray-300 rounded"></div>
                             </div>
                             
@@ -892,22 +893,22 @@
                     </div>
 
                     <!-- Step 4: Project Objectives -->
-                    <div id="step-4" class="step p-4 hidden bg-white">
+                    <div id="step-4" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button -->
+                            <!-- Back button (hidden on first step) -->
                             <button type="button" class="prev-button">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators (first three green, fourth active) -->
+                            <!-- Progress indicators -->
                             <div class="flex space-x-2">
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                             </div>
                             
                             <!-- Close button -->
@@ -1071,24 +1072,24 @@
                             </svg>
                         </button>
                     </div>
-                    
+
                     <!-- Step 5: Vision and Budget -->
-                    <div id="step-5" class="step p-4 hidden bg-white">
+                    <div id="step-5" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button -->
+                            <!-- Back button (hidden on first step) -->
                             <button type="button" class="prev-button">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators (all green for last step) -->
+                            <!-- Progress indicators -->
                             <div class="flex space-x-2">
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
+                                <div class="h-6 w-12 border-2 border-black rounded"></div>
                             </div>
                             
                             <!-- Close button -->
@@ -1233,7 +1234,7 @@
                             type="button" 
                             class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
                         >
-                            <span class="text-xl">Next: Vision and Budget</span>
+                            <span class="text-xl">Complete Form</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -1241,17 +1242,17 @@
                     </div>
 
                     <!-- Step 6: Form Completed -->
-                    <div id="step-6" class="step p-4 hidden bg-white">
+                    <div id="step-6" class="step p-4 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button -->
+                            <!-- Back button (hidden on first step) -->
                             <button type="button" class="prev-button">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators (all completed) -->
+                            <!-- Progress indicators -->
                             <div class="flex space-x-2">
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
@@ -1358,7 +1359,11 @@
                         <div class="flex justify-between items-center mb-6">
                             <div></div>
                             <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
-                            <div></div>
+                            <button type="button" class="close-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
                         </div>
                         
                         <div class="text-center mb-10">
@@ -1381,7 +1386,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Error Message (Hidden by default) -->
                     <div id="error-message" class="hidden p-4 bg-white">
                         <div class="rounded-md bg-red-50 p-6 mb-6">
@@ -1422,7 +1427,8 @@
         <script type="module" src="src/navigationMenu.js" defer></script>
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
-        <script type="module" src="src/formFunctionality.js" defer></script>
-        <script type="module" src="src/formcardAnimation.js" defer></script>
+        <script type="module" src="src/formFunctionality" defer></script>
+        <script type="module" src="src/formCardAnimation.js" defer></script>
+        <!-- <script type="module" src="src/formImplementation.j" defer></script> -->
     </body>
 </html>

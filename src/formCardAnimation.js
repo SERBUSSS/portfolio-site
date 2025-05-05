@@ -26,10 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
       // Open form buttons
       openBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          openForm();
-        });
+          btn.addEventListener('click', function (e) {
+              e.preventDefault();
+
+              // Dynamically load formFunctionality.js
+              const formFunctionalityScript = document.createElement('script');
+              formFunctionalityScript.src = 'src/formFunctionality.js';
+              formFunctionalityScript.type = 'module';
+              document.body.appendChild(formFunctionalityScript);
+
+              // Open the form
+              openForm();
+          });
       });
       
       // Close buttons (just register the event here, validation happens in formFunctionality.js)

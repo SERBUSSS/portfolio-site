@@ -1,0 +1,210 @@
+/* Form overlay */
+#form-overlay {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Loading overlay */
+#form-loading-overlay {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* Form container */
+#c-form {
+    transition: opacity 0.3s ease;
+}
+
+/* Steps */
+.step {
+    transform-origin: center;
+    will-change: transform, opacity;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.step::-webkit-scrollbar {
+    width: 6px;
+}
+
+.step::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.step::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
+
+/* Progress indicators */
+.step .flex.space-x-2 > div {
+    transition: all 0.3s ease;
+}
+
+/* Expandable textareas */
+.question-container {
+    position: relative;
+}
+
+.editing-view {
+    position: relative;
+    z-index: 10;
+}
+
+/* Custom checkboxes */
+.checkbox-container, .radio-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.checkbox-icon, .radio-selected {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Special button effects */
+.next-button:not(:disabled), 
+.prev-button:not(.invisible), 
+button[type="submit"],
+.mark-as-done,
+.add-social-button,
+.remove-social,
+#show-question-button,
+#hide-question-button {
+    transition: all 0.2s ease;
+}
+
+.next-button:not(:disabled):hover, 
+.prev-button:not(.invisible):hover, 
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.next-button:not(:disabled):active, 
+.prev-button:not(.invisible):active, 
+button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Error styles */
+.error-message {
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+input.border-red-500, textarea.border-red-500 {
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+}
+
+/* Social media field animations */
+.social-media-field {
+    transition: all 0.3s ease;
+}
+
+/* Success animation */
+#success-message, #error-message {
+    transform-origin: center;
+}
+
+/* Enhanced mobile experience for the form */
+
+@media (max-width: 768px) {
+    /* Form container */
+    #c-form {
+        padding: 0.5rem;
+    }
+    
+    /* Step cards */
+    .step {
+        padding: 1rem;
+        max-height: 90vh;
+    }
+    
+    /* Input fields */
+    input, select, textarea {
+        font-size: 16px; /* Prevents iOS zoom */
+    }
+    
+    /* Expanded textarea view */
+    .editing-view {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        z-index: 100;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .editing-view textarea {
+        flex-grow: 1;
+        margin-bottom: 1rem;
+        font-size: 16px;
+    }
+    
+    /* Social media fields */
+    .social-media-field select {
+        max-width: 120px;
+    }
+    
+    /* Buttons */
+    .next-button, .prev-button, button[type="submit"], .mark-as-done {
+        padding: 0.75rem;
+    }
+    
+    /* Progress indicators */
+    .flex.space-x-2 > div {
+        width: 2.5rem;
+    }
+    
+    /* Success and error messages */
+    #success-message, #error-message {
+        padding: 1rem;
+    }
+}
+
+/* Better focus states for mobile */
+@media (max-width: 768px) {
+    input:focus, textarea:focus, select:focus, button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Prevent sticky hover states */
+    .next-button:hover, .prev-button:hover, button[type="submit"]:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Fix for iOS Safari bottom padding */
+@supports (-webkit-touch-callout: none) {
+    .step {
+        padding-bottom: 3rem;
+    }
+    
+    button[type="submit"] {
+        margin-bottom: 1.5rem;
+    }
+}

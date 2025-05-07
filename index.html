@@ -10,6 +10,7 @@
         <link rel="icon" type="image/x-icon" href="src/icons/Logo Mark.svg">
         <link rel="stylesheet" href="src/output.css">
         <link rel="stylesheet" href="src/cardScroll.css">
+        <link rel="stylesheet" href="src/formStyles.css">
     </head>
     <body>
         <div id="form-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -595,20 +596,23 @@
             </div>
         </section>
 
-        <!-- Form Section with proper structure -->
-        <section id="c-form" class="hidden fixed inset-0 z-50 items-center justify-center overflow-y-auto p-4">
-            <div id="form-container" class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto">
+        <!-- Form Overlay (for background blur/freeze) -->
+        <div id="form-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+
+        <!-- Form Container (fixed, centered) -->
+        <section id="c-form" class="hidden fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
+            <div id="form-container" class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto relative">
                 <!-- Form -->
                 <form id="inquiry-form" class="space-y-6" aria-live="polite">
                     <!-- Honeypot field for spam protection -->
                     <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off">
                     
-                    <!-- Step 1: Before we start, name and email -->
-                    <div id="step-1" class="step p-4 bg-white">
+                    <!-- Step 0: Before we start, name and email -->
+                    <div id="step-0" class="step p-6 bg-white">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button invisible">
+                            <!-- Back button (invisible on first step) -->
+                            <button type="button" class="prev-button invisible" aria-label="Previous step">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -623,7 +627,7 @@
                             </div>
                             
                             <!-- Close button -->
-                            <button type="button" class="close-button">
+                            <button type="button" class="close-button" aria-label="Close form">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -634,8 +638,8 @@
                         <h2 class="text-4xl font-medium font-display mb-6 text-center">Before we start</h2>
                         
                         <p class="text-gray-800 mb-10">
-                            Completing this form, you will provide basic information about you, about the business, 
-                            services needed and your vision and budget for the project.
+                            Completing this form, you will provide basic information about you, your business, 
+                            services needed, and your vision and budget for the project.
                         </p>
                         
                         <!-- Form fields -->
@@ -647,7 +651,7 @@
                                     name="fullName" 
                                     id="fullName" 
                                     required 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="John Doe"
                                 >
                             </div>
@@ -659,7 +663,7 @@
                                     name="email" 
                                     id="email" 
                                     required 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="example@email.com"
                                 >
                             </div>
@@ -677,7 +681,8 @@
                         <!-- Next button -->
                         <button 
                             type="button" 
-                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
                         >
                             <span class="text-xl">Next: Contact Details</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -685,94 +690,13 @@
                             </svg>
                         </button>
                     </div>
-
-                    <!-- Step 2: Contact Details -->
-                    <div id="step-2" class="step p-4 bg-white">
+                    
+                    <!-- Step 1: Contact Details -->
+                    <div id="step-1" class="step p-6 bg-white hidden">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                            
-                            <!-- Progress indicators -->
-                            <div class="flex space-x-2">
-                                <div class="h-6 w-12 border-2 border-black rounded"></div>
-                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                            </div>
-                            
-                            <!-- Close button -->
-                            <button type="button" class="close-button">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <!-- Step title and description -->
-                        <h2 class="text-4xl font-medium font-display mb-6">Your Contact Details</h2>
-                        
-                        <p class="text-gray-800 mb-10">
-                            This first step collects basic information so we can contact you.
-                        </p>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
-                            <div>
-                                <label for="businessName" class="block text-xl font-medium text-gray-900 mb-2">Business Name:</label>
-                                <input 
-                                    type="text" 
-                                    name="businessName" 
-                                    id="businessName" 
-                                    required 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
-                                    placeholder="John Doe's Business"
-                                >
-                            </div>
-                            
-                            <div class="social-media-field">
-                                <div class="flex rounded-xl border border-gray-300 overflow-hidden">
-                                    <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
-                                        <select name="social-media-type" class="bg-gray-100 border-none focus:ring-0">
-                                            <option value="instagram">Instagram</option>
-                                            <option value="facebook">Facebook</option>
-                                            <option value="twitter">Twitter</option>
-                                            <option value="linkedin">LinkedIn</option>
-                                            <option value="website">Website</option>
-                                        </select>
-                                    </div>
-                                    <input 
-                                        type="text" 
-                                        name="social-media-profile" 
-                                        class="flex-grow px-4 py-3 bg-white" 
-                                        placeholder="e.g. @username or website URL"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Next button -->
-                        <button 
-                            type="button" 
-                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                        >
-                            <span class="text-xl">Next: About Your Business</span>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Step 3: About Your Business -->
-                    <div id="step-3" class="step p-4 bg-white">
-                        <!-- Progress navigation -->
-                        <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button">
+                            <!-- Back button -->
+                            <button type="button" class="prev-button" aria-label="Previous step">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -787,7 +711,112 @@
                             </div>
                             
                             <!-- Close button -->
-                            <button type="button" class="close-button">
+                            <button type="button" class="close-button" aria-label="Close form">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Step title and description -->
+                        <h2 class="text-4xl font-medium font-display mb-6">Your Contact Details</h2>
+                        
+                        <p class="text-gray-800 mb-10">
+                            This step collects basic information about your business.
+                        </p>
+                        
+                        <!-- Form fields -->
+                        <div class="space-y-6 mb-10">
+                            <div>
+                                <label for="businessName" class="block text-xl font-medium text-gray-900 mb-2">Business Name:</label>
+                                <input 
+                                    type="text" 
+                                    name="businessName" 
+                                    id="businessName" 
+                                    required 
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                    placeholder="Your Business Name"
+                                >
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xl font-medium text-gray-900 mb-2">Social Media Profiles:</label>
+                                
+                                <div class="social-media-fields">
+                                    <!-- Initial social media field -->
+                                    <div class="social-media-field">
+                                        <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+                                            <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
+                                                <select name="social-media-type-0" class="bg-gray-100 border-none focus:ring-0">
+                                                    <option value="instagram" selected>Instagram</option>
+                                                    <option value="facebook">Facebook</option>
+                                                    <option value="twitter">Twitter</option>
+                                                    <option value="linkedin">LinkedIn</option>
+                                                    <option value="website">Website</option>
+                                                </select>
+                                            </div>
+                                            <input 
+                                                type="text" 
+                                                name="social-media-profile-0" 
+                                                class="flex-grow px-4 py-3 bg-white" 
+                                                placeholder="e.g. @username or website URL"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Add more social media button -->
+                                <button 
+                                    type="button"
+                                    class="add-social-button mt-3 flex items-center text-gray-600 font-medium"
+                                >
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="mr-2">
+                                        <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Add another social profile
+                                </button>
+                                
+                                <!-- Max fields message (hidden by default) -->
+                                <p id="max-social-fields-message" class="hidden mt-2 text-amber-600">
+                                    Maximum of 5 social profiles can be added.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Next button -->
+                        <button 
+                            type="button" 
+                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
+                        >
+                            <span class="text-xl">Next: About Your Business</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: About Your Business -->
+                    <div id="step-2" class="step p-6 bg-white hidden">
+                        <!-- Progress navigation -->
+                        <div class="flex items-center justify-between mb-8">
+                            <!-- Back button -->
+                            <button type="button" class="prev-button" aria-label="Previous step">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            
+                            <!-- Progress indicators -->
+                            <div class="flex space-x-2">
+                                <div class="h-6 w-12 bg-green-500 rounded"></div>
+                                <div class="h-6 w-12 bg-green-500 rounded"></div>
+                                <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
+                            </div>
+                            
+                            <!-- Close button -->
+                            <button type="button" class="close-button" aria-label="Close form">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -819,7 +848,7 @@
                                         id="businessDescription" 
                                         rows="6"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
                                 </div>
@@ -829,7 +858,7 @@
                                         name="businessDescription-editing" 
                                         id="businessDescription-editing" 
                                         rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
@@ -857,7 +886,7 @@
                                         id="businessChallenges" 
                                         rows="6"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
                                 </div>
@@ -867,7 +896,7 @@
                                         name="businessChallenges-editing" 
                                         id="businessChallenges-editing" 
                                         rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
@@ -883,7 +912,8 @@
                         <!-- Next button -->
                         <button 
                             type="button" 
-                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
                         >
                             <span class="text-xl">Next: Project Objectives</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -892,12 +922,12 @@
                         </button>
                     </div>
 
-                    <!-- Step 4: Project Objectives -->
-                    <div id="step-4" class="step p-4 bg-white">
+                    <!-- Step 3: Project Objectives -->
+                    <div id="step-3" class="step p-6 bg-white hidden">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button">
+                            <!-- Back button -->
+                            <button type="button" class="prev-button" aria-label="Previous step">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -907,12 +937,12 @@
                             <div class="flex space-x-2">
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
+                                <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 border-2 border-black rounded"></div>
-                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                             </div>
                             
                             <!-- Close button -->
-                            <button type="button" class="close-button">
+                            <button type="button" class="close-button" aria-label="Close form">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -948,9 +978,9 @@
                                                 <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <label for="webDesign" class="text-xl font-medium cursor-pointer">Web Design</label>
+                                        <label for="brandStrategy" class="text-xl font-medium cursor-pointer">Web Designy</label>
                                     </div>
-                                    
+
                                     <!-- Development checkbox (initially disabled) -->
                                     <div class="flex items-center">
                                         <div class="w-6 h-6 mr-3 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
@@ -968,7 +998,7 @@
                                         </div>
                                         <label for="development" class="text-xl font-medium text-gray-400 cursor-not-allowed">Development</label>
                                     </div>
-                                    
+
                                     <!-- Brand Strategy checkbox -->
                                     <div class="flex items-center">
                                         <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
@@ -1038,7 +1068,7 @@
                                         id="projectObjectives" 
                                         rows="6"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
                                 </div>
@@ -1048,7 +1078,7 @@
                                         name="projectObjectives-editing" 
                                         id="projectObjectives-editing" 
                                         rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
@@ -1064,7 +1094,8 @@
                         <!-- Next button -->
                         <button 
                             type="button" 
-                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
                         >
                             <span class="text-xl">Next: Vision and Budget</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1073,12 +1104,12 @@
                         </button>
                     </div>
 
-                    <!-- Step 5: Vision and Budget -->
-                    <div id="step-5" class="step p-4 bg-white">
+                    <!-- Step 4: Vision and Budget -->
+                    <div id="step-4" class="step p-6 bg-white hidden">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button">
+                            <!-- Back button -->
+                            <button type="button" class="prev-button" aria-label="Previous step">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -1089,11 +1120,11 @@
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
                                 <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 border-2 border-black rounded"></div>
+                                <div class="h-6 w-12 bg-green-500 rounded"></div>
                             </div>
                             
                             <!-- Close button -->
-                            <button type="button" class="close-button">
+                            <button type="button" class="close-button" aria-label="Close form">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -1126,7 +1157,7 @@
                                         id="projectVision" 
                                         rows="6"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
                                 </div>
@@ -1136,7 +1167,7 @@
                                         name="projectVision-editing" 
                                         id="projectVision-editing" 
                                         rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
@@ -1221,7 +1252,7 @@
                                             type="text" 
                                             id="customBudget" 
                                             name="customBudget" 
-                                            class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                            class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                             placeholder="$200 - $750"
                                         >
                                     </div>
@@ -1232,36 +1263,34 @@
                         <!-- Next button -->
                         <button 
                             type="button" 
-                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
                         >
-                            <span class="text-xl">Complete Form</span>
+                            <span class="text-xl">Review and Submit</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                     </div>
 
-                    <!-- Step 6: Form Completed -->
-                    <div id="step-6" class="step p-4 bg-white">
+                    <!-- Step 5: Pre-Submit Review -->
+                    <div id="step-5" class="step p-6 bg-white hidden">
                         <!-- Progress navigation -->
                         <div class="flex items-center justify-between mb-8">
-                            <!-- Back button (hidden on first step) -->
-                            <button type="button" class="prev-button">
+                            <!-- Back button -->
+                            <button type="button" class="prev-button" aria-label="Previous step">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </button>
                             
-                            <!-- Progress indicators -->
-                            <div class="flex space-x-2">
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
-                                <div class="h-6 w-12 bg-green-500 rounded"></div>
+                            <!-- No progress indicators on final step -->
+                            <div class="flex space-x-2 invisible">
+                                <div class="h-1 w-12 bg-gray-300 rounded"></div>
                             </div>
                             
                             <!-- Close button -->
-                            <button type="button" class="close-button">
+                            <button type="button" class="close-button" aria-label="Close form">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -1273,18 +1302,19 @@
                         <p class="text-gray-800 text-xl mb-6 text-center">Ready to be sent!</p>
                         
                         <p class="text-gray-800 mb-8">
-                            Congrats! Now you have all the information necessary to get in touch with me. Now, all you have to do is hit the "Send Form" button and the form will be sent from your email. I will review it and will get back to you as soon as possible.
+                            Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
                         </p>
                         
                         <!-- Optional question section -->
                         <div class="mb-8">
-                            <p class="font-medium text-gray-900 mb-2">P.S. You would do me a huge favor if you answer to the question below. <span class="text-gray-600">(optional)</span></p>
+                            <p class="font-medium text-gray-900 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-gray-600">(optional)</span></p>
                             
                             <!-- Toggle question button - shown when question is hidden -->
                             <button 
-                            type="button" 
-                            id="show-question-button" 
-                            class="flex items-center text-gray-600 font-medium mb-4">
+                                type="button" 
+                                id="show-question-button" 
+                                class="flex items-center text-gray-600 font-medium mb-4"
+                            >
                                 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                     <circle cx="12" cy="12" r="3"/>
@@ -1294,9 +1324,10 @@
                             
                             <!-- Hide question button - hidden initially -->
                             <button 
-                            type="button" 
-                            id="hide-question-button" 
-                            class="hidden flex items-center text-gray-600 font-medium mb-4">
+                                type="button" 
+                                id="hide-question-button" 
+                                class="hidden flex items-center text-gray-600 font-medium mb-4"
+                            >
                                 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
                                     <line x1="1" y1="1" x2="23" y2="23"/>
@@ -1305,31 +1336,29 @@
                             </button>
                             
                             <!-- Optional question content - hidden initially -->
-                            <div class="question-container">
-                                <label for="projectVision" class="block text-xl font-medium text-gray-900 mb-2">
+                            <div id="optional-question-container" class="hidden question-container">
+                                <label for="referralSource" class="block text-xl font-medium text-gray-900 mb-2">
                                     How did you hear about me? Why do you want to collaborate with me?
                                 </label>
-                                <!-- This will show when the question is answered -->
-                                <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium">Question answered!</p>
-                                </div>
+                                
                                 <!-- Normal textarea view -->
                                 <div class="textarea-container">
                                     <textarea 
-                                        name="projectVision" 
-                                        id="projectVision" 
-                                        rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        name="referralSource" 
+                                        id="referralSource" 
+                                        rows="5"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
                                 </div>
+                                
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
                                     <textarea 
-                                        name="projectVision-editing" 
-                                        id="projectVision-editing" 
-                                        rows="6"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        name="referralSource-editing" 
+                                        id="referralSource-editing" 
+                                        rows="5"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
@@ -1355,7 +1384,7 @@
                     </div>
                     
                     <!-- Success Message (Hidden by default) -->
-                    <div id="success-message" class="hidden p-4 bg-white">
+                    <div id="success-message" class="hidden p-6 bg-white">
                         <div class="flex justify-between items-center mb-6">
                             <div></div>
                             <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
@@ -1388,7 +1417,7 @@
                     </div>
 
                     <!-- Error Message (Hidden by default) -->
-                    <div id="error-message" class="hidden p-4 bg-white">
+                    <div id="error-message" class="hidden p-6 bg-white">
                         <div class="rounded-md bg-red-50 p-6 mb-6">
                             <div class="flex">
                                 <div class="flex-shrink-0">
@@ -1427,8 +1456,10 @@
         <script type="module" src="src/navigationMenu.js" defer></script>
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
-        <script type="module" src="src/formFunctionality" defer></script> 
-        <script type="module" src="src/formCardAnimation.js" defer></script>
-        <!-- <script type="module" src="src/formImplementation.j" defer></script> -->
+        <script type="module" src="src/formFunctionality.js" defer></script> 
+        <script type="module" src="src/formAnimation.js" defer></script>
+        <script type="module" src="src/formValidation.js" defer></script>
+        <script type="module" src="src/formMain.js" defer></script>
+        <script type="module" src="src/formIntegration.js" defer></script>
     </body>
 </html>

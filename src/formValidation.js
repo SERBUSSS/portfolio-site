@@ -1,6 +1,6 @@
 /**
- * Form Validation Module
- * Handles all validation for the multi-step form
+ * Form Validation Module - Enhanced
+ * Handles all validation for the multi-step form with improved error handling
  */
 const FormValidation = (function() {
     // DOM elements
@@ -32,13 +32,37 @@ const FormValidation = (function() {
             
             // Add input event listeners
             requiredFields.forEach(field => {
-                field.addEventListener('input', () => {
-                    validateAndUpdateStep(stepIndex);
+                // Clear previous event listeners by cloning the element
+                const newField = field.cloneNode(true);
+                field.parentNode.replaceChild(newField, field);
+                
+                // Add new listener to the cloned element
+                newField.addEventListener('input', function() {
+                    // Special validation for email field
+                    if (this.type === 'email' && this.value.trim() !== '') {
+                        validateEmail(this);
+                    }
+                    
+                    // Remove error styling when field has value
+                    if (this.value.trim() !== '') {
+                        this.classList.remove('border-red-500');
+                        
+                        // Remove error message if exists
+                        const errorMsg = this.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                    }
+                    
+                    // Update step validation state
+                    setTimeout(() => {
+                        validateAndUpdateStep(stepIndex);
+                    }, 10); // Small delay to ensure value is updated
                 });
                 
-                // Initial validation
-                if (field.value.trim() !== '') {
-                    field.dispatchEvent(new Event('input'));
+                // Initial validation if field has value
+                if (newField.value.trim() !== '') {
+                    newField.dispatchEvent(new Event('input'));
                 }
             });
             
@@ -47,13 +71,21 @@ const FormValidation = (function() {
             radioGroups.forEach((groupName) => {
                 const radios = step.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
                 radios.forEach(radio => {
-                    radio.addEventListener('change', () => {
-                        validateAndUpdateStep(stepIndex);
+                    // Clear previous event listeners by cloning the element
+                    const newRadio = radio.cloneNode(true);
+                    radio.parentNode.replaceChild(newRadio, radio);
+                    
+                    // Add new listener to the cloned element
+                    newRadio.addEventListener('change', function() {
+                        // Update step validation state
+                        setTimeout(() => {
+                            validateAndUpdateStep(stepIndex);
+                        }, 10);
                     });
                     
                     // Initial validation if checked
-                    if (radio.checked) {
-                        radio.dispatchEvent(new Event('change'));
+                    if (newRadio.checked) {
+                        newRadio.dispatchEvent(new Event('change'));
                     }
                 });
             });
@@ -61,19 +93,57 @@ const FormValidation = (function() {
             // Validate checkboxes if any are required
             const checkboxes = step.querySelectorAll('input[type="checkbox"][required]');
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    validateAndUpdateStep(stepIndex);
+                // Clear previous event listeners by cloning the element
+                const newCheckbox = checkbox.cloneNode(true);
+                checkbox.parentNode.replaceChild(newCheckbox, checkbox);
+                
+                // Add new listener to the cloned element
+                newCheckbox.addEventListener('change', function() {
+                    // Update step validation state
+                    setTimeout(() => {
+                        validateAndUpdateStep(stepIndex);
+                    }, 10);
                 });
                 
                 // Initial validation if checked
-                if (checkbox.checked) {
-                    checkbox.dispatchEvent(new Event('change'));
+                if (newCheckbox.checked) {
+                    newCheckbox.dispatchEvent(new Event('change'));
                 }
             });
             
             // Initial validation for the step
             validateAndUpdateStep(stepIndex);
         });
+    }
+    
+    /**
+     * Validate email field
+     * @param {HTMLInputElement} field Email input field
+     */
+    function validateEmail(field) {
+        // Remove any existing error message
+        const existingError = field.nextElementSibling;
+        if (existingError && existingError.classList.contains('error-message')) {
+            existingError.remove();
+        }
+        
+        // Check if email is valid
+        if (!isValidEmail(field.value)) {
+            // Add error styling
+            field.classList.add('border-red-500');
+            
+            // Add error message
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+            errorMessage.textContent = 'Please enter a valid email address';
+            field.parentNode.insertBefore(errorMessage, field.nextSibling);
+            
+            return false;
+        }
+        
+        // Remove error styling if valid
+        field.classList.remove('border-red-500');
+        return true;
     }
     
     /**
@@ -114,8 +184,13 @@ const FormValidation = (function() {
         // 1. Validate required inputs (text, email, etc.)
         const requiredFields = step.querySelectorAll('input[required], textarea[required], select[required]');
         const allFieldsValid = Array.from(requiredFields).every(field => {
-            // Skip radio buttons (handled separately)
+            // Skip radio buttons and checkboxes (handled separately)
             if (field.type === 'radio' || field.type === 'checkbox') return true;
+            
+            // Special validation for email field
+            if (field.type === 'email' && field.value.trim() !== '') {
+                return isValidEmail(field.value);
+            }
             
             return field.value.trim() !== '';
         });
@@ -137,8 +212,32 @@ const FormValidation = (function() {
         const requiredCheckboxes = step.querySelectorAll('input[type="checkbox"][required]');
         const allCheckboxesValid = Array.from(requiredCheckboxes).every(checkbox => checkbox.checked);
         
+        // 4. Validate custom fields (if any)
+        const isCustomBudgetValid = validateCustomBudgetIfVisible(step);
+        
         // Return true only if all validations pass
-        return allFieldsValid && allRadioGroupsValid && allCheckboxesValid;
+        return allFieldsValid && allRadioGroupsValid && allCheckboxesValid && isCustomBudgetValid;
+    }
+    
+    /**
+     * Validate custom budget field if visible
+     * @param {HTMLElement} step Step element
+     * @returns {boolean} Whether the custom budget is valid
+     */
+    function validateCustomBudgetIfVisible(step) {
+        const customBudgetContainer = step.querySelector('#customBudgetContainer');
+        if (!customBudgetContainer || customBudgetContainer.classList.contains('hidden')) {
+            return true; // If not visible, consider valid
+        }
+        
+        const customBudgetInput = customBudgetContainer.querySelector('#customBudget');
+        if (!customBudgetInput) return true;
+        
+        const budgetCustomRadio = step.querySelector('#budgetCustom');
+        if (!budgetCustomRadio || !budgetCustomRadio.checked) return true;
+        
+        // Check if custom budget has a value when the custom option is selected
+        return customBudgetInput.value.trim() !== '';
     }
     
     /**
@@ -157,6 +256,12 @@ const FormValidation = (function() {
         step.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
             // Skip radio buttons and checkboxes (handled separately)
             if (field.type === 'radio' || field.type === 'checkbox') return;
+            
+            // Special validation for email
+            if (field.type === 'email' && field.value.trim() !== '') {
+                validateEmail(field);
+                return;
+            }
             
             // Skip if valid
             if (field.value.trim() !== '') return;
@@ -180,6 +285,11 @@ const FormValidation = (function() {
                     }
                 }
             }, { once: true });
+            
+            // If this is the first invalid field, focus it
+            if (!step.querySelector('.error-message')) {
+                field.focus();
+            }
         });
         
         // Check radio groups
@@ -218,6 +328,21 @@ const FormValidation = (function() {
                         }
                     }, { once: true });
                 });
+                
+                // Highlight the radio container
+                const radioContainers = container.querySelectorAll('.radio-container');
+                radioContainers.forEach(radioContainer => {
+                    radioContainer.classList.add('border-red-500');
+                    
+                    // Add event listener to remove highlight when an option is selected
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            radioContainers.forEach(rc => {
+                                rc.classList.remove('border-red-500');
+                            });
+                        }, { once: true });
+                    });
+                });
             }
         });
         
@@ -235,6 +360,12 @@ const FormValidation = (function() {
             errorMessage.textContent = 'This selection is required';
             container.appendChild(errorMessage);
             
+            // Highlight the checkbox container
+            const checkboxContainer = checkbox.closest('.checkbox-container');
+            if (checkboxContainer) {
+                checkboxContainer.classList.add('border-red-500');
+            }
+            
             // Add event listener to remove error when option is selected
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
@@ -242,9 +373,52 @@ const FormValidation = (function() {
                     if (errorMsg) {
                         errorMsg.remove();
                     }
+                    
+                    if (checkboxContainer) {
+                        checkboxContainer.classList.remove('border-red-500');
+                    }
                 }
             }, { once: true });
         });
+        
+        // Check custom budget if it's visible and required
+        const customBudgetContainer = step.querySelector('#customBudgetContainer');
+        if (customBudgetContainer && !customBudgetContainer.classList.contains('hidden')) {
+            const customBudgetInput = customBudgetContainer.querySelector('#customBudget');
+            const budgetCustomRadio = step.querySelector('#budgetCustom');
+            
+            if (customBudgetInput && budgetCustomRadio && budgetCustomRadio.checked && customBudgetInput.value.trim() === '') {
+                // Add error styling
+                customBudgetInput.classList.add('border-red-500');
+                
+                // Add error message
+                const errorMessage = document.createElement('p');
+                errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+                errorMessage.textContent = 'Please specify your budget';
+                customBudgetInput.parentNode.insertBefore(errorMessage, customBudgetInput.nextSibling);
+                
+                // Add event listener to remove error when field is valid
+                customBudgetInput.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.classList.remove('border-red-500');
+                        const errorMsg = this.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                    }
+                }, { once: true });
+            }
+        }
+        
+        // Shake the form to indicate error
+        const formContainer = step.closest('form');
+        if (formContainer && typeof gsap !== 'undefined') {
+            gsap.to(formContainer, {
+                x: [-5, 5, -4, 4, -3, 3, 0],
+                duration: 0.4,
+                ease: 'power1.inOut'
+            });
+        }
     }
     
     /**
@@ -281,4 +455,8 @@ const FormValidation = (function() {
 })();
 
 // Initialize FormValidation when DOM is ready
-document.addEventListener('DOMContentLoaded', FormValidation.init);
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        FormValidation.init();
+    }, 50);
+});

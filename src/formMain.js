@@ -1,6 +1,6 @@
 /**
- * Form Main Controller
- * Main entry point for the form functionality
+ * Form Main Controller - Enhanced
+ * Main entry point for the form functionality with improved coordination between modules
  */
 (function() {
     // State
@@ -49,11 +49,19 @@
      * Initialize when DOM is ready
      */
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Form Main Controller initializing...');
+        
         // Add form containers if not present
         ensureFormContainers();
         
         // Initialize open form buttons
         initializeOpenFormButtons();
+        
+        // Setup click handlers on form links in the site
+        setupFormLinkHandlers();
+        
+        // Check if we should auto-open the form based on URL hash
+        checkAutoOpenForm();
     });
     
     /**
@@ -67,6 +75,19 @@
             overlay.className = 'fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 hidden';
             overlay.style.opacity = 0;
             document.body.appendChild(overlay);
+            
+            // Add click handler to close form when clicking outside
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    if (confirm('Are you sure you want to close the form? Your progress will be lost.')) {
+                        if (typeof FormAnimation !== 'undefined') {
+                            FormAnimation.closeForm();
+                        } else {
+                            hideForm();
+                        }
+                    }
+                }
+            });
         }
         
         // Make sure form section exists
@@ -90,6 +111,49 @@
     }
     
     /**
+     * Setup click handlers for form links in the site
+     */
+    function setupFormLinkHandlers() {
+        // Find all links that point to #background-form
+        const formLinks = document.querySelectorAll('a[href="#background-form"]');
+        
+        formLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Smooth scroll to the form section first
+                const formSection = document.getElementById('background-form');
+                if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Then open the form after a short delay
+                    setTimeout(() => {
+                        loadAndOpenForm();
+                    }, 800); // Delay to allow scroll to complete
+                } else {
+                    // If section doesn't exist, just open the form
+                    loadAndOpenForm();
+                }
+            });
+        });
+    }
+    
+    /**
+     * Check if we should auto-open the form based on URL hash
+     */
+    function checkAutoOpenForm() {
+        if (window.location.hash === '#open-form') {
+            // Wait a moment for page to settle
+            setTimeout(() => {
+                loadAndOpenForm();
+                
+                // Clear the hash to prevent reopening on refresh
+                history.replaceState(null, document.title, window.location.pathname + window.location.search);
+            }, 500);
+        }
+    }
+    
+    /**
      * Load dependencies and open form
      */
     function loadAndOpenForm() {
@@ -98,7 +162,8 @@
             if (typeof FormAnimation !== 'undefined') {
                 FormAnimation.openForm();
             } else {
-                console.error('FormAnimation module not available');
+                // Fallback without animation
+                showForm();
             }
             return;
         }
@@ -113,6 +178,9 @@
                 return loadModules();
             })
             .then(() => {
+                // Initialize modules if they have an init function
+                initializeModules();
+                
                 // Hide loading overlay
                 hideLoadingOverlay();
                 
@@ -125,7 +193,8 @@
                     if (typeof FormAnimation !== 'undefined') {
                         FormAnimation.openForm();
                     } else {
-                        console.error('FormAnimation module not loaded');
+                        // Fallback without animation
+                        showForm();
                     }
                 }, 300);
             })
@@ -136,6 +205,22 @@
                 console.error('Failed to load form dependencies:', error);
                 alert('There was an error loading the form. Please try again later.');
             });
+    }
+    
+    /**
+     * Initialize modules if they have an init function
+     */
+    function initializeModules() {
+        // Try to initialize individual modules
+        for (const module of config.modules) {
+            if (window[module.global] && typeof window[module.global].init === 'function') {
+                try {
+                    window[module.global].init();
+                } catch (e) {
+                    console.error(`Error initializing ${module.name}:`, e);
+                }
+            }
+        }
     }
     
     /**
@@ -247,4 +332,88 @@
             overlay.classList.add('hidden');
         }
     }
+    
+    /**
+     * Show form without animation (fallback)
+     */
+    function showForm() {
+        const formSection = document.getElementById('c-form');
+        const formOverlay = document.getElementById('form-overlay');
+        
+        if (formSection && formOverlay) {
+            // Show form and overlay
+            formSection.classList.remove('hidden');
+            formSection.classList.add('flex');
+            formOverlay.classList.remove('hidden');
+            formOverlay.style.opacity = 0.8;
+            
+            // Make first step visible
+            const steps = document.querySelectorAll('#inquiry-form .step');
+            if (steps.length > 0) {
+                // Hide all steps
+                steps.forEach(step => step.classList.add('hidden'));
+                
+                // Show first step
+                steps[0].classList.remove('hidden');
+            }
+            
+            // Prevent scrolling
+            document.body.classList.add('overflow-hidden');
+        }
+    }
+    
+    /**
+     * Hide form without animation (fallback)
+     */
+    function hideForm() {
+        const formSection = document.getElementById('c-form');
+        const formOverlay = document.getElementById('form-overlay');
+        
+        if (formSection && formOverlay) {
+            // Hide form and overlay
+            formSection.classList.add('hidden');
+            formSection.classList.remove('flex');
+            formOverlay.classList.add('hidden');
+            
+            // Reset form
+            resetForm();
+            
+            // Allow scrolling
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+    
+    /**
+     * Reset form (fallback)
+     */
+    function resetForm() {
+        const form = document.getElementById('inquiry-form');
+        if (form) {
+            form.reset();
+            
+            // Show first step, hide others
+            const steps = form.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                if (index === 0) {
+                    step.classList.remove('hidden');
+                } else {
+                    step.classList.add('hidden');
+                }
+            });
+            
+            // Hide success and error messages
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (successMessage) successMessage.classList.add('hidden');
+            if (errorMessage) errorMessage.classList.add('hidden');
+        }
+    }
+    
+    // Expose public API (for debugging)
+    window.FormMainController = {
+        loadAndOpenForm,
+        showForm,
+        hideForm
+    };
 })();

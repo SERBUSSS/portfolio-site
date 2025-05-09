@@ -1,6 +1,6 @@
 // Wait for window to fully load (including all resources)
 window.addEventListener('load', function() {
-    console.log("Window loaded - checking for GSAP");
+    // console.log("Window loaded - checking for GSAP");
     
     // Check if GSAP and ScrollTrigger are loaded
     if (typeof gsap === 'undefined') {
@@ -13,7 +13,7 @@ window.addEventListener('load', function() {
         return;
     }
     
-    console.log("GSAP and ScrollTrigger are available");
+    // console.log("GSAP and ScrollTrigger are available");
     
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
@@ -28,7 +28,7 @@ window.addEventListener('load', function() {
     const serviceThreeDivider = document.querySelector('#s3-divider');
     
     // Debug - Check if elements are found
-    console.log('Services elements found:', {
+    /* console.log('Services elements found:', {
         servicesIntro: servicesIntro ? true : false,
         serviceOne: serviceOne ? true : false,
         serviceOneDivider: serviceOneDivider ? true : false,
@@ -37,7 +37,8 @@ window.addEventListener('load', function() {
         serviceThree: serviceThree ? true : false,
         serviceThreeDivider: serviceThreeDivider ? true : false
     });
-    
+    */
+
     // Verify services section exists
     const servicesSection = document.querySelector('#services');
     if (!servicesSection) {
@@ -45,7 +46,7 @@ window.addEventListener('load', function() {
         return;
     }
     
-    console.log('Services section found, setting up animations');
+    // console.log('Services section found, setting up animations');
     
     // Set initial state with inline styles to ensure they take effect
     const elements = [servicesIntro, serviceOne, serviceOneDivider, serviceTwo, 
@@ -61,7 +62,7 @@ window.addEventListener('load', function() {
     // Force a layout recalculation
     servicesSection.offsetHeight;
     
-    console.log('Initial states set, creating timelines');
+    // console.log('Initial states set, creating timelines');
     
     // Create a timeline for services intro
     const introTl = gsap.timeline({
@@ -183,5 +184,5 @@ window.addEventListener('load', function() {
     
     // Force ScrollTrigger to recalculate all scroll positions
     ScrollTrigger.refresh();
-    console.log('ScrollTrigger refreshed');
+    // console.log('ScrollTrigger refreshed');
 });

@@ -64,20 +64,32 @@ const FormIntegration = (function() {
         const steps = Array.from(form.querySelectorAll('.step'));
         
         // Next buttons
-        document.querySelectorAll('.next-button').forEach((button, index) => {
+        const nextButtons = document.querySelectorAll('.next-button');
+        nextButtons.forEach((button, index) => {
+            // Add original click handler
             button.addEventListener('click', function(e) {
                 // Call the nextButtonHandler function
                 nextButtonHandler.call(this, e);
             });
             
-            // Initial validation state
-            if (index < steps.length) {
-                try {
-                    const isValid = window.FormValidation.validateStep(index);
-                    updateButtonState(button, isValid);
-                } catch (e) {
-                    console.warn('Could not validate step', index, e);
+            // Directly set button attributes to ensure state is correct
+            try {
+                console.log(`Setting initial state for next button ${index}`);
+                const isValid = window.FormValidation.validateStep(index);
+                button.disabled = !isValid;
+                
+                // Toggle visual CSS classes
+                if (isValid) {
+                    button.classList.remove('opacity-50', 'cursor-not-allowed');
+                    button.classList.add('hover:bg-gray-100');
+                    console.log(`Button ${index} should be enabled, classList:`, button.classList);
+                } else {
+                    button.classList.add('opacity-50', 'cursor-not-allowed');
+                    button.classList.remove('hover:bg-gray-100');
+                    console.log(`Button ${index} should be disabled, classList:`, button.classList);
                 }
+            } catch (e) {
+                console.warn('Could not set initial button state for button', index, e);
             }
         });
         
@@ -400,6 +412,8 @@ const FormIntegration = (function() {
         collectFormData
     };
 })();
+
+window.FormIntegration = FormIntegration;
 
 // Do NOT initialize when script is loaded
 // This will be called by FormMainController when neededconst prevButtons = form.querySelectorAll('.prev-button');

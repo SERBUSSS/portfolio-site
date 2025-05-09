@@ -5,20 +5,116 @@
 const FormValidation = (function() {
     // DOM elements
     let form, steps, nextButtons;
+
+    let isActive = false; // Whether the validation is active
+
+    function forceReplaceNextButton(stepIndex) {
+        // Get the button
+        const oldButton = nextButtons[stepIndex];
+        if (!oldButton) return;
+        
+        // Create a completely new button element
+        const newButton = document.createElement('button');
+        
+        // Copy all attributes
+        Array.from(oldButton.attributes).forEach(attr => {
+            newButton.setAttribute(attr.name, attr.value);
+        });
+        
+        // Copy inner HTML
+        newButton.innerHTML = oldButton.innerHTML;
+        
+        // Remove disabled state
+        newButton.disabled = false;
+        newButton.removeAttribute('disabled');
+        newButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        newButton.classList.add('hover:bg-gray-100');
+        
+        // Add click handler
+        newButton.addEventListener('click', function() {
+            console.log('Next button clicked for step', stepIndex);
+            if (typeof FormAnimation !== 'undefined' && typeof FormAnimation.nextStep === 'function') {
+                FormAnimation.nextStep();
+            }
+        });
+        
+        // Replace the old button
+        oldButton.parentNode.replaceChild(newButton, oldButton);
+        
+        // Update reference in nextButtons array
+        nextButtons[stepIndex] = newButton;
+        
+        console.log('Next button completely replaced for step', stepIndex);
+    }
+
+    function validateNextButton(stepIndex) {
+        if (stepIndex < 0 || stepIndex >= steps.length) return;
+        
+        // Grab the button
+        const button = nextButtons[stepIndex];
+        if (!button) return;
+        
+        // Basic validation check
+        const step = steps[stepIndex];
+        if (!step) return;
+        
+        // Check required fields - simple direct validation
+        const requiredFields = step.querySelectorAll('input[required], textarea[required]');
+        const allFieldsValid = Array.from(requiredFields).every(field => {
+            if (field.type === 'radio' || field.type === 'checkbox') return true;
+            if (field.type === 'email' && field.value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+            }
+            return field.value.trim() !== '';
+        });
+        
+        // Update button state directly
+        button.disabled = !allFieldsValid;
+        
+        // Clear and apply appropriate classes
+        button.classList.remove('opacity-50', 'cursor-not-allowed', 'hover:bg-gray-100');
+        
+        if (allFieldsValid) {
+            button.classList.add('hover:bg-gray-100');
+        } else {
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        
+        console.log(`Simple validation for step ${stepIndex}: ${allFieldsValid ? 'Valid' : 'Invalid'}`);
+    }
     
     /**
      * Initialize the module
      */
     function init() {
-        // Get DOM elements
+        console.log('Initializing FormValidation structure...');
+        
+        // Just set up references but don't start validation yet
         form = document.getElementById('inquiry-form');
         steps = Array.from(document.querySelectorAll('#inquiry-form .step'));
         nextButtons = Array.from(document.querySelectorAll('.next-button'));
         
+        console.log(`Found ${steps.length} steps and ${nextButtons.length} next buttons`);
+        
+        // Don't run validation automatically on init
+        // We'll call activateValidation() only when the form is opened
+        
+        console.log('FormValidation structure initialized but not active');
+    }
+
+    /**
+     * Activate validation
+     */
+    function activateValidation() {
+        if (isActive) return;
+        
+        console.log('Activating form validation...');
+        
         // Setup real-time validation
         setupRealTimeValidation();
         
-        console.log('FormValidation initialized with', steps.length, 'steps');
+        isActive = true;
+        console.log('Form validation activated');
     }
     
     /**
@@ -152,23 +248,65 @@ const FormValidation = (function() {
      * @param {number} stepIndex Step index to validate
      */
     function validateAndUpdateStep(stepIndex) {
+        if (!isActive) {
+            console.log('Validation not active yet, ignoring validateAndUpdateStep call');
+            return;
+        }
+        
         if (stepIndex < 0 || stepIndex >= steps.length) return;
         
         // Validate the step
         const isValid = validateStep(stepIndex);
+        console.log(`Validating step ${stepIndex}: ${isValid ? 'Valid' : 'Invalid'}`);
         
-        // Update next button state
-        if (nextButtons[stepIndex]) {
-            nextButtons[stepIndex].disabled = !isValid;
+        // Update next button state - force a direct DOM update
+        const button = nextButtons[stepIndex];
+        if (button) {
+            console.log(`Updating button state for step ${stepIndex} to ${isValid ? 'enabled' : 'disabled'}`);
             
-            // Add/remove classes for visual indication
+            // IMPORTANT: Force direct attribute modification
             if (isValid) {
-                nextButtons[stepIndex].classList.remove('opacity-50', 'cursor-not-allowed');
-                nextButtons[stepIndex].classList.add('hover:bg-gray-100');
+                // Enable button - force all possible ways to enable
+                // button.disabled = false;
+                // button.removeAttribute('disabled'); // Sometimes needed to override default behavior
+                
+                // Remove disabled styling
+                // button.classList.remove('opacity-50', 'cursor-not-allowed');
+                // button.classList.add('hover:bg-gray-100');
+                
+                // Add clear enabled state
+                // button.style.pointerEvents = 'auto';
+                // button.style.cursor = 'pointer';
+                // button.style.opacity = '1';
+                
+                // Highlight the button briefly to show it's enabled
+                // if (typeof gsap !== 'undefined') {
+                //     gsap.fromTo(button, 
+                //         { boxShadow: '0 0 0 3px rgba(0, 0, 0, 0.2)' },
+                //         { boxShadow: '0 0 0 0px rgba(0, 0, 0, 0)', duration: 0.5 }
+                //     );
+                // }
+                forceReplaceNextButton(stepIndex);
             } else {
-                nextButtons[stepIndex].classList.add('opacity-50', 'cursor-not-allowed');
-                nextButtons[stepIndex].classList.remove('hover:bg-gray-100');
+                // Disable button
+                button.disabled = true;
+                
+                // Add disabled styling
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+                button.classList.remove('hover:bg-gray-100');
+                
+                // Force CSS to match disabled state
+                button.style.pointerEvents = 'none';
+                button.style.cursor = 'not-allowed';
+                button.style.opacity = '0.5';
             }
+            
+            // Debug output
+            console.log(`Button ${stepIndex} disabled attribute is now: ${button.disabled}`);
+            console.log(`Button ${stepIndex} classList is now:`, button.classList);
+            console.log(`Button ${stepIndex} style is now:`, button.style.cssText);
+        } else {
+            console.warn(`Next button for step ${stepIndex} not found!`);
         }
     }
     
@@ -448,6 +586,7 @@ const FormValidation = (function() {
     // Public API
     return {
         init,
+        activateValidation,
         validateStep,
         validateAndUpdateStep,
         showValidationErrors,
@@ -461,3 +600,5 @@ document.addEventListener('DOMContentLoaded', function() {
         FormValidation.init();
     }, 50);
 });
+
+window.FormValidation = FormValidation;

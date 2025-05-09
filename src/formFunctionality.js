@@ -55,6 +55,11 @@ const FormModule = (function() {
       editingViews.forEach(view => {
         view.classList.add('hidden');
       });
+
+      // IMPORTANT: Make sure textarea containers are shown initially
+      document.querySelectorAll('.textarea-container').forEach(container => {
+        container.classList.remove('hidden');
+      });
       
       // Make sure mark-as-done buttons work
       const markAsDoneButtons = document.querySelectorAll('.mark-as-done');
@@ -973,83 +978,73 @@ const FormModule = (function() {
         });
       }
     }
-    
-    // Public API
-    return {
-      init,
-      fixTextareaInitialStates,
-      expandTextarea,
-      collapseTextarea,
-      initializeExpandableTextareas
-    };
-  })();
-    
+
     /**
      * Initialize expandable textareas for better user experience
      */
     function initializeExpandableTextareas() {
-      // Focus event to expand textarea
-      document.querySelectorAll('.textarea-container textarea').forEach(textarea => {
+        // Focus event to expand textarea
+        document.querySelectorAll('.textarea-container textarea').forEach(textarea => {
         // Clear existing listeners by cloning the element
         const newTextarea = textarea.cloneNode(true);
         textarea.parentNode.replaceChild(newTextarea, textarea);
         
         // Add focus event listener
         newTextarea.addEventListener('focus', function() {
-          expandTextarea(this);
+            expandTextarea(this);
         });
         
         // Also handle touch events for mobile
         newTextarea.addEventListener('touchstart', function(e) {
-          // Prevent default only if necessary
-          if (window.innerWidth < 768) { // mobile viewport
+            // Prevent default only if necessary
+            if (window.innerWidth < 768) { // mobile viewport
             e.preventDefault();
-          }
-          expandTextarea(this);
+            }
+            expandTextarea(this);
         });
         
         // Check if textarea has content and show completion status
         if (newTextarea.value.trim() !== '') {
-          const container = newTextarea.closest('.question-container');
-          if (container) {
+            const container = newTextarea.closest('.question-container');
+            if (container) {
             const statusElement = container.querySelector('.question-status');
             if (statusElement) {
-              statusElement.classList.remove('hidden');
+                statusElement.classList.remove('hidden');
             }
-          }
+            }
         }
-      });
-      
-      // Mark as done button to collapse textarea
-      document.querySelectorAll('.mark-as-done').forEach(button => {
+        });
+        
+        // Mark as done button to collapse textarea
+        document.querySelectorAll('.mark-as-done').forEach(button => {
         // Clear existing listeners by cloning the element
         const newButton = button.cloneNode(true);
         button.parentNode.replaceChild(newButton, button);
         
         // Add click event listener
         newButton.addEventListener('click', function() {
-          collapseTextarea(this);
+            collapseTextarea(this);
         });
-      });
+        });
     }
-    
+
     /**
      * Expand textarea for editing
      * @param {Element} textarea - The textarea element to expand
      */
     function expandTextarea(textarea) {
-      const container = textarea.closest('.question-container');
-      if (!container) return;
-      
-      // Hide compact view
-      const textareaContainer = container.querySelector('.textarea-container');
-      if (textareaContainer) {
+        const container = textarea.closest('.question-container');
+        if (!container) return;
+        
+        // Hide compact view
+        const textareaContainer = container.querySelector('.textarea-container');
+        if (textareaContainer) {
         textareaContainer.classList.add('hidden');
-      }
-      
-      // Show expanded editing view
-      const editingView = container.querySelector('.editing-view');
-      if (editingView) {
+        }
+        
+        // Show expanded editing view
+        const editingView = container.querySelector('.editing-view');
+        if (editingView) {
         editingView.classList.remove('hidden');
         
         // Set max height to prevent overflow
@@ -1058,28 +1053,28 @@ const FormModule = (function() {
         // Copy value to editing textarea
         const editingTextarea = editingView.querySelector('textarea');
         if (editingTextarea) {
-          editingTextarea.value = textarea.value;
-          
-          // Set maximum height for textarea
-          editingTextarea.style.maxHeight = '40vh';
-          
-          // Auto-resize textarea to fit content, but respect max height
-          const scrollHeight = editingTextarea.scrollHeight;
-          const maxHeight = window.innerHeight * 0.4; // 40% of viewport height
-          editingTextarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
-          
-          // Add scrolling if content exceeds height
-          if (scrollHeight > maxHeight) {
+            editingTextarea.value = textarea.value;
+            
+            // Set maximum height for textarea
+            editingTextarea.style.maxHeight = '40vh';
+            
+            // Auto-resize textarea to fit content, but respect max height
+            const scrollHeight = editingTextarea.scrollHeight;
+            const maxHeight = window.innerHeight * 0.4; // 40% of viewport height
+            editingTextarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+            
+            // Add scrolling if content exceeds height
+            if (scrollHeight > maxHeight) {
             editingTextarea.style.overflowY = 'auto';
-          }
-          
-          // Focus with slight delay for animation
-          setTimeout(() => {
+            }
+            
+            // Focus with slight delay for animation
+            setTimeout(() => {
             editingTextarea.focus();
-          }, 50);
-          
-          // Add auto-resize on input
-          editingTextarea.addEventListener('input', function() {
+            }, 50);
+            
+            // Add auto-resize on input
+            editingTextarea.addEventListener('input', function() {
             // Reset height to calculate proper scrollHeight
             this.style.height = 'auto';
             
@@ -1090,57 +1085,71 @@ const FormModule = (function() {
             
             // Add scrollbar if content exceeds max height
             this.style.overflowY = newScrollHeight > newMaxHeight ? 'auto' : 'hidden';
-          });
+            });
         }
-      }
+        }
     }
-    
+        
     /**
      * Collapse textarea after editing
      * @param {Element} button - The "Mark as done" button
      */
     function collapseTextarea(button) {
-      const container = button.closest('.question-container');
-      if (!container) return;
-      
-      // Get text from editing view
-      const editingTextarea = container.querySelector('.editing-view textarea');
-      if (!editingTextarea) return;
-      
-      const textValue = editingTextarea.value.trim();
-      
-      // Update main textarea
-      const mainTextarea = container.querySelector('.textarea-container textarea');
-      if (mainTextarea) {
+        const container = button.closest('.question-container');
+        if (!container) return;
+        
+        // Get text from editing view
+        const editingTextarea = container.querySelector('.editing-view textarea');
+        if (!editingTextarea) return;
+        
+        const textValue = editingTextarea.value.trim();
+        
+        // Update main textarea
+        const mainTextarea = container.querySelector('.textarea-container textarea');
+        if (mainTextarea) {
         mainTextarea.value = textValue;
         
         // Trigger input event for validation
         const inputEvent = new Event('input', {
-          bubbles: true,
-          cancelable: true
+            bubbles: true,
+            cancelable: true
         });
         mainTextarea.dispatchEvent(inputEvent);
-      }
-      
-      // Toggle views
-      container.querySelector('.editing-view').classList.add('hidden');
-      container.querySelector('.textarea-container').classList.remove('hidden');
-      
-      // Update completion status
-      const statusElement = container.querySelector('.question-status');
-      if (statusElement) {
-        if (textValue) {
-          statusElement.classList.remove('hidden');
-          
-          // Animate status appearance
-          if (typeof gsap !== 'undefined') {
-            gsap.fromTo(statusElement,
-              { opacity: 0, y: -10 },
-              { opacity: 1, y: 0, duration: 0.3 }
-            );
-          }
-        } else {
-          statusElement.classList.add('hidden');
         }
-      }
+        
+        // Toggle views
+        container.querySelector('.editing-view').classList.add('hidden');
+        container.querySelector('.textarea-container').classList.remove('hidden');
+        
+        // Update completion status
+        const statusElement = container.querySelector('.question-status');
+        if (statusElement) {
+        if (textValue) {
+            statusElement.classList.remove('hidden');
+            
+            // Animate status appearance
+            if (typeof gsap !== 'undefined') {
+            gsap.fromTo(statusElement,
+                { opacity: 0, y: -10 },
+                { opacity: 1, y: 0, duration: 0.3 }
+            );
+            }
+        } else {
+            statusElement.classList.add('hidden');
+        }
+        }
     }
+    
+    // Public API
+    return {
+      init,
+      fixTextareaInitialStates,
+      expandTextarea,
+      collapseTextarea,
+      initializeExpandableTextareas
+    };
+})();
+    
+
+
+window.FormModule = FormModule;

@@ -140,21 +140,26 @@ const FormMainController = (function() {
     function loadAndOpenForm() {
         if (isFormOpen) {
             // Form is already open, do nothing
+            console.log('Form is already open');
             return;
         }
         
         if (modulesLoaded) {
             // Modules already loaded, just open the form
+            console.log('Modules already loaded, opening form...');
             openForm();
             return;
         }
         
         // Show loading overlay
         showLoadingOverlay();
+
+        console.log('Initializing form modules...');
         
         // Initialize modules if globally available
         if (initializeFormModules()) {
             // Modules successfully initialized, open the form
+            console.log('Modules successfully initialized');
             hideLoadingOverlay();
             modulesLoaded = true;
             openForm();
@@ -191,6 +196,13 @@ const FormMainController = (function() {
      */
     function initializeFormModules() {
         try {
+            console.log('Checking for form modules:', {
+                Animation: !!window.FormAnimation, 
+                Validation: !!window.FormValidation, 
+                Functionality: !!window.FormModule, 
+                Integration: !!window.FormIntegration
+            });
+
             // Check for global modules (already loaded via script tags)
             if (window.FormAnimation && 
                 window.FormValidation && 
@@ -276,6 +288,11 @@ const FormMainController = (function() {
             navbar.style.zIndex = '30'; // Lower than form z-index
         }
         
+        // Activate validation here - after the form is shown
+        if (modules.validation && typeof modules.validation.activateValidation === 'function') {
+            modules.validation.activateValidation();
+        }
+        
         if (modules.animation && typeof modules.animation.openForm === 'function') {
             // Use animation module
             modules.animation.openForm();
@@ -284,33 +301,64 @@ const FormMainController = (function() {
             showFormFallback();
         }
     }
+
+    function hardResetForm() {
+        console.log('Hard resetting form state...');
+        
+        // Reset form state flags
+        isFormOpen = false;
+        
+        // Re-enable scrolling with multiple approaches
+        document.body.classList.remove('form-open');
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        
+        // Make sure form elements are hidden
+        const formSection = document.getElementById('c-form');
+        const formOverlay = document.getElementById('form-overlay');
+        
+        if (formSection) {
+            formSection.classList.add('hidden');
+            formSection.classList.remove('flex');
+            formSection.style.opacity = '1';
+        }
+        
+        if (formOverlay) {
+            formOverlay.classList.add('hidden');
+            formOverlay.style.opacity = '0';
+        }
+        
+        // Reset steps to initial state
+        const steps = document.querySelectorAll('#inquiry-form .step');
+        steps.forEach((step, index) => {
+            // Reset transformations and styles
+            step.style = '';
+            
+            // Show only first step, hide others
+            if (index === 0) {
+                step.classList.remove('hidden');
+            } else {
+                step.classList.add('hidden');
+            }
+        });
+        
+        // Reset navbar z-index
+        const navbar = document.getElementById('nav-bar-cont');
+        if (navbar) {
+            navbar.style.zIndex = '100';
+        }
+        
+        console.log('Form has been hard reset');
+    }
     
     /**
      * Close form
      */
     function closeForm() {
-        if (modules.animation && typeof modules.animation.closeForm === 'function') {
-            // Use animation module
-            modules.animation.closeForm();
-        } else {
-            // Fallback
-            hideFormFallback();
-        }
-
-        // Re-enable scrolling
-        document.body.classList.remove('form-open');
-        document.body.style.overflow = '';
-        document.body.style.height = '';
-
-        // Restore nav bar z-index after animations complete
-        setTimeout(() => {
-            const navbar = document.getElementById('nav-bar-cont');
-            if (navbar) {
-                navbar.style.zIndex = '100';
-            }
-        }, 500);
-        
-        isFormOpen = false;
+        console.log('Closing form with hard reset...');
+        hardResetForm();
     }
     
     /**
@@ -1025,6 +1073,37 @@ const FormMainController = (function() {
             });
         }
     }
+
+    /**
+     * Reset form parameters after closing
+     */
+    function resetFormParameters() {
+        // Reset form state
+        isFormOpen = false;
+        
+        // Re-enable scrolling - use multiple approaches to ensure it works
+        document.body.classList.remove('form-open');
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        
+        // Reset button states directly
+        const nextButtons = document.querySelectorAll('.next-button');
+        nextButtons.forEach(button => {
+            // Reset any inline styles
+            button.style = '';
+            
+            // Reset classes
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+            button.classList.remove('hover:bg-gray-100');
+            
+            // Set disabled
+            button.disabled = true;
+        });
+        
+        console.log('Form parameters reset, scrolling should be enabled');
+    }
     
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', init);
@@ -1038,3 +1117,108 @@ const FormMainController = (function() {
         resetTextareas
     };
 })();
+
+window.formHelpers = {
+    validateCurrentStep: function() {
+        const form = document.getElementById('inquiry-form');
+        if (!form) return;
+        
+        const steps = Array.from(form.querySelectorAll('.step'));
+        const currentStepIndex = steps.findIndex(step => !step.classList.contains('hidden'));
+        
+        if (currentStepIndex >= 0) {
+            this.validateStep(currentStepIndex);
+        }
+    },
+    
+    validateStep: function(stepIndex) {
+        const form = document.getElementById('inquiry-form');
+        if (!form) return false;
+        
+        const steps = Array.from(form.querySelectorAll('.step'));
+        if (stepIndex < 0 || stepIndex >= steps.length) return false;
+        
+        const step = steps[stepIndex];
+        
+        // Check required fields
+        const requiredFields = step.querySelectorAll('input[required], textarea[required]');
+        const allFieldsValid = Array.from(requiredFields).every(field => {
+            if (field.type === 'radio' || field.type === 'checkbox') return true;
+            if (field.type === 'email' && field.value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+            }
+            return field.value.trim() !== '';
+        });
+        
+        // Update button state
+        const button = step.querySelector('.next-button');
+        if (button) {
+            // Clean implementation of button state
+            button.disabled = !allFieldsValid;
+            button.style.pointerEvents = allFieldsValid ? 'auto' : 'none';
+            button.style.cursor = allFieldsValid ? 'pointer' : 'not-allowed';
+            button.style.opacity = allFieldsValid ? '1' : '0.5';
+            
+            // Ensure click event is active when valid
+            if (allFieldsValid) {
+                const oldButton = button;
+                const newButton = button.cloneNode(true);
+                
+                newButton.addEventListener('click', function() {
+                    console.log('Direct button click handler');
+                    window.formHelpers.goToNextStep();
+                });
+                
+                oldButton.parentNode.replaceChild(newButton, oldButton);
+            }
+        }
+        
+        return allFieldsValid;
+    },
+    
+    goToNextStep: function() {
+        if (typeof FormAnimation !== 'undefined' && typeof FormAnimation.nextStep === 'function') {
+            FormAnimation.nextStep();
+        } else {
+            // Simple direct implementation if animation module fails
+            const form = document.getElementById('inquiry-form');
+            if (!form) return;
+            
+            const steps = Array.from(form.querySelectorAll('.step'));
+            const currentStepIndex = steps.findIndex(step => !step.classList.contains('hidden'));
+            
+            if (currentStepIndex >= 0 && currentStepIndex < steps.length - 1) {
+                steps[currentStepIndex].classList.add('hidden');
+                steps[currentStepIndex + 1].classList.remove('hidden');
+            }
+        }
+    },
+    
+    resetForm: function() {
+        // Direct DOM manipulation to reset the form
+        const form = document.getElementById('inquiry-form');
+        if (!form) return;
+        
+        // Hide form elements
+        const formSection = document.getElementById('c-form');
+        const formOverlay = document.getElementById('form-overlay');
+        
+        if (formSection) {
+            formSection.classList.add('hidden');
+            formSection.classList.remove('flex');
+        }
+        
+        if (formOverlay) {
+            formOverlay.classList.add('hidden');
+        }
+        
+        // Reset body scroll
+        document.body.classList.remove('form-open');
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        
+        console.log('Form has been reset via direct helpers');
+    }
+};

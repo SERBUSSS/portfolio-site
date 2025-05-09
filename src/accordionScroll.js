@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get all dividers
     const dividers = document.querySelectorAll('#FAQ [id="divider"]');
     
+    /*
     console.log("FAQ Elements found:", {
         faqIntro: !!faqIntro,
         questions: questions.length,
         dividers: dividers.length
     });
+    */
     
     // Make everything visible first (fallback)
     document.querySelectorAll('#FAQ *').forEach(el => {

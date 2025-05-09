@@ -45,6 +45,12 @@ const FormAnimation = (function() {
             formOverlay = document.getElementById('form-overlay');
             formSection = document.getElementById('c-form');
             formContainer = document.getElementById('form-container');
+
+            console.log('Initializing FormAnimation with elements:', {
+                formOverlay: formOverlay,
+                formSection: formSection,
+                formContainer: formContainer
+            });
             
             // Check if form elements exist
             if (!formSection || !formOverlay) {
@@ -87,14 +93,16 @@ const FormAnimation = (function() {
      * Open form animation - displays the form with an entrance animation
      */
     function openForm() {
-        console.log('Opening form...');
+        console.log('Opening form...', formSection, formOverlay, steps);
         
         // Make sure we're initialized
         if (!isInitialized) {
+            console.log('FormAnimation not initialized, initializing now...');
             init();
             // Wait a moment for initialization
             setTimeout(() => {
                 if (isInitialized) {
+                    console.log('Initialization successful, opening form now');
                     openForm();
                 } else {
                     console.error('Could not initialize FormAnimation');
@@ -105,7 +113,7 @@ const FormAnimation = (function() {
         
         // Make sure form elements exist
         if (!formSection || !formOverlay) {
-            console.error('Form elements not found');
+            console.error('Form elements not found', {formSection, formOverlay});
             return;
         }
         
@@ -192,6 +200,8 @@ const FormAnimation = (function() {
      * @returns {boolean} Success - whether the transition was successful
      */
     function nextStep() {
+        console.log(`Attempting to move from step ${currentStep} to step ${currentStep + 1}`);
+        
         if (currentStep >= steps.length - 1) return false;
         
         const currentCard = steps[currentStep];
@@ -257,14 +267,17 @@ const FormAnimation = (function() {
         // Update current step
         setCurrentStep(currentStep + 1);
         
-        // Validate new step
-        if (typeof FormValidation !== 'undefined') {
-            try {
-                FormValidation.validateAndUpdateStep(currentStep);
-            } catch (e) {
-                console.warn('Could not validate step', currentStep, e);
+        // Validate new step with a slight delay to ensure DOM is updated
+        setTimeout(() => {
+            if (typeof FormValidation !== 'undefined') {
+                try {
+                    console.log(`Triggering validation for new step ${currentStep}`);
+                    FormValidation.validateAndUpdateStep(currentStep);
+                } catch (e) {
+                    console.warn('Could not validate step', currentStep, e);
+                }
             }
-        }
+        }, 100);
         
         return true;
     }
@@ -349,6 +362,8 @@ const FormAnimation = (function() {
      * Close form animation - animates the form closing and resets it
      */
     function closeForm() {
+        console.log('FormAnimation.closeForm() called');
+    
         // Animate current card out to the left
         if (typeof gsap !== 'undefined') {
             gsap.to(steps[currentStep], {
@@ -393,7 +408,7 @@ const FormAnimation = (function() {
             formOverlay.style.opacity = 0;
             formOverlay.style.transitionDelay = '0.2s';
         }
-
+    
         // Restore the navbar z-index after a delay to complete animations
         setTimeout(() => {
             const headerContainer = document.getElementById('nav-bar-cont');
@@ -422,6 +437,10 @@ const FormAnimation = (function() {
                     
                     // Allow scrolling again
                     document.body.classList.remove('overflow-hidden');
+                    document.body.style.overflow = '';
+                    document.body.style.height = '';
+                    
+                    console.log('Form animation completed, form is now hidden');
                 }
             });
         } else {
@@ -683,3 +702,5 @@ const FormAnimation = (function() {
 if (typeof FormAnimation !== 'undefined') {
     FormAnimation.init();
 }
+
+window.FormAnimation = FormAnimation;

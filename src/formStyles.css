@@ -1,36 +1,14 @@
+/* 
+ * Consolidated Form Styles
+ * Contains all the CSS needed for the multi-step form including animations and mobile responsiveness
+ */
+
 /* Prevent scrolling when form is open */
 body.form-open {
     overflow: hidden;
     height: 100%;
     position: fixed;
     width: 100%;
-}
-
-/* Improve mark-as-done button visibility */
-.mark-as-done {
-    background: #f9f9f9;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.mark-as-done:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-/* Make form container scrollable but contained */
-.step {
-    max-height: 85vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-/* Keep the nav bar in the background when form is open */
-body.form-open #nav-bar-cont {
-    z-index: 30 !important;
 }
 
 /* Form overlay */
@@ -91,7 +69,7 @@ body.form-open #nav-bar-cont {
     transition: all 0.3s ease;
 }
 
-/* Expandable textareas */
+/* Expanded textarea styles */
 .question-container {
     position: relative;
 }
@@ -99,9 +77,33 @@ body.form-open #nav-bar-cont {
 .editing-view {
     position: relative;
     z-index: 10;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Custom checkboxes */
+.editing-view textarea {
+    max-height: 40vh;
+    overflow-y: auto;
+    resize: none;
+}
+
+/* Improve mark-as-done button visibility */
+.mark-as-done {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.mark-as-done:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Custom checkboxes and radio buttons */
 .checkbox-container, .radio-container {
     position: relative;
     overflow: hidden;
@@ -164,13 +166,19 @@ input.border-red-500, textarea.border-red-500 {
     transition: all 0.3s ease;
 }
 
-/* Success animation */
+/* Success & error animations */
 #success-message, #error-message {
     transform-origin: center;
 }
 
-/* Enhanced mobile experience for the form */
+/* Animation for question answered status */
+.question-status {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
 
+/* Enhanced mobile experience for the form */
 @media (max-width: 768px) {
     /* Form container */
     #c-form {
@@ -227,10 +235,8 @@ input.border-red-500, textarea.border-red-500 {
     #success-message, #error-message {
         padding: 1rem;
     }
-}
-
-/* Better focus states for mobile */
-@media (max-width: 768px) {
+    
+    /* Better focus states for mobile */
     input:focus, textarea:focus, select:focus, button:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
@@ -241,133 +247,7 @@ input.border-red-500, textarea.border-red-500 {
         transform: none;
         box-shadow: none;
     }
-}
-
-/* Fix for iOS Safari bottom padding */
-@supports (-webkit-touch-callout: none) {
-    .step {
-        padding-bottom: 3rem;
-    }
     
-    button[type="submit"] {
-        margin-bottom: 1.5rem;
-    }
-}
-
-
-/* Textarea focus fix */
-.editing-view {
-    position: relative;
-    z-index: 10;
-    max-height: 50vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.editing-view textarea {
-    max-height: 40vh;
-    overflow-y: auto;
-    resize: none;
-}
-
-/* Improve mark-as-done button visibility */
-.mark-as-done {
-    background: #f9f9f9;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.mark-as-done:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-/* Enhanced CSS for textarea focus behavior */
-
-/* Question container */
-.question-container {
-    position: relative;
-}
-
-/* Textarea container in normal state */
-.textarea-container {
-    transition: opacity 0.3s ease;
-}
-
-/* Focused state (editing view) */
-.editing-view {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-height: 70vh;
-    transition: all 0.3s ease;
-}
-
-/* Make sure editing-view is hidden by default */
-.editing-view.hidden {
-    display: none;
-}
-
-/* Style for the textarea in focused state */
-.editing-view textarea {
-    min-height: 120px;
-    max-height: 40vh;
-    overflow-y: auto;
-    resize: none;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    font-size: 16px; /* Mobile-friendly font size to prevent zooming */
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-}
-
-/* Enhance focused state further when the textarea is focused */
-.editing-view textarea:focus {
-    outline: none;
-    border-color: #000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Improve mark-as-done button */
-.mark-as-done {
-    background: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 8px;
-}
-
-.mark-as-done:hover {
-    background: #e5e5e5;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.mark-as-done:active {
-    transform: translateY(0);
-}
-
-/* Add a check icon to mark-as-done button */
-.mark-as-done::after {
-    content: '✓';
-    display: inline-block;
-    margin-left: 8px;
-    font-weight: bold;
-}
-
-/* Mobile-specific adjustments */
-@media (max-width: 768px) {
     /* Full-screen editing view for mobile */
     .editing-view {
         position: fixed;
@@ -407,16 +287,13 @@ input.border-red-500, textarea.border-red-500 {
     }
 }
 
-/* Animation for question answered status */
-.question-status {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Fix for iOS Safari bottom padding */
+@supports (-webkit-touch-callout: none) {
+    .step {
+        padding-bottom: 3rem;
+    }
+    
+    button[type="submit"] {
+        margin-bottom: 1.5rem;
+    }
 }

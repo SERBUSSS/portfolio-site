@@ -1,5 +1,5 @@
 /**
- * Form Validation Module - Enhanced
+ * Form Validation Module
  * Handles all validation for the multi-step form with improved error handling
  */
 const FormValidation = (function() {
@@ -119,6 +119,7 @@ const FormValidation = (function() {
     /**
      * Validate email field
      * @param {HTMLInputElement} field Email input field
+     * @returns {boolean} Whether the email is valid
      */
     function validateEmail(field) {
         // Remove any existing error message
@@ -319,7 +320,7 @@ const FormValidation = (function() {
                 container.appendChild(errorMessage);
                 
                 // Add event listener to remove error when option is selected
-                const radios = step.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
+                const radios = step.querySelectorAll(`input[name="${groupName}"]`);
                 radios.forEach(radio => {
                     radio.addEventListener('change', function() {
                         const errorMsg = container.querySelector('.error-message');
@@ -351,7 +352,7 @@ const FormValidation = (function() {
             if (checkbox.checked) return;
             
             // Get container for the error message
-            const container = checkbox.closest('.checkbox-container').parentNode;
+            const container = checkbox.closest('.checkbox-container')?.parentNode;
             if (!container) return;
             
             // Add error message

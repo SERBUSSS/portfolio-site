@@ -1,6 +1,7 @@
 /**
  * Form Animation Module
- * Handles all animations for the multi-step card form
+ * Handles all animations for the multi-step form including transitions between steps,
+ * card stacking effects, and success/error animations.
  */
 const FormAnimation = (function() {
     // Private variables
@@ -20,28 +21,9 @@ const FormAnimation = (function() {
     const MAX_STACK_SIZE = 3; // Max number of cards to keep in the stack
     
     /**
-     * Initialize the module
+     * Initialize the module - set up DOM references and event handlers
      */
     function init() {
-        function init() {
-            if (isInitialized) return;
-            
-            console.log('Initializing FormAnimation...');
-            
-            // Make sure we don't interfere with other GSAP animations
-            const preserveGSAP = window.gsap;
-            
-            // Wait for DOM content to be loaded
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initWhenReady);
-            } else {
-                initWhenReady();
-            }
-            
-            // Restore gsap reference 
-            window.gsap = preserveGSAP;
-        }
-
         if (isInitialized) return;
         
         console.log('Initializing FormAnimation...');
@@ -55,7 +37,7 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Initialize when DOM is ready
+     * Initialize when DOM is ready - find DOM elements and set up initial state
      */
     function initWhenReady() {
         try {
@@ -102,7 +84,7 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Open form animation
+     * Open form animation - displays the form with an entrance animation
      */
     function openForm() {
         console.log('Opening form...');
@@ -206,8 +188,8 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Next step animation
-     * @returns {boolean} Success
+     * Next step animation - transitions to the next form step with animation
+     * @returns {boolean} Success - whether the transition was successful
      */
     function nextStep() {
         if (currentStep >= steps.length - 1) return false;
@@ -288,8 +270,8 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Previous step animation
-     * @returns {boolean} Success
+     * Previous step animation - transitions back to the previous form step
+     * @returns {boolean} Success - whether the transition was successful
      */
     function prevStep() {
         if (currentStep <= 0) return false;
@@ -364,7 +346,7 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Close form animation
+     * Close form animation - animates the form closing and resets it
      */
     function closeForm() {
         // Animate current card out to the left
@@ -562,7 +544,8 @@ const FormAnimation = (function() {
     }
     
     /**
-     * Set current step and update UI
+     * Set current step and update UI to reflect the current step
+     * @param {number} index - The step index to set as current
      */
     function setCurrentStep(index) {
         currentStep = index;
@@ -612,6 +595,7 @@ const FormAnimation = (function() {
     
     /**
      * Update card stack when moving forward
+     * @param {number} newRotation - Random rotation to apply to the current card
      */
     function updateCardStackForward(newRotation) {
         // Shift all cards down in the stack

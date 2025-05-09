@@ -1,9 +1,9 @@
 /**
- * Form Main Controller - Fixed Version
+ * Form Main Controller
  * Main entry point for the form functionality with improved coordination between modules
  */
 const FormMainController = (function() {
-    // State
+    // State variables
     let isInitialized = false;
     let modulesLoaded = false;
     let isFormOpen = false;
@@ -68,7 +68,7 @@ const FormMainController = (function() {
     }
     
     /**
-     * Initialize open form buttons
+     * Initialize open form buttons with click handlers
      */
     function initializeOpenFormButtons() {
         const openButtons = document.querySelectorAll('[data-open-form="true"]');
@@ -166,9 +166,22 @@ const FormMainController = (function() {
         }
 
         // Reset textareas when form opens
+        resetTextareas();
+    }
+
+    /**
+     * Reset textareas to initial state
+     */
+    function resetTextareas() {
+        // If we have a dedicated textarea fix module, use it
         if (window.textareaFix) {
             window.textareaFix.initializeAllTextareas();
             window.textareaFix.setupTextareaInteractions();
+        } 
+        // Otherwise if we have FormModule available, use it
+        else if (modules.functionality && typeof modules.functionality.fixTextareaInitialStates === 'function') {
+            modules.functionality.fixTextareaInitialStates();
+            modules.functionality.initializeExpandableTextareas();
         }
     }
     
@@ -191,30 +204,42 @@ const FormMainController = (function() {
                 modules.integration = window.FormIntegration;
                 
                 // Initialize modules in the correct order
+                console.log('Initializing form modules in sequence...');
+                
+                // 1. Initialize validation first
                 if (typeof modules.validation.init === 'function') {
                     modules.validation.init();
                 }
                 
+                // 2. Initialize functionality second
                 if (typeof modules.functionality.init === 'function') {
                     modules.functionality.init();
                 }
                 
+                // 3. Initialize animation third
                 if (typeof modules.animation.init === 'function') {
                     modules.animation.init();
                 }
                 
-                // Initialize integration last
+                // 4. Initialize integration last (connects everything together)
                 if (typeof modules.integration.init === 'function') {
                     modules.integration.init();
                 }
                 
-                // Connect navigation buttons
+                // Connect navigation buttons explicitly for extra redundancy
                 if (typeof modules.integration.connectNavigationButtons === 'function') {
                     modules.integration.connectNavigationButtons();
                 }
                 
                 return true;
             }
+            
+            console.warn('One or more required modules not found:',
+                window.FormAnimation ? '✓' : '✗', 'Animation',
+                window.FormValidation ? '✓' : '✗', 'Validation',
+                window.FormModule ? '✓' : '✗', 'Functionality',
+                window.FormIntegration ? '✓' : '✗', 'Integration'
+            );
             
             return false;
         } catch (error) {
@@ -229,7 +254,7 @@ const FormMainController = (function() {
     function openForm() {
         isFormOpen = true;
 
-        // Prevent background scrolling more forcefully
+        // Prevent background scrolling
         document.body.classList.add('form-open');
         document.body.style.overflow = 'hidden';
         document.body.style.height = '100%';
@@ -314,7 +339,7 @@ const FormMainController = (function() {
             overlay.classList.remove('hidden');
         }
     }
-    
+
     /**
      * Hide loading overlay
      */
@@ -326,7 +351,7 @@ const FormMainController = (function() {
     }
     
     /**
-     * Show form fallback
+     * Show form fallback when animation module is not available
      */
     function showFormFallback() {
         const formSection = document.getElementById('c-form');
@@ -360,7 +385,7 @@ const FormMainController = (function() {
     }
     
     /**
-     * Hide form fallback
+     * Hide form fallback when closing without animation module
      */
     function hideFormFallback() {
         const formSection = document.getElementById('c-form');
@@ -383,7 +408,7 @@ const FormMainController = (function() {
     }
     
     /**
-     * Reset form
+     * Reset form to initial state
      */
     function resetForm() {
         const form = document.getElementById('inquiry-form');
@@ -410,7 +435,7 @@ const FormMainController = (function() {
     }
     
     /**
-     * Setup basic form navigation for fallback
+     * Setup basic form navigation for fallback mode
      */
     function setupBasicFormNavigation() {
         const form = document.getElementById('inquiry-form');
@@ -448,6 +473,9 @@ const FormMainController = (function() {
                         // Update prev button visibility
                         updatePrevButtonVisibility(currentIndex + 1);
                     }
+                } else {
+                    // Show validation errors
+                    showBasicValidationErrors(steps[currentIndex]);
                 }
             });
             
@@ -493,7 +521,10 @@ const FormMainController = (function() {
             
             // Validate current step
             const currentIndex = getCurrentStepIndex();
-            if (!validateBasicStep(steps[currentIndex])) return;
+            if (!validateBasicStep(steps[currentIndex])) {
+                showBasicValidationErrors(steps[currentIndex]);
+                return;
+            }
             
             // Get submit button
             const submitButton = form.querySelector('button[type="submit"]');
@@ -803,6 +834,11 @@ const FormMainController = (function() {
     function validateBasicStep(step) {
         if (!step) return false;
         
+        // Use integration module's validation if available
+        if (modules.integration && typeof modules.integration.validateBasicStep === 'function') {
+            return modules.integration.validateBasicStep(step);
+        }
+        
         // Required fields
         const requiredFields = step.querySelectorAll('input[required], textarea[required], select[required]');
         let isValid = true;
@@ -861,6 +897,135 @@ const FormMainController = (function() {
         return isValid;
     }
     
+    /**
+     * Show basic validation errors
+     * @param {HTMLElement} step Step element to show errors for
+     */
+    function showBasicValidationErrors(step) {
+        if (!step) return;
+        
+        // Clear previous error messages
+        step.querySelectorAll('.error-message').forEach(msg => msg.remove());
+        
+        // Check required fields
+        step.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+            // Skip radio and checkbox fields
+            if (field.type === 'radio' || field.type === 'checkbox') return;
+            
+            // Special validation for email
+            if (field.type === 'email' && field.value.trim() !== '') {
+                const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (!emailRegex.test(field.value.toLowerCase())) {
+                    // Add error styling
+                    field.classList.add('border-red-500');
+                    
+                    // Add error message
+                    const errorMessage = document.createElement('p');
+                    errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+                    errorMessage.textContent = 'Please enter a valid email address';
+                    field.parentNode.insertBefore(errorMessage, field.nextSibling);
+                }
+                return;
+            }
+            
+            // Skip if valid
+            if (field.value.trim() !== '') return;
+            
+            // Add error styling
+            field.classList.add('border-red-500');
+            
+            // Add error message
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+            errorMessage.textContent = 'This field is required';
+            field.parentNode.insertBefore(errorMessage, field.nextSibling);
+        });
+        
+        // Check radio groups
+        const radioGroups = new Set();
+        step.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+            radioGroups.add(radio.name);
+        });
+        
+        radioGroups.forEach(groupName => {
+            const isAnyChecked = step.querySelector(`input[name="${groupName}"]:checked`) !== null;
+            
+            if (!isAnyChecked) {
+                // Get a container for the error message
+                const firstRadio = step.querySelector(`input[type="radio"][name="${groupName}"]`);
+                if (!firstRadio) return;
+                
+                const container = firstRadio.closest('.space-y-4') || firstRadio.closest('div');
+                if (!container) return;
+                
+                // Add error message
+                const errorMessage = document.createElement('p');
+                errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+                errorMessage.textContent = 'Please select an option';
+                container.appendChild(errorMessage);
+                
+                // Highlight the radio containers
+                const radioContainers = container.querySelectorAll('.radio-container');
+                radioContainers.forEach(radioContainer => {
+                    radioContainer.classList.add('border-red-500');
+                });
+            }
+        });
+        
+        // Check required checkboxes
+        step.querySelectorAll('input[type="checkbox"][required]').forEach(checkbox => {
+            if (checkbox.checked) return;
+            
+            // Get container for the error message
+            const container = checkbox.closest('.checkbox-container')?.parentNode;
+            if (!container) return;
+            
+            // Add error message
+            const errorMessage = document.createElement('p');
+            errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+            errorMessage.textContent = 'This selection is required';
+            container.appendChild(errorMessage);
+            
+            // Highlight the checkbox container
+            const checkboxContainer = checkbox.closest('.checkbox-container');
+            if (checkboxContainer) {
+                checkboxContainer.classList.add('border-red-500');
+            }
+        });
+        
+        // Check custom budget
+        const budgetCustomRadio = step.querySelector('#budgetCustom');
+        const customBudgetContainer = step.querySelector('#customBudgetContainer');
+        
+        if (budgetCustomRadio && 
+            customBudgetContainer && 
+            !customBudgetContainer.classList.contains('hidden') && 
+            budgetCustomRadio.checked) {
+            
+            const customBudgetInput = customBudgetContainer.querySelector('#customBudget');
+            if (customBudgetInput && !customBudgetInput.value.trim()) {
+                // Add error styling
+                customBudgetInput.classList.add('border-red-500');
+                
+                // Add error message
+                const errorMessage = document.createElement('p');
+                errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
+                errorMessage.textContent = 'Please specify your budget';
+                customBudgetInput.parentNode.insertBefore(errorMessage, customBudgetInput.nextSibling);
+            }
+        }
+        
+        // Shake the form to indicate error
+        const formContainer = step.closest('form');
+        if (formContainer && typeof gsap !== 'undefined') {
+            gsap.to(formContainer, {
+                x: [-5, 5, -4, 4, -3, 3, 0],
+                duration: 0.4,
+                ease: 'power1.inOut'
+            });
+        }
+    }
+    
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', init);
     
@@ -869,6 +1034,7 @@ const FormMainController = (function() {
         init,
         loadAndOpenForm,
         openForm,
-        closeForm
+        closeForm,
+        resetTextareas
     };
 })();

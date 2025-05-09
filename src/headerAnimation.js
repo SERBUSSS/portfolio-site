@@ -5,16 +5,21 @@ window.addEventListener('load', function() {
     
     // Get the header element
     const header = document.getElementById('nav-bar');
+    const headerContainer = document.getElementById('nav-bar-cont');
     const headerLogo = document.getElementById('head-logo');
     
-    // Set initial state
+    // Set initial state with an appropriate z-index
     gsap.set(header, {
         position: 'fixed',
         width: '100%',
         background: 'rgba(255, 255, 255, 0)', // Start transparent
         backdropFilter: 'blur(0px)',
-        transition: 'background 0.3s, backdrop-filter 0.3s',
-        zIndex: 100
+        transition: 'background 0.3s, backdrop-filter 0.3s'
+    });
+    
+    // Set z-index on the container instead of individual elements
+    gsap.set(headerContainer, {
+        zIndex: 30 // Lower z-index so form can appear above it
     });
     
     // Initialize variables for scroll direction detection
@@ -85,6 +90,14 @@ window.addEventListener('load', function() {
             }
             
             lastScrollTop = scrollTop;
+        }
+    });
+    
+    // Add a global listener to check for form open state and adjust z-index accordingly
+    document.addEventListener('click', function(e) {
+        // If clicking a form open button, lower the navbar z-index
+        if (e.target.closest('[data-open-form="true"]') || e.target.closest('a[href="#background-form"]')) {
+            gsap.set(headerContainer, { zIndex: 30 });
         }
     });
 });

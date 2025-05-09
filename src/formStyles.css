@@ -1,9 +1,53 @@
+/* Prevent scrolling when form is open */
+body.form-open {
+    overflow: hidden;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+/* Improve mark-as-done button visibility */
+.mark-as-done {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.mark-as-done:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Make form container scrollable but contained */
+.step {
+    max-height: 85vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* Keep the nav bar in the background when form is open */
+body.form-open #nav-bar-cont {
+    z-index: 30 !important;
+}
+
 /* Form overlay */
 #form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.5);
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 40;
 }
 
 /* Loading overlay */
@@ -14,6 +58,7 @@
 
 /* Form container */
 #c-form {
+    z-index: 50;
     transition: opacity 0.3s ease;
 }
 
@@ -207,4 +252,171 @@ input.border-red-500, textarea.border-red-500 {
     button[type="submit"] {
         margin-bottom: 1.5rem;
     }
+}
+
+
+/* Textarea focus fix */
+.editing-view {
+    position: relative;
+    z-index: 10;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.editing-view textarea {
+    max-height: 40vh;
+    overflow-y: auto;
+    resize: none;
+}
+
+/* Improve mark-as-done button visibility */
+.mark-as-done {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.mark-as-done:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Enhanced CSS for textarea focus behavior */
+
+/* Question container */
+.question-container {
+    position: relative;
+}
+
+/* Textarea container in normal state */
+.textarea-container {
+    transition: opacity 0.3s ease;
+}
+
+/* Focused state (editing view) */
+.editing-view {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+    transition: all 0.3s ease;
+}
+
+/* Make sure editing-view is hidden by default */
+.editing-view.hidden {
+    display: none;
+}
+
+/* Style for the textarea in focused state */
+.editing-view textarea {
+    min-height: 120px;
+    max-height: 40vh;
+    overflow-y: auto;
+    resize: none;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 16px; /* Mobile-friendly font size to prevent zooming */
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Enhance focused state further when the textarea is focused */
+.editing-view textarea:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Improve mark-as-done button */
+.mark-as-done {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.mark-as-done:hover {
+    background: #e5e5e5;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mark-as-done:active {
+    transform: translateY(0);
+}
+
+/* Add a check icon to mark-as-done button */
+.mark-as-done::after {
+    content: '✓';
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    /* Full-screen editing view for mobile */
+    .editing-view {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        z-index: 60;
+        padding: 16px;
+        max-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Add a title for the question at the top */
+    .editing-view::before {
+        content: attr(data-question-label);
+        font-weight: bold;
+        margin-bottom: 12px;
+        font-size: 18px;
+    }
+    
+    /* Textarea takes remaining space */
+    .editing-view textarea {
+        flex-grow: 1;
+        min-height: 150px;
+        max-height: calc(100vh - 120px);
+        margin-bottom: 16px;
+    }
+    
+    /* Bigger tap target for mark-as-done */
+    .mark-as-done {
+        padding: 14px 20px;
+        font-size: 16px;
+        margin-top: auto;
+    }
+}
+
+/* Animation for question answered status */
+.question-status {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }

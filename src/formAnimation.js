@@ -23,6 +23,25 @@ const FormAnimation = (function() {
      * Initialize the module
      */
     function init() {
+        function init() {
+            if (isInitialized) return;
+            
+            console.log('Initializing FormAnimation...');
+            
+            // Make sure we don't interfere with other GSAP animations
+            const preserveGSAP = window.gsap;
+            
+            // Wait for DOM content to be loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initWhenReady);
+            } else {
+                initWhenReady();
+            }
+            
+            // Restore gsap reference 
+            window.gsap = preserveGSAP;
+        }
+
         if (isInitialized) return;
         
         console.log('Initializing FormAnimation...');
@@ -115,6 +134,12 @@ const FormAnimation = (function() {
         
         // Prevent background scrolling
         document.body.classList.add('overflow-hidden');
+
+        // Lower the navbar z-index
+        const headerContainer = document.getElementById('nav-bar-cont');
+        if (headerContainer) {
+            headerContainer.style.zIndex = '30'; // Lower than form z-index
+        }
         
         // Animate overlay fade in
         if (typeof gsap !== 'undefined') {
@@ -386,6 +411,14 @@ const FormAnimation = (function() {
             formOverlay.style.opacity = 0;
             formOverlay.style.transitionDelay = '0.2s';
         }
+
+        // Restore the navbar z-index after a delay to complete animations
+        setTimeout(() => {
+            const headerContainer = document.getElementById('nav-bar-cont');
+            if (headerContainer) {
+                headerContainer.style.zIndex = '100';
+            }
+        }, 500);
         
         // Hide form after animation completes
         if (typeof gsap !== 'undefined') {

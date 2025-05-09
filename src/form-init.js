@@ -1,23 +1,35 @@
 /**
- * Form Initialization Script
+ * Form Initialization Script - FIXED VERSION
  * Simple script to enable the form without needing to wait for all modules
  */
 (function() {
     // Wait for DOM to be ready
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('Form Init script loaded and ready');
+        
         // Initialize open form buttons immediately
         const openButtons = document.querySelectorAll('[data-open-form="true"]');
         
         openButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            // Remove existing listeners by cloning
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Add new event listener
+            newButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Try to use FormMainController if available
+                // Use FormMainController if available
                 if (window.FormMainController && typeof window.FormMainController.loadAndOpenForm === 'function') {
                     window.FormMainController.loadAndOpenForm();
                 } else {
-                    // Simple fallback if modules aren't loaded
-                    showSimpleForm();
+                    // Either wait for MainController to be available or show fallback
+                    if (window.FormAnimation && typeof window.FormAnimation.openForm === 'function') {
+                        window.FormAnimation.openForm();
+                    } else {
+                        // Simple fallback if modules aren't loaded
+                        showSimpleForm();
+                    }
                 }
             });
         });
@@ -26,7 +38,12 @@
         const formLinks = document.querySelectorAll('a[href="#background-form"]');
         
         formLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+            // Remove existing listeners by cloning
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            // Add new event listener
+            newLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 
                 // Scroll to the form section
@@ -51,6 +68,8 @@
      * Show a simple form without animations as fallback
      */
     function showSimpleForm() {
+        console.log('Using simple form fallback');
+        
         // Get form elements
         const formSection = document.getElementById('c-form');
         const formOverlay = document.getElementById('form-overlay');
@@ -91,7 +110,12 @@
         // Setup form close buttons
         const closeButtons = document.querySelectorAll('#c-form .close-button');
         closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            // Remove existing listeners
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Add new event listener
+            newButton.addEventListener('click', function() {
                 if (confirm('Are you sure you want to close the form? Your progress will be lost.')) {
                     closeSimpleForm();
                 }
@@ -153,7 +177,12 @@
         
         // Next buttons
         form.querySelectorAll('.next-button').forEach((button, index) => {
-            button.addEventListener('click', function() {
+            // Remove existing event listeners
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Add new event listener
+            newButton.addEventListener('click', function() {
                 // Simple validation
                 const currentStep = steps.findIndex(step => !step.classList.contains('hidden'));
                 const currentStepElement = steps[currentStep];
@@ -186,13 +215,24 @@
                     
                     // Show next step
                     steps[currentStep + 1].classList.remove('hidden');
+                    
+                    // Update prev button visibility
+                    if (currentStep + 1 > 0) {
+                        const prevButtons = form.querySelectorAll('.prev-button');
+                        prevButtons.forEach(btn => btn.classList.remove('invisible'));
+                    }
                 }
             });
         });
         
         // Previous buttons
         form.querySelectorAll('.prev-button').forEach(button => {
-            button.addEventListener('click', function() {
+            // Remove existing event listeners
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Add new event listener
+            newButton.addEventListener('click', function() {
                 const currentStep = steps.findIndex(step => !step.classList.contains('hidden'));
                 
                 if (currentStep > 0) {
@@ -201,6 +241,12 @@
                     
                     // Show previous step
                     steps[currentStep - 1].classList.remove('hidden');
+                    
+                    // Update prev button visibility
+                    if (currentStep - 1 === 0) {
+                        const prevButtons = form.querySelectorAll('.prev-button');
+                        prevButtons.forEach(btn => btn.classList.add('invisible'));
+                    }
                 }
             });
         });
@@ -283,5 +329,60 @@
                 }
             });
         }
+        
+        // Setup input fields to update button state
+        setupInputValidation(form, steps);
+    }
+    
+    /**
+     * Setup input validation
+     */
+    function setupInputValidation(form, steps) {
+        // Function to validate step
+        function validateStep(step) {
+            const requiredFields = step.querySelectorAll('input[required], textarea[required], select[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                // Skip radio and checkbox
+                if (field.type === 'radio' || field.type === 'checkbox') return;
+                
+                if (!field.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Function to update button state
+        function updateButtonState(step) {
+            const isValid = validateStep(step);
+            const nextButton = step.querySelector('.next-button');
+            
+            if (nextButton) {
+                if (isValid) {
+                    nextButton.disabled = false;
+                    nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    nextButton.disabled = true;
+                    nextButton.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+        
+        // Add input event listeners
+        steps.forEach(step => {
+            const fields = step.querySelectorAll('input, textarea, select');
+            
+            fields.forEach(field => {
+                field.addEventListener('input', function() {
+                    updateButtonState(step);
+                });
+            });
+            
+            // Initial validation
+            updateButtonState(step);
+        });
     }
 })();

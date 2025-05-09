@@ -5,8 +5,6 @@
 const FormIntegration = (function() {
     // Keep track of initialized state
     let isInitialized = false;
-    let initAttempts = 0;
-    const MAX_INIT_ATTEMPTS = 10; // Prevent infinite loops
     
     /**
      * Initialize module
@@ -16,42 +14,9 @@ const FormIntegration = (function() {
         
         console.log('Initializing form integration...');
         
-        // Wait for DOM content to be loaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initWhenReady);
-        } else {
-            initWhenReady();
-        }
-    }
-    
-    /**
-     * Initialize when DOM and modules are ready
-     */
-    function initWhenReady() {
-        // Increment the attempt counter
-        initAttempts++;
-        
-        // Check if we've tried too many times
-        if (initAttempts > MAX_INIT_ATTEMPTS) {
-            console.error('Failed to initialize FormIntegration after', MAX_INIT_ATTEMPTS, 'attempts');
-            
-            // Set up a basic fallback
-            setupBasicNavigation();
-            return;
-        }
-        
-        // Check if dependencies are available - be more specific about what we're checking
-        const animationAvailable = typeof window.FormAnimation !== 'undefined' && 
-                                  typeof window.FormAnimation.nextStep === 'function';
-        
-        const validationAvailable = typeof window.FormValidation !== 'undefined' && 
-                                   typeof window.FormValidation.validateStep === 'function';
-        
-        if (!animationAvailable || !validationAvailable) {
-            console.log(`Waiting for form modules to load... (attempt ${initAttempts}/${MAX_INIT_ATTEMPTS})`);
-            
-            // Try again with increasing delay to avoid hammering
-            setTimeout(initWhenReady, 100 * Math.min(initAttempts, 5));
+        // Check if dependencies are already initialized
+        if (!checkDependencies()) {
+            console.log('Dependencies not ready yet, integration will be initialized when needed');
             return;
         }
         
@@ -70,268 +35,18 @@ const FormIntegration = (function() {
     }
     
     /**
-     * Set up basic navigation as a fallback
+     * Check if all needed dependencies are available
      */
-    function setupBasicNavigation() {
-        // Simple navigation logic that doesn't depend on other modules
-        const form = document.getElementById('inquiry-form');
-        if (!form) return;
+    function checkDependencies() {
+        const animationAvailable = typeof window.FormAnimation !== 'undefined' && 
+                                   typeof window.FormAnimation.nextStep === 'function';
         
-        // Get all steps
-        const steps = Array.from(form.querySelectorAll('.step'));
+        const validationAvailable = typeof window.FormValidation !== 'undefined' && 
+                                   typeof window.FormValidation.validateStep === 'function';
         
-        // Function to go to a step
-        function goToStep(index) {
-            if (index < 0 || index >= steps.length) return;
-            
-            // Hide all steps
-            steps.forEach(step => step.classList.add('hidden'));
-            
-            // Show the requested step
-            steps[index].classList.remove('hidden');
-            
-            // Update buttons
-            updateButtonStates(index);
-        }
+        const functionalityAvailable = typeof window.FormModule !== 'undefined';
         
-        // Update button states
-        function updateButtonStates(currentIndex) {
-            // Previous buttons
-            const prevButtons = form.querySelectorAll('.prev-button');
-            prevButtons.forEach(btn => {
-                if (currentIndex === 0) {
-                    btn.classList.add('invisible');
-                } else {
-                    btn.classList.remove('invisible');
-                }
-            });
-        }
-        
-        // Get current step index
-        function getCurrentStepIndex() {
-            return steps.findIndex(step => !step.classList.contains('hidden'));
-        }
-        
-        // Basic form validation
-        function validateCurrentStep() {
-            const currentIndex = getCurrentStepIndex();
-            if (currentIndex < 0) return false;
-            
-            const currentStep = steps[currentIndex];
-            
-            // Check required fields
-            const requiredFields = currentStep.querySelectorAll('input[required], textarea[required], select[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                // Skip radio buttons and checkboxes (will handle separately)
-                if (field.type === 'radio' || field.type === 'checkbox') return;
-                
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.classList.add('border-red-500');
-                    
-                    // Add error message if it doesn't exist
-                    const existingError = field.nextElementSibling;
-                    if (!existingError || !existingError.classList.contains('error-message')) {
-                        const errorMessage = document.createElement('p');
-                        errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
-                        errorMessage.textContent = 'This field is required';
-                        field.parentNode.insertBefore(errorMessage, field.nextSibling);
-                    }
-                } else {
-                    field.classList.remove('border-red-500');
-                    
-                    // Remove error message if exists
-                    const existingError = field.nextElementSibling;
-                    if (existingError && existingError.classList.contains('error-message')) {
-                        existingError.remove();
-                    }
-                }
-            });
-            
-            return isValid;
-        }
-        
-        // Clear validation errors
-        function clearValidationErrors() {
-            form.querySelectorAll('.error-message').forEach(msg => msg.remove());
-            form.querySelectorAll('.border-red-500').forEach(field => {
-                field.classList.remove('border-red-500');
-            });
-        }
-        
-        // Next buttons
-        form.querySelectorAll('.next-button').forEach((button, index) => {
-            // Remove existing event listeners
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
-            
-            // Add new click handler
-            newButton.addEventListener('click', function() {
-                const currentIndex = getCurrentStepIndex();
-                
-                // Validate current step
-                if (validateCurrentStep()) {
-                    // Go to next step
-                    goToStep(currentIndex + 1);
-                    
-                    // Clear any errors
-                    clearValidationErrors();
-                } else {
-                    // Shake the button to indicate error
-                    this.classList.add('shake-animation');
-                    setTimeout(() => {
-                        this.classList.remove('shake-animation');
-                    }, 500);
-                }
-            });
-            
-            // Check if the button should be enabled initially
-            const shouldBeEnabled = validateCurrentStep();
-            newButton.disabled = !shouldBeEnabled;
-            
-            if (shouldBeEnabled) {
-                newButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                newButton.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-        });
-        
-        // Previous buttons
-        form.querySelectorAll('.prev-button').forEach(button => {
-            // Remove existing event listeners
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
-            
-            // Add new click handler
-            newButton.addEventListener('click', function() {
-                const currentIndex = getCurrentStepIndex();
-                
-                // Go to previous step
-                if (currentIndex > 0) {
-                    goToStep(currentIndex - 1);
-                }
-            });
-        });
-        
-        // Make sure we're on the right step
-        const currentIndex = getCurrentStepIndex();
-        if (currentIndex >= 0) {
-            updateButtonStates(currentIndex);
-        } else {
-            // If no step is visible, show the first one
-            goToStep(0);
-        }
-        
-        // Add form submission handler
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Validate the current step
-            if (!validateCurrentStep()) {
-                return;
-            }
-            
-            // Get submit button
-            const submitButton = form.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-                
-                // Save original text
-                const originalText = submitButton.innerHTML;
-                submitButton.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Submitting...</span>';
-                
-                try {
-                    // Collect form data
-                    const formData = new FormData(form);
-                    const formObject = {};
-                    
-                    formData.forEach((value, key) => {
-                        // Skip editing-view textareas
-                        if (!key.includes('-editing')) {
-                            formObject[key] = value;
-                        }
-                    });
-                    
-                    // Handle checkbox services
-                    const services = [];
-                    form.querySelectorAll('input[name="services"]:checked').forEach(checkbox => {
-                        services.push(checkbox.value);
-                    });
-                    formObject.services = services.join(', ');
-                    
-                    // Handle custom budget if present
-                    if (formObject.budget === 'custom' && formObject.customBudget) {
-                        formObject.budget = formObject.customBudget;
-                    }
-                    
-                    // Submit form
-                    const response = await fetch('/.netlify/functions/submit-form', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formObject)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        // Show success message
-                        form.classList.add('hidden');
-                        const successMessage = document.getElementById('success-message');
-                        if (successMessage) {
-                            successMessage.classList.remove('hidden');
-                        }
-                    } else {
-                        // Show error message
-                        const errorMessage = document.getElementById('error-message');
-                        if (errorMessage) {
-                            errorMessage.classList.remove('hidden');
-                        }
-                        console.error('Form submission error:', result);
-                    }
-                } catch (error) {
-                    // Show error message
-                    const errorMessage = document.getElementById('error-message');
-                    if (errorMessage) {
-                        errorMessage.classList.remove('hidden');
-                    }
-                    console.error('Form submission error:', error);
-                } finally {
-                    // Re-enable submit button
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = originalText;
-                    }
-                }
-            }
-        });
-        
-        // Setup real-time validation
-        form.querySelectorAll('input, textarea, select').forEach(field => {
-            field.addEventListener('input', function() {
-                // Re-validate the step
-                validateCurrentStep();
-                
-                // Update next button state
-                const currentIndex = getCurrentStepIndex();
-                const nextButton = form.querySelector(`.step:nth-child(${currentIndex + 1}) .next-button`);
-                if (nextButton) {
-                    const isValid = validateCurrentStep();
-                    nextButton.disabled = !isValid;
-                    
-                    if (isValid) {
-                        nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                    } else {
-                        nextButton.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
-                }
-            });
-        });
-        
-        console.log('Basic form navigation set up as fallback');
+        return animationAvailable && validationAvailable && functionalityAvailable;
     }
     
     /**
@@ -343,7 +58,10 @@ const FormIntegration = (function() {
         
         // Get all steps
         const form = document.getElementById('inquiry-form');
-        if (!form) return;
+        if (!form) {
+            console.error('Form not found');
+            return;
+        }
         
         const steps = Array.from(form.querySelectorAll('.step'));
         
@@ -357,7 +75,7 @@ const FormIntegration = (function() {
             // Initial validation state
             if (index < steps.length) {
                 try {
-                    const isValid = FormValidation.validateStep(index);
+                    const isValid = window.FormValidation.validateStep(index);
                     updateButtonState(button, isValid);
                 } catch (e) {
                     console.warn('Could not validate step', index, e);
@@ -378,11 +96,6 @@ const FormIntegration = (function() {
                 if (confirm('Are you sure you want to close the form? Your progress will be lost.')) {
                     if (typeof FormAnimation !== 'undefined' && typeof FormAnimation.closeForm === 'function') {
                         FormAnimation.closeForm();
-                    } else {
-                        // Fallback close
-                        document.getElementById('c-form').classList.add('hidden');
-                        document.getElementById('form-overlay').classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
                     }
                 }
             });
@@ -466,7 +179,7 @@ const FormIntegration = (function() {
                     FormValidation.showValidationErrors(currentStepIndex);
                 }
             } else {
-                // Basic validation
+                // Basic validation fallback
                 isValid = validateBasicStep(steps[currentStepIndex]);
             }
             
@@ -485,9 +198,6 @@ const FormIntegration = (function() {
             try {
                 // Collect form data
                 const formData = collectFormData(newForm);
-                
-                // Log data for debugging
-                console.log('Submitting form data:', formData);
                 
                 // Submit form data
                 const response = await fetch('/.netlify/functions/submit-form', {
@@ -515,8 +225,6 @@ const FormIntegration = (function() {
                             successMessage.classList.remove('hidden');
                         }
                     }
-                    
-                    console.log('Form submitted successfully:', result);
                 } else {
                     // Show error message
                     if (typeof FormAnimation !== 'undefined' && typeof FormAnimation.showError === 'function') {
@@ -552,57 +260,6 @@ const FormIntegration = (function() {
                 }
             }
         });
-        
-        // Try again button
-        const tryAgainButton = document.getElementById('try-again-button');
-        if (tryAgainButton) {
-            tryAgainButton.addEventListener('click', function() {
-                const errorMessage = document.getElementById('error-message');
-                if (errorMessage) {
-                    errorMessage.classList.add('hidden');
-                }
-            });
-        }
-    }
-    
-    /**
-     * Basic validation function for fallback
-     */
-    function validateBasicStep(step) {
-        if (!step) return false;
-        
-        // Check required fields
-        const requiredFields = step.querySelectorAll('input[required], textarea[required], select[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            // Skip radio buttons and checkboxes (we'll handle them separately)
-            if (field.type === 'radio' || field.type === 'checkbox') return;
-            
-            if (!field.value.trim()) {
-                isValid = false;
-                field.classList.add('border-red-500');
-                
-                // Add error message if it doesn't exist
-                const existingError = field.nextElementSibling;
-                if (!existingError || !existingError.classList.contains('error-message')) {
-                    const errorMessage = document.createElement('p');
-                    errorMessage.className = 'text-red-500 text-sm mt-1 error-message';
-                    errorMessage.textContent = 'This field is required';
-                    field.parentNode.insertBefore(errorMessage, field.nextSibling);
-                }
-            } else {
-                field.classList.remove('border-red-500');
-                
-                // Remove error message if exists
-                const existingError = field.nextElementSibling;
-                if (existingError && existingError.classList.contains('error-message')) {
-                    existingError.remove();
-                }
-            }
-        });
-        
-        return isValid;
     }
     
     /**
@@ -632,7 +289,7 @@ const FormIntegration = (function() {
         // Handle social media fields - collect all profiles into a single string
         const socialMediaProfiles = [];
         const socialFields = document.querySelectorAll('.social-media-field');
-        socialFields.forEach((field, index) => {
+        socialFields.forEach((field) => {
             const typeSelect = field.querySelector('select');
             const profileInput = field.querySelector('input');
             
@@ -648,6 +305,73 @@ const FormIntegration = (function() {
         }
         
         return formObject;
+    }
+    
+    /**
+     * Basic validation function for fallback
+     * @param {Element} step Step element
+     * @returns {boolean} Whether the step is valid
+     */
+    function validateBasicStep(step) {
+        if (!step) return false;
+        
+        // Check required fields
+        const requiredFields = step.querySelectorAll('input[required], textarea[required], select[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            // Skip radio buttons and checkboxes (we'll handle them separately)
+            if (field.type === 'radio' || field.type === 'checkbox') return;
+            
+            if (!field.value.trim()) {
+                isValid = false;
+            }
+            
+            // Email validation
+            if (field.type === 'email' && field.value.trim() !== '') {
+                const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (!emailRegex.test(field.value.toLowerCase())) {
+                    isValid = false;
+                }
+            }
+        });
+        
+        // Check required radio groups
+        const radioGroups = new Set();
+        step.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+            radioGroups.add(radio.name);
+        });
+        
+        radioGroups.forEach(groupName => {
+            const isAnyChecked = step.querySelector(`input[name="${groupName}"]:checked`) !== null;
+            if (!isAnyChecked) {
+                isValid = false;
+            }
+        });
+        
+        // Check required checkboxes
+        step.querySelectorAll('input[type="checkbox"][required]').forEach(checkbox => {
+            if (!checkbox.checked) {
+                isValid = false;
+            }
+        });
+        
+        // Special case: custom budget
+        const budgetCustomRadio = step.querySelector('#budgetCustom');
+        const customBudgetContainer = step.querySelector('#customBudgetContainer');
+        
+        if (budgetCustomRadio && 
+            customBudgetContainer && 
+            !customBudgetContainer.classList.contains('hidden') && 
+            budgetCustomRadio.checked) {
+            
+            const customBudgetInput = customBudgetContainer.querySelector('#customBudget');
+            if (customBudgetInput && !customBudgetInput.value.trim()) {
+                isValid = false;
+            }
+        }
+        
+        return isValid;
     }
     
     /**
@@ -671,6 +395,7 @@ const FormIntegration = (function() {
     
     /**
      * Next button handler
+     * @param {Event} e - Event object
      */
     function nextButtonHandler(e) {
         // Try to use FormAnimation if available
@@ -716,14 +441,15 @@ const FormIntegration = (function() {
             const currentIndex = steps.findIndex(step => !step.classList.contains('hidden'));
             
             if (currentIndex >= 0 && currentIndex < steps.length - 1) {
-                // Hide current step
-                steps[currentIndex].classList.add('hidden');
-                
-                // Show next step
-                steps[currentIndex + 1].classList.remove('hidden');
-                
-                // Update prev button visibility
-                if (currentIndex + 1 > 0) {
+                // Validate current step
+                if (validateBasicStep(steps[currentIndex])) {
+                    // Hide current step
+                    steps[currentIndex].classList.add('hidden');
+                    
+                    // Show next step
+                    steps[currentIndex + 1].classList.remove('hidden');
+                    
+                    // Update prev button visibility
                     const prevButtons = form.querySelectorAll('.prev-button');
                     prevButtons.forEach(btn => btn.classList.remove('invisible'));
                 }
@@ -733,6 +459,7 @@ const FormIntegration = (function() {
     
     /**
      * Previous button handler
+     * @param {Event} e - Event object
      */
     function prevButtonHandler(e) {
         // Try to use FormAnimation if available
@@ -764,6 +491,8 @@ const FormIntegration = (function() {
     
     /**
      * Update button state based on validation
+     * @param {HTMLElement} button Button element
+     * @param {boolean} isValid Validation state
      */
     function updateButtonState(button, isValid) {
         if (isValid) {
@@ -784,12 +513,5 @@ const FormIntegration = (function() {
     };
 })();
 
-// Initialize when script is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Set a small delay to ensure other modules are initialized first
-    setTimeout(function() {
-        if (typeof FormIntegration !== 'undefined') {
-            FormIntegration.init();
-        }
-    }, 300);
-});
+// Do NOT initialize when script is loaded
+// This will be called by FormMainController when needed

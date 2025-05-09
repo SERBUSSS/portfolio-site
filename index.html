@@ -597,7 +597,7 @@
         </section>
 
         <!-- Form Overlay (for background blur/freeze) -->
-        <div id="form-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+        <div id="form-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
 
         <!-- Form Container (fixed, centered) -->
         <section id="c-form" class="hidden fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
@@ -842,7 +842,7 @@
                                     <p class="text-green-500 font-medium">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
-                                <div class="textarea-container">
+                                <div class="textarea-container" data-question-label="Describe your business">
                                     <textarea 
                                         name="businessDescription" 
                                         id="businessDescription" 
@@ -880,7 +880,7 @@
                                     <p class="text-green-500 font-medium">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
-                                <div class="textarea-container">
+                                <div class="textarea-container" data-question-label="Business challenges">
                                     <textarea 
                                         name="businessChallenges" 
                                         id="businessChallenges" 
@@ -1062,7 +1062,7 @@
                                     <p class="text-green-500 font-medium">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
-                                <div class="textarea-container">
+                                <div class="textarea-container" data-question-label="Project objectives">
                                     <textarea 
                                         name="projectObjectives" 
                                         id="projectObjectives" 
@@ -1151,7 +1151,7 @@
                                     <p class="text-green-500 font-medium">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
-                                <div class="textarea-container">
+                                <div class="textarea-container" data-question-label="What is your vision for the new website/branding?">
                                     <textarea 
                                         name="projectVision" 
                                         id="projectVision" 
@@ -1342,7 +1342,7 @@
                                 </label>
                                 
                                 <!-- Normal textarea view -->
-                                <div class="textarea-container">
+                                <div class="textarea-container" data-question-label="How did you hear about me? Why do you want to collaborate with me?">
                                     <textarea 
                                         name="referralSource" 
                                         id="referralSource" 
@@ -1456,11 +1456,15 @@
         <script type="module" src="src/navigationMenu.js" defer></script>
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
-        <script type="module" src="src/formFunctionality.js" defer></script> 
-        <script type="module" src="src/formAnimation.js" defer></script>
-        <script type="module" src="src/formValidation.js" defer></script>
-        <script type="module" src="src/formMain.js" defer></script>
-        <script type="module" src="src/formIntegration.js" defer></script>
-        <script type="module" src="src/form-init.js" defer></script>
+        <script src="src/formFunctionality.js" defer></script> 
+        <script src="src/formAnimation.js" defer></script>
+        <script src="src/formValidation.js" defer></script>
+        <script src="src/formMain.js" defer></script>
+        <script src="src/formIntegration.js" defer></script>
+        <script src="src/form-init.js" defer></script>
+        <script src="src/debug.js" defer></script>
+        <script src="src/textareaFix.js" defer></script>
+        <script src="src/src/formAnimationFix.js" defer></script>
+        <script src="src/textareaFocusFix.js" defer></script>
     </body>
 </html>

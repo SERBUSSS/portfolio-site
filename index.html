@@ -599,35 +599,35 @@
 
         <!-- Form container - contains the cards -->
         <div id="form-container" class="fixed inset-0 z-50 hidden">
-            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="h-full w-full flex justify-center items-center">
+            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="h-full w-full flex justify-center items-center flex-col">
                 <!-- Honeypot field for spam protection (hidden from users) -->
                 <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
                 
                 <!-- Security token field (if needed for CSRF protection) -->
                 <input type="hidden" name="_csrf" value="">
                 
-                <div id="step-0" class="step p-4 pb-6 m-4 bg-white">
+                <div id="step-0" class="step p-4 pb-6 m-4 rounded-xl bg-white">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button (invisible on first step) -->
                         <button type="button" class="prev-button invisible" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2">
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
+                        <div class="flex space-x-2 items-center">
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -690,28 +690,28 @@
                 </div>
                 
                 <!-- Step 1: Contact Details -->
-                <div id="step-1" class="step p-4 pb-6 m-4 bg-white hidden">
+                <div id="step-1" class="step p-4 pb-6 m-4 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2">
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 border-2 border-black rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
+                        <div class="flex space-x-2 items-center">
+                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -796,28 +796,28 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step p-4 pb-6 m-4 bg-white hidden">
+                <div id="step-2" class="step p-4 pb-6 m-4 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2">
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 border-2 border-black rounded"></div>
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
+                        <div class="flex space-x-2 items-center">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
+                            <div class="h-1 w-12 bg-black rounded"></div>
+                            <div class="h-1 w-12 bg-black rounded"></div>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -922,28 +922,28 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step p-4 pb-6 m-4 bg-white hidden">
+                <div id="step-3" class="step p-4 pb-6 m-4 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2">
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 border-2 border-black rounded"></div>
+                        <div class="flex space-x-2 items-center">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
+                            <div class="h-1 w-12 bg-black rounded"></div>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -1107,28 +1107,28 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step p-4 pb-6 m-4 bg-white hidden">
+                <div id="step-4" class="step p-4 pb-6 m-4 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2">
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
-                            <div class="h-6 w-12 bg-green-500 rounded"></div>
+                        <div class="flex space-x-2 items-center">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -1276,25 +1276,28 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step p-4 pb-6 m-4 bg-white hidden">
+                <div id="step-5" class="step p-4 pb-6 m-4 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                         
-                        <!-- No progress indicators on final step -->
-                        <div class="flex space-x-2 invisible">
-                            <div class="h-1 w-12 bg-gray-300 rounded"></div>
+                        <!-- Progress indicators on final step -->
+                        <div class="flex space-x-2 items-center">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -1386,13 +1389,13 @@
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="hidden p-4 pb-6 m-4 bg-white">
+                <div id="success-message" class="hidden p-4 pb-6 m-4 rounded-xl bg-white">
                     <div class="flex justify-between items-center mb-6">
                         <div></div>
                         <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
                         <button type="button" class="close-button">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -1419,28 +1422,26 @@
                 </div>
 
                 <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="hidden p-4 pb-6 m-4 bg-white">
-                    <div class="rounded-md bg-red-50 p-6 mb-6">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                </svg>
+                <div id="error-message" class="hidden rounded-xl p-4 pb-6 m-4 bg-white">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-xl font-medium text-red-800">There was an error submitting your inquiry</h3>
+                            <div class="mt-2 text-lg text-red-700">
+                                <p>Please try again later or contact me directly via email.</p>
                             </div>
-                            <div class="ml-3">
-                                <h3 class="text-xl font-medium text-red-800">There was an error submitting your inquiry</h3>
-                                <div class="mt-2 text-lg text-red-700">
-                                    <p>Please try again later or contact me directly via email.</p>
-                                </div>
-                                <div class="mt-4">
-                                    <button 
-                                        type="button" 
-                                        id="try-again-button"
-                                        class="px-4 py-2 bg-white border border-black rounded-md text-black font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                                    >
-                                        Try Again
-                                    </button>
-                                </div>
+                            <div class="mt-4">
+                                <button 
+                                    type="button" 
+                                    id="try-again-button"
+                                    class="px-4 py-2 bg-white border border-black rounded-md text-black font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                >
+                                    Try Again
+                                </button>
                             </div>
                         </div>
                     </div>

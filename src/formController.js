@@ -11,6 +11,7 @@ const FormController = {
       this.cacheElements();
       this.bindEvents();
       this.validateCurrentStep();
+      this.setupTextareaInteractions();
     },
     
     // Cache DOM elements
@@ -106,6 +107,8 @@ const FormController = {
       
       // Reset optional question
       this.toggleOptionalQuestion(false);
+
+      this.resetTextareaStates();
     },
     
     // Reset social fields to initial state
@@ -380,6 +383,147 @@ const FormController = {
     // Show error message
     showErrorMessage() {
       document.getElementById('error-message').classList.remove('hidden');
+    },
+
+    setupTextareaInteractions() {
+        // Check if device is mobile (viewport width less than 768px)
+        const isMobile = () => window.innerWidth < 768;
+        
+        // Get all textareas
+        const textareas = document.querySelectorAll('.textarea-container textarea');
+        
+        textareas.forEach(textarea => {
+          // Focus event to activate special state (only on mobile)
+          textarea.addEventListener('focus', () => {
+            if (isMobile()) {
+              this.activateTextareaSpecialState(textarea);
+            }
+          });
+        });
+        
+        // Mark as done buttons
+        const markAsDoneButtons = document.querySelectorAll('.mark-as-done');
+        markAsDoneButtons.forEach(button => {
+          button.addEventListener('click', () => this.deactivateTextareaSpecialState(button));
+        });
+    },
+    
+    activateTextareaSpecialState(textarea) {
+    const questionContainer = textarea.closest('.question-container');
+    if (!questionContainer) return;
+    
+    const textareaContainer = questionContainer.querySelector('.textarea-container');
+    const editingView = questionContainer.querySelector('.editing-view');
+    const editingTextarea = editingView.querySelector('textarea');
+    const question = questionContainer.querySelector('label');
+    
+    // Make editing view a focused overlay
+    editingView.style.position = 'fixed';
+    editingView.style.top = '0';
+    editingView.style.left = '0';
+    editingView.style.right = '0';
+    editingView.style.bottom = '0';
+    editingView.style.backgroundColor = 'white';
+    editingView.style.zIndex = '60';
+    editingView.style.padding = '1rem';
+    editingView.style.display = 'flex';
+    editingView.style.flexDirection = 'column';
+    
+    // Add question text to editing view if not already there
+    let questionClone = editingView.querySelector('.question-text');
+    if (!questionClone) {
+        questionClone = document.createElement('div');
+        questionClone.className = 'question-text mb-4 text-xl font-medium';
+        questionClone.textContent = question.textContent;
+        editingView.insertBefore(questionClone, editingTextarea);
+    }
+    
+    // Hide normal view, show editing view
+    textareaContainer.classList.add('hidden');
+    editingView.classList.remove('hidden');
+    
+    // Copy current value to editing textarea
+    editingTextarea.value = textarea.value;
+    
+    // Focus the editing textarea
+    setTimeout(() => {
+        editingTextarea.focus();
+    }, 50);
+    
+    // Sync values between textareas
+    const syncHandler = () => {
+        textarea.value = editingTextarea.value;
+        // Trigger validation
+        this.validateCurrentStep();
+    };
+    
+    editingTextarea.addEventListener('input', syncHandler);
+    
+    // Store the handler for cleanup
+    editingTextarea._syncHandler = syncHandler;
+    },
+    
+    deactivateTextareaSpecialState(button) {
+    const questionContainer = button.closest('.question-container');
+    if (!questionContainer) return;
+    
+    const textareaContainer = questionContainer.querySelector('.textarea-container');
+    const editingView = questionContainer.querySelector('.editing-view');
+    const textarea = textareaContainer.querySelector('textarea');
+    const editingTextarea = editingView.querySelector('textarea');
+    const questionStatus = questionContainer.querySelector('.question-status');
+    
+    // Update the main textarea with the edited value
+    textarea.value = editingTextarea.value;
+    
+    // Remove overlay styles
+    editingView.style = '';
+    
+    // Show normal view, hide editing view
+    editingView.classList.add('hidden');
+    textareaContainer.classList.remove('hidden');
+    
+    // Show "Question answered!" if there's content
+    if (textarea.value.trim()) {
+        questionStatus.classList.remove('hidden');
+    } else {
+        questionStatus.classList.add('hidden');
+    }
+    
+    // Clean up event listeners
+    if (editingTextarea._syncHandler) {
+        editingTextarea.removeEventListener('input', editingTextarea._syncHandler);
+        delete editingTextarea._syncHandler;
+    }
+    
+    // Trigger validation
+    this.validateCurrentStep();
+    },
+    
+    resetTextareaStates() {
+    // Hide all editing views
+    document.querySelectorAll('.editing-view').forEach(view => {
+        view.classList.add('hidden');
+        view.style = ''; // Reset any inline styles
+    });
+    
+    // Show all textarea containers
+    document.querySelectorAll('.textarea-container').forEach(container => {
+        container.classList.remove('hidden');
+    });
+    
+    // Hide all question status indicators
+    document.querySelectorAll('.question-status').forEach(status => {
+        status.classList.add('hidden');
+    });
+    
+    // Clean up any event listeners
+    document.querySelectorAll('.editing-view textarea').forEach(textarea => {
+        if (textarea._syncHandler) {
+        textarea.removeEventListener('input', textarea._syncHandler);
+        delete textarea._syncHandler;
+        }
+    });
     }
   };
   

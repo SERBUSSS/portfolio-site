@@ -1,4 +1,5 @@
-// formController.js
+// formController.js - Updated version with all fixes
+
 const FormController = {
     // State
     currentStep: 0,
@@ -10,8 +11,9 @@ const FormController = {
     init() {
       this.cacheElements();
       this.bindEvents();
-      this.validateCurrentStep();
       this.setupTextareaInteractions();
+      this.setupInputInteractions();
+      this.validateCurrentStep();
     },
     
     // Cache DOM elements
@@ -21,6 +23,8 @@ const FormController = {
       this.formContainer = document.getElementById('form-container');
       this.form = document.getElementById('multi-step-form');
       this.steps = Array.from(document.querySelectorAll('.step'));
+      this.successMessage = document.getElementById('success-message');
+      this.errorMessage = document.getElementById('error-message');
       this.closeButtons = document.querySelectorAll('.close-button');
       this.prevButtons = document.querySelectorAll('.prev-button');
       this.nextButtons = document.querySelectorAll('.next-button');
@@ -67,6 +71,172 @@ const FormController = {
       // Optional question toggle
       this.showQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(true));
       this.hideQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(false));
+      
+      // Setup initial social media placeholder
+      this.setupSocialMediaPlaceholder(document.querySelector('.social-media-field'));
+    },
+    
+    // Setup input special interactions for mobile
+    setupInputInteractions() {
+      const isMobile = () => window.innerWidth < 768;
+      
+      // Get all text inputs (excluding textareas)
+      const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+      
+      inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+          if (isMobile()) {
+            this.handleInputFocus(input);
+          }
+        });
+        
+        input.addEventListener('blur', () => {
+          if (isMobile()) {
+            this.handleInputBlur(input);
+          }
+        });
+      });
+    },
+    
+    handleInputFocus(input) {
+      const step = input.closest('.step');
+      const inputRect = input.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // If input is in the lower half of the screen, scroll the card up
+      if (inputRect.top > viewportHeight / 2) {
+        const scrollAmount = inputRect.top - (viewportHeight * 0.3); // Position input at 30% from top
+        step.scrollTop += scrollAmount;
+        
+        // Store the scroll amount for reversing later
+        input._scrollAmount = scrollAmount;
+      }
+    },
+    
+    handleInputBlur(input) {
+      const step = input.closest('.step');
+      
+      // Reverse the scroll if we scrolled for this input
+      if (input._scrollAmount) {
+        step.scrollTop -= input._scrollAmount;
+        delete input._scrollAmount;
+      }
+    },
+    
+    // Setup textarea special interactions
+    setupTextareaInteractions() {
+      // Check if device is mobile (viewport width less than 768px)
+      const isMobile = () => window.innerWidth < 768;
+      
+      // Get all textareas
+      const textareas = document.querySelectorAll('.textarea-container textarea');
+      
+      textareas.forEach(textarea => {
+        // Focus event to activate special state (only on mobile)
+        textarea.addEventListener('focus', () => {
+          if (isMobile()) {
+            this.activateTextareaSpecialState(textarea);
+          }
+        });
+      });
+      
+      // Mark as done buttons
+      const markAsDoneButtons = document.querySelectorAll('.mark-as-done');
+      markAsDoneButtons.forEach(button => {
+        button.addEventListener('click', () => this.deactivateTextareaSpecialState(button));
+      });
+    },
+    
+    activateTextareaSpecialState(textarea) {
+      const questionContainer = textarea.closest('.question-container');
+      if (!questionContainer) return;
+      
+      const textareaContainer = questionContainer.querySelector('.textarea-container');
+      const editingView = questionContainer.querySelector('.editing-view');
+      const editingTextarea = editingView.querySelector('textarea');
+      const question = questionContainer.querySelector('label');
+      
+      // Make editing view a focused overlay
+      editingView.style.position = 'fixed';
+      editingView.style.top = '0';
+      editingView.style.left = '0';
+      editingView.style.right = '0';
+      editingView.style.bottom = '0';
+      editingView.style.backgroundColor = 'white';
+      editingView.style.zIndex = '60';
+      editingView.style.padding = '1rem';
+      editingView.style.display = 'flex';
+      editingView.style.flexDirection = 'column';
+      
+      // Add question text to editing view if not already there
+      let questionClone = editingView.querySelector('.question-text');
+      if (!questionClone) {
+        questionClone = document.createElement('div');
+        questionClone.className = 'question-text mb-4 text-xl font-medium';
+        questionClone.textContent = question.textContent;
+        editingView.insertBefore(questionClone, editingTextarea);
+      }
+      
+      // Hide normal view, show editing view
+      textareaContainer.classList.add('hidden');
+      editingView.classList.remove('hidden');
+      
+      // Copy current value to editing textarea
+      editingTextarea.value = textarea.value;
+      
+      // Focus the editing textarea
+      setTimeout(() => {
+        editingTextarea.focus();
+      }, 50);
+      
+      // Sync values between textareas
+      const syncHandler = () => {
+        textarea.value = editingTextarea.value;
+        // Trigger validation
+        this.validateCurrentStep();
+      };
+      
+      editingTextarea.addEventListener('input', syncHandler);
+      
+      // Store the handler for cleanup
+      editingTextarea._syncHandler = syncHandler;
+    },
+    
+    deactivateTextareaSpecialState(button) {
+      const questionContainer = button.closest('.question-container');
+      if (!questionContainer) return;
+      
+      const textareaContainer = questionContainer.querySelector('.textarea-container');
+      const editingView = questionContainer.querySelector('.editing-view');
+      const textarea = textareaContainer.querySelector('textarea');
+      const editingTextarea = editingView.querySelector('textarea');
+      const questionStatus = questionContainer.querySelector('.question-status');
+      
+      // Update the main textarea with the edited value
+      textarea.value = editingTextarea.value;
+      
+      // Remove overlay styles
+      editingView.style = '';
+      
+      // Show normal view, hide editing view
+      editingView.classList.add('hidden');
+      textareaContainer.classList.remove('hidden');
+      
+      // Show "Question answered!" if there's content
+      if (textarea.value.trim()) {
+        questionStatus.classList.remove('hidden');
+      } else {
+        questionStatus.classList.add('hidden');
+      }
+      
+      // Clean up event listeners
+      if (editingTextarea._syncHandler) {
+        editingTextarea.removeEventListener('input', editingTextarea._syncHandler);
+        delete editingTextarea._syncHandler;
+      }
+      
+      // Trigger validation
+      this.validateCurrentStep();
     },
     
     // Open form
@@ -107,8 +277,39 @@ const FormController = {
       
       // Reset optional question
       this.toggleOptionalQuestion(false);
-
+      
+      // Reset textarea special states
       this.resetTextareaStates();
+      
+      // Hide success/error messages
+      this.successMessage.classList.add('hidden');
+      this.errorMessage.classList.add('hidden');
+    },
+    
+    // Setup social media placeholder based on selection
+    setupSocialMediaPlaceholder(field) {
+      const select = field.querySelector('select');
+      const input = field.querySelector('input[type="text"]');
+      
+      if (!select || !input) return;
+      
+      const updatePlaceholder = () => {
+        const placeholders = {
+          instagram: 'e.g. @username',
+          facebook: 'e.g. @username',
+          twitter: 'e.g. @username',
+          linkedin: 'e.g. @username',
+          website: 'e.g. yourcompany.com'
+        };
+        
+        input.placeholder = placeholders[select.value] || 'e.g. @username';
+      };
+      
+      // Update placeholder on change
+      select.addEventListener('change', updatePlaceholder);
+      
+      // Set initial placeholder
+      updatePlaceholder();
     },
     
     // Reset social fields to initial state
@@ -149,10 +350,10 @@ const FormController = {
           <input 
             type="text" 
             name="social-media-profile-${this.socialFieldCount}" 
-            class="flex-grow px-4 py-3 bg-white" 
-            placeholder="e.g. @username or website URL"
+            class="flex-grow px-3 py-3 bg-white min-w-0" 
+            placeholder="e.g. @username"
           >
-          <button type="button" class="remove-social px-3 bg-gray-100 border-l border-gray-300 text-gray-500 hover:text-red-500">
+          <button type="button" class="remove-social px-3 bg-gray-100 border-l border-gray-300 text-gray-500 hover:text-red-500 flex-shrink-0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 6L6 18M6 6L18 18" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -162,6 +363,9 @@ const FormController = {
       
       container.appendChild(newField);
       this.socialFieldCount++;
+      
+      // Setup placeholder for the new field
+      this.setupSocialMediaPlaceholder(newField);
       
       // Hide add button if max reached
       if (this.socialFieldCount >= this.MAX_SOCIAL_FIELDS) {
@@ -199,13 +403,15 @@ const FormController = {
     
     // Show specific step
     showStep(stepIndex) {
-      this.steps.forEach((step, index) => {
-        if (index === stepIndex) {
-          step.classList.remove('hidden');
-        } else {
-          step.classList.add('hidden');
-        }
-      });
+      // Hide all steps and messages
+      this.steps.forEach(step => step.classList.add('hidden'));
+      this.successMessage.classList.add('hidden');
+      this.errorMessage.classList.add('hidden');
+      
+      // Show the requested step
+      if (stepIndex < this.steps.length) {
+        this.steps[stepIndex].classList.remove('hidden');
+      }
       
       // Update progress indicators
       this.updateProgressIndicators();
@@ -358,10 +564,10 @@ const FormController = {
         });
         
         if (response.ok) {
-          // Show success message
+          // Show success message as a card
           this.showSuccessMessage();
         } else {
-          // Show error message
+          // Show error message as a card
           this.showErrorMessage();
         }
       } catch (error) {
@@ -374,156 +580,54 @@ const FormController = {
       }
     },
     
-    // Show success message
+    // Show success message as a card
     showSuccessMessage() {
+      // Hide all steps
       this.steps.forEach(step => step.classList.add('hidden'));
-      document.getElementById('success-message').classList.remove('hidden');
+      
+      // Show success message
+      this.successMessage.classList.remove('hidden');
+      
+      // Update the currentStep to indicate we're on a special state
+      this.currentStep = 'success';
     },
     
-    // Show error message
+    // Show error message as a card
     showErrorMessage() {
-      document.getElementById('error-message').classList.remove('hidden');
-    },
-
-    setupTextareaInteractions() {
-        // Check if device is mobile (viewport width less than 768px)
-        const isMobile = () => window.innerWidth < 768;
-        
-        // Get all textareas
-        const textareas = document.querySelectorAll('.textarea-container textarea');
-        
-        textareas.forEach(textarea => {
-          // Focus event to activate special state (only on mobile)
-          textarea.addEventListener('focus', () => {
-            if (isMobile()) {
-              this.activateTextareaSpecialState(textarea);
-            }
-          });
-        });
-        
-        // Mark as done buttons
-        const markAsDoneButtons = document.querySelectorAll('.mark-as-done');
-        markAsDoneButtons.forEach(button => {
-          button.addEventListener('click', () => this.deactivateTextareaSpecialState(button));
-        });
-    },
-    
-    activateTextareaSpecialState(textarea) {
-    const questionContainer = textarea.closest('.question-container');
-    if (!questionContainer) return;
-    
-    const textareaContainer = questionContainer.querySelector('.textarea-container');
-    const editingView = questionContainer.querySelector('.editing-view');
-    const editingTextarea = editingView.querySelector('textarea');
-    const question = questionContainer.querySelector('label');
-    
-    // Make editing view a focused overlay
-    editingView.style.position = 'fixed';
-    editingView.style.top = '0';
-    editingView.style.left = '0';
-    editingView.style.right = '0';
-    editingView.style.bottom = '0';
-    editingView.style.backgroundColor = 'white';
-    editingView.style.zIndex = '60';
-    editingView.style.padding = '1rem';
-    editingView.style.display = 'flex';
-    editingView.style.flexDirection = 'column';
-    
-    // Add question text to editing view if not already there
-    let questionClone = editingView.querySelector('.question-text');
-    if (!questionClone) {
-        questionClone = document.createElement('div');
-        questionClone.className = 'question-text mb-4 text-xl font-medium';
-        questionClone.textContent = question.textContent;
-        editingView.insertBefore(questionClone, editingTextarea);
-    }
-    
-    // Hide normal view, show editing view
-    textareaContainer.classList.add('hidden');
-    editingView.classList.remove('hidden');
-    
-    // Copy current value to editing textarea
-    editingTextarea.value = textarea.value;
-    
-    // Focus the editing textarea
-    setTimeout(() => {
-        editingTextarea.focus();
-    }, 50);
-    
-    // Sync values between textareas
-    const syncHandler = () => {
-        textarea.value = editingTextarea.value;
-        // Trigger validation
-        this.validateCurrentStep();
-    };
-    
-    editingTextarea.addEventListener('input', syncHandler);
-    
-    // Store the handler for cleanup
-    editingTextarea._syncHandler = syncHandler;
-    },
-    
-    deactivateTextareaSpecialState(button) {
-    const questionContainer = button.closest('.question-container');
-    if (!questionContainer) return;
-    
-    const textareaContainer = questionContainer.querySelector('.textarea-container');
-    const editingView = questionContainer.querySelector('.editing-view');
-    const textarea = textareaContainer.querySelector('textarea');
-    const editingTextarea = editingView.querySelector('textarea');
-    const questionStatus = questionContainer.querySelector('.question-status');
-    
-    // Update the main textarea with the edited value
-    textarea.value = editingTextarea.value;
-    
-    // Remove overlay styles
-    editingView.style = '';
-    
-    // Show normal view, hide editing view
-    editingView.classList.add('hidden');
-    textareaContainer.classList.remove('hidden');
-    
-    // Show "Question answered!" if there's content
-    if (textarea.value.trim()) {
-        questionStatus.classList.remove('hidden');
-    } else {
-        questionStatus.classList.add('hidden');
-    }
-    
-    // Clean up event listeners
-    if (editingTextarea._syncHandler) {
-        editingTextarea.removeEventListener('input', editingTextarea._syncHandler);
-        delete editingTextarea._syncHandler;
-    }
-    
-    // Trigger validation
-    this.validateCurrentStep();
+      // Hide all steps
+      this.steps.forEach(step => step.classList.add('hidden'));
+      
+      // Show error message
+      this.errorMessage.classList.remove('hidden');
+      
+      // Update the currentStep to indicate we're on a special state
+      this.currentStep = 'error';
     },
     
     resetTextareaStates() {
-    // Hide all editing views
-    document.querySelectorAll('.editing-view').forEach(view => {
+      // Hide all editing views
+      document.querySelectorAll('.editing-view').forEach(view => {
         view.classList.add('hidden');
         view.style = ''; // Reset any inline styles
-    });
-    
-    // Show all textarea containers
-    document.querySelectorAll('.textarea-container').forEach(container => {
+      });
+      
+      // Show all textarea containers
+      document.querySelectorAll('.textarea-container').forEach(container => {
         container.classList.remove('hidden');
-    });
-    
-    // Hide all question status indicators
-    document.querySelectorAll('.question-status').forEach(status => {
+      });
+      
+      // Hide all question status indicators
+      document.querySelectorAll('.question-status').forEach(status => {
         status.classList.add('hidden');
-    });
-    
-    // Clean up any event listeners
-    document.querySelectorAll('.editing-view textarea').forEach(textarea => {
+      });
+      
+      // Clean up any event listeners
+      document.querySelectorAll('.editing-view textarea').forEach(textarea => {
         if (textarea._syncHandler) {
-        textarea.removeEventListener('input', textarea._syncHandler);
-        delete textarea._syncHandler;
+          textarea.removeEventListener('input', textarea._syncHandler);
+          delete textarea._syncHandler;
         }
-    });
+      });
     }
   };
   

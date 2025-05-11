@@ -3,6 +3,8 @@ const FormController = {
     // State
     currentStep: 0,
     formData: {},
+    socialFieldCount: 1,
+    MAX_SOCIAL_FIELDS: 5,
     
     // Initialize the form controller
     init() {
@@ -21,6 +23,11 @@ const FormController = {
       this.closeButtons = document.querySelectorAll('.close-button');
       this.prevButtons = document.querySelectorAll('.prev-button');
       this.nextButtons = document.querySelectorAll('.next-button');
+      this.addSocialButton = document.querySelector('.add-social-button');
+      this.maxSocialFieldsMessage = document.getElementById('max-social-fields-message');
+      this.showQuestionButton = document.getElementById('show-question-button');
+      this.hideQuestionButton = document.getElementById('hide-question-button');
+      this.optionalQuestionContainer = document.getElementById('optional-question-container');
     },
     
     // Bind event listeners
@@ -52,6 +59,13 @@ const FormController = {
       
       // Close form when clicking overlay
       this.formOverlay.addEventListener('click', () => this.closeForm());
+      
+      // Add social media field button
+      this.addSocialButton.addEventListener('click', () => this.addSocialMediaField());
+      
+      // Optional question toggle
+      this.showQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(true));
+      this.hideQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(false));
     },
     
     // Open form
@@ -86,6 +100,98 @@ const FormController = {
       this.form.reset();
       this.currentStep = 0;
       this.showStep(0);
+      
+      // Reset social fields to just one
+      this.resetSocialFields();
+      
+      // Reset optional question
+      this.toggleOptionalQuestion(false);
+    },
+    
+    // Reset social fields to initial state
+    resetSocialFields() {
+      const container = document.querySelector('.social-media-fields');
+      const extraFields = container.querySelectorAll('.social-media-field:not(:first-child)');
+      extraFields.forEach(field => field.remove());
+      this.socialFieldCount = 1;
+      this.addSocialButton.classList.remove('hidden');
+      this.maxSocialFieldsMessage.classList.add('hidden');
+    },
+    
+    // Add social media field
+    addSocialMediaField() {
+      if (this.socialFieldCount >= this.MAX_SOCIAL_FIELDS) {
+        this.maxSocialFieldsMessage.classList.remove('hidden');
+        setTimeout(() => {
+          this.maxSocialFieldsMessage.classList.add('hidden');
+        }, 3000);
+        return;
+      }
+      
+      const container = document.querySelector('.social-media-fields');
+      const newField = document.createElement('div');
+      newField.className = 'social-media-field mt-3';
+      
+      newField.innerHTML = `
+        <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+          <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
+            <select name="social-media-type-${this.socialFieldCount}" class="bg-gray-100 border-none focus:ring-0">
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="twitter">Twitter</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="website">Website</option>
+            </select>
+          </div>
+          <input 
+            type="text" 
+            name="social-media-profile-${this.socialFieldCount}" 
+            class="flex-grow px-4 py-3 bg-white" 
+            placeholder="e.g. @username or website URL"
+          >
+          <button type="button" class="remove-social px-3 bg-gray-100 border-l border-gray-300 text-gray-500 hover:text-red-500">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6L18 18" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      `;
+      
+      container.appendChild(newField);
+      this.socialFieldCount++;
+      
+      // Hide add button if max reached
+      if (this.socialFieldCount >= this.MAX_SOCIAL_FIELDS) {
+        this.addSocialButton.classList.add('hidden');
+      }
+      
+      // Add remove button functionality
+      const removeButton = newField.querySelector('.remove-social');
+      removeButton.addEventListener('click', () => this.removeSocialMediaField(newField));
+    },
+    
+    // Remove social media field
+    removeSocialMediaField(field) {
+      field.remove();
+      this.socialFieldCount--;
+      
+      // Show add button if it was hidden
+      if (this.socialFieldCount < this.MAX_SOCIAL_FIELDS) {
+        this.addSocialButton.classList.remove('hidden');
+      }
+    },
+    
+    // Toggle optional question visibility
+    toggleOptionalQuestion(show) {
+      if (show) {
+        this.showQuestionButton.classList.add('hidden');
+        this.hideQuestionButton.classList.remove('hidden');
+        this.optionalQuestionContainer.classList.remove('hidden');
+      } else {
+        this.showQuestionButton.classList.remove('hidden');
+        this.hideQuestionButton.classList.add('hidden');
+        this.optionalQuestionContainer.classList.add('hidden');
+      }
     },
     
     // Show specific step
@@ -302,13 +408,23 @@ const FormController = {
             developmentContainer.classList.remove('border-gray-300');
             developmentContainer.classList.add('border-black');
           } else {
+            // Disable and uncheck development checkbox when web design is unchecked
             developmentCheckbox.disabled = true;
             developmentCheckbox.checked = false;
             developmentLabel.classList.add('text-gray-400', 'cursor-not-allowed');
             developmentLabel.classList.remove('cursor-pointer');
             developmentContainer.classList.add('border-gray-300');
             developmentContainer.classList.remove('border-black');
+            
+            // Also hide the checkbox icon
+            const icon = developmentContainer.querySelector('.checkbox-icon');
+            if (icon) {
+              icon.classList.add('hidden');
+            }
           }
+          
+          // Trigger validation after change
+          FormController.validateCurrentStep();
         });
       }
     },

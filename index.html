@@ -68,7 +68,7 @@
                         </div>
                         <div class="w-full h-auto self-stretch flex flex-col justify-center items-center gap-2 mt-8">
                             <div class="w-full h-auto bg-white hover:shadow-2xl hover:drop-shadow-xs self-stretch px-5 py-3.5 rounded-md inline-flex justify-center items-center gap-1.5 border-2 border-black">
-                                <a href="#background-form" class="justify-start text-black text-base font-bold font-sans leading-5">start project</a>
+                                <a href="#form-entry" class="justify-start text-black text-base font-bold font-sans leading-5">start project</a>
                             </div>
                             <p class="w-full justify-center text-center text-[#5a5a5a] text-sm font-light font-sans leading-5">start a project by filling out the inquiry form!</p>
                         </div>
@@ -599,7 +599,7 @@
 
         <!-- Form container - contains the cards -->
         <div id="form-container" class="fixed inset-0 z-50 hidden">
-            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="h-full w-full">
+            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="h-full w-full flex justify-center items-center">
                 <!-- Honeypot field for spam protection (hidden from users) -->
                 <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
                 
@@ -635,7 +635,7 @@
                     <!-- Step title and description -->
                     <h2 class="text-4xl font-medium font-display mb-6 text-center">Before we start</h2>
                     
-                    <p class="text-gray-800 mb-10">
+                    <p class="text-gray-800 mb-6">
                         Completing this form, you will provide basic information about you, your business, 
                         services needed, and your vision and budget for the project.
                     </p>
@@ -643,7 +643,7 @@
                     <!-- Form fields -->
                     <div class="space-y-6 mb-10">
                         <div>
-                            <label for="fullName" class="block text-xl font-medium text-gray-900 mb-2">Full Name:</label>
+                            <label for="fullName" class="flex text-xl font-medium text-gray-900 mb-2">Full Name:</label>
                             <input 
                                 type="text" 
                                 name="fullName" 
@@ -655,7 +655,7 @@
                         </div>
 
                         <div>
-                            <label for="email" class="block text-xl font-medium text-gray-900 mb-2">Enter your email:</label>
+                            <label for="email" class="flex text-xl font-medium text-gray-900 mb-2">Enter your email:</label>
                             <input 
                                 type="email" 
                                 name="email" 
@@ -668,7 +668,7 @@
                     </div>
                     
                     <!-- Tip section -->
-                    <div class="mb-10">
+                    <div class="mb-6">
                         <h3 class="text-2xl font-medium mb-2">Tip!</h3>
                         <p class="text-gray-800">
                             You'll be asked to share a mood board or any sources of inspiration. 
@@ -719,14 +719,14 @@
                     <!-- Step title and description -->
                     <h2 class="text-4xl font-medium font-display mb-6">Your Contact Details</h2>
                     
-                    <p class="text-gray-800 mb-10">
+                    <p class="text-gray-800 mb-6">
                         This step collects basic information about your business.
                     </p>
                     
                     <!-- Form fields -->
                     <div class="space-y-6 mb-10">
                         <div>
-                            <label for="businessName" class="block text-xl font-medium text-gray-900 mb-2">Business Name:</label>
+                            <label for="businessName" class="flex text-xl font-medium text-gray-900 mb-2">Business Name:</label>
                             <input 
                                 type="text" 
                                 name="businessName" 
@@ -738,7 +738,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-xl font-medium text-gray-900 mb-2">Social Media Profiles:</label>
+                            <label class="flex text-xl font-medium text-gray-900 mb-2">Social Media Profiles:</label>
                             
                             <div class="social-media-fields">
                                 <!-- Initial social media field -->
@@ -824,15 +824,15 @@
                     <!-- Step title -->
                     <h2 class="text-4xl font-medium font-display mb-6">About Your Business</h2>
                     
-                    <p class="text-gray-800 mb-10">
+                    <p class="text-gray-800 mb-6">
                         In this step, we focus on understanding the nature and context of your business.
                     </p>
                     
                     <!-- Form fields -->
-                    <div class="space-y-8 mb-10">
+                    <div class="space-y-6 mb-10">
                         <!-- Business description field -->
                         <div class="question-container">
-                            <label for="businessDescription" class="block text-xl font-medium text-gray-900 mb-2">
+                            <label for="businessDescription" class="flex text-xl font-medium text-gray-900 mb-2">
                                 Describe your business: What products or services do you offer?
                             </label>
                             <!-- This will show when the question is answered -->
@@ -844,7 +844,7 @@
                                 <textarea 
                                     name="businessDescription" 
                                     id="businessDescription" 
-                                    rows="6"
+                                    rows="4"
                                     required 
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="We offer [...] products/services to [...] ..."
@@ -855,7 +855,7 @@
                                 <textarea 
                                     name="businessDescription-editing" 
                                     id="businessDescription-editing" 
-                                    rows="6"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="We offer [...] products/services to [...] ..."
                                 ></textarea>
@@ -870,7 +870,7 @@
                         
                         <!-- Business challenges field -->
                         <div class="question-container">
-                            <label for="businessChallenges" class="block text-xl font-medium text-gray-900 mb-2">
+                            <label for="businessChallenges" class="flex text-xl font-medium text-gray-900 mb-2">
                                 What are the main challenges of your business? What aspects do you want to improve?
                             </label>
                             <!-- This will show when the question is answered -->
@@ -882,7 +882,7 @@
                                 <textarea 
                                     name="businessChallenges" 
                                     id="businessChallenges" 
-                                    rows="6"
+                                    rows="4"
                                     required 
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="We are currently facing [problem] ..."
@@ -893,7 +893,7 @@
                                 <textarea 
                                     name="businessChallenges-editing" 
                                     id="businessChallenges-editing" 
-                                    rows="6"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="We are currently facing [problem] ..."
                                 ></textarea>
@@ -950,51 +950,54 @@
                     <!-- Step title -->
                     <h2 class="text-4xl font-medium font-display mb-6">Project Objectives</h2>
                     
-                    <p class="text-gray-800 mb-10">
+                    <p class="text-gray-800 mb-6">
                         Here you choose which services you are interested in and clarify your objectives.
                     </p>
                     
                     <!-- Form fields -->
-                    <div class="space-y-8 mb-10">
+                    <div class="space-y-6 mb-10">
                         <!-- Services selection -->
                         <div>
-                            <label class="block text-xl font-medium text-gray-900 mb-2">Desired Services:</label>
+                            <label class="flex text-xl font-medium text-gray-900">Desired Services:</label>
                             <p class="text-gray-500 mb-4">Select one or more options:</p>
                             
                             <div class="space-y-4">
-                                <!-- Web Design checkbox -->
-                                <div class="flex items-center">
-                                    <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
-                                        <input 
-                                            type="checkbox" 
-                                            id="webDesign" 
-                                            name="services" 
-                                            value="webDesign" 
-                                            class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                        >
-                                        <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
+                                <!-- Web Design & Development group -->
+                                <div class="inline-flex gap-2">
+                                    <!-- Web Design checkbox -->
+                                    <div class="flex items-center">
+                                        <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                            <input 
+                                                type="checkbox" 
+                                                id="webDesign" 
+                                                name="services" 
+                                                value="webDesign" 
+                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
+                                            >
+                                            <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <label for="brandStrategy" class="text-xl font-medium cursor-pointer">Web Design</label>
                                     </div>
-                                    <label for="brandStrategy" class="text-xl font-medium cursor-pointer">Web Designy</label>
-                                </div>
 
-                                <!-- Development checkbox (initially disabled) -->
-                                <div class="flex items-center">
-                                    <div class="w-6 h-6 mr-3 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
-                                        <input 
-                                            type="checkbox" 
-                                            id="development" 
-                                            name="services" 
-                                            value="development" 
-                                            class="opacity-0 absolute cursor-not-allowed w-full h-full z-10"
-                                            disabled
-                                        >
-                                        <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
+                                    <!-- Development checkbox (initially disabled) -->
+                                    <div class="flex items-center">
+                                        <div class="w-6 h-6 mr-3 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
+                                            <input 
+                                                type="checkbox" 
+                                                id="development" 
+                                                name="services" 
+                                                value="development" 
+                                                class="opacity-0 absolute cursor-not-allowed w-full h-full z-10"
+                                                disabled
+                                            >
+                                            <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <label for="development" class="text-xl font-medium text-gray-400 cursor-not-allowed">Development</label>
                                     </div>
-                                    <label for="development" class="text-xl font-medium text-gray-400 cursor-not-allowed">Development</label>
                                 </div>
 
                                 <!-- Brand Strategy checkbox -->
@@ -1052,7 +1055,7 @@
                         
                         <!-- Project objectives -->
                         <div class="question-container">
-                            <label for="projectObjectives" class="block text-xl font-medium text-gray-900 mb-2">
+                            <label for="projectObjectives" class="flex text-xl font-medium text-gray-900 mb-2">
                                 What objectives do you want to achieve with this project?
                             </label>
                             <!-- This will show when the question is answered -->
@@ -1064,7 +1067,7 @@
                                 <textarea 
                                     name="projectObjectives" 
                                     id="projectObjectives" 
-                                    rows="6"
+                                    rows="4"
                                     required 
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="For example: increasing the number of clients, improving online presence, etc."
@@ -1075,7 +1078,7 @@
                                 <textarea 
                                     name="projectObjectives-editing" 
                                     id="projectObjectives-editing" 
-                                    rows="6"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="For example: increasing the number of clients, improving online presence, etc."
                                 ></textarea>
@@ -1131,17 +1134,17 @@
                     
                     <!-- Step title -->
                     <h2 class="text-4xl font-medium font-display mb-2">Vision and Budget</h2>
-                    <p class="text-gray-800 text-xl mb-6">Last step!</p>
+                    <p class="text-gray-800 text-xl mb-4">Last step!</p>
                     
-                    <p class="text-gray-800 mb-10">
+                    <p class="text-gray-800 mb-6">
                         The last step focuses on your vision for the project and the details of the collaboration.
                     </p>
                     
                     <!-- Form fields -->
-                    <div class="space-y-8 mb-10">
+                    <div class="space-y-6 mb-10">
                         <!-- Vision textarea -->
                         <div class="question-container">
-                            <label for="projectVision" class="block text-xl font-medium text-gray-900 mb-2">
+                            <label for="projectVision" class="flex text-xl font-medium text-gray-900 mb-2">
                                 What is your vision for the new website/branding?
                             </label>
                             <!-- This will show when the question is answered -->
@@ -1153,7 +1156,7 @@
                                 <textarea 
                                     name="projectVision" 
                                     id="projectVision" 
-                                    rows="6"
+                                    rows="4"
                                     required 
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
@@ -1164,7 +1167,7 @@
                                 <textarea 
                                     name="projectVision-editing" 
                                     id="projectVision-editing" 
-                                    rows="6"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                 ></textarea>
@@ -1179,7 +1182,7 @@
                         
                         <!-- Budget selection -->
                         <div>
-                            <label class="block text-xl font-medium text-gray-900 mb-2">Project investment:</label>
+                            <label class="flex text-xl font-medium text-gray-900 mb-2">Project investment:</label>
                             <p class="text-gray-500 mb-4">Select one:</p>
                             
                             <div class="space-y-4">
@@ -1335,7 +1338,7 @@
                         
                         <!-- Optional question content - hidden initially -->
                         <div id="optional-question-container" class="hidden question-container">
-                            <label for="referralSource" class="block text-xl font-medium text-gray-900 mb-2">
+                            <label for="referralSource" class="flex text-xl font-medium text-gray-900 mb-2">
                                 How did you hear about me? Why do you want to collaborate with me?
                             </label>
                             
@@ -1344,7 +1347,7 @@
                                 <textarea 
                                     name="referralSource" 
                                     id="referralSource" 
-                                    rows="5"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                 ></textarea>
@@ -1355,7 +1358,7 @@
                                 <textarea 
                                     name="referralSource-editing" 
                                     id="referralSource-editing" 
-                                    rows="5"
+                                    rows="4"
                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                     placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                 ></textarea>
@@ -1453,6 +1456,7 @@
         <script type="module" src="src/navigationMenu.js" defer></script>
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
+        <script src="src/formController.js" defer></script>
         <!-- <script src="src/formFunctionality.js" defer></script> 
         <script src="src/formAnimation.js" defer></script>
         <script src="src/formValidation.js" defer></script>

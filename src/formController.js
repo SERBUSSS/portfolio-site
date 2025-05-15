@@ -1,1013 +1,930 @@
-// formController.js - Updated version with animations
+// formController.js - Main control script for the form functionality
+// This handles all form interactions, animations, and validation
 
-const FormController = {
-    // State
-    currentStep: 0,
-    formData: {},
-    socialFieldCount: 1,
-    MAX_SOCIAL_FIELDS: 5,
-    
-    // Animation related
-    stackedCards: [],
-    finalPositions: [
-      { x: '-20vw', y: '-20vh' },
-      { x: '-5vw', y: '-10vh' },
-      { x: '10vw', y: '0vh' },
-      { x: '20vw', y: '10vh' },
-      { x: '10vw', y: '20vh' },
-      { x: '-5vw', y: '30vh' }
-    ],
-    
-    // Initialize the form controller
-    init() {
-      this.cacheElements();
-      this.bindEvents();
-      this.setupTextareaInteractions();
-      this.setupInputInteractions();
-      this.validateCurrentStep();
-      this.setupAnimations();
-    },
-    
-    // Setup initial animation states
-    setupAnimations() {
-      // Add CSS for animations
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-          20%, 40%, 60%, 80% { transform: translateX(10px); }
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    },
-    
-    // Cache DOM elements
-    cacheElements() {
-      this.openFormBtn = document.getElementById('open-form-btn');
-      this.formOverlay = document.getElementById('form-overlay');
-      this.formContainer = document.getElementById('form-container');
-      this.form = document.getElementById('multi-step-form');
-      this.steps = Array.from(document.querySelectorAll('.step'));
-      this.successMessage = document.getElementById('success-message');
-      this.errorMessage = document.getElementById('error-message');
-      this.closeButtons = document.querySelectorAll('.close-button');
-      this.prevButtons = document.querySelectorAll('.prev-button');
-      this.nextButtons = document.querySelectorAll('.next-button');
-      this.addSocialButton = document.querySelector('.add-social-button');
-      this.maxSocialFieldsMessage = document.getElementById('max-social-fields-message');
-      this.showQuestionButton = document.getElementById('show-question-button');
-      this.hideQuestionButton = document.getElementById('hide-question-button');
-      this.optionalQuestionContainer = document.getElementById('optional-question-container');
-    },
-    
-    // Bind event listeners
-    bindEvents() {
-      // Open form button
-      this.openFormBtn.addEventListener('click', () => this.openForm());
-      
-      // Close buttons
-      this.closeButtons.forEach(btn => {
-        btn.addEventListener('click', () => this.closeForm());
-      });
-      
-      // Previous buttons
-      this.prevButtons.forEach(btn => {
-        btn.addEventListener('click', () => this.prevStep());
-      });
-      
-      // Next buttons
-      this.nextButtons.forEach(btn => {
-        btn.addEventListener('click', () => this.nextStep());
-      });
-      
-      // Input event listeners for validation
-      this.form.addEventListener('input', () => this.validateCurrentStep());
-      this.form.addEventListener('change', () => this.validateCurrentStep());
-      
-      // Form submission
-      this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-      
-      // Close form when clicking overlay
-      this.formOverlay.addEventListener('click', () => this.closeForm());
-      
-      // Add social media field button
-      this.addSocialButton.addEventListener('click', () => this.addSocialMediaField());
-      
-      // Optional question toggle
-      this.showQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(true));
-      this.hideQuestionButton.addEventListener('click', () => this.toggleOptionalQuestion(false));
-      
-      // Setup initial social media placeholder
-      this.setupSocialMediaPlaceholder(document.querySelector('.social-media-field'));
-      
-      // Try again button
-      const tryAgainButton = document.getElementById('try-again-button');
-      if (tryAgainButton) {
-        tryAgainButton.addEventListener('click', () => {
-          const errorMessage = document.getElementById('error-message');
-          
-          // Animate error message out
-          errorMessage.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
-          errorMessage.style.transform = 'translateX(100vw)';
-          errorMessage.style.opacity = '0';
-          
-          setTimeout(() => {
-            errorMessage.classList.add('hidden');
-            errorMessage.style.transform = '';
-            errorMessage.style.opacity = '';
-            
-            this.currentStep = 0;
-            this.showStep(0);
-          }, 300);
-        });
-      }
-    },
-    
-    // Setup input special interactions for mobile
-    setupInputInteractions() {
-      const isMobile = () => window.innerWidth < 768;
-      
-      // Get all text inputs (excluding textareas)
-      const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
-      
-      inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-          if (isMobile()) {
-            this.handleInputFocus(input);
-          }
-        });
-        
-        input.addEventListener('blur', () => {
-          if (isMobile()) {
-            this.handleInputBlur(input);
-          }
-        });
-      });
-    },
-    
-    handleInputFocus(input) {
-      const step = input.closest('.step');
-      const inputRect = input.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      
-      // If input is in the lower half of the screen, scroll the card up
-      if (inputRect.top > viewportHeight / 2) {
-        const scrollAmount = inputRect.top - (viewportHeight * 0.3); // Position input at 30% from top
-        step.scrollTop += scrollAmount;
-        
-        // Store the scroll amount for reversing later
-        input._scrollAmount = scrollAmount;
-      }
-    },
-    
-    handleInputBlur(input) {
-      const step = input.closest('.step');
-      
-      // Reverse the scroll if we scrolled for this input
-      if (input._scrollAmount) {
-        step.scrollTop -= input._scrollAmount;
-        delete input._scrollAmount;
-      }
-    },
-    
-    // Setup textarea special interactions
-    setupTextareaInteractions() {
-      // Check if device is mobile (viewport width less than 768px)
-      const isMobile = () => window.innerWidth < 768;
-      
-      // Get all textareas
-      const textareas = document.querySelectorAll('.textarea-container textarea');
-      
-      textareas.forEach(textarea => {
-        // Focus event to activate special state (only on mobile)
-        textarea.addEventListener('focus', () => {
-          if (isMobile()) {
-            this.activateTextareaSpecialState(textarea);
-          }
-        });
-      });
-      
-      // Mark as done buttons
-      const markAsDoneButtons = document.querySelectorAll('.mark-as-done');
-      markAsDoneButtons.forEach(button => {
-        button.addEventListener('click', () => this.deactivateTextareaSpecialState(button));
-      });
-    },
-    
-    activateTextareaSpecialState(textarea) {
-      const questionContainer = textarea.closest('.question-container');
-      if (!questionContainer) return;
-      
-      const textareaContainer = questionContainer.querySelector('.textarea-container');
-      const editingView = questionContainer.querySelector('.editing-view');
-      const editingTextarea = editingView.querySelector('textarea');
-      const question = questionContainer.querySelector('label');
-      
-      // Make editing view a focused overlay
-      editingView.style.position = 'fixed';
-      editingView.style.top = '0';
-      editingView.style.left = '0';
-      editingView.style.right = '0';
-      editingView.style.bottom = '0';
-      editingView.style.backgroundColor = 'white';
-      editingView.style.zIndex = '60';
-      editingView.style.padding = '1rem';
-      editingView.style.display = 'flex';
-      editingView.style.flexDirection = 'column';
-      
-      // Add question text to editing view if not already there
-      let questionClone = editingView.querySelector('.question-text');
-      if (!questionClone) {
-        questionClone = document.createElement('div');
-        questionClone.className = 'question-text mb-4 text-xl font-medium';
-        questionClone.textContent = question.textContent;
-        editingView.insertBefore(questionClone, editingTextarea);
-      }
-      
-      // Hide normal view, show editing view
-      textareaContainer.classList.add('hidden');
-      editingView.classList.remove('hidden');
-      
-      // Copy current value to editing textarea
-      editingTextarea.value = textarea.value;
-      
-      // Focus the editing textarea
-      setTimeout(() => {
-        editingTextarea.focus();
-      }, 50);
-      
-      // Sync values between textareas
-      const syncHandler = () => {
-        textarea.value = editingTextarea.value;
-        // Trigger validation
-        this.validateCurrentStep();
-      };
-      
-      editingTextarea.addEventListener('input', syncHandler);
-      
-      // Store the handler for cleanup
-      editingTextarea._syncHandler = syncHandler;
-    },
-    
-    deactivateTextareaSpecialState(button) {
-      const questionContainer = button.closest('.question-container');
-      if (!questionContainer) return;
-      
-      const textareaContainer = questionContainer.querySelector('.textarea-container');
-      const editingView = questionContainer.querySelector('.editing-view');
-      const textarea = textareaContainer.querySelector('textarea');
-      const editingTextarea = editingView.querySelector('textarea');
-      const questionStatus = questionContainer.querySelector('.question-status');
-      
-      // Update the main textarea with the edited value
-      textarea.value = editingTextarea.value;
-      
-      // Remove overlay styles
-      editingView.style = '';
-      
-      // Show normal view, hide editing view
-      editingView.classList.add('hidden');
-      textareaContainer.classList.remove('hidden');
-      
-      // Show "Question answered!" if there's content
-      if (textarea.value.trim()) {
-        questionStatus.classList.remove('hidden');
-      } else {
-        questionStatus.classList.add('hidden');
-      }
-      
-      // Clean up event listeners
-      if (editingTextarea._syncHandler) {
-        editingTextarea.removeEventListener('input', editingTextarea._syncHandler);
-        delete editingTextarea._syncHandler;
-      }
-      
-      // Trigger validation
-      this.validateCurrentStep();
-    },
-    
-    // Open form with animation
-    openForm() {
-      // Show form and overlay
-      this.formOverlay.classList.remove('hidden');
-      this.formContainer.classList.remove('hidden');
-      
-      // Prevent background scrolling
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      
-      // Animate overlay fade in
-      this.formOverlay.style.opacity = '0';
-      this.formOverlay.style.transition = 'opacity 0.3s ease';
-      requestAnimationFrame(() => {
-        this.formOverlay.style.opacity = '0.5';
-      });
-      
-      // Reset to first step
-      this.currentStep = 0;
-      
-      // Show first step with slide-in animation
-      const firstStep = this.steps[0];
-      this.steps.forEach(step => step.classList.add('hidden'));
-      firstStep.classList.remove('hidden');
-      
-      firstStep.style.transform = 'translateX(100vw)';
-      firstStep.style.opacity = '0';
-      firstStep.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-      
-      requestAnimationFrame(() => {
-        firstStep.style.transform = 'translateX(0)';
-        firstStep.style.opacity = '1';
-      });
-      
-      this.validateCurrentStep();
-    },
-    
-    // Close form with animation
-    closeForm() {
-      const isSuccessState = this.currentStep === 'success';
-      
-      if (isSuccessState) {
-        // Close from success state - keep stacked cards
-        this.successMessage.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-        this.successMessage.style.transform = 'translateX(-100vw)';
-        this.successMessage.style.opacity = '0';
-        
-        // Fade out overlay
-        this.formOverlay.style.transition = 'opacity 0.5s ease';
-        this.formOverlay.style.opacity = '0';
-        
-        setTimeout(() => {
-          // Actually hide elements
-          this.formOverlay.classList.add('hidden');
-          this.formContainer.classList.add('hidden');
-          
-          // Reset styles
-          this.formOverlay.style.opacity = '';
-          this.formOverlay.style.transition = '';
-          this.successMessage.style.transform = '';
-          this.successMessage.style.opacity = '';
-          
-          // Re-enable background scrolling
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-        }, 500);
-      } else {
-        // Normal close - animate all cards out
-        const visibleElements = document.querySelectorAll('.step:not(.hidden), #success-message:not(.hidden), #error-message:not(.hidden)');
-        
-        visibleElements.forEach((element, index) => {
-          setTimeout(() => {
-            element.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-            element.style.transform = 'translateX(-100vw)';
-            element.style.opacity = '0';
-          }, index * 100);
-        });
-        
-        // Animate stacked cards out
-        this.stackedCards.forEach((stepIndex, i) => {
-          const element = document.querySelector(`#step-${stepIndex}`);
-          if (element && !element.classList.contains('hidden')) {
-            setTimeout(() => {
-              element.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-              element.style.transform = 'translateX(-100vw)';
-              element.style.opacity = '0';
-            }, (visibleElements.length + i) * 100);
-          }
-        });
-        
-        // Fade out overlay
-        setTimeout(() => {
-          this.formOverlay.style.transition = 'opacity 0.5s ease';
-          this.formOverlay.style.opacity = '0';
-        }, 300);
-        
-        // Actually hide elements and reset after animations complete
-        setTimeout(() => {
-          // Hide elements
-          this.formOverlay.classList.add('hidden');
-          this.formContainer.classList.add('hidden');
-          
-          // Re-enable background scrolling
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          
-          // Reset form
-          this.form.reset();
-          this.currentStep = 0;
-          
-          // Reset all animations
-          this.resetAnimations();
-          
-          // Reset social fields
-          this.resetSocialFields();
-          
-          // Reset optional question
-          this.toggleOptionalQuestion(false);
-          
-          // Reset textarea states
-          this.resetTextareaStates();
-          
-          // Hide success/error messages
-          this.successMessage.classList.add('hidden');
-          this.errorMessage.classList.add('hidden');
-          
-          // Show first step (hidden during animation)
-          this.steps[0].classList.remove('hidden');
-          this.steps[0].style.transform = '';
-          this.steps[0].style.opacity = '';
-          this.steps[0].style.transition = '';
-        }, 1000);
-      }
-    },
-    
-    // Reset animations
-    resetAnimations() {
-      // Reset all transforms
-      this.steps.forEach(step => {
-        step.style.transform = '';
-        step.style.opacity = '';
-        step.style.transition = '';
-        step.style.zIndex = '';
-      });
-      
-      this.stackedCards = [];
-    },
-    
-    // Setup social media placeholder based on selection
-    setupSocialMediaPlaceholder(field) {
-      const select = field.querySelector('select');
-      const input = field.querySelector('input[type="text"]');
-      
-      if (!select || !input) return;
-      
-      const updatePlaceholder = () => {
-        const placeholders = {
-          instagram: 'e.g. @username',
-          facebook: 'e.g. @username',
-          twitter: 'e.g. @username',
-          linkedin: 'e.g. @username',
-          website: 'e.g. yourcompany.com'
-        };
-        
-        input.placeholder = placeholders[select.value] || 'e.g. @username';
-      };
-      
-      // Update placeholder on change
-      select.addEventListener('change', updatePlaceholder);
-      
-      // Set initial placeholder
-      updatePlaceholder();
-    },
-    
-    // Reset social fields to initial state
-    resetSocialFields() {
-      const container = document.querySelector('.social-media-fields');
-      const extraFields = container.querySelectorAll('.social-media-field:not(:first-child)');
-      extraFields.forEach(field => field.remove());
-      this.socialFieldCount = 1;
-      this.addSocialButton.classList.remove('hidden');
-      this.maxSocialFieldsMessage.classList.add('hidden');
-    },
-    
-    // Add social media field
-    addSocialMediaField() {
-      if (this.socialFieldCount >= this.MAX_SOCIAL_FIELDS) {
-        this.maxSocialFieldsMessage.classList.remove('hidden');
-        setTimeout(() => {
-          this.maxSocialFieldsMessage.classList.add('hidden');
-        }, 3000);
-        return;
-      }
-      
-      const container = document.querySelector('.social-media-fields');
-      const newField = document.createElement('div');
-      newField.className = 'social-media-field mt-3';
-      
-      newField.innerHTML = `
-        <div class="flex rounded-xl border border-gray-300 overflow-hidden">
-          <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
-            <select name="social-media-type-${this.socialFieldCount}" class="bg-gray-100 border-none focus:ring-0">
-              <option value="instagram">Instagram</option>
-              <option value="facebook">Facebook</option>
-              <option value="twitter">Twitter</option>
-              <option value="linkedin">LinkedIn</option>
-              <option value="website">Website</option>
-            </select>
-          </div>
-          <input 
-            type="text" 
-            name="social-media-profile-${this.socialFieldCount}" 
-            class="flex-grow px-3 py-3 bg-white min-w-0" 
-            placeholder="e.g. @username"
-          >
-          <button type="button" class="remove-social px-3 bg-gray-100 border-l border-gray-300 text-gray-500 hover:text-red-500 flex-shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6L18 18" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      `;
-      
-      container.appendChild(newField);
-      this.socialFieldCount++;
-      
-      // Setup placeholder for the new field
-      this.setupSocialMediaPlaceholder(newField);
-      
-      // Hide add button if max reached
-      if (this.socialFieldCount >= this.MAX_SOCIAL_FIELDS) {
-        this.addSocialButton.classList.add('hidden');
-      }
-      
-      // Add remove button functionality
-      const removeButton = newField.querySelector('.remove-social');
-      removeButton.addEventListener('click', () => this.removeSocialMediaField(newField));
-    },
-    
-    // Remove social media field
-    removeSocialMediaField(field) {
-      field.remove();
-      this.socialFieldCount--;
-      
-      // Show add button if it was hidden
-      if (this.socialFieldCount < this.MAX_SOCIAL_FIELDS) {
-        this.addSocialButton.classList.remove('hidden');
-      }
-    },
-    
-    // Toggle optional question visibility
-    toggleOptionalQuestion(show) {
-      if (show) {
-        this.showQuestionButton.classList.add('hidden');
-        this.hideQuestionButton.classList.remove('hidden');
-        this.optionalQuestionContainer.classList.remove('hidden');
-      } else {
-        this.showQuestionButton.classList.remove('hidden');
-        this.hideQuestionButton.classList.add('hidden');
-        this.optionalQuestionContainer.classList.add('hidden');
-      }
-    },
-
-    // Show specific step with animation
-    showStep(stepIndex) {
-        const fromStep = this.currentStep;
-        
-        // Skip animation for special states
-        if (typeof fromStep !== 'number' || typeof stepIndex !== 'number') {
-          this.steps.forEach((step, i) => {
-            step.classList.toggle('hidden', i !== stepIndex);
-          });
-          this.successMessage.classList.add('hidden');
-          this.errorMessage.classList.add('hidden');
-          
-          this.updateProgressIndicators();
-          return;
-        }
-        
-        // Handle step transitions with animations
-        if (fromStep !== stepIndex) {
-          if (stepIndex > fromStep) {
-            // Moving forward - stack current card
-            this.animateForward(fromStep, stepIndex);
-          } else {
-            // Moving backward - unstack card
-            this.animateBackward(fromStep, stepIndex);
-          }
-        }
-        
-        this.updateProgressIndicators();
-    },
-    
-    // Animate moving forward to next step
-    animateForward(fromIndex, toIndex) {
-    const fromElement = this.steps[fromIndex];
-    const toElement = this.steps[toIndex];
-    
-    // Stack the current card
-    this.stackCard(fromElement, fromIndex);
-    
-    // Prepare the next card for animation
-    toElement.classList.remove('hidden');
-    toElement.style.transform = 'translateX(100vw)';
-    toElement.style.opacity = '0';
-    toElement.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    toElement.style.zIndex = '10';
-    
-    // Slide in the next card
-    requestAnimationFrame(() => {
-        toElement.style.transform = 'translateX(0)';
-        toElement.style.opacity = '1';
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM Elements
+  const formOpenBtn = document.getElementById('open-form-btn');
+  const formContainer = document.getElementById('form-container');
+  const formOverlay = document.getElementById('form-overlay');
+  const form = document.getElementById('multi-step-form');
+  const steps = document.querySelectorAll('.step');
+  const nextButtons = document.querySelectorAll('.next-button');
+  const prevButtons = document.querySelectorAll('.prev-button');
+  const closeButtons = document.querySelectorAll('.close-button');
+  const successMessage = document.getElementById('success-message');
+  const errorMessage = document.getElementById('error-message');
+  const tryAgainButton = document.getElementById('try-again-button');
+  
+  // Social media functionality
+  const addSocialButton = document.querySelector('.add-social-button');
+  const socialMediaFields = document.querySelector('.social-media-fields');
+  const maxSocialFieldsMessage = document.getElementById('max-social-fields-message');
+  
+  // Optional question toggle
+  const showQuestionButton = document.getElementById('show-question-button');
+  const hideQuestionButton = document.getElementById('hide-question-button');
+  const optionalQuestionContainer = document.getElementById('optional-question-container');
+  
+  // Custom budget fields
+  const budgetCustomRadio = document.getElementById('budgetCustom');
+  const customBudgetContainer = document.getElementById('customBudgetContainer');
+  
+  // Special states for textareas
+  const questionContainers = document.querySelectorAll('.question-container');
+  
+  // Web Design & Development checkboxes
+  const webDesignCheckbox = document.getElementById('webDesign');
+  const developmentCheckbox = document.getElementById('development');
+  
+  // Current step tracker
+  let currentStep = 0;
+  
+  // Define final positions for the staggered card stack pattern
+  const finalPositions = [
+    { xPercent: '-70', yPercent: '-70', rotation: -5 },
+    { xPercent: '-55', yPercent: '-60', rotation: 2 },
+    { xPercent: '-40', yPercent: '-50', rotation: -3 },
+    { xPercent: '-30', yPercent: '-40', rotation: 5 },
+    { xPercent: '-20', yPercent: '-30', rotation: -2 }
+  ];
+  
+  // Animation durations
+  const animDurations = {
+    overlay: 0.3,
+    cardSlide: 0.5,
+    cardStack: 0.3,
+    stagger: 0.1
+  };
+  
+  // Check if device is mobile
+  const isMobile = () => window.innerWidth < 768;
+  
+  // ---------------
+  // CORE FORM CONTROL
+  // ---------------
+  
+  // Initialize the form
+  const initForm = () => {
+    // Show the first step only
+    steps.forEach((step, index) => {
+      if (index === 0) step.classList.remove('hidden');
+      else step.classList.add('hidden');
     });
-    },
+
+    // Center cards in the form
+    const formElement = document.getElementById('multi-step-form');
+    formElement.style.display = 'flex';
+    formElement.style.flexDirection = 'column';
+    formElement.style.justifyContent = 'center';
+    formElement.style.alignItems = 'center';
+    formElement.style.height = '100%';
     
-    // Animate moving backward to previous step
-    animateBackward(fromIndex, toIndex) {
-    const fromElement = this.steps[fromIndex];
-    const toElement = this.steps[toIndex];
+    // Set initial positioning for all steps
+    steps.forEach(step => {
+      // Apply the initial styles once for proper centering
+      gsap.set(step, {
+        position: 'absolute',
+        left: '50%',
+        top: '90%',
+        xPercent: -50,
+        yPercent: -50,
+        transform: 'translate(-50%, -50%)'  // Fallback for non-GSAP elements
+      });
+      
+      if (step.id !== `step-${currentStep}`) {
+        step.classList.add('hidden');
+      }
+    });
     
-    // Slide out current card
-    fromElement.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    fromElement.style.transform = 'translateX(100vw)';
-    fromElement.style.opacity = '0';
+    // Setup event listeners
+    setupEventListeners();
     
-    // Show and unstack the previous card
-    toElement.classList.remove('hidden');
-    this.unstackCard(toElement, toIndex);
-    
-    // Hide the from element after animation
-    setTimeout(() => {
-        fromElement.classList.add('hidden');
-        fromElement.style.transform = '';
-        fromElement.style.opacity = '';
-    }, 500);
-    },
-    
-    // Stack a card in a decorative position
-    stackCard(element, stepIndex) {
-    // Add to stacked cards if not already there
-    if (!this.stackedCards.includes(stepIndex)) {
-        this.stackedCards.push(stepIndex);
+    // Initialize validation for the first step
+    validateStep(0);
+
+    setupInputVisualStates();
+  };
+  
+  // Setup all event listeners
+  const setupEventListeners = () => {
+    // Open form button
+    if (formOpenBtn) {
+      formOpenBtn.addEventListener('click', openForm);
     }
     
-    // Get final position based on step index
-    const position = this.finalPositions[stepIndex % this.finalPositions.length];
-    
-    // Random rotation between -5 and 5 degrees
-    const rotation = (Math.random() - 0.5) * 10;
-    
-    // Animate to stacked position
-    element.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    element.style.transform = `translate(${position.x}, ${position.y}) scale(0.9) rotate(${rotation}deg)`;
-    element.style.opacity = '0.8';
-    element.style.zIndex = '-1';
-    },
-    
-    // Unstack a card and bring to front
-    unstackCard(element, stepIndex) {
-    element.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    element.style.transform = 'translateX(0) scale(1) rotate(0deg)';
-    element.style.opacity = '1';
-    element.style.zIndex = '10';
-    
-    // Remove from stacked cards
-    const index = this.stackedCards.indexOf(stepIndex);
-    if (index > -1) {
-        this.stackedCards.splice(index, 1);
+    // Add more social media fields
+    if (addSocialButton) {
+      addSocialButton.addEventListener('click', addSocialMediaField);
     }
-    },
     
-    // Navigate to previous step
-    prevStep() {
-    if (this.currentStep > 0) {
-        this.currentStep--;
-        this.showStep(this.currentStep);
-        this.validateCurrentStep();
+    // Custom budget toggle
+    if (budgetCustomRadio) {
+      budgetCustomRadio.addEventListener('change', toggleCustomBudget);
+      document.querySelectorAll('input[name="budget"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (radio.id !== 'budgetCustom') {
+            customBudgetContainer.classList.add('hidden');
+          }
+        });
+      });
     }
-    },
     
-    // Navigate to next step
-    nextStep() {
-    if (this.currentStep < this.steps.length - 1 && this.isStepValid(this.currentStep)) {
-        this.currentStep++;
-        this.showStep(this.currentStep);
-        this.validateCurrentStep();
+    // Web Design & Development checkbox dependency
+    if (webDesignCheckbox && developmentCheckbox) {
+      webDesignCheckbox.addEventListener('change', updateDevelopmentCheckbox);
     }
-    },
     
-    // Validate current step and update button state
-    validateCurrentStep() {
-    const isValid = this.isStepValid(this.currentStep);
-    const nextButton = this.steps[this.currentStep].querySelector('.next-button');
+    // Optional question toggle
+    if (showQuestionButton && hideQuestionButton && optionalQuestionContainer) {
+      showQuestionButton.addEventListener('click', showOptionalQuestion);
+      hideQuestionButton.addEventListener('click', hideOptionalQuestion);
+    }
     
-    if (nextButton) {
-        if (isValid) {
-        nextButton.disabled = false;
-        nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
+    // Next buttons
+    nextButtons.forEach(button => {
+      button.addEventListener('click', goToNextStep);
+    });
+    
+    // Previous buttons
+    prevButtons.forEach(button => {
+      button.addEventListener('click', goToPrevStep);
+    });
+    
+    // Close buttons
+    closeButtons.forEach(button => {
+      button.addEventListener('click', closeForm);
+    });
+    
+    // Try again button
+    if (tryAgainButton) {
+      tryAgainButton.addEventListener('click', hideErrorMessage);
+    }
+    
+    // Form submission
+    if (form) {
+      form.addEventListener('submit', handleSubmit);
+    }
+    
+    // Special textarea handlers
+    setupTextareaHandlers();
+    
+    // Social media type change
+    setupSocialMediaTypeHandlers();
+    
+    // Input fields validation
+    setupInputValidation();
+  };
+  
+  // ---------------
+  // FORM OPEN/CLOSE
+  // ---------------
+  
+  // Open the form with animation
+  const openForm = () => {
+    // Show form and overlay
+    formContainer.classList.remove('hidden');
+    formOverlay.classList.remove('hidden');
+
+    // Position form container in the center of the viewport
+    formContainer.style.position = 'fixed';
+    formContainer.style.top = '0';
+    formContainer.style.left = '0';
+    formContainer.style.right = '0';
+    formContainer.style.bottom = '0';
+    formContainer.style.display = 'flex';
+    formContainer.style.justifyContent = 'center';
+    formContainer.style.alignItems = 'center';
+    formContainer.style.zIndex = '50';
+    
+    // Disable scrolling on the entire page
+    document.body.style.overflow = 'hidden';
+    
+    // Animate overlay fading in
+    gsap.to(formOverlay, {
+      duration: animDurations.overlay,
+      opacity: 0.5,
+      ease: 'power2.out'
+    });
+    
+    // Get the first step
+    const firstStep = steps[0];
+    
+    // Set initial position (off-screen to the right)
+    gsap.set(firstStep, {
+      x: '100vw',
+      opacity: 0
+    });
+    
+    // Animate first card sliding in
+    gsap.to(firstStep, {
+      duration: animDurations.cardSlide,
+      x: 0,
+      opacity: 1,
+      ease: 'power2.out'
+    });
+  };
+  
+  // Close the form with animation
+  const closeForm = () => {
+    // Animate all visible cards sliding out
+    const visibleCards = document.querySelectorAll('.step:not(.hidden), #success-message:not(.hidden), #error-message:not(.hidden)');
+    
+    // If form was not submitted successfully, reset it
+    const wasSuccessful = !successMessage.classList.contains('hidden');
+    
+    if (!wasSuccessful) {
+      // Animate all cards sliding out to the left
+      gsap.to(visibleCards, {
+        duration: animDurations.cardSlide,
+        x: '-100vw',
+        opacity: 0,
+        stagger: animDurations.stagger,
+        ease: 'power2.in',
+        onComplete: () => {
+          // Hide form and overlay
+          formContainer.classList.add('hidden');
+          formOverlay.classList.add('hidden');
+          
+          // Reset form to initial state
+          resetForm();
+          
+          // Re-enable scrolling when form is closed
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      // If form was successful, just hide the success message
+      gsap.to(visibleCards, {
+        duration: animDurations.cardSlide,
+        opacity: 0,
+        ease: 'power2.in',
+        onComplete: () => {
+          // Hide form and overlay
+          formContainer.classList.add('hidden');
+          formOverlay.classList.add('hidden');
+          
+          // Re-enable scrolling when form is closed
+          document.body.style.overflow = '';
+        }
+      });
+    }
+    
+    // Animate overlay fading out
+    gsap.to(formOverlay, {
+      duration: animDurations.overlay,
+      opacity: 0,
+      ease: 'power2.in'
+    });
+  };
+  
+  // Reset form to initial state
+  const resetForm = () => {
+    // Reset current step
+    currentStep = 0;
+    
+    // Show first step only
+    steps.forEach((step, index) => {
+      if (index === 0) {
+        step.classList.remove('hidden');
+        gsap.set(step, { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1 });
+      } else {
+        step.classList.add('hidden');
+        gsap.set(step, { clearProps: 'all' });
+      }
+    });
+    
+    // Reset success and error messages
+    successMessage.classList.add('hidden');
+    errorMessage.classList.add('hidden');
+    
+    // Reset form fields
+    form.reset();
+    
+    // Reset social media fields
+    const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
+    for (let i = 1; i < socialFields.length; i++) {
+      socialFields[i].remove();
+    }
+    
+    // Hide custom budget container
+    if (customBudgetContainer) {
+      customBudgetContainer.classList.add('hidden');
+    }
+    
+    // Hide optional question
+    if (optionalQuestionContainer) {
+      optionalQuestionContainer.classList.add('hidden');
+      showQuestionButton.classList.remove('hidden');
+      hideQuestionButton.classList.add('hidden');
+    }
+    
+    // Reset development checkbox state
+    if (developmentCheckbox) {
+      developmentCheckbox.disabled = true;
+      developmentCheckbox.checked = false;
+      developmentCheckbox.parentNode.classList.remove('border-black');
+      developmentCheckbox.parentNode.classList.add('border-gray-300');
+    }
+    
+    // Reset textarea special states
+    questionContainers.forEach(container => {
+      const questionStatus = container.querySelector('.question-status');
+      const textareaContainer = container.querySelector('.textarea-container');
+      const editingView = container.querySelector('.editing-view');
+      
+      if (questionStatus) questionStatus.classList.add('hidden');
+      if (textareaContainer) textareaContainer.classList.remove('hidden');
+      if (editingView) editingView.classList.add('hidden');
+    });
+    
+    // Reset validation for all steps
+    nextButtons.forEach(button => {
+      button.disabled = true;
+    });
+    
+    // Validate first step
+    validateStep(0);
+  };
+  
+  // ---------------
+  // NAVIGATION
+  // ---------------
+  
+  // Go to next step
+  const goToNextStep = () => {
+    // Make sure we're not on the last step
+    if (currentStep >= steps.length - 1) return;
+    
+    const currentCard = steps[currentStep];
+    const nextCard = steps[currentStep + 1];
+    
+    // Make next card visible but off to the right
+    nextCard.classList.remove('hidden');
+    gsap.set(nextCard, {
+      xPercent: 50,  // Off to the right
+      yPercent: -50,  // Vertically centered
+      opacity: 0
+    });
+    
+    // Animation timeline
+    const tl = gsap.timeline();
+    
+    // Animate current card to its stacked position
+    tl.to(currentCard, {
+      duration: animDurations.cardStack,
+      scale: 0.9,
+      rotation: finalPositions[currentStep].rotation,
+      xPercent: finalPositions[currentStep].xPercent || -50,
+      yPercent: finalPositions[currentStep].yPercent || -50,
+      x: finalPositions[currentStep].x || 0,
+      y: finalPositions[currentStep].y || 0,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        currentCard.style.pointerEvents = 'none';
+      }
+    });
+    
+    // Animate next card sliding in to center
+    tl.to(nextCard, {
+      duration: animDurations.cardSlide,
+      xPercent: -50,  // Center horizontally
+      opacity: 1,
+      ease: 'power2.out'
+    }, '-=0.3');
+    
+    // Update current step
+    currentStep++;
+    
+    // Validate the new step
+    validateStep(currentStep);
+  };
+  
+  // Go to previous step
+  const goToPrevStep = () => {
+    // Make sure we're not on the first step
+    if (currentStep <= 0) return;
+    
+    const currentCard = steps[currentStep];
+    const prevCard = steps[currentStep - 1];
+    
+    // Animation timeline
+    const tl = gsap.timeline();
+    
+    // Animate current card sliding out to the right
+    tl.to(currentCard, {
+      duration: animDurations.cardSlide,
+      x: '100vw',
+      opacity: 0,
+      ease: 'power2.in',
+      onComplete: () => {
+        currentCard.classList.add('hidden');
+      }
+    });
+    
+    // Animate previous card coming back from stack
+    tl.to(prevCard, {
+      duration: animDurations.cardStack,
+      scale: 1,
+      rotation: 0,
+      x: '-50%', // Center horizontally
+      y: '-50%', // Center vertically
+      ease: 'power2.out',
+      onComplete: () => {
+        // Re-enable interaction with the previous card
+        prevCard.style.pointerEvents = 'auto';
+      }
+    }, '-=0.3');
+    
+    // Update current step
+    currentStep--;
+  };
+  
+  // ---------------
+  // VALIDATION
+  // ---------------
+  
+  // Validate current step
+  const validateStep = (stepIndex) => {
+    const step = steps[stepIndex];
+    const nextButton = step.querySelector('.next-button');
+    
+    if (!nextButton) return;
+    
+    // Get all required fields in the current step
+    const requiredFields = step.querySelectorAll('[required]');
+    
+    // Initial validation - disable next button by default
+    nextButton.disabled = true;
+    
+    // Function to check if all required fields are filled
+    const checkFields = () => {
+      let allFilled = true;
+      
+      requiredFields.forEach(field => {
+        // Check if field is empty based on type
+        if (field.type === 'checkbox' || field.type === 'radio') {
+          // For checkboxes and radios, we need at least one checked in the group
+          const name = field.name;
+          const group = step.querySelectorAll(`[name="${name}"]`);
+          const checked = Array.from(group).some(input => input.checked);
+          
+          if (!checked) allFilled = false;
         } else {
-        nextButton.disabled = true;
-        nextButton.classList.add('opacity-50', 'cursor-not-allowed');
+          // For text inputs, emails, etc.
+          if (!field.value.trim()) allFilled = false;
         }
-    }
-    },
+      });
+      
+      // Enable/disable next button based on validation
+      nextButton.disabled = !allFilled;
+    };
     
-    // Check if a step is valid
-    isStepValid(stepIndex) {
-    const step = this.steps[stepIndex];
+    // Check fields initially
+    checkFields();
     
-    // Check required text inputs and textareas
-    const requiredInputs = step.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]');
-    for (let input of requiredInputs) {
-        if (!input.value.trim()) {
-        return false;
-        }
-        
-        // Special validation for email
-        if (input.type === 'email' && !this.isValidEmail(input.value)) {
-        return false;
-        }
-    }
+    // Add event listeners to all required fields
+    requiredFields.forEach(field => {
+      // Remove existing listeners to avoid duplicates
+      field.removeEventListener('input', checkFields);
+      field.removeEventListener('change', checkFields);
+      
+      // Add appropriate listeners based on field type
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        field.addEventListener('change', checkFields);
+      } else {
+        field.addEventListener('input', checkFields);
+      }
+    });
+  };
+  
+  // Setup input validation
+  const setupInputValidation = () => {
+    // Add validation to all required fields
+    const requiredFields = form.querySelectorAll('[required]');
     
-    // Check required radio groups
-    const radioGroups = this.getRadioGroups(step);
-    for (let groupName of radioGroups) {
-        const radios = step.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
-        if (radios.length > 0 && radios[0].hasAttribute('required')) {
-        const checked = step.querySelector(`input[type="radio"][name="${groupName}"]:checked`);
-        if (!checked) {
-            return false;
-        }
-        }
-    }
-    
-    // Check required checkboxes (if any checkboxes in a group are required)
-    const checkboxGroups = this.getCheckboxGroups(step);
-    for (let groupName of checkboxGroups) {
-        const checkboxes = step.querySelectorAll(`input[type="checkbox"][name="${groupName}"]`);
-        if (checkboxes.length > 0 && checkboxes[0].hasAttribute('required')) {
-        const checked = step.querySelector(`input[type="checkbox"][name="${groupName}"]:checked`);
-        if (!checked) {
-            return false;
-        }
-        }
-    }
-    
-    // Special case for custom budget field
-    const budgetCustomRadio = step.querySelector('#budgetCustom');
-    const customBudgetInput = step.querySelector('#customBudget');
-    if (budgetCustomRadio && budgetCustomRadio.checked && customBudgetInput) {
-        if (!customBudgetInput.value.trim()) {
-        return false;
-        }
-    }
-    
-    return true;
-    },
-    
-    // Get unique radio group names in a step
-    getRadioGroups(step) {
-    const radios = step.querySelectorAll('input[type="radio"]');
-    const groups = new Set();
-    radios.forEach(radio => groups.add(radio.name));
-    return Array.from(groups);
-    },
-    
-    // Get unique checkbox group names in a step
-    getCheckboxGroups(step) {
-    const checkboxes = step.querySelectorAll('input[type="checkbox"]');
-    const groups = new Set();
-    checkboxes.forEach(checkbox => groups.add(checkbox.name));
-    return Array.from(groups);
-    },
-    
-    // Validate email format
-    isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-    },
-    
-    // Update progress indicators
-    updateProgressIndicators() {
-    // This will be implemented later with your specific progress indicator logic
-    },
-    
-    // Handle form submission
-    async handleSubmit(e) {
+    requiredFields.forEach(field => {
+      field.addEventListener('input', () => {
+        validateStep(currentStep);
+      });
+      
+      field.addEventListener('change', () => {
+        validateStep(currentStep);
+      });
+    });
+  };
+  
+  // ---------------
+  // FORM SUBMISSION
+  // ---------------
+  
+  // Handle form submission
+  const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validate final step
-    if (!this.isStepValid(this.currentStep)) {
-        return;
+    // Collect form data
+    const formData = new FormData(form);
+    
+    // Process service checkboxes into a comma-separated string
+    const servicesChecked = Array.from(document.querySelectorAll('input[name="services"]:checked'))
+      .map(checkbox => checkbox.value)
+      .join(', ');
+      
+    formData.set('services', servicesChecked);
+    
+    // Process social media fields
+    const socialMediaFields = document.querySelectorAll('.social-media-field');
+    const socialMediaProfiles = [];
+    
+    socialMediaFields.forEach((field, index) => {
+      const type = field.querySelector(`select[name="social-media-type-${index}"]`).value;
+      const profile = field.querySelector(`input[name="social-media-profile-${index}"]`).value;
+      
+      if (profile.trim()) {
+        socialMediaProfiles.push(`${type}: ${profile}`);
+      }
+    });
+    
+    // Set the first social media as Instagram profile for compatibility
+    if (socialMediaProfiles.length > 0) {
+      formData.set('instagramProfile', socialMediaProfiles.join(', '));
     }
     
-    // Collect form data
-    const formData = new FormData(this.form);
-    const data = Object.fromEntries(formData);
-    
-    // Remove honeypot field from data
-    delete data.website;
+    // Convert FormData to JSON
+    const formDataJson = {};
+    formData.forEach((value, key) => {
+      formDataJson[key] = value;
+    });
     
     // Show loading state
-    const submitButton = this.form.querySelector('button[type="submit"]');
-    const originalText = submitButton.innerHTML;
+    const submitButton = document.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.innerHTML;
+    submitButton.innerHTML = '<span class="text-xl">Sending...</span>';
     submitButton.disabled = true;
-    submitButton.innerHTML = '<span>Submitting...</span>';
     
-    try {
-        // Submit to Netlify function
-        const response = await fetch('/.netlify/functions/submit-form', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+    // Send form data to server
+    fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formDataJson)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Show success message
+      showSuccessMessage();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Show error message
+      showErrorMessage();
+    })
+    .finally(() => {
+      // Reset button state
+      submitButton.innerHTML = originalButtonText;
+      submitButton.disabled = false;
+    });
+  };
+  
+  // Show success message
+  const showSuccessMessage = () => {
+    // Hide the current step
+    steps[currentStep].classList.add('hidden');
+    
+    // Show success message
+    successMessage.classList.remove('hidden');
+    
+    // Position offscreen initially
+    gsap.set(successMessage, {
+      y: '20px',
+      opacity: 0
+    });
+    
+    // Animate in
+    gsap.to(successMessage, {
+      duration: 0.5,
+      y: 0,
+      opacity: 1,
+      ease: 'back.out(1.2)'
+    });
+  };
+  
+  // Show error message
+  const showErrorMessage = () => {
+    // Hide the current step
+    steps[currentStep].classList.add('hidden');
+    
+    // Show error message
+    errorMessage.classList.remove('hidden');
+    
+    // Position offscreen initially
+    gsap.set(errorMessage, {
+      opacity: 0
+    });
+    
+    // Animate in with shake effect
+    gsap.to(errorMessage, {
+      duration: 0.5,
+      opacity: 1,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Add shake animation
+        gsap.to(errorMessage, {
+          x: [-10, 10, -10, 10, 0],
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      }
+    });
+  };
+  
+  // Hide error message
+  const hideErrorMessage = () => {
+    // Hide error message
+    errorMessage.classList.add('hidden');
+    
+    // Show the last step again
+    steps[currentStep].classList.remove('hidden');
+  };
+  
+  // ---------------
+  // SPECIAL FEATURES
+  // ---------------
+  
+  // Add social media field
+  const addSocialMediaField = () => {
+    // Count existing fields
+    const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
+    
+    // Maximum 5 social fields
+    if (socialFields.length >= 5) {
+      maxSocialFieldsMessage.classList.remove('hidden');
+      return;
+    }
+    
+    // Create new field
+    const newField = document.createElement('div');
+    newField.className = 'social-media-field mt-3';
+    
+    const index = socialFields.length;
+    
+    newField.innerHTML = `
+      <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+        <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
+          <select name="social-media-type-${index}" class="bg-gray-100 border-none focus:ring-0 social-media-type">
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="twitter">Twitter</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="website">Website</option>
+          </select>
+        </div>
+        <input 
+          type="text" 
+          name="social-media-profile-${index}"
+          class="flex-grow px-4 py-3 bg-white social-media-profile" 
+          placeholder="e.g. @username"
+        >
+      </div>
+    `;
+    
+    // Add to container
+    socialMediaFields.appendChild(newField);
+    
+    // Add event listener for type change
+    const select = newField.querySelector('select');
+    const input = newField.querySelector('input');
+    
+    select.addEventListener('change', () => {
+      updatePlaceholder(select, input);
+    });
+    
+    // Revalidate
+    validateStep(currentStep);
+  };
+  
+  // Update placeholder based on social media type
+  const updatePlaceholder = (select, input) => {
+    const type = select.value;
+    
+    if (type === 'website') {
+      input.placeholder = 'e.g. yourcompany.com';
+    } else {
+      input.placeholder = 'e.g. @username';
+    }
+  };
+  
+  // Setup social media type change handlers
+  const setupSocialMediaTypeHandlers = () => {
+    // Get all initial social media selects
+    document.querySelectorAll('.social-media-type').forEach(select => {
+      const input = select.closest('.social-media-field').querySelector('input');
+      
+      select.addEventListener('change', () => {
+        updatePlaceholder(select, input);
+      });
+    });
+  };
+  
+  // Toggle custom budget field
+  const toggleCustomBudget = () => {
+    if (budgetCustomRadio.checked) {
+      customBudgetContainer.classList.remove('hidden');
+    } else {
+      customBudgetContainer.classList.add('hidden');
+    }
+  };
+  
+  // Update development checkbox based on web design selection
+  const updateDevelopmentCheckbox = () => {
+    if (webDesignCheckbox.checked) {
+      // Enable development checkbox
+      developmentCheckbox.disabled = false;
+      developmentCheckbox.parentNode.classList.remove('border-gray-300');
+      developmentCheckbox.parentNode.classList.add('border-black');
+    } else {
+      // Disable development checkbox
+      developmentCheckbox.disabled = true;
+      developmentCheckbox.checked = false;
+      developmentCheckbox.parentNode.classList.remove('border-black');
+      developmentCheckbox.parentNode.classList.add('border-gray-300');
+    }
+  };
+  
+  // Show optional question
+  const showOptionalQuestion = () => {
+    optionalQuestionContainer.classList.remove('hidden');
+    showQuestionButton.classList.add('hidden');
+    hideQuestionButton.classList.remove('hidden');
+  };
+  
+  // Hide optional question
+  const hideOptionalQuestion = () => {
+    optionalQuestionContainer.classList.add('hidden');
+    showQuestionButton.classList.remove('hidden');
+    hideQuestionButton.classList.add('hidden');
+  };
+
+  function setupInputVisualStates() {
+    // For checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const icon = this.parentNode.querySelector('.checkbox-icon');
+        if (this.checked) {
+          icon.classList.remove('hidden');
+        } else {
+          icon.classList.add('hidden');
+        }
+      });
+    });
+    
+    // For radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const name = this.getAttribute('name');
+        const group = document.querySelectorAll(`input[name="${name}"]`);
+        
+        // Hide all dots in the group
+        group.forEach(item => {
+          const dot = item.parentNode.querySelector('.radio-selected');
+          if (dot) dot.classList.add('hidden');
         });
         
-        if (response.ok) {
-        // Show success message as a card
-        this.showSuccessMessage();
-        } else {
-        // Show error message as a card
-        this.showErrorMessage();
+        // Show the selected dot
+        if (this.checked) {
+          const dot = this.parentNode.querySelector('.radio-selected');
+          if (dot) dot.classList.remove('hidden');
         }
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        this.showErrorMessage();
-    } finally {
-        // Restore button state
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalText;
-    }
-    },
-    
-    // Show success message with animation
-    showSuccessMessage() {
-    // Hide all steps but don't reset stacked cards
-    this.steps.forEach(step => step.classList.add('hidden'));
-    
-    // Prepare success message
-    this.successMessage.classList.remove('hidden');
-    this.successMessage.style.transform = 'translateY(20px)';
-    this.successMessage.style.opacity = '0';
-    this.successMessage.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    
-    // Animate success message in
-    requestAnimationFrame(() => {
-        this.successMessage.style.transform = 'translateY(0)';
-        this.successMessage.style.opacity = '1';
+      });
     });
-    
-    // Update the currentStep to indicate we're on a special state
-    this.currentStep = 'success';
-    },
-    
-    // Show error message with animation
-    showErrorMessage() {
-    // Hide all steps
-    this.steps.forEach(step => step.classList.add('hidden'));
-    
-    // Prepare error message
-    this.errorMessage.classList.remove('hidden');
-    this.errorMessage.style.animation = 'shake 0.5s ease-out';
-    this.errorMessage.style.opacity = '0';
-    this.errorMessage.style.transition = 'opacity 0.3s ease-out';
-    
-    // Animate error message in
-    requestAnimationFrame(() => {
-        this.errorMessage.style.opacity = '1';
-    });
-    
-    // Remove animation after completion
-    setTimeout(() => {
-        this.errorMessage.style.animation = '';
-    }, 500);
-    
-    // Update the currentStep to indicate we're on a special state
-    this.currentStep = 'error';
-    },
-    
-    resetTextareaStates() {
-    // Hide all editing views
-    document.querySelectorAll('.editing-view').forEach(view => {
-        view.classList.add('hidden');
-        view.style = ''; // Reset any inline styles
-    });
-    
-    // Show all textarea containers
-    document.querySelectorAll('.textarea-container').forEach(container => {
-        container.classList.remove('hidden');
-    });
-    
-    // Hide all question status indicators
-    document.querySelectorAll('.question-status').forEach(status => {
-        status.classList.add('hidden');
-    });
-    
-    // Clean up any event listeners
-    document.querySelectorAll('.editing-view textarea').forEach(textarea => {
-        if (textarea._syncHandler) {
-        textarea.removeEventListener('input', textarea._syncHandler);
-        delete textarea._syncHandler;
-        }
-    });
-    }
-};
-    
-// Special field interactions
-const SpecialFields = {
-    init() {
-    this.setupWebDesignDependency();
-    this.setupBudgetRadios();
-    this.setupCheckboxVisuals();
-    this.setupRadioVisuals();
-    },
-    
-    // Setup Web Design -> Development dependency
-    setupWebDesignDependency() {
-    const webDesignCheckbox = document.getElementById('webDesign');
-    const developmentCheckbox = document.getElementById('development');
-    const developmentLabel = document.querySelector('label[for="development"]');
-    const developmentContainer = developmentCheckbox?.closest('.checkbox-container');
-    
-    if (webDesignCheckbox && developmentCheckbox) {
-        webDesignCheckbox.addEventListener('change', () => {
-        if (webDesignCheckbox.checked) {
-            developmentCheckbox.disabled = false;
-            developmentLabel.classList.remove('text-gray-400', 'cursor-not-allowed');
-            developmentLabel.classList.add('cursor-pointer');
-            developmentContainer.classList.remove('border-gray-300');
-            developmentContainer.classList.add('border-black');
+  };
+  
+  // ---------------
+  // MOBILE SPECIAL STATES
+  // ---------------
+  
+  // Setup textarea handlers for mobile special state
+  const setupTextareaHandlers = () => {
+    questionContainers.forEach(container => {
+      const textarea = container.querySelector('textarea');
+      const editingTextarea = container.querySelector('.editing-view textarea');
+      const markAsDoneButton = container.querySelector('.mark-as-done');
+      const textareaContainer = container.querySelector('.textarea-container');
+      const editingView = container.querySelector('.editing-view');
+      const questionStatus = container.querySelector('.question-status');
+      
+      if (!textarea || !editingTextarea || !markAsDoneButton) return;
+      
+      // Copy textarea attributes to editing textarea
+      editingTextarea.placeholder = textarea.placeholder;
+      
+      // Handler for focusing on textarea on mobile
+      textarea.addEventListener('focus', () => {
+        if (isMobile()) {
+          // Copy current text to editing textarea
+          editingTextarea.value = textarea.value;
+          
+          // Show editing view
+          textareaContainer.classList.add('hidden');
+          editingView.classList.remove('hidden');
+          
+          // Animate overlay appearance
+          gsap.fromTo(editingView, 
+            { y: '20px', opacity: 0 },
+            { y: 0, opacity: 0.5, duration: 0.3, ease: 'power2.out' }
+          );
+          
+          // Focus the editing textarea
+          setTimeout(() => {
+            editingTextarea.focus();
+          }, 100);
         } else {
-            // Disable and uncheck development checkbox when web design is unchecked
-            developmentCheckbox.disabled = true;
-            developmentCheckbox.checked = false;
-            developmentLabel.classList.add('text-gray-400', 'cursor-not-allowed');
-            developmentLabel.classList.remove('cursor-pointer');
-            developmentContainer.classList.add('border-gray-300');
-            developmentContainer.classList.remove('border-black');
-            
-            // Also hide the checkbox icon
-            const icon = developmentContainer.querySelector('.checkbox-icon');
-            if (icon) {
-            icon.classList.add('hidden');
-            }
+          // If not mobile, just handle normal scroll
+          handleInputScroll(textarea);
+        }
+      });
+      
+      // Handler for marking as done
+      markAsDoneButton.addEventListener('click', () => {
+        // Copy text back to original textarea
+        textarea.value = editingTextarea.value;
+        
+        // Hide editing view
+        textareaContainer.classList.remove('hidden');
+        editingView.classList.add('hidden');
+        
+        // Show question answered status if there's text
+        if (textarea.value.trim() !== '') {
+          questionStatus.classList.remove('hidden');
+        } else {
+          questionStatus.classList.add('hidden');
         }
         
-        // Trigger validation after change
-        FormController.validateCurrentStep();
+        // Revalidate the step
+        validateStep(currentStep);
+      });
+      
+      // Sync text between textareas
+      editingTextarea.addEventListener('input', () => {
+        textarea.value = editingTextarea.value;
+        validateStep(currentStep);
+      });
+      
+      // For non-mobile special handling
+      if (!isMobile()) {
+        textarea.addEventListener('blur', () => {
+          // Show question answered status if there's text
+          if (textarea.value.trim() !== '') {
+            questionStatus.classList.remove('hidden');
+          } else {
+            questionStatus.classList.add('hidden');
+          }
         });
+      }
+    });
+    
+    // Handle scroll for regular inputs
+    document.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        handleInputScroll(input);
+      });
+    });
+  };
+  
+  // Handle scrolling when input is focused (for non-mobile special state)
+  const handleInputScroll = (input) => {
+    if (!isMobile()) return;
+    
+    const inputRect = input.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    // If input is in lower half of screen, scroll up a bit
+    if (inputRect.top > windowHeight / 2) {
+      const scrollStep = inputRect.top - (windowHeight / 4);
+      const currentStep = steps[currentStep];
+      
+      gsap.to(currentStep, {
+        duration: 0.3,
+        y: -scrollStep,
+        ease: 'power2.out'
+      });
+      
+      // Scroll back when done typing
+      input.addEventListener('blur', () => {
+        gsap.to(currentStep, {
+          duration: 0.3,
+          y: 0,
+          ease: 'power2.out'
+        });
+      }, { once: true });
     }
-    },
-    
-    // Setup budget radio custom field
-    setupBudgetRadios() {
-    const budgetRadios = document.querySelectorAll('input[name="budget"]');
-    const customBudgetContainer = document.getElementById('customBudgetContainer');
-    
-    budgetRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-        if (radio.id === 'budgetCustom' && radio.checked) {
-            customBudgetContainer.classList.remove('hidden');
-        } else if (radio.id !== 'budgetCustom' && radio.checked) {
-            customBudgetContainer.classList.add('hidden');
-        }
-        });
-    });
-    },
-    
-    // Setup checkbox visual feedback
-    setupCheckboxVisuals() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-        const icon = checkbox.closest('.checkbox-container').querySelector('.checkbox-icon');
-        if (checkbox.checked) {
-            icon.classList.remove('hidden');
-        } else {
-            icon.classList.add('hidden');
-        }
-        });
-    });
-    },
-    
-    // Setup radio visual feedback
-    setupRadioVisuals() {
-    const radios = document.querySelectorAll('input[type="radio"]');
-    
-    radios.forEach(radio => {
-        radio.addEventListener('change', () => {
-        if (radio.checked) {
-            // Hide all radio indicators in the same group
-            const groupRadios = document.querySelectorAll(`input[name="${radio.name}"]`);
-            groupRadios.forEach(groupRadio => {
-            const indicator = groupRadio.closest('.radio-container').querySelector('.radio-selected');
-            indicator.classList.add('hidden');
-            });
-            
-            // Show the selected indicator
-            const selectedIndicator = radio.closest('.radio-container').querySelector('.radio-selected');
-            selectedIndicator.classList.remove('hidden');
-        }
-        });
-    });
-    }
-};
-    
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    FormController.init();
-    SpecialFields.init();
+  };
+  
+  // Initialize the form
+  initForm();
 });

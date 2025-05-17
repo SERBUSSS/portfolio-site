@@ -65,10 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialize the form
   const initForm = () => {
+    console.log('initForm called');
+
     // Show the first step only
     steps.forEach((step, index) => {
+      console.log(`Step ${index}:`, step.classList.contains('hidden'));
       if (index === 0) step.classList.remove('hidden');
       else step.classList.add('hidden');
+      console.log(`After setting Step ${index}:`, step.classList.contains('hidden'));
     });
 
     // Center cards in the form
@@ -84,10 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
       step.style.left = '50%';
       step.style.top = '50%';
       step.style.transform = 'translate(-50%, -50%)';
-      
-      if (index !== currentStep) {
-        step.classList.add('hidden');
-      }
     });
     
     // Setup event listeners
@@ -97,6 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
     validateStep(0);
 
     setupInputVisualStates();
+
+    window.addEventListener('resize', setupResponsiveCards);
+
+    // Add a small delay to prevent race condition
+    setTimeout(() => {
+      setupResponsiveCards();
+    }, 100);
   };
   
   // Setup all event listeners
@@ -175,6 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Open the form with animation
   const openForm = () => {
+    console.log('openForm called');
+    console.log('Before reset - visible steps:', 
+      Array.from(steps).filter(step => !step.classList.contains('hidden')).length);
+
     // First, ensure form container is properly reset and visible
     formContainer.classList.remove('hidden');
     formContainer.style.display = 'flex';
@@ -183,6 +194,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Show overlay
     formOverlay.classList.remove('hidden');
+    
+    // IMPORTANT: Reset card visibility - hide all cards except the first one
+    steps.forEach((step, index) => {
+      if (index === 0) {
+        step.classList.remove('hidden');
+      } else {
+        step.classList.add('hidden');
+      }
+    });
+
+    console.log('After manual reset - visible steps:', 
+      Array.from(steps).filter(step => !step.classList.contains('hidden')).length);
+    
+    // Ensure we're starting from step 0
+    currentStep = 0;
     
     // Set up the form container to fill the screen and center content
     formContainer.style.position = 'fixed';
@@ -216,6 +242,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const firstStep = steps[0];
     firstStep.classList.remove('hidden');
     
+    // Clear any existing transforms from previous sessions
+    gsap.set(firstStep, { clearProps: 'all' });
+    
+    // Reset first step positioning
+    firstStep.style.position = 'absolute';
+    firstStep.style.left = '50%';
+    firstStep.style.top = '50%';
+    firstStep.style.transform = 'translate(-50%, -50%)';
+    
     // Set initial position (off-screen to the right)
     gsap.set(firstStep, {
       x: '100vw',
@@ -229,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
       opacity: 1,
       ease: 'power2.out'
     });
+    
+    // Validate the first step
+    validateStep(0);
   };
   
   // Close the form with animation
@@ -842,6 +880,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   // MOBILE SPECIAL STATES
   // ---------------
+
+  const setupResponsiveCards = () => {
+    steps.forEach((step, index) => {
+      const cardContent = step.querySelector('#card-content') || step.querySelector('.card-content');
+      
+      if (cardContent) {
+        const maxCardHeight = window.innerHeight - 120;
+        
+        if (window.innerWidth < 768) {
+          step.style.maxHeight = `${maxCardHeight}px`;
+          step.style.overflow = 'hidden';
+          step.style.display = 'flex';
+          step.style.flexDirection = 'column';
+          
+          cardContent.style.overflowY = 'auto';
+          cardContent.style.flexGrow = '1';
+          cardContent.style.maxHeight = `${maxCardHeight - 80}px`;
+        } else {
+          step.style.maxHeight = 'none';
+          step.style.overflow = 'visible';
+          cardContent.style.overflowY = 'visible';
+        }
+      }
+    });
+  };
   
   // Setup textarea handlers for mobile special state
   const setupTextareaHandlers = () => {
@@ -864,14 +927,26 @@ document.addEventListener('DOMContentLoaded', () => {
           // Copy current text to editing textarea
           editingTextarea.value = textarea.value;
           
-          // Show editing view
+          // Show editing view with proper positioning
           textareaContainer.classList.add('hidden');
           editingView.classList.remove('hidden');
+          
+          // Position the editing view at the top of the viewport
+          editingView.style.position = 'fixed';
+          editingView.style.top = '10vh';
+          editingView.style.left = '50%';
+          editingView.style.transform = 'translateX(-50%)';
+          editingView.style.width = '90vw';
+          editingView.style.backgroundColor = 'white';
+          editingView.style.padding = '1rem';
+          editingView.style.borderRadius = '0.75rem';
+          editingView.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+          editingView.style.zIndex = '60';
           
           // Animate overlay appearance
           gsap.fromTo(editingView, 
             { y: '20px', opacity: 0 },
-            { y: 0, opacity: 0.5, duration: 0.3, ease: 'power2.out' }
+            { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
           );
           
           // Focus the editing textarea
@@ -879,7 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
             editingTextarea.focus();
           }, 100);
         } else {
-          // If not mobile, just handle normal scroll
           handleInputScroll(textarea);
         }
       });
@@ -890,8 +964,28 @@ document.addEventListener('DOMContentLoaded', () => {
         textarea.value = editingTextarea.value;
         
         // Hide editing view
-        textareaContainer.classList.remove('hidden');
-        editingView.classList.add('hidden');
+        gsap.to(editingView, {
+          duration: 0.3,
+          y: '20px',
+          opacity: 0,
+          ease: 'power2.in',
+          onComplete: () => {
+            textareaContainer.classList.remove('hidden');
+            editingView.classList.add('hidden');
+            
+            // Reset editing view styles
+            editingView.style.position = '';
+            editingView.style.top = '';
+            editingView.style.left = '';
+            editingView.style.transform = '';
+            editingView.style.width = '';
+            editingView.style.backgroundColor = '';
+            editingView.style.padding = '';
+            editingView.style.borderRadius = '';
+            editingView.style.boxShadow = '';
+            editingView.style.zIndex = '';
+          }
+        });
         
         // Show question answered status if there's text
         if (textarea.value.trim() !== '') {
@@ -935,30 +1029,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleInputScroll = (input) => {
     if (!isMobile()) return;
     
+    const currentCard = steps[currentStep];
     const inputRect = input.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
+    const targetPosition = window.innerHeight * 0.2; // Position input at 20% from top
     
-    // If input is in lower half of screen, scroll up a bit
-    if (inputRect.top > windowHeight / 2) {
-      const scrollStep = inputRect.top - (windowHeight / 4);
-      const currentStep = steps[currentStep];
+    if (inputRect.top > targetPosition) {
+      const scrollAmount = inputRect.top - targetPosition;
       
-      gsap.to(currentStep, {
+      gsap.to(currentCard, {
         duration: 0.3,
-        y: -scrollStep,
+        y: -scrollAmount,
         ease: 'power2.out'
       });
       
-      // Scroll back when done typing
-      input.addEventListener('blur', () => {
-        gsap.to(currentStep, {
+      // Store the scroll amount to reset later
+      currentCard.dataset.scrollOffset = scrollAmount;
+    }
+  };
+
+  // Update the blur handler for inputs
+  document.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+    input.addEventListener('focus', () => {
+      handleInputScroll(input);
+    });
+    
+    input.addEventListener('blur', () => {
+      if (isMobile()) {
+        const currentCard = steps[currentStep];
+        
+        gsap.to(currentCard, {
           duration: 0.3,
           y: 0,
           ease: 'power2.out'
         });
-      }, { once: true });
-    }
-  };
+        
+        // Clear the stored offset
+        delete currentCard.dataset.scrollOffset;
+      }
+    });
+  });
   
   // Initialize the form
   initForm();

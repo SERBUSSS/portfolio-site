@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Define final positions for the staggered card stack pattern
   const finalPositions = [
-    { xPercent: '-70', yPercent: '-70', rotation: -5 },
-    { xPercent: '-55', yPercent: '-60', rotation: 2 },
-    { xPercent: '-40', yPercent: '-50', rotation: -3 },
-    { xPercent: '-30', yPercent: '-40', rotation: 5 },
-    { xPercent: '-20', yPercent: '-30', rotation: -2 }
+    { x: '-300px', y: '-200px', rotation: -5 },
+    { x: '-150px', y: '-100px', rotation: 2 },
+    { x: '150px', y: '0px', rotation: -3 },
+    { x: '300px', y: '100px', rotation: 5 },
+    { x: '200px', y: '200px', rotation: -2 }
   ];
   
   // Animation durations
@@ -79,19 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
     formElement.style.alignItems = 'center';
     formElement.style.height = '100%';
     
-    // Set initial positioning for all steps
-    steps.forEach(step => {
-      // Apply the initial styles once for proper centering
-      gsap.set(step, {
-        position: 'absolute',
-        left: '50%',
-        top: '90%',
-        xPercent: -50,
-        yPercent: -50,
-        transform: 'translate(-50%, -50%)'  // Fallback for non-GSAP elements
-      });
+    steps.forEach((step, index) => {
+      step.style.position = 'absolute';
+      step.style.left = '50%';
+      step.style.top = '50%';
+      step.style.transform = 'translate(-50%, -50%)';
       
-      if (step.id !== `step-${currentStep}`) {
+      if (index !== currentStep) {
         step.classList.add('hidden');
       }
     });
@@ -181,22 +175,34 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Open the form with animation
   const openForm = () => {
-    // Show form and overlay
+    // First, ensure form container is properly reset and visible
     formContainer.classList.remove('hidden');
+    formContainer.style.display = 'flex';
+    formContainer.style.visibility = 'visible';
+    formContainer.style.opacity = '1';
+    
+    // Show overlay
     formOverlay.classList.remove('hidden');
-
-    // Position form container in the center of the viewport
+    
+    // Set up the form container to fill the screen and center content
     formContainer.style.position = 'fixed';
     formContainer.style.top = '0';
     formContainer.style.left = '0';
-    formContainer.style.right = '0';
-    formContainer.style.bottom = '0';
-    formContainer.style.display = 'flex';
+    formContainer.style.width = '100vw';
+    formContainer.style.height = '100vh';
     formContainer.style.justifyContent = 'center';
     formContainer.style.alignItems = 'center';
     formContainer.style.zIndex = '50';
     
-    // Disable scrolling on the entire page
+    // Make sure the form takes the full space
+    form.style.position = 'relative';
+    form.style.width = '100%';
+    form.style.height = '100%';
+    form.style.display = 'flex';
+    form.style.justifyContent = 'center';
+    form.style.alignItems = 'center';
+    
+    // Disable background scrolling
     document.body.style.overflow = 'hidden';
     
     // Animate overlay fading in
@@ -206,8 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'power2.out'
     });
     
-    // Get the first step
+    // Get the first step and ensure it's visible
     const firstStep = steps[0];
+    firstStep.classList.remove('hidden');
     
     // Set initial position (off-screen to the right)
     gsap.set(firstStep, {
@@ -226,55 +233,83 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Close the form with animation
   const closeForm = () => {
-    // Animate all visible cards sliding out
-    const visibleCards = document.querySelectorAll('.step:not(.hidden), #success-message:not(.hidden), #error-message:not(.hidden)');
-    
-    // If form was not submitted successfully, reset it
     const wasSuccessful = !successMessage.classList.contains('hidden');
     
-    if (!wasSuccessful) {
+    if (wasSuccessful) {
+      // Form was submitted successfully - position it over the form-entry section
+      const formEntrySection = document.getElementById('form-entry');
+      
+      if (formEntrySection) {
+        const formEntryRect = formEntrySection.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        formContainer.style.position = 'absolute';
+        formContainer.style.top = `${formEntryRect.top + scrollTop}px`;
+        formContainer.style.left = '0';
+        formContainer.style.width = '100vw';
+        formContainer.style.height = `${formEntryRect.height}px`;
+        formContainer.style.zIndex = '10';
+      }
+      
+      // Make all cards non-interactive
+      steps.forEach(step => {
+        step.style.pointerEvents = 'none';
+      });
+      
+      // Hide success message and overlay
+      gsap.to(successMessage, {
+        duration: animDurations.cardSlide,
+        opacity: 0,
+        ease: 'power2.in'
+      });
+      
+      gsap.to(formOverlay, {
+        duration: animDurations.overlay,
+        opacity: 0,
+        ease: 'power2.in',
+        onComplete: () => {
+          formOverlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      // Form was not submitted - animate all cards out, then hide everything
+      const allCards = Array.from(steps);
+      const cardsToAnimate = [...allCards];
+      
+      // Add error message if visible
+      if (!errorMessage.classList.contains('hidden')) {
+        cardsToAnimate.unshift(errorMessage);
+      }
+      
       // Animate all cards sliding out to the left
-      gsap.to(visibleCards, {
+      gsap.to(cardsToAnimate, {
         duration: animDurations.cardSlide,
         x: '-100vw',
         opacity: 0,
         stagger: animDurations.stagger,
         ease: 'power2.in',
         onComplete: () => {
-          // Hide form and overlay
+          // Hide everything completely
           formContainer.classList.add('hidden');
+          formContainer.style.display = 'none';
           formOverlay.classList.add('hidden');
           
-          // Reset form to initial state
+          // Reset form state
           resetForm();
           
-          // Re-enable scrolling when form is closed
+          // Re-enable scrolling
           document.body.style.overflow = '';
         }
       });
-    } else {
-      // If form was successful, just hide the success message
-      gsap.to(visibleCards, {
-        duration: animDurations.cardSlide,
+      
+      // Animate overlay fading out
+      gsap.to(formOverlay, {
+        duration: animDurations.overlay,
         opacity: 0,
-        ease: 'power2.in',
-        onComplete: () => {
-          // Hide form and overlay
-          formContainer.classList.add('hidden');
-          formOverlay.classList.add('hidden');
-          
-          // Re-enable scrolling when form is closed
-          document.body.style.overflow = '';
-        }
+        ease: 'power2.in'
       });
     }
-    
-    // Animate overlay fading out
-    gsap.to(formOverlay, {
-      duration: animDurations.overlay,
-      opacity: 0,
-      ease: 'power2.in'
-    });
   };
   
   // Reset form to initial state
@@ -282,18 +317,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset current step
     currentStep = 0;
     
-    // Show first step only
+    // Reset all steps to their initial state
     steps.forEach((step, index) => {
       if (index === 0) {
         step.classList.remove('hidden');
-        gsap.set(step, { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1 });
+        step.style.pointerEvents = 'auto';
       } else {
         step.classList.add('hidden');
-        gsap.set(step, { clearProps: 'all' });
       }
+      
+      // Clear all GSAP transforms
+      gsap.set(step, { 
+        clearProps: 'all' 
+      });
+      
+      // Reset to initial positioning
+      step.style.position = 'absolute';
+      step.style.left = '50%';
+      step.style.top = '50%';
+      step.style.transform = 'translate(-50%, -50%)';
     });
     
-    // Reset success and error messages
+    // Reset messages
     successMessage.classList.add('hidden');
     errorMessage.classList.add('hidden');
     
@@ -352,50 +397,40 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Go to next step
   const goToNextStep = () => {
-    // Make sure we're not on the last step
     if (currentStep >= steps.length - 1) return;
     
     const currentCard = steps[currentStep];
     const nextCard = steps[currentStep + 1];
     
-    // Make next card visible but off to the right
+    // Show next card and position it off-screen to the right
     nextCard.classList.remove('hidden');
-    gsap.set(nextCard, {
-      xPercent: 50,  // Off to the right
-      yPercent: -50,  // Vertically centered
-      opacity: 0
-    });
+    gsap.set(nextCard, { x: '100vw', opacity: 0 });
     
     // Animation timeline
     const tl = gsap.timeline();
     
-    // Animate current card to its stacked position
+    // Move current card to its stacked position
     tl.to(currentCard, {
       duration: animDurations.cardStack,
       scale: 0.9,
       rotation: finalPositions[currentStep].rotation,
-      xPercent: finalPositions[currentStep].xPercent || -50,
-      yPercent: finalPositions[currentStep].yPercent || -50,
-      x: finalPositions[currentStep].x || 0,
-      y: finalPositions[currentStep].y || 0,
+      x: finalPositions[currentStep].x,
+      y: finalPositions[currentStep].y,
       ease: 'power2.inOut',
       onComplete: () => {
         currentCard.style.pointerEvents = 'none';
       }
     });
     
-    // Animate next card sliding in to center
+    // Slide next card in from the right
     tl.to(nextCard, {
       duration: animDurations.cardSlide,
-      xPercent: -50,  // Center horizontally
+      x: 0,
       opacity: 1,
       ease: 'power2.out'
     }, '-=0.3');
     
-    // Update current step
     currentStep++;
-    
-    // Validate the new step
     validateStep(currentStep);
   };
   
@@ -421,13 +456,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     
-    // Animate previous card coming back from stack
+    // Animate previous card back to its original centered position
     tl.to(prevCard, {
       duration: animDurations.cardStack,
       scale: 1,
       rotation: 0,
-      x: '-50%', // Center horizontally
-      y: '-50%', // Center vertically
+      x: 0,  // Reset to original position
+      y: 0,  // Reset to original position
       ease: 'power2.out',
       onComplete: () => {
         // Re-enable interaction with the previous card

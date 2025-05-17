@@ -63,17 +63,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // CORE FORM CONTROL
   // ---------------
   
+  // Helper function to show only the current step
+  const showStep = (stepIndex) => {
+    console.log(`showStep called for step ${stepIndex}`);
+    steps.forEach((step, index) => {
+      if (index === stepIndex) {
+        step.classList.remove('hidden');
+        console.log(`Step ${index} shown`);
+      } else {
+        step.classList.add('hidden');
+        console.log(`Step ${index} hidden`);
+      }
+    });
+  };
+  
   // Initialize the form
   const initForm = () => {
     console.log('initForm called');
 
-    // Show the first step only
-    steps.forEach((step, index) => {
-      console.log(`Step ${index}:`, step.classList.contains('hidden'));
-      if (index === 0) step.classList.remove('hidden');
-      else step.classList.add('hidden');
-      console.log(`After setting Step ${index}:`, step.classList.contains('hidden'));
-    });
+    // Reset current step to 0
+    currentStep = 0;
+    
+    // Show only the first step
+    showStep(currentStep);
 
     // Center cards in the form
     const formElement = document.getElementById('multi-step-form');
@@ -183,9 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Open the form with animation
   const openForm = () => {
     console.log('openForm called');
-    console.log('Before reset - visible steps:', 
-      Array.from(steps).filter(step => !step.classList.contains('hidden')).length);
-
+    
+    // Reset form state completely
+    resetForm();
+    
     // First, ensure form container is properly reset and visible
     formContainer.classList.remove('hidden');
     formContainer.style.display = 'flex';
@@ -194,21 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Show overlay
     formOverlay.classList.remove('hidden');
-    
-    // IMPORTANT: Reset card visibility - hide all cards except the first one
-    steps.forEach((step, index) => {
-      if (index === 0) {
-        step.classList.remove('hidden');
-      } else {
-        step.classList.add('hidden');
-      }
-    });
-
-    console.log('After manual reset - visible steps:', 
-      Array.from(steps).filter(step => !step.classList.contains('hidden')).length);
-    
-    // Ensure we're starting from step 0
-    currentStep = 0;
     
     // Set up the form container to fill the screen and center content
     formContainer.style.position = 'fixed';
@@ -355,14 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset current step
     currentStep = 0;
     
-    // Reset all steps to their initial state
+    // Reset all steps to their initial state - ENSURE ONLY FIRST STEP IS VISIBLE
+    showStep(currentStep);
+    
     steps.forEach((step, index) => {
-      if (index === 0) {
-        step.classList.remove('hidden');
-        step.style.pointerEvents = 'auto';
-      } else {
-        step.classList.add('hidden');
-      }
+      step.style.pointerEvents = 'auto';
       
       // Clear all GSAP transforms
       gsap.set(step, { 
@@ -435,13 +430,29 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Go to next step
   const goToNextStep = () => {
-    if (currentStep >= steps.length - 1) return;
+    console.log(`goToNextStep called. Current step: ${currentStep}, Total steps: ${steps.length}`);
+    
+    if (currentStep >= steps.length - 1) {
+      console.log('Already at last step, cannot go to next');
+      return;
+    }
     
     const currentCard = steps[currentStep];
     const nextCard = steps[currentStep + 1];
     
+    console.log(`Moving from step ${currentStep} to step ${currentStep + 1}`);
+    console.log('Current card:', currentCard);
+    console.log('Next card:', nextCard);
+    
     // Show next card and position it off-screen to the right
     nextCard.classList.remove('hidden');
+    
+    // Make sure the next card is properly positioned
+    nextCard.style.position = 'absolute';
+    nextCard.style.left = '50%';
+    nextCard.style.top = '50%';
+    nextCard.style.transform = 'translate(-50%, -50%)';
+    
     gsap.set(nextCard, { x: '100vw', opacity: 0 });
     
     // Animation timeline
@@ -469,16 +480,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }, '-=0.3');
     
     currentStep++;
+    console.log(`Step updated to: ${currentStep}`);
     validateStep(currentStep);
   };
   
   // Go to previous step
   const goToPrevStep = () => {
+    console.log(`goToPrevStep called. Current step: ${currentStep}`);
+    
     // Make sure we're not on the first step
-    if (currentStep <= 0) return;
+    if (currentStep <= 0) {
+      console.log('Already at first step, cannot go to previous');
+      return;
+    }
     
     const currentCard = steps[currentStep];
     const prevCard = steps[currentStep - 1];
+    
+    console.log(`Moving from step ${currentStep} to step ${currentStep - 1}`);
     
     // Animation timeline
     const tl = gsap.timeline();
@@ -510,6 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update current step
     currentStep--;
+    console.log(`Step updated to: ${currentStep}`);
   };
   
   // ---------------

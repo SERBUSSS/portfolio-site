@@ -608,7 +608,7 @@
                 
                 <div id="step-0" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button (invisible on first step) -->
                         <button type="button" class="prev-button invisible" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -634,17 +634,17 @@
 
                     <div id="card-content">
                         <!-- Step title and description -->
-                        <h2 class="text-4xl font-medium font-display mb-6 text-center">Before we start</h2>
+                        <h2 class="text-3xl font-medium font-display mb-3 text-center">Before we start</h2>
                         
-                        <p class="text-gray-800 mb-6">
+                        <p class="text-gray-800 leading-5 mb-5">
                             Completing this form, you will provide basic information about you, your business, 
                             services needed, and your vision and budget for the project.
                         </p>
                         
                         <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
+                        <div class="space-y-4 mb-6">
                             <div>
-                                <label for="fullName" class="flex text-xl font-medium text-gray-900 mb-2">Full Name:</label>
+                                <label for="fullName" class="flex text-[1rem] font-medium text-gray-900 mb-2">Full Name:</label>
                                 <input 
                                     type="text" 
                                     name="fullName" 
@@ -656,7 +656,7 @@
                             </div>
 
                             <div>
-                                <label for="email" class="flex text-xl font-medium text-gray-900 mb-2">Enter your email:</label>
+                                <label for="email" class="flex text-[1rem] font-medium text-gray-900 mb-2">Enter your email:</label>
                                 <input 
                                     type="email" 
                                     name="email" 
@@ -670,11 +670,16 @@
                         
                         <!-- Tip section -->
                         <div class="mb-6">
-                            <h3 class="text-2xl font-medium mb-2">Tip!</h3>
-                            <p class="text-gray-800">
+                            <div class="w-full inline-flex items-center gap-4 mb-2">
+                                <div class="w-full h-0.5 bg-gray-200">&nbsp;</div>
+                                <h3 class="text-xl font-medium text-center">Tip!</h3>
+                                <div class="w-full h-0.5 bg-gray-200">&nbsp;</div>
+                            </div>
+                            <p class="text-gray-800 leading-5 mb-4">
                                 You'll be asked to share a mood board or any sources of inspiration. 
                                 You can do it at a later date too, if you don't have one right now.
                             </p>
+                            <div class="w-full h-0.5 bg-gray-200">&nbsp;</div>
                         </div>
                     </div>
                     
@@ -694,7 +699,7 @@
                 <!-- Step 1: Contact Details -->
                 <div id="step-1" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -720,16 +725,16 @@
                     
                     <div id="card-content">
                         <!-- Step title and description -->
-                        <h2 class="text-4xl font-medium font-display mb-6">Your Contact Details</h2>
+                        <h2 class="text-3xl font-medium font-display mb-3 text-center">Your Contact Details</h2>
                         
-                        <p class="text-gray-800 mb-6">
+                        <p class="text-gray-800 leading-5 mb-5">
                             This step collects basic information about your business.
                         </p>
                         
                         <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
+                        <div class="space-y-4 mb-6">
                             <div>
-                                <label for="businessName" class="flex text-xl font-medium text-gray-900 mb-2">Business Name:</label>
+                                <label for="businessName" class="flex text-[1rem] font-medium text-gray-900 mb-2">Business Name:</label>
                                 <input 
                                     type="text" 
                                     name="businessName" 
@@ -741,7 +746,7 @@
                             </div>
                             
                             <div>
-                                <label class="flex text-xl font-medium text-gray-900 mb-2">Social Media Profiles:</label>
+                                <label class="flex text-[1rem] font-medium text-gray-900 mb-2">Social Media Profiles:</label>
                                 
                                 <div class="social-media-fields">
                                     <!-- Initial social media field -->
@@ -802,7 +807,7 @@
                 <!-- Step 2: About Your Business -->
                 <div id="step-2" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -828,17 +833,17 @@
                     
                     <div id="card-content">
                         <!-- Step title -->
-                        <h2 class="text-4xl font-medium font-display mb-6">About Your Business</h2>
+                        <h2 class="text-3xl font-medium font-display mb-3 text-center">About Your Business</h2>
                         
-                        <p class="text-gray-800 mb-6">
+                        <p class="text-gray-800 leading-5 mb-5">
                             In this step, we focus on understanding the nature and context of your business.
                         </p>
                         
                         <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
+                        <div class="space-y-4 mb-6">
                             <!-- Business description field -->
                             <div class="question-container">
-                                <label for="businessDescription" class="flex text-xl font-medium text-gray-900 mb-2">
+                                <label for="businessDescription" class="flex text-[1rem] font-medium text-gray-900 mb-2">
                                     Describe your business: What products or services do you offer?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -876,7 +881,7 @@
                             
                             <!-- Business challenges field -->
                             <div class="question-container">
-                                <label for="businessChallenges" class="flex text-xl font-medium text-gray-900 mb-2">
+                                <label for="businessChallenges" class="flex text-[1rem] font-medium text-gray-900 mb-2">
                                     What are the main challenges of your business? What aspects do you want to improve?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -930,7 +935,7 @@
                 <!-- Step 3: Project Objectives -->
                 <div id="step-3" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -956,17 +961,17 @@
                     
                     <div id="card-content">
                         <!-- Step title -->
-                        <h2 class="text-4xl font-medium font-display mb-6">Project Objectives</h2>
+                        <h2 class="text-3xl font-medium font-display mb-3 text-center">Project Objectives</h2>
                         
-                        <p class="text-gray-800 mb-6">
+                        <p class="text-gray-800 leading-5 mb-5">
                             Here you choose which services you are interested in and clarify your objectives.
                         </p>
                         
                         <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
+                        <div class="space-y-4 mb-6">
                             <!-- Services selection -->
                             <div>
-                                <label class="flex text-xl font-medium text-gray-900">Desired Services:</label>
+                                <label class="flex text-[1rem] font-medium text-gray-900">Desired Services:</label>
                                 <p class="text-gray-500 mb-4">Select one or more options:</p>
                                 
                                 <div class="space-y-4">
@@ -1063,7 +1068,7 @@
                             
                             <!-- Project objectives -->
                             <div class="question-container">
-                                <label for="projectObjectives" class="flex text-xl font-medium text-gray-900 mb-2">
+                                <label for="projectObjectives" class="flex text-[1rem] font-medium text-gray-900 mb-2">
                                     What objectives do you want to achieve with this project?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -1117,7 +1122,7 @@
                 <!-- Step 4: Vision and Budget -->
                 <div id="step-4" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1143,18 +1148,18 @@
                     
                     <div id="card-content">
                         <!-- Step title -->
-                        <h2 class="text-4xl font-medium font-display mb-2">Vision and Budget</h2>
-                        <p class="text-gray-800 text-xl mb-4">Last step!</p>
+                        <h2 class="text-3xl font-medium font-display mb-2 text-center">Vision and Budget</h2>
+                        <p class="text-gray-800 text-xl mb-3 text-center">Last step!</p>
                         
-                        <p class="text-gray-800 mb-6">
+                        <p class="text-gray-800 leading-5 mb-5">
                             The last step focuses on your vision for the project and the details of the collaboration.
                         </p>
                         
                         <!-- Form fields -->
-                        <div class="space-y-6 mb-10">
+                        <div class="space-y-4 mb-6">
                             <!-- Vision textarea -->
                             <div class="question-container">
-                                <label for="projectVision" class="flex text-xl font-medium text-gray-900 mb-2">
+                                <label for="projectVision" class="flex text-[1rem] font-medium text-gray-900 mb-2">
                                     What is your vision for the new website/branding?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -1192,7 +1197,7 @@
                             
                             <!-- Budget selection -->
                             <div>
-                                <label class="flex text-xl font-medium text-gray-900 mb-2">Project investment:</label>
+                                <label class="flex text-[1rem] font-medium text-gray-900 mb-2">Project investment:</label>
                                 <p class="text-gray-500 mb-4">Select one:</p>
                                 
                                 <div class="space-y-4">
@@ -1288,7 +1293,7 @@
                 <!-- Step 5: Pre-Submit Review -->
                 <div id="step-5" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1314,16 +1319,16 @@
 
                     <div id="card-content">
                         <!-- Form completed title and description -->
-                        <h2 class="text-4xl font-medium font-display mb-2 text-center">Form Completed!</h2>
-                        <p class="text-gray-800 text-xl mb-6 text-center">Ready to be sent!</p>
+                        <h2 class="text-3xl font-medium font-display mb-2 text-center">Form Completed!</h2>
+                        <p class="text-gray-800 text-xl mb-3 text-center">Ready to be sent!</p>
                         
-                        <p class="text-gray-800 mb-8">
+                        <p class="text-gray-800 leading-5 mb-5">
                             Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
                         </p>
                         
                         <!-- Optional question section -->
-                        <div class="mb-8">
-                            <p class="font-medium text-gray-900 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-gray-600">(optional)</span></p>
+                        <div class="mb-6">
+                            <p class="font-medium text-gray-900 leading-5 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-gray-600">(optional)</span></p>
                             
                             <!-- Toggle question button - shown when question is hidden -->
                             <button 
@@ -1353,7 +1358,7 @@
                             
                             <!-- Optional question content - hidden initially -->
                             <div id="optional-question-container" class="hidden question-container">
-                                <label for="referralSource" class="flex text-xl font-medium text-gray-900 mb-2">
+                                <label for="referralSource" class="flex text-[1rem] font-medium text-gray-900 mb-2">
                                     How did you hear about me? Why do you want to collaborate with me?
                                 </label>
                                 
@@ -1404,7 +1409,7 @@
                 <div id="success-message" class="hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white">
                     <div class="flex justify-between items-center mb-6">
                         <div></div>
-                        <h2 class="text-4xl font-medium font-display text-center">Form Sent!</h2>
+                        <h2 class="text-3xl font-medium font-display text-center">Form Sent!</h2>
                         <button type="button" class="close-button">
                             <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>

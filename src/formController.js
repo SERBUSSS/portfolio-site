@@ -47,17 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let preventViewportResize = false;
   let keyboardOpen = false;
 
+  const activeCardScale = 1;
+
   // Force correct step visibility
   const enforceStepVisibility = () => {
     if (!formIsOpen) return;
     
     steps.forEach((step, index) => {
       if (index === currentStep) {
+        // Current step should be visible
         if (step.classList.contains('hidden')) {
           step.classList.remove('hidden');
           step.style.display = 'block';
         }
+      } else if (index < currentStep) {
+        // Previous steps should be visible but in background (for back navigation)
+        step.classList.remove('hidden');
+        step.style.display = 'block';
+        step.style.pointerEvents = 'none'; // But not interactive
       } else {
+        // Future steps should be hidden
         if (!step.classList.contains('hidden')) {
           step.classList.add('hidden');
         }
@@ -67,11 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Define final positions for the staggered card stack pattern
   const finalPositions = [
-    { x: '-300px', y: '-200px', rotation: -5 },
-    { x: '-150px', y: '-100px', rotation: 2 },
-    { x: '150px', y: '0px', rotation: -3 },
-    { x: '300px', y: '100px', rotation: 5 },
-    { x: '200px', y: '200px', rotation: -2 }
+    { x: '-90px', y: '-200px', rotation: -3, scale: 0.5 },
+    { x: '-80px', y: '-100px', rotation: 2, scale: 0.5 },
+    { x: '10px', y: '0px', rotation: -1, scale: 0.5 },
+    { x: '50px', y: '100px', rotation: 3, scale: 0.5 },
+    { x: '80px', y: '200px', rotation: -2, scale: 0.5 }
   ];
   
   // Animation durations
@@ -472,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 1; i < socialFields.length; i++) {
       socialFields[i].remove();
     }
+    // Hide max fields message on reset
+    maxSocialFieldsMessage.classList.add('hidden');
     
     // Hide custom budget container
     if (customBudgetContainer) {
@@ -550,13 +561,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Move current card to its stacked position
     tl.to(currentCard, {
       duration: animDurations.cardStack,
-      scale: 0.9,
+      scale: finalPositions[currentStep].scale,
       rotation: finalPositions[currentStep].rotation,
       x: finalPositions[currentStep].x,
       y: finalPositions[currentStep].y,
       ease: 'power2.inOut',
       onComplete: () => {
+        // DON'T hide the card - just disable interaction
         currentCard.style.pointerEvents = 'none';
+        // Make sure it stays visible
+        currentCard.classList.remove('hidden');
+        currentCard.style.display = 'block';
       }
     });
     
@@ -582,13 +597,23 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
+    isNavigating = true;
+    
     const currentCard = steps[currentStep];
     const prevCard = steps[currentStep - 1];
     
     console.log(`Moving from step ${currentStep} to step ${currentStep - 1}`);
     
+    // Make sure previous card is visible before animating
+    prevCard.classList.remove('hidden');
+    prevCard.style.display = 'block';
+    
     // Animation timeline
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => {
+        isNavigating = false;
+      }
+    });
     
     // Animate current card sliding out to the right
     tl.to(currentCard, {
@@ -604,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animate previous card back to its original centered position
     tl.to(prevCard, {
       duration: animDurations.cardStack,
-      scale: 1,
+      scale: activeCardScale,
       rotation: 0,
       x: 0,  // Reset to original position
       y: 0,  // Reset to original position
@@ -871,6 +896,15 @@ document.addEventListener('DOMContentLoaded', () => {
           class="flex-grow px-4 py-3 bg-white social-media-profile" 
           placeholder="e.g. @username"
         >
+        <button 
+          type="button" 
+          class="delete-social-field bg-red-50 hover:bg-red-100 px-4 py-3 border-l border-gray-300 text-red-600 hover:text-red-700 transition-colors"
+          title="Remove this social media field"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
     `;
     
@@ -880,13 +914,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listener for type change
     const select = newField.querySelector('select');
     const input = newField.querySelector('input');
+    const deleteBtn = newField.querySelector('.delete-social-field');
     
     select.addEventListener('change', () => {
       updatePlaceholder(select, input);
     });
     
+    // Add delete functionality
+    deleteBtn.addEventListener('click', () => {
+      newField.remove();
+      updateSocialMediaIndexes();
+      hideMaxFieldsMessage();
+      validateStep(currentStep);
+    });
+    
     // Revalidate
     validateStep(currentStep);
+  };
+
+  // Update social media field indexes after deletion
+  const updateSocialMediaIndexes = () => {
+    const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
+    
+    socialFields.forEach((field, index) => {
+      const select = field.querySelector('select');
+      const input = field.querySelector('input');
+      
+      if (select) select.name = `social-media-type-${index}`;
+      if (input) input.name = `social-media-profile-${index}`;
+    });
+  };
+
+  // Hide max fields message when fields are removed
+  const hideMaxFieldsMessage = () => {
+    const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
+    if (socialFields.length < 5) {
+      maxSocialFieldsMessage.classList.add('hidden');
+    }
   };
   
   // Update placeholder based on social media type
@@ -894,7 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const type = select.value;
     
     if (type === 'website') {
-      input.placeholder = 'e.g. yourcompany.com';
+      input.placeholder = 'e.g. yoursite.com';
     } else {
       input.placeholder = 'e.g. @username';
     }

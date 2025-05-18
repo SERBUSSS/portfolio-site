@@ -38,6 +38,28 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Current step tracker
   let currentStep = 0;
+
+  // Form state protection
+  let formIsOpen = false;
+  let isNavigating = false;
+
+  // Force correct step visibility
+  const enforceStepVisibility = () => {
+    if (!formIsOpen) return;
+    
+    steps.forEach((step, index) => {
+      if (index === currentStep) {
+        if (step.classList.contains('hidden')) {
+          step.classList.remove('hidden');
+          step.style.display = 'block';
+        }
+      } else {
+        if (!step.classList.contains('hidden')) {
+          step.classList.add('hidden');
+        }
+      }
+    });
+  };
   
   // Define final positions for the staggered card stack pattern
   const finalPositions = [
@@ -58,6 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Check if device is mobile
   const isMobile = () => window.innerWidth < 768;
+
+  // Protect against scroll interference
+  const handleScrollProtection = () => {
+    if (formIsOpen && !isNavigating) {
+      enforceStepVisibility();
+    }
+  };
+
+  // Debounced scroll handler
+  let scrollTimeout;
+  const debouncedScrollHandler = () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(handleScrollProtection, 50);
+  };
   
   // ---------------
   // CORE FORM CONTROL
@@ -116,6 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       setupResponsiveCards();
     }, 100);
+
+    // Initial protection setup
+    if (isMobile()) {
+      // Additional mobile protection
+      document.addEventListener('visibilitychange', () => {
+        if (formIsOpen) {
+          setTimeout(enforceStepVisibility, 100);
+        }
+      });
+    };
   };
   
   // Setup all event listeners
@@ -194,7 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Open the form with animation
   const openForm = () => {
-    console.log('openForm called');
+    // Set state immediately
+    formIsOpen = true;
     
     // Reset form state completely
     resetForm();
@@ -208,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show overlay
     formOverlay.classList.remove('hidden');
     
-    // Set up the form container to fill the screen and center content
+    // Set up the form container
     formContainer.style.position = 'fixed';
     formContainer.style.top = '0';
     formContainer.style.left = '0';
@@ -229,6 +276,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Disable background scrolling
     document.body.style.overflow = 'hidden';
     
+    // Force first step visibility
+    steps.forEach((step, index) => {
+      if (index === 0) {
+        step.classList.remove('hidden');
+        step.style.display = 'block';
+      } else {
+        step.classList.add('hidden');
+      }
+    });
+    
+    // Add scroll protection
+    window.addEventListener('scroll', debouncedScrollHandler, { passive: true });
+    document.addEventListener('touchmove', debouncedScrollHandler, { passive: true });
+    
     // Animate overlay fading in
     gsap.to(formOverlay, {
       duration: animDurations.overlay,
@@ -236,11 +297,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'power2.out'
     });
     
-    // Get the first step and ensure it's visible
+    // Get the first step and animate it in
     const firstStep = steps[0];
-    firstStep.classList.remove('hidden');
     
-    // Clear any existing transforms from previous sessions
+    // Clear any existing transforms
     gsap.set(firstStep, { clearProps: 'all' });
     
     // Reset first step positioning
@@ -269,6 +329,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Close the form with animation
   const closeForm = () => {
+    // Set state immediately
+    formIsOpen = false;
+    
+    // Remove scroll protection
+    window.removeEventListener('scroll', debouncedScrollHandler);
+    document.removeEventListener('touchmove', debouncedScrollHandler);
+
     const wasSuccessful = !successMessage.classList.contains('hidden');
     
     if (wasSuccessful) {
@@ -430,22 +497,16 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Go to next step
   const goToNextStep = () => {
-    console.log(`goToNextStep called. Current step: ${currentStep}, Total steps: ${steps.length}`);
+    if (currentStep >= steps.length - 1 || isNavigating) return;
     
-    if (currentStep >= steps.length - 1) {
-      console.log('Already at last step, cannot go to next');
-      return;
-    }
+    isNavigating = true;
     
     const currentCard = steps[currentStep];
     const nextCard = steps[currentStep + 1];
     
-    console.log(`Moving from step ${currentStep} to step ${currentStep + 1}`);
-    console.log('Current card:', currentCard);
-    console.log('Next card:', nextCard);
-    
     // Show next card and position it off-screen to the right
     nextCard.classList.remove('hidden');
+    nextCard.style.display = 'block';
     
     // Make sure the next card is properly positioned
     nextCard.style.position = 'absolute';
@@ -456,7 +517,13 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.set(nextCard, { x: '100vw', opacity: 0 });
     
     // Animation timeline
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => {
+        isNavigating = false;
+        // Final protection check
+        setTimeout(enforceStepVisibility, 100);
+      }
+    });
     
     // Move current card to its stacked position
     tl.to(currentCard, {
@@ -480,7 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, '-=0.3');
     
     currentStep++;
-    console.log(`Step updated to: ${currentStep}`);
     validateStep(currentStep);
   };
   

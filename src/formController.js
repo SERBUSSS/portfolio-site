@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let formIsOpen = false;
   let isNavigating = false;
 
+  // Viewport change protection
+  let preventViewportResize = false;
+  let keyboardOpen = false;
+
   // Force correct step visibility
   const enforceStepVisibility = () => {
     if (!formIsOpen) return;
@@ -146,9 +150,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupInputVisualStates();
 
-    window.addEventListener('resize', setupResponsiveCards);
+    let setupCardsTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(setupCardsTimeout);
+      setupCardsTimeout = setTimeout(() => {
+        if (!preventViewportResize) {
+          setupResponsiveCards();
+        }
+      }, 150);
+    });
 
-    // Add a small delay to prevent race condition
+    setupKeyboardDetection();
+
+    // Small delay to prevent race condition
     setTimeout(() => {
       setupResponsiveCards();
     }, 100);
@@ -242,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openForm = () => {
     // Set state immediately
     formIsOpen = true;
+    preventViewportResize = true; // Prevent resize interference
     
     // Reset form state completely
     resetForm();
@@ -323,6 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'power2.out'
     });
     
+    // Reset resize prevention after animation
+    setTimeout(() => {
+      preventViewportResize = false;
+    }, 1000);
+    
     // Validate the first step
     validateStep(0);
   };
@@ -331,6 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeForm = () => {
     // Set state immediately
     formIsOpen = false;
+    preventViewportResize = false; // Re-enable resize handling
+    keyboardOpen = false; // Reset keyboard state
     
     // Remove scroll protection
     window.removeEventListener('scroll', debouncedScrollHandler);
@@ -968,7 +990,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
 
   const setupResponsiveCards = () => {
+    // Skip if form is open and we're preventing resize
+    if (formIsOpen && preventViewportResize) {
+      return;
+    }
+    
     steps.forEach((step, index) => {
+      // Skip modifications for non-current steps when form is open
+      if (formIsOpen && index !== currentStep) {
+        return;
+      }
+      
       const cardContent = step.querySelector('#card-content') || step.querySelector('.card-content');
       
       if (cardContent) {
@@ -990,6 +1022,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+    
+    // Enforce correct visibility after responsive changes
+    if (formIsOpen) {
+      setTimeout(enforceStepVisibility, 50);
+    }
   };
   
   // Setup textarea handlers for mobile special state
@@ -1154,6 +1191,40 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Detect mobile keyboard open/close
+  const setupKeyboardDetection = () => {
+    if (!isMobile()) return;
+    
+    let initialViewportHeight = window.visualViewport?.height || window.innerHeight;
+    
+    const handleViewportChange = () => {
+      if (!formIsOpen) return;
+      
+      const currentHeight = window.visualViewport?.height || window.innerHeight;
+      const heightDifference = initialViewportHeight - currentHeight;
+      
+      // If height decreased by more than 150px, likely keyboard is open
+      keyboardOpen = heightDifference > 150;
+      preventViewportResize = keyboardOpen;
+      
+      // Force correct visibility when keyboard state changes
+      if (formIsOpen) {
+        enforceStepVisibility();
+      }
+    };
+    
+    // Listen for both visualViewport and resize events
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+    }
+    
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleViewportChange, 100);
+    });
+  };
   
   // Initialize the form
   initForm();

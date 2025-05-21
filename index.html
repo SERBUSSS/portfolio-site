@@ -606,7 +606,7 @@
                 <!-- Security token field (if needed for CSRF protection) -->
                 <input type="hidden" name="_csrf" value="">
                 
-                <div id="step-0" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white">
+                <div id="step-0" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button (invisible on first step) -->
@@ -697,7 +697,7 @@
                 </div>
                 
                 <!-- Step 1: Contact Details -->
-                <div id="step-1" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
+                <div id="step-1" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -797,7 +797,7 @@
                         class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-xl">Next: About Your Business</span>
+                        <span class="text-xl">Next: Your Business</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -805,7 +805,7 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
+                <div id="step-2" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -848,7 +848,7 @@
                                 </label>
                                 <!-- This will show when the question is answered -->
                                 <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium">Question answered!</p>
+                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
                                 <div class="textarea-container" data-question-label="Describe your business">
@@ -886,7 +886,7 @@
                                 </label>
                                 <!-- This will show when the question is answered -->
                                 <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium">Question answered!</p>
+                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
                                 <div class="textarea-container" data-question-label="Business challenges">
@@ -933,7 +933,7 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
+                <div id="step-3" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -972,14 +972,14 @@
                             <!-- Services selection -->
                             <div>
                                 <label class="flex text-[1rem] font-medium text-gray-900">Desired Services:</label>
-                                <p class="text-gray-500 mb-4">Select one or more options:</p>
+                                <p class="text-gray-500 mb-3 text-sm">Select one or more options:</p>
                                 
                                 <div class="space-y-4">
                                     <!-- Web Design & Development group -->
                                     <div class="inline-flex gap-4">
                                         <!-- Web Design checkbox -->
                                         <div class="flex items-center">
-                                            <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                            <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
                                                 <input 
                                                     type="checkbox" 
                                                     id="webDesign" 
@@ -991,12 +991,12 @@
                                                     <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
                                             </div>
-                                            <label for="brandStrategy" class="text-xl font-medium cursor-pointer">Web Design</label>
+                                            <label for="brandStrategy" class="text-[1.2rem] font-medium cursor-pointer">Web Design</label>
                                         </div>
 
                                         <!-- Development checkbox (initially disabled) -->
                                         <div class="flex items-center">
-                                            <div class="w-6 h-6 mr-3 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
+                                            <div class="w-6 h-6 mr-2.5 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
                                                 <input 
                                                     type="checkbox" 
                                                     id="development" 
@@ -1009,13 +1009,13 @@
                                                     <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
                                             </div>
-                                            <label for="development" class="text-xl font-medium text-gray-400 cursor-not-allowed">Development</label>
+                                            <label for="development" class="text-[1.2rem] font-medium text-gray-400 cursor-not-allowed">Development</label>
                                         </div>
                                     </div>
 
                                     <!-- Brand Strategy checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="brandStrategy" 
@@ -1027,12 +1027,12 @@
                                                 <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <label for="brandStrategy" class="text-xl font-medium cursor-pointer">Brand Strategy</label>
+                                        <label for="brandStrategy" class="text-[1.2rem] font-medium cursor-pointer">Brand Strategy</label>
                                     </div>
                                     
                                     <!-- Rebranding checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="rebranding" 
@@ -1044,12 +1044,12 @@
                                                 <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <label for="rebranding" class="text-xl font-medium cursor-pointer">Rebranding</label>
+                                        <label for="rebranding" class="text-[1.2rem] font-medium cursor-pointer">Rebranding</label>
                                     </div>
                                     
                                     <!-- Other checkbox -->
-                                    <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="other" 
@@ -1061,7 +1061,7 @@
                                                 <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <label for="other" class="text-xl font-medium cursor-pointer">Other <span class="text-gray-500 font-normal">(specify below)</span></label>
+                                        <label for="other" class="text-[1.2rem] font-medium cursor-pointer">Other <span class="text-gray-500 font-normal">(specify below)</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -1073,7 +1073,7 @@
                                 </label>
                                 <!-- This will show when the question is answered -->
                                 <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium">Question answered!</p>
+                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
                                 <div class="textarea-container" data-question-label="Project objectives">
@@ -1120,7 +1120,7 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
+                <div id="step-4" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -1149,7 +1149,7 @@
                     <div id="card-content">
                         <!-- Step title -->
                         <h2 class="text-3xl font-medium font-display mb-2 text-center">Vision and Budget</h2>
-                        <p class="text-gray-800 text-xl mb-3 text-center">Last step!</p>
+                        <p class="text-gray-800 text-[1.1rem] mb-3 text-center">Last step!</p>
                         
                         <p class="text-gray-800 leading-5 mb-5">
                             The last step focuses on your vision for the project and the details of the collaboration.
@@ -1164,7 +1164,7 @@
                                 </label>
                                 <!-- This will show when the question is answered -->
                                 <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium">Question answered!</p>
+                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
                                 </div>
                                 <!-- Normal textarea view -->
                                 <div class="textarea-container" data-question-label="What is your vision for the new website/branding?">
@@ -1197,13 +1197,13 @@
                             
                             <!-- Budget selection -->
                             <div>
-                                <label class="flex text-[1rem] font-medium text-gray-900 mb-2">Project investment:</label>
-                                <p class="text-gray-500 mb-4">Select one:</p>
+                                <label class="flex text-[1rem] font-medium text-gray-900">Project investment:</label>
+                                <p class="text-gray-500 mb-3 text-sm">Select one:</p>
                                 
                                 <div class="space-y-4">
                                     <!-- $100 - $500 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget1" 
@@ -1219,7 +1219,7 @@
                                     
                                     <!-- $501 - $1000 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget2" 
@@ -1234,7 +1234,7 @@
                                     
                                     <!-- $1001 - $5000+ radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget3" 
@@ -1249,7 +1249,7 @@
                                     
                                     <!-- Custom radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-3 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budgetCustom" 
@@ -1291,7 +1291,7 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden">
+                <div id="step-5" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -1406,7 +1406,7 @@
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white">
+                <div id="success-message" class="hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <div class="flex justify-between items-center mb-6">
                         <div></div>
                         <h2 class="text-3xl font-medium font-display text-center">Form Sent!</h2>
@@ -1439,7 +1439,7 @@
                 </div>
 
                 <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white">
+                <div id="error-message" class="hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <div class="flex flex-col items-center">
                         <div class="inline-flex">
                             <h3 class="text-xl font-medium text-red-800">There was an error submitting your inquiry</h3>

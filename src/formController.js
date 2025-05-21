@@ -76,11 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Define final positions for the staggered card stack pattern
   const finalPositions = [
-    { x: '-90px', y: '-200px', rotation: -3, scale: 0.5 },
-    { x: '-80px', y: '-100px', rotation: 2, scale: 0.5 },
+    { x: '-7px', y: '-150px', rotation: -3, scale: 0.5 },
+    { x: '-30px', y: '-100px', rotation: 2, scale: 0.5 },
     { x: '10px', y: '0px', rotation: -1, scale: 0.5 },
-    { x: '50px', y: '100px', rotation: 3, scale: 0.5 },
-    { x: '80px', y: '200px', rotation: -2, scale: 0.5 }
+    { x: '30px', y: '100px', rotation: 3, scale: 0.5 },
+    { x: '70px', y: '1500px', rotation: -2, scale: 0.5 },
+    { x: '0px', y: '0px', rotation: 0, scale: 0.7 }, // For success message
+    { x: '0px', y: '0px', rotation: 0, scale: 0.7 } // For error message
   ];
   
   // Animation durations
@@ -246,7 +248,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
       form.addEventListener('submit', handleSubmit);
     }
-    
+
+    const setupInitialSocialMediaButtons = () => {
+      // Setup delete buttons on any existing social media fields
+      const initialSocialFields = socialMediaFields.querySelectorAll('.social-media-field');
+      
+      initialSocialFields.forEach((field, index) => {
+        const deleteBtn = field.querySelector('.delete-social-field');
+        
+        // Skip the first field if we want to keep at least one field
+        if (index === 0 && initialSocialFields.length === 1) {
+          if (deleteBtn) deleteBtn.style.display = 'none';
+          return;
+        }
+        
+        if (deleteBtn) {
+          // Make sure the button is visible
+          deleteBtn.style.display = 'flex';
+          deleteBtn.style.visibility = 'visible';
+          
+          // Add or re-add the event listener
+          deleteBtn.addEventListener('click', (e) => {
+            console.log('Delete button clicked for initial field:', index);
+            e.stopPropagation();
+            
+            field.remove();
+            updateSocialMediaIndexes();
+            hideMaxFieldsMessage();
+            validateStep(currentStep);
+          });
+        }
+      });
+    };
+  
+    setupInitialSocialMediaButtons();
+
     // Special textarea handlers
     setupTextareaHandlers();
     
@@ -799,16 +835,33 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Show success message
   const showSuccessMessage = () => {
-    // Hide the current step
-    steps[currentStep].classList.add('hidden');
+    // Don't hide the current step, just add it to the stack
+    const currentCard = steps[currentStep];
+    
+    // Stack the current card
+    gsap.to(currentCard, {
+      duration: animDurations.cardStack,
+      scale: finalPositions[currentStep].scale,
+      rotation: finalPositions[currentStep].rotation,
+      x: finalPositions[currentStep].x,
+      y: finalPositions[currentStep].y,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        currentCard.style.pointerEvents = 'none';
+      }
+    });
     
     // Show success message
     successMessage.classList.remove('hidden');
     
-    // Position offscreen initially
+    // Position for animation
     gsap.set(successMessage, {
       y: '20px',
-      opacity: 0
+      opacity: 0,
+      position: 'absolute',
+      left: '50%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)'
     });
     
     // Animate in
@@ -822,30 +875,46 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Show error message
   const showErrorMessage = () => {
-    // Hide the current step
-    steps[currentStep].classList.add('hidden');
+    // Don't hide the current step, just add it to the stack
+    const currentCard = steps[currentStep];
+    
+    // Stack the current card
+    gsap.to(currentCard, {
+      duration: animDurations.cardStack,
+      scale: finalPositions[currentStep].scale,
+      rotation: finalPositions[currentStep].rotation,
+      x: finalPositions[currentStep].x,
+      y: finalPositions[currentStep].y,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        currentCard.style.pointerEvents = 'none';
+      }
+    });
     
     // Show error message
     errorMessage.classList.remove('hidden');
     
-    // Position offscreen initially
+    // Ensure the error message is positioned correctly - centered
+    errorMessage.style.position = 'absolute';
+    errorMessage.style.left = '50%';
+    errorMessage.style.top = '50%';
+    errorMessage.style.transform = 'translate(-50%, -50%)';
+    
+    // Clear any inline transform that might be interfering
+    errorMessage.style.translate = 'none';
+    
+    // Set initial opacity
     gsap.set(errorMessage, {
-      opacity: 0
+      opacity: 0,
+      x: 0  // Make sure there's no x offset
     });
     
     // Animate in with shake effect
     gsap.to(errorMessage, {
-      duration: 0.5,
+      duration: animDurations.cardSlide,
+      x: 0,
       opacity: 1,
-      ease: 'power2.out',
-      onComplete: () => {
-        // Add shake animation
-        gsap.to(errorMessage, {
-          x: [-10, 10, -10, 10, 0],
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-      }
+      ease: 'power2.out'
     });
   };
   
@@ -854,8 +923,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide error message
     errorMessage.classList.add('hidden');
     
-    // Show the last step again
-    steps[currentStep].classList.remove('hidden');
+    // Restore the current step to center
+    const currentCard = steps[currentStep];
+    
+    gsap.to(currentCard, {
+      duration: animDurations.cardStack,
+      scale: activeCardScale,
+      rotation: 0,
+      x: 0,
+      y: 0,
+      ease: 'power2.out',
+      onComplete: () => {
+        currentCard.style.pointerEvents = 'auto';
+      }
+    });
   };
   
   // ---------------
@@ -879,6 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const index = socialFields.length;
     
+    // Updated HTML with better flex control for the input field
     newField.innerHTML = `
       <div class="flex rounded-xl border border-gray-300 overflow-hidden">
         <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
@@ -893,13 +975,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <input 
           type="text" 
           name="social-media-profile-${index}"
-          class="flex-grow px-4 py-3 bg-white social-media-profile" 
+          class="flex-grow min-w-0 px-4 py-3 bg-white social-media-profile" 
           placeholder="e.g. @username"
+          style="min-width: 0; flex-shrink: 1;"
         >
         <button 
           type="button" 
-          class="delete-social-field bg-red-50 hover:bg-red-100 px-4 py-3 border-l border-gray-300 text-red-600 hover:text-red-700 transition-colors"
+          class="delete-social-field bg-red-50 hover:bg-red-100 px-3 py-3 border-l border-gray-300 text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
           title="Remove this social media field"
+          style="flex: 0 0 auto; width: 44px; display: flex; align-items: center; justify-content: center;"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6L6 18M6 6l12 12"/>
@@ -926,6 +1010,56 @@ document.addEventListener('DOMContentLoaded', () => {
       updateSocialMediaIndexes();
       hideMaxFieldsMessage();
       validateStep(currentStep);
+    });
+
+    input.addEventListener('focus', function() {
+      // Using standard setTimeout to ensure this happens after everything else
+      setTimeout(() => {
+        handleInputScroll(this);
+      }, 0);
+    });
+
+    select.addEventListener('focus', function() {
+      // Using standard setTimeout to ensure this happens after everything else
+      setTimeout(() => {
+        handleInputScroll(this);
+      }, 0);
+    });
+
+    input.addEventListener('blur', function() {
+      if (isMobile()) {
+        const currentCard = steps[currentStep];
+        
+        // Check if we need to reset the scroll position
+        if (currentCard.dataset.scrollOffset) {
+          gsap.to(currentCard, {
+            duration: 0.3,
+            y: 0,
+            ease: 'power2.out'
+          });
+          
+          // Clear the stored offset
+          delete currentCard.dataset.scrollOffset;
+        }
+      }
+    });
+
+    select.addEventListener('blur', function() {
+      if (isMobile()) {
+        const currentCard = steps[currentStep];
+        
+        // Check if we need to reset the scroll position
+        if (currentCard.dataset.scrollOffset) {
+          gsap.to(currentCard, {
+            duration: 0.3,
+            y: 0,
+            ease: 'power2.out'
+          });
+          
+          // Clear the stored offset
+          delete currentCard.dataset.scrollOffset;
+        }
+      }
     });
     
     // Revalidate
@@ -992,12 +1126,34 @@ document.addEventListener('DOMContentLoaded', () => {
       developmentCheckbox.disabled = false;
       developmentCheckbox.parentNode.classList.remove('border-gray-300');
       developmentCheckbox.parentNode.classList.add('border-black');
+      
+      // Update the label color to black
+      const label = developmentCheckbox.parentNode.nextElementSibling;
+      if (label) {
+        label.classList.remove('text-gray-400');
+        label.classList.remove('cursor-not-allowed');
+        label.classList.add('text-black');
+        label.classList.add('cursor-pointer');
+      }
     } else {
-      // Disable development checkbox
+      // Disable development checkbox and ensure it's unchecked
       developmentCheckbox.disabled = true;
-      developmentCheckbox.checked = false;
+      developmentCheckbox.checked = false;  // This line is already present
       developmentCheckbox.parentNode.classList.remove('border-black');
       developmentCheckbox.parentNode.classList.add('border-gray-300');
+      
+      // Update the label color to gray
+      const label = developmentCheckbox.parentNode.nextElementSibling;
+      if (label) {
+        label.classList.add('text-gray-400');
+        label.classList.add('cursor-not-allowed');
+        label.classList.remove('text-black');
+        label.classList.remove('cursor-pointer');
+      }
+      
+      // Trigger a change event to ensure validation is updated
+      const changeEvent = new Event('change', { bubbles: true });
+      developmentCheckbox.dispatchEvent(changeEvent);
     }
   };
   
@@ -1150,7 +1306,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Copy text back to original textarea
         textarea.value = editingTextarea.value;
         
-        // Hide editing view
         gsap.to(editingView, {
           duration: 0.3,
           y: '20px',
@@ -1180,6 +1335,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           questionStatus.classList.add('hidden');
         }
+
+        const inputEvent = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(inputEvent);
         
         // Revalidate the step
         validateStep(currentStep);
@@ -1223,6 +1381,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (inputRect.top > targetPosition) {
       const scrollAmount = inputRect.top - targetPosition;
       
+      // For all inputs, just scroll the current step card
       gsap.to(currentCard, {
         duration: 0.3,
         y: -scrollAmount,

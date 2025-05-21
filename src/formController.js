@@ -426,13 +426,10 @@ document.addEventListener('DOMContentLoaded', () => {
         step.style.pointerEvents = 'none';
       });
       
-      // Hide success message and overlay
-      gsap.to(successMessage, {
-        duration: animDurations.cardSlide,
-        opacity: 0,
-        ease: 'power2.in'
-      });
+      // CHANGE: Do NOT hide the success message, just fade out the overlay
+      // Removed: the gsap.to(successMessage) animation
       
+      // Just fade out the overlay
       gsap.to(formOverlay, {
         duration: animDurations.overlay,
         opacity: 0,
@@ -481,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   };
-  
+
   // Reset form to initial state
   const resetForm = () => {
     // Reset current step

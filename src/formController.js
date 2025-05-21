@@ -188,21 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    // Check for success state test parameter
-    if (new URLSearchParams(window.location.search).get('testSuccess') === 'true') {
+    // Test mode detection
+    if (window.location.hash === '#test-success') {
+      // Delay to ensure everything is loaded
       setTimeout(() => {
-        // Simulate navigating to the last step
-        currentStep = steps.length - 1;
-        showStep(currentStep);
-        
-        // Show the current step and position previous steps
-        enforceStepVisibility();
-        
-        // Simulate success message
-        showSuccessMessage();
-        
-        console.log('Success state activated for testing.');
-      }, 1000); // Small delay to ensure everything is loaded
+        openForm();
+        setTimeout(() => {
+          testSuccessState();
+        }, 500);
+      }, 300);
     }
   };
   
@@ -423,47 +417,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const wasSuccessful = !successMessage.classList.contains('hidden');
     
     if (wasSuccessful) {
-      // Form was submitted successfully - position it over the form-entry section
-      const formEntrySection = document.getElementById('form-entry');
+      // Form was submitted successfully
+      // Position success message using the last position in finalPositions array
+      const successIndex = steps.length; // This corresponds to the success message index in finalPositions
       
-      if (formEntrySection) {
-        const formEntryRect = formEntrySection.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        formContainer.style.position = 'absolute';
-        formContainer.style.top = `${formEntryRect.top + scrollTop}px`;
-        formContainer.style.left = '0';
-        formContainer.style.width = '100vw';
-        formContainer.style.height = `${formEntryRect.height}px`;
-        formContainer.style.zIndex = '10';
-      }
-      
-      // Make all cards non-interactive
-      steps.forEach(step => {
-        step.style.pointerEvents = 'none';
-      });
-
-      // Get the current card and ensure it stays in the correct position
-      const currentCard = steps[currentStep];
-
-      // Ensure the current card maintains its stacked position
-      gsap.to(currentCard, {
-        duration: animDurations.cardStack,
-        scale: finalPositions[currentStep].scale,
-        rotation: finalPositions[currentStep].rotation,
-        x: finalPositions[currentStep].x,
-        y: finalPositions[currentStep].y,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          // DON'T hide the card - just disable interaction
-          currentCard.style.pointerEvents = 'none';
-          // Make sure it stays visible
-          currentCard.classList.remove('hidden');
-          currentCard.style.display = 'block';
-        }
-      });
-      
-      // Just fade out the overlay without hiding the success message
+      // Make sure overlay fades out
       gsap.to(formOverlay, {
         duration: animDurations.overlay,
         opacity: 0,
@@ -471,6 +429,39 @@ document.addEventListener('DOMContentLoaded', () => {
         onComplete: () => {
           formOverlay.classList.add('hidden');
           document.body.style.overflow = '';
+        }
+      });
+      
+      // Make sure the success message is in the correct position
+      gsap.to(successMessage, {
+        duration: animDurations.cardStack,
+        scale: finalPositions[successIndex].scale,
+        rotation: finalPositions[successIndex].rotation,
+        x: finalPositions[successIndex].x,
+        y: finalPositions[successIndex].y,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          // Make success message non-interactive
+          successMessage.style.pointerEvents = 'none';
+          // Make sure it stays visible
+          successMessage.classList.remove('hidden');
+          successMessage.style.display = 'block';
+        }
+      });
+      
+      // Apply the same positioning to the success message's container for better positioning
+      formContainer.style.position = 'fixed';
+      formContainer.style.top = '0';
+      formContainer.style.left = '0';
+      formContainer.style.width = '100vw';
+      formContainer.style.height = '100vh';
+      formContainer.style.zIndex = '50';
+      formContainer.style.pointerEvents = 'none';
+      
+      // Hide previous steps completely
+      steps.forEach((step, index) => {
+        if (index !== currentStep) {
+          step.classList.add('hidden');
         }
       });
     } else {
@@ -866,10 +857,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Show success message
   const showSuccessMessage = () => {
-    // Don't hide the current step, just add it to the stack
+    // Stack the current card
     const currentCard = steps[currentStep];
     
-    // Stack the current card
     gsap.to(currentCard, {
       duration: animDurations.cardStack,
       scale: finalPositions[currentStep].scale,
@@ -887,12 +877,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Position for animation
     gsap.set(successMessage, {
-      y: '20px',
-      opacity: 0,
       position: 'absolute',
       left: '50%',
       top: '50%',
-      transform: 'translate(-50%, -50%)'
+      transform: 'translate(-50%, -50%)',
+      y: '20px',
+      opacity: 0,
+      scale: 1, // Start at normal scale
+      rotation: 0 // Start with no rotation
     });
     
     // Animate in
@@ -1478,6 +1470,21 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(handleViewportChange, 100);
     });
+  };
+
+  // Test function to simulate successful form submission
+  const testSuccessState = () => {
+    // Go to the last step first
+    currentStep = steps.length - 1;
+    showStep(currentStep);
+    
+    // Wait a bit to ensure the step is rendered
+    setTimeout(() => {
+      // Show success message
+      showSuccessMessage();
+      
+      console.log('Success state activated for testing');
+    }, 500);
   };
   
   // Initialize the form

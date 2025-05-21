@@ -187,6 +187,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     };
+
+    // Check for success state test parameter
+    if (new URLSearchParams(window.location.search).get('testSuccess') === 'true') {
+      setTimeout(() => {
+        // Simulate navigating to the last step
+        currentStep = steps.length - 1;
+        showStep(currentStep);
+        
+        // Show the current step and position previous steps
+        enforceStepVisibility();
+        
+        // Simulate success message
+        showSuccessMessage();
+        
+        console.log('Success state activated for testing.');
+      }, 1000); // Small delay to ensure everything is loaded
+    }
   };
   
   // Setup all event listeners
@@ -425,11 +442,28 @@ document.addEventListener('DOMContentLoaded', () => {
       steps.forEach(step => {
         step.style.pointerEvents = 'none';
       });
+
+      // Get the current card and ensure it stays in the correct position
+      const currentCard = steps[currentStep];
+
+      // Ensure the current card maintains its stacked position
+      gsap.to(currentCard, {
+        duration: animDurations.cardStack,
+        scale: finalPositions[currentStep].scale,
+        rotation: finalPositions[currentStep].rotation,
+        x: finalPositions[currentStep].x,
+        y: finalPositions[currentStep].y,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          // DON'T hide the card - just disable interaction
+          currentCard.style.pointerEvents = 'none';
+          // Make sure it stays visible
+          currentCard.classList.remove('hidden');
+          currentCard.style.display = 'block';
+        }
+      });
       
-      // CHANGE: Do NOT hide the success message, just fade out the overlay
-      // Removed: the gsap.to(successMessage) animation
-      
-      // Just fade out the overlay
+      // Just fade out the overlay without hiding the success message
       gsap.to(formOverlay, {
         duration: animDurations.overlay,
         opacity: 0,

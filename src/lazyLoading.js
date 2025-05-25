@@ -1,52 +1,54 @@
 // src/lazyLoading.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Create intersection observer for lazy loading
+    console.log('Lazy loading script started'); // Debug log
+    
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
+                console.log('Loading image:', img.dataset.src); // Debug log
                 
-                // Load the image
+                // Handle picture sources first
+                const picture = img.closest('picture');
+                if (picture) {
+                    const sources = picture.querySelectorAll('source[data-srcset]');
+                    sources.forEach(source => {
+                        if (source.dataset.srcset) {
+                            source.srcset = source.dataset.srcset;
+                            source.removeAttribute('data-srcset');
+                        }
+                    });
+                }
+                
+                // Then handle the img tag
                 if (img.dataset.src) {
                     img.src = img.dataset.src;
                     img.removeAttribute('data-src');
                 }
                 
-                // Load srcset if available
-                if (img.dataset.srcset) {
-                    img.srcset = img.dataset.srcset;
-                    img.removeAttribute('data-srcset');
-                }
+                // Add loaded class for CSS transitions
+                img.addEventListener('load', () => {
+                    img.classList.add('lazy-loaded');
+                });
                 
-                // Handle picture sources
-                const picture = img.closest('picture');
-                if (picture) {
-                    const sources = picture.querySelectorAll('source[data-srcset]');
-                    sources.forEach(source => {
-                        source.srcset = source.dataset.srcset;
-                        source.removeAttribute('data-srcset');
-                    });
-                }
+                // Handle load errors
+                img.addEventListener('error', () => {
+                    console.error('Failed to load image:', img.src);
+                    img.classList.add('lazy-error');
+                });
                 
-                // Remove loading class and add loaded class
-                img.classList.remove('lazy-loading');
-                img.classList.add('lazy-loaded');
-                
-                // Stop observing this image
                 observer.unobserve(img);
             }
         });
     }, {
-        rootMargin: '50px' // Start loading 50px before image comes into view
+        rootMargin: '50px'
     });
 
-    // Observe all lazy images
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    // Find and observe all lazy images
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    console.log('Found lazy images:', lazyImages.length); // Debug log
+    
     lazyImages.forEach(img => {
-        // Add loading class for styling
-        img.classList.add('lazy-loading');
-        
-        // Start observing
         imageObserver.observe(img);
     });
 });

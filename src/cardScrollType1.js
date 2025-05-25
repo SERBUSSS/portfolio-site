@@ -62,7 +62,7 @@ window.addEventListener('load', function() {
         horizontalScrollData[sectionId] = {
             scrollX: 0,
             isActive: false,
-            maxScroll: sectionCards.length * 150 // Adjust multiplier as needed
+            maxScroll: sectionCards.length * 120 // Adjust multiplier as needed
         };
         
         // Get background section if one is mapped
@@ -123,7 +123,7 @@ window.addEventListener('load', function() {
                 
                 // Update horizontal scroll position
                 const delta = e.deltaX || e.deltaY; // Handle both horizontal and vertical wheel
-                horizontalScrollData[sectionId].scrollX += delta * 0.5; // Adjust sensitivity
+                horizontalScrollData[sectionId].scrollX += delta * 0.7; // Adjust sensitivity
                 
                 // Clamp scroll position
                 horizontalScrollData[sectionId].scrollX = Math.max(0, 
@@ -160,7 +160,7 @@ window.addEventListener('load', function() {
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
                     e.preventDefault();
                     
-                    horizontalScrollData[sectionId].scrollX += deltaX * 0.3;
+                    horizontalScrollData[sectionId].scrollX += deltaX * 0.5;
                     horizontalScrollData[sectionId].scrollX = Math.max(0, 
                         Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll)
                     );
@@ -204,7 +204,7 @@ window.addEventListener('load', function() {
     // Function to update horizontal animation based on progress
     function updateHorizontalAnimation(sectionId, progress, cards) {
         const totalCards = cards.length;
-        const progressPerCard = 1 / totalCards;
+        const progressPerCard = 0.9 / totalCards;
         
         // Get viewport dimensions for calculations
         const vw = window.innerWidth / 100;

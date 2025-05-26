@@ -78,3 +78,44 @@ body {
         padding: 6px 12px;
     }
 }
+
+/* Project Tooltip Styles */
+.project-tooltip {
+    position: absolute;
+    top: 10vh; /* 10% from top of section */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.project-tooltip.hidden {
+    display: none;
+}
+
+.project-tooltip.visible {
+    display: block;
+    opacity: 1;
+}
+
+/* Ensure tooltips stay within their sections */
+.section {
+    position: relative;
+    overflow: visible;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .project-tooltip {
+        top: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .project-tooltip .w-96 {
+        width: 90vw;
+        max-width: 24rem;
+    }
+}

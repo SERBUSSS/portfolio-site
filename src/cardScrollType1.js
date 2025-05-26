@@ -1,3 +1,94 @@
+// Add these imports at the top of cardScrollType1.js
+import { tooltipContent } from './tooltipContent.js';
+
+// Add this class before your existing code
+class ProjectTooltipManager {
+    constructor(projectId) {
+        this.projectId = projectId;
+        this.tooltip = document.getElementById(`tooltip-${projectId}`);
+        this.projectNameEl = document.getElementById(`tt-project-name-${projectId.split('-')[1]}`);
+        this.descriptionEl = document.getElementById(`tt-card-description-${projectId.split('-')[1]}`);
+        this.currentCardIndex = -1;
+        this.isVisible = false;
+        this.isTransitioning = false;
+        this.content = tooltipContent[projectId];
+        this.shouldBeVisible = false; // Track intended visibility state
+        
+        if (this.content) {
+            this.projectNameEl.textContent = this.content.projectName;
+        }
+    }
+
+    showTooltip(cardIndex) {
+        if (!this.content.cards[cardIndex]) return;
+        
+        if (!this.isVisible && !this.isTransitioning) {
+            this.isTransitioning = true;
+            this.shouldBeVisible = true;
+            
+            this.tooltip.classList.remove('hidden');
+            this.descriptionEl.textContent = this.content.cards[cardIndex];
+            this.currentCardIndex = cardIndex;
+            
+            // Reset description opacity
+            gsap.set(this.descriptionEl, { opacity: 1 });
+            
+            gsap.to(this.tooltip, {
+                duration: 0.5,
+                opacity: 1,
+                ease: 'power2.out',
+                onComplete: () => {
+                    this.isVisible = true;
+                    this.isTransitioning = false;
+                }
+            });
+        }
+    }
+
+    updateDescription(cardIndex) {
+        if (this.content.cards[cardIndex] && this.currentCardIndex !== cardIndex) {
+            this.descriptionEl.textContent = this.content.cards[cardIndex];
+            this.currentCardIndex = cardIndex;
+        }
+    }
+
+    hideTooltip() {
+        if (!this.isVisible || this.isTransitioning) return;
+        
+        this.isTransitioning = true;
+        this.shouldBeVisible = false;
+        
+        gsap.to(this.tooltip, {
+            duration: 0.4,
+            opacity: 0,
+            ease: 'power2.in',
+            onComplete: () => {
+                this.tooltip.classList.add('hidden');
+                this.isVisible = false;
+                this.isTransitioning = false;
+                this.currentCardIndex = -1;
+            }
+        });
+    }
+
+    // New method to handle card-based visibility
+    handleCardTransition(activeCardIndex, totalCards) {
+        // Only show tooltip for cards 1 through second-to-last
+        const shouldShow = activeCardIndex >= 1 && activeCardIndex <= totalCards - 2;
+        
+        if (shouldShow && !this.isVisible && !this.isTransitioning) {
+            // Should show and currently hidden - fade in
+            this.showTooltip(activeCardIndex);
+        } else if (!shouldShow && this.isVisible && !this.isTransitioning) {
+            // Should hide and currently visible - fade out
+            this.hideTooltip();
+        }
+        
+        // Update shouldBeVisible to match current state
+        this.shouldBeVisible = shouldShow;
+    }
+}
+
 // Animation for project sections with hybrid horizontal scroll
 window.addEventListener('load', function() {
     // Register ScrollTrigger plugin
@@ -108,7 +199,7 @@ window.addEventListener('load', function() {
             trigger: section,
             pin: true,
             start: "top 5%",
-            end: "+=30%", // Standard section height
+            end: "+=25%", // Reduced from 30% for faster exit
             anticipatePin: 1,
             fastScrollEnd: true,
             preventOverlaps: true,
@@ -181,7 +272,10 @@ window.addEventListener('load', function() {
         ScrollTrigger.create({
             trigger: section,
             start: "top 5%",
-            end: "+=30%",
+            end: "+=25%",
+            anticipatePin: 1,
+            fastScrollEnd: true,
+            preventOverlaps: true,
             onEnter: () => {
                 horizontalScrollData[sectionId].isActive = true;
                 toggleNavigation(false); // Hide nav
@@ -200,11 +294,19 @@ window.addEventListener('load', function() {
             }
         });
     });
+
+    // Initialize tooltip managers
+    const tooltipManagers = {};
+    projectSections.forEach(section => {
+        const sectionId = section.id;
+        tooltipManagers[sectionId] = new ProjectTooltipManager(sectionId);
+    });
     
     // Function to update horizontal animation based on progress
     function updateHorizontalAnimation(sectionId, progress, cards) {
         const totalCards = cards.length;
         const progressPerCard = 0.9 / totalCards;
+        const tooltipManager = tooltipManagers[sectionId];
         
         // Get viewport dimensions for calculations
         const vw = window.innerWidth / 100;
@@ -216,42 +318,61 @@ window.addEventListener('load', function() {
             const isLastCard = index === cards.length - 1;
             
             if (progress >= cardStartProgress) {
-                // Calculate card-specific progress
                 const cardProgress = Math.min(1, (progress - cardStartProgress) / progressPerCard);
                 
+                // Tooltip logic - only handle description fading for active cards
+                if (tooltipManager && index >= 1 && index <= cards.length - 2) {
+                    const isActiveCard = progress >= cardStartProgress && progress < cardEndProgress;
+                    
+                    if (isActiveCard) {
+                        // Update description if needed
+                        if (tooltipManager.currentCardIndex !== index) {
+                            tooltipManager.updateDescription(index);
+                        }
+                        
+                        // Handle description opacity based on card progress
+                        if (cardProgress >= 0.05 && cardProgress <= 0.95) {
+                            if (cardProgress >= 0.05 && cardProgress <= 0.1) {
+                                const fadeProgress = (cardProgress - 0.05) / 0.05;
+                                gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
+                            } else if (cardProgress > 0.1 && cardProgress < 0.9) {
+                                gsap.set(tooltipManager.descriptionEl, { opacity: 1 });
+                            } else if (cardProgress >= 0.9 && cardProgress <= 0.95) {
+                                const fadeProgress = 1 - ((cardProgress - 0.9) / 0.05);
+                                gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
+                            }
+                        } else {
+                            gsap.set(tooltipManager.descriptionEl, { opacity: 0 });
+                        }
+                    }
+                }
+                
+                // Your existing card animation code stays the same here...
                 if (cardProgress <= 0.6) {
-                    // Step 1: Slide in from right to center (first 60% of card animation)
+                    // Step 1: Slide in from right to center
                     const slideProgress = cardProgress / 0.6;
-                    const startX = 100 * vw; // 100vw in pixels
+                    const startX = 100 * vw;
                     const endX = 0;
                     const currentX = startX + (endX - startX) * slideProgress;
                     
                     gsap.set(card, {
                         x: currentX,
-                        y: -10 * vh, // -10vh in pixels
+                        y: -10 * vh,
                         scale: 1,
                         opacity: slideProgress,
                         rotation: 0
                     });
                 } else {
-                    // Step 2: Move to final position (last 40% of card animation)
+                    // Step 2: Move to final position
                     const finalProgress = (cardProgress - 0.6) / 0.4;
                     
                     let finalPos;
                     if (isLastCard) {
-                        // Last card goes to center with custom properties
-                        finalPos = { 
-                            x: '0vw', 
-                            y: '0vh', 
-                            rotation: 0, 
-                            scale: 0.8, 
-                            opacity: 1 
-                        };
+                        finalPos = { x: '0vw', y: '0vh', rotation: 0, scale: 0.8, opacity: 1 };
                     } else {
                         finalPos = finalPositions[index % finalPositions.length];
                     }
                     
-                    // Parse final position values
                     const finalX = parseFloat(finalPos.x) * vw;
                     const finalY = parseFloat(finalPos.y) * vh;
                     
@@ -272,14 +393,20 @@ window.addEventListener('load', function() {
             } else {
                 // Card hasn't started animating yet
                 gsap.set(card, {
-                    x: 100 * vw, // 100vw in pixels
-                    y: -10 * vh, // -10vh in pixels
+                    x: 100 * vw,
+                    y: -10 * vh,
                     scale: 1,
                     opacity: 0,
                     rotation: 0
                 });
             }
         });
+
+        // Handle tooltip visibility ONCE per frame outside the loop
+        if (tooltipManager) {
+            const currentActiveCard = Math.floor(progress / progressPerCard);
+            tooltipManager.handleCardTransition(currentActiveCard, cards.length);
+        }
     }
 
     function toggleNavigation(show) {

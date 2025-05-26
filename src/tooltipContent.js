@@ -4,33 +4,44 @@ export const tooltipContent = {
     projectName: 'Si Punct Media',
     cards: [
       null, // Index 0 - no tooltip (brief card)
-      'Landing Page for Social Media Starter Kit',
-      'Brand Identity and Visual Guidelines', 
-      'Social Media Strategy Framework',
-      'Content Creation Templates',
-      'Analytics and Performance Tracking',
-      'Client Onboarding Process',
-      'Marketing Campaign Results',
-      'Social Media Audit',
-      'Competitor Analysis',
-      'Content Calendar System',
-      'Brand Voice Development',
-      'Community Management Strategy',
-      'Influencer Collaboration Framework',
-      'ROI Measurement Tools',
-      'Final Results and Impact'
+      'Brand logo and identity design',
+      'Brand color palette showcase',
+      'Typography selection',
+      'Social media toolkit landing page, hero section design',
+      'Product introduction and benefits overview',
+      'Detailed breakdown of toolkit contents and services',
+      'Bonus materials and brand customization documents',
+      'Success guide for client acquisition strategies',
+      'Pricing and package details presentation',
+      'Lead magnet and email capture system',
+      'Client proposal document cover page design',
+      'Client proposal document pricing pages design',
+      'Client proposal document customer reviews design',
+      '8-Step checklist for a successful discovery call'
     ]
   },
   'project-2': {
-    projectName: 'Supplement Brand',
+    projectName: 'EnergNature',
     cards: [
       null, // Index 0 - no tooltip
-      'Market Research and Analysis',
-      'Target Audience Identification',
-      'Product Development Strategy',
-      'Brand Identity Creation',
-      'E-commerce Platform Setup',
-      // Add more descriptions as needed
+      'Brand logomark',
+      'Brand logo and identity design',
+      'Typography selection',
+      'Product page lo-fi design, key sections (desktop - 1)',
+      'Product page lo-fi design, key sections (desktop - 2)',
+      'Product page lo-fi design, key sections (desktop - 3)',
+      'Product page lo-fi design, key sections (desktop - 4)',
+      'Product page hi-fi design, key sections (desktop - 1)',
+      'Product page hi-fi design, key sections (desktop - 2)',
+      'Product page hi-fi design, key sections (desktop - 3)',
+      'Product page hi-fi design, key sections (desktop - 4)',
+      'Product page hi-fi design, key sections (desktop - 5)',
+      'Product page hi-fi design, key sections (desktop - 6)',
+      'Product page hi-fi design, key sections (mobile - 1)',
+      'Product page hi-fi design, key sections (mobile - 2)',
+      'Product page hi-fi design, key sections (mobile - 3)',
+      'Product page hi-fi design, key sections (mobile - 4)',
+      'Enhanced product creative to boost cart value'
     ]
   },
   'project-3': {

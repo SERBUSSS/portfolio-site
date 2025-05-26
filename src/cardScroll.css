@@ -82,7 +82,7 @@ body {
 /* Project Tooltip Styles */
 .project-tooltip {
     position: absolute;
-    top: 10vh; /* 10% from top of section */
+    /* top: 5vh;  10% from top of section */
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -109,7 +109,7 @@ body {
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .project-tooltip {
-        top: 5vh;
+        /* top: 5vh; */
         left: 50%;
         transform: translateX(-50%);
     }

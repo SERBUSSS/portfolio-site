@@ -58,17 +58,36 @@ class ProjectTooltipManager {
         this.isTransitioning = true;
         this.shouldBeVisible = false;
         
-        gsap.to(this.tooltip, {
-            duration: 0.4,
-            opacity: 0,
-            ease: 'power2.in',
-            onComplete: () => {
-                this.tooltip.classList.add('hidden');
-                this.isVisible = false;
-                this.isTransitioning = false;
-                this.currentCardIndex = -1;
-            }
-        });
+        // Check if description is already faded out
+        const currentOpacity = gsap.getProperty(this.descriptionEl, "opacity");
+        
+        if (currentOpacity <= 0.1) {
+            // Description is already faded, hide tooltip immediately
+            gsap.to(this.tooltip, {
+                duration: 0.3,
+                opacity: 0,
+                ease: 'power2.in',
+                onComplete: () => {
+                    this.tooltip.classList.add('hidden');
+                    this.isVisible = false;
+                    this.isTransitioning = false;
+                    this.currentCardIndex = -1;
+                }
+            });
+        } else {
+            // Fade description and tooltip together
+            gsap.to([this.descriptionEl, this.tooltip], {
+                duration: 0.4,
+                opacity: 0,
+                ease: 'power2.in',
+                onComplete: () => {
+                    this.tooltip.classList.add('hidden');
+                    this.isVisible = false;
+                    this.isTransitioning = false;
+                    this.currentCardIndex = -1;
+                }
+            });
+        }
     }
 
     // New method to handle card-based visibility
@@ -320,32 +339,45 @@ window.addEventListener('load', function() {
             if (progress >= cardStartProgress) {
                 const cardProgress = Math.min(1, (progress - cardStartProgress) / progressPerCard);
                 
-                // Tooltip logic - only handle description fading for active cards
+                // Tooltip logic
                 if (tooltipManager && index >= 1 && index <= cards.length - 2) {
-                    const isActiveCard = progress >= cardStartProgress && progress < cardEndProgress;
+                const isActiveCard = progress >= cardStartProgress && progress < cardEndProgress;
+                
+                if (isActiveCard) {
+                    // Update description if needed
+                    if (tooltipManager.currentCardIndex !== index) {
+                        tooltipManager.updateDescription(index);
+                    }
                     
-                    if (isActiveCard) {
-                        // Update description if needed
-                        if (tooltipManager.currentCardIndex !== index) {
-                            tooltipManager.updateDescription(index);
-                        }
-                        
-                        // Handle description opacity based on card progress
-                        if (cardProgress >= 0.05 && cardProgress <= 0.95) {
-                            if (cardProgress >= 0.05 && cardProgress <= 0.1) {
-                                const fadeProgress = (cardProgress - 0.05) / 0.05;
-                                gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
-                            } else if (cardProgress > 0.1 && cardProgress < 0.9) {
-                                gsap.set(tooltipManager.descriptionEl, { opacity: 1 });
-                            } else if (cardProgress >= 0.9 && cardProgress <= 0.95) {
-                                const fadeProgress = 1 - ((cardProgress - 0.9) / 0.05);
-                                gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
+                    // Handle description opacity based on card progress
+                    if (cardProgress >= 0.05 && cardProgress <= 0.95) {
+                        if (cardProgress >= 0.05 && cardProgress <= 0.1) {
+                            const fadeProgress = (cardProgress - 0.05) / 0.05;
+                            gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
+                            // If this is the first tooltip card (index 1) and we're fading in from card 0
+                            if (index === 1) {
+                                gsap.set(tooltipManager.tooltip, { opacity: fadeProgress });
                             }
-                        } else {
-                            gsap.set(tooltipManager.descriptionEl, { opacity: 0 });
+                        } else if (cardProgress > 0.1 && cardProgress < 0.9) {
+                            gsap.set(tooltipManager.descriptionEl, { opacity: 1 });
+                            gsap.set(tooltipManager.tooltip, { opacity: 1 });
+                        } else if (cardProgress >= 0.9 && cardProgress <= 0.95) {
+                            const fadeProgress = 1 - ((cardProgress - 0.9) / 0.05);
+                            gsap.set(tooltipManager.descriptionEl, { opacity: fadeProgress });
+                            // If this is the last tooltip card (second-to-last overall card) and we're fading out to last card
+                            if (index === cards.length - 2) {
+                                gsap.set(tooltipManager.tooltip, { opacity: fadeProgress });
+                            }
+                        }
+                    } else {
+                        gsap.set(tooltipManager.descriptionEl, { opacity: 0 });
+                        // Fade out tooltip on edge cases
+                        if (index === 1 || index === cards.length - 2) {
+                            gsap.set(tooltipManager.tooltip, { opacity: 0 });
                         }
                     }
                 }
+            }
                 
                 // Your existing card animation code stays the same here...
                 if (cardProgress <= 0.6) {
@@ -405,7 +437,13 @@ window.addEventListener('load', function() {
         // Handle tooltip visibility ONCE per frame outside the loop
         if (tooltipManager) {
             const currentActiveCard = Math.floor(progress / progressPerCard);
-            tooltipManager.handleCardTransition(currentActiveCard, cards.length);
+            const shouldShow = currentActiveCard >= 1 && currentActiveCard <= cards.length - 2;
+            
+            if (shouldShow && !tooltipManager.isVisible && !tooltipManager.isTransitioning) {
+                tooltipManager.showTooltip(currentActiveCard);
+            } else if (!shouldShow && tooltipManager.isVisible && !tooltipManager.isTransitioning) {
+                tooltipManager.hideTooltip();
+            }
         }
     }
 

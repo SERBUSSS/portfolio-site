@@ -192,13 +192,27 @@ window.addEventListener('load', function() {
         ],
         
         'project-4': [
-            // Simple grid layout for project 4
-            { x: '-15vw', y: '-15vh', rotation: -10, scale: 0.5, opacity: 1 },
-            { x: '0vw', y: '-15vh', rotation: 0, scale: 0.5, opacity: 1 },
-            { x: '15vw', y: '-15vh', rotation: 10, scale: 0.5, opacity: 1 },
-            { x: '-15vw', y: '0vh', rotation: -5, scale: 0.55, opacity: 1 },
-            { x: '15vw', y: '0vh', rotation: 5, scale: 0.55, opacity: 1 },
-            { x: '0vw', y: '15vh', rotation: 0, scale: 0.5, opacity: 1 }
+            // Different layout for project 4 - maybe more circular
+            { x: '-25vw', y: '-25vh', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0vw', y: '-30vh', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25vw', y: '-25vh', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30vw', y: '0vh', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25vw', y: '25vh', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0vw', y: '30vh', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25vw', y: '25vh', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30vw', y: '0vh', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15vw', y: '-15vh', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15vw', y: '-15vh', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20vw', y: '10vh', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10vw', y: '20vh', rotation: 5, scale: 0.47, opacity: 1 },
+            { x: '-10vw', y: '20vh', rotation: -5, scale: 0.47, opacity: 1 },
+            { x: '-20vw', y: '10vh', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15vw', y: '-5vh', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15vw', y: '-5vh', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0vw', y: '15vh', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8vw', y: '-20vh', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8vw', y: '-20vh', rotation: -8, scale: 0.42, opacity: 1 }
         ]
     };
     

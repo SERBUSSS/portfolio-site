@@ -27,25 +27,25 @@ export const tooltipContent = {
       'Brand logomark',
       'Brand logo and identity design',
       'Typography selection',
-      'Product page lo-fi design, key sections (desktop - 1)',
-      'Product page lo-fi design, key sections (desktop - 2)',
-      'Product page lo-fi design, key sections (desktop - 3)',
-      'Product page lo-fi design, key sections (desktop - 4)',
-      'Product page hi-fi design, key sections (desktop - 1)',
-      'Product page hi-fi design, key sections (desktop - 2)',
-      'Product page hi-fi design, key sections (desktop - 3)',
-      'Product page hi-fi design, key sections (desktop - 4)',
-      'Product page hi-fi design, key sections (desktop - 5)',
-      'Product page hi-fi design, key sections (desktop - 6)',
-      'Product page hi-fi design, key sections (mobile - 1)',
-      'Product page hi-fi design, key sections (mobile - 2)',
-      'Product page hi-fi design, key sections (mobile - 3)',
-      'Product page hi-fi design, key sections (mobile - 4)',
+      'Product page low-fidelity design, key sections (desktop - 1)',
+      'Product page low-fidelity design, key sections (desktop - 2)',
+      'Product page low-fidelity design, key sections (desktop - 3)',
+      'Product page low-fidelity design, key sections (desktop - 4)',
+      'Product page high-fidelity design, key sections (desktop - 1)',
+      'Product page high-fidelity design, key sections (desktop - 2)',
+      'Product page high-fidelity design, key sections (desktop - 3)',
+      'Product page high-fidelity design, key sections (desktop - 4)',
+      'Product page high-fidelity design, key sections (desktop - 5)',
+      'Product page high-fidelity design, key sections (desktop - 6)',
+      'Product page high-fidelity design, key sections (mobile - 1)',
+      'Product page high-fidelity design, key sections (mobile - 2)',
+      'Product page high-fidelity design, key sections (mobile - 3)',
+      'Product page high-fidelity design, key sections (mobile - 4)',
       'Enhanced product creative to boost cart value'
     ]
   },
   'project-3': {
-    projectName: 'German Market Entry',
+    projectName: 'A&D Performance',
     cards: [
       null, // Index 0 - no tooltip
       'Header Navigation Menu Enhancement',
@@ -66,12 +66,27 @@ export const tooltipContent = {
     ]
   },
   'project-4': {
-    projectName: 'Home Essentials Redesign',
+    projectName: 'Casamare',
     cards: [
       null, // Index 0 - no tooltip
-      'User Research and Pain Points',
-      'Information Architecture',
-      // Add more descriptions
+      'Brand logo design',
+      'Typography system and font selection',
+      'Brand color palette showcase',
+      'New user registration flow wireframe concept',
+      'Email signup process wireframe design',
+      'Account creation workflow wireframe structure',
+      'Homepage layout wireframe (1)',
+      'Homepage layout wireframe (2)',
+      'Product page wireframe structure and flow',
+      'New user registration high-fidelity interface',
+      'Email signup process high-fidelity design',
+      'Account creation workflow high-fidelity interface',
+      'Homepage high-fidelity design (1)',
+      'Homepage high-fidelity design (2)',
+      'Product page high-fidelity design and layout',
+      'Shopping cart interface high-fidelity design',
+      'Checkout process steps 1-2: contact and shipping information',
+      'Checkout process step 3: payment and billing interface'
     ]
   }
 };

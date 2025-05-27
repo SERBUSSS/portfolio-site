@@ -131,21 +131,21 @@ window.addEventListener('load', function() {
         { x: '-15vw', y: '-35vh', rotation: -8, scale: 0.38, opacity: 1 },
         { x: '0vw', y: '-32vh', rotation: -3, scale: 0.4, opacity: 1 },
         { x: '15vw', y: '-30vh', rotation: 2, scale: 0.42, opacity: 1 },
-        { x: '28vw', y: '-32vh', rotation: -2, scale: 0.4, opacity: 1 },
+        { x: '28vw', y: '-32vh', rotation: -2, scale: 0.45, opacity: 1 },
         
         // Right side curve - right to left - second row
-        { x: '27vw', y: '-4vh', rotation: 2, scale: 0.38, opacity: 1 },
-        { x: '14vw', y: '0vh', rotation: -5, scale: 0.36, opacity: 1 },
-        { x: '2vw', y: '-2vh', rotation: 8, scale: 0.39, opacity: 1 },
-        { x: '-13vw', y: '0vh', rotation: -2, scale: 0.41, opacity: 1 },
-        { x: '-29vw', y: '4vh', rotation: 8, scale: 0.43, opacity: 1 },
+        { x: '27vw', y: '-4vh', rotation: 2, scale: 0.6, opacity: 1 },
+        { x: '14vw', y: '0vh', rotation: -5, scale: 0.6, opacity: 1 },
+        { x: '2vw', y: '-2vh', rotation: 8, scale: 0.6, opacity: 1 },
+        { x: '-13vw', y: '0vh', rotation: -2, scale: 0.6, opacity: 1 },
+        { x: '-29vw', y: '4vh', rotation: 8, scale: 0.6, opacity: 1 },
         
         // Bottom curve - letf to right - third row
-        { x: '-28vw', y: '28vh', rotation: 5, scale: 0.4, opacity: 1 },
-        { x: '-16vw', y: '26vh', rotation: 2, scale: 0.42, opacity: 1 },
-        { x: '-4vw', y: '27vh', rotation: -2, scale: 0.44, opacity: 1 },
-        { x: '15vw', y: '25vh', rotation: -5, scale: 0.42, opacity: 1 },
-        { x: '29vw', y: '27vh', rotation: -8, scale: 0.4, opacity: 1 },
+        { x: '-28vw', y: '28vh', rotation: 5, scale: 0.6, opacity: 1 },
+        { x: '-16vw', y: '26vh', rotation: 2, scale: 0.5, opacity: 1 },
+        { x: '-4vw', y: '27vh', rotation: -2, scale: 0.5, opacity: 1 },
+        { x: '15vw', y: '25vh', rotation: -5, scale: 0.5, opacity: 1 },
+        { x: '29vw', y: '27vh', rotation: -8, scale: 0.5, opacity: 1 },
         
         // Left side curve - bottom to top
         { x: '2vw', y: '30vh', rotation: -9, scale: 0.38, opacity: 1 },
@@ -389,7 +389,7 @@ window.addEventListener('load', function() {
                     
                     gsap.set(card, {
                         x: currentX,
-                        y: -10 * vh,
+                        y: -5 * vh,
                         scale: 1,
                         opacity: slideProgress,
                         rotation: 0
@@ -409,7 +409,7 @@ window.addEventListener('load', function() {
                     const finalY = parseFloat(finalPos.y) * vh;
                     
                     const currentX = 0 + (finalX - 0) * finalProgress;
-                    const currentY = (-10 * vh) + (finalY - (-10 * vh)) * finalProgress;
+                    const currentY = (-5 * vh) + (finalY - (-5 * vh)) * finalProgress;
                     const currentScale = 1 + (finalPos.scale - 1) * finalProgress;
                     const currentOpacity = 1 + (finalPos.opacity - 1) * finalProgress;
                     const currentRotation = 0 + (finalPos.rotation - 0) * finalProgress;
@@ -426,7 +426,7 @@ window.addEventListener('load', function() {
                 // Card hasn't started animating yet
                 gsap.set(card, {
                     x: 100 * vw,
-                    y: -10 * vh,
+                    y: -5 * vh,
                     scale: 1,
                     opacity: 0,
                     rotation: 0

@@ -48,9 +48,21 @@ export const tooltipContent = {
     projectName: 'German Market Entry',
     cards: [
       null, // Index 0 - no tooltip
-      'Market Analysis and Entry Strategy',
-      'Compliance and Regulatory Research',
-      // Add more descriptions
+      'Header Navigation Menu Enhancement',
+      'Shopping Cart Interface Redesign',
+      'Checkout Process Optimization',
+      'Homepage One-Time Offer Integration',
+      'Turkesterone Product Page Redesign',
+      'Subscription-Optimized Product Page Layout',
+      'Purchase Interface for Subscription Conversion',
+      'Height Enhancement Marketing Campaign (1)',
+      'Height Enhancement Marketing Campaign (2)',
+      'Height Enhancement Marketing Campaign (3)', 
+      'Height Enhancement Marketing Campaign (4)',
+      'Strength Enhancement Marketing Campaign (1)',
+      'Strength Enhancement Marketing Campaign (2)',
+      'Strength Enhancement Marketing Campaign (3)',
+      'Strength Enhancement Marketing Campaign (4)'
     ]
   },
   'project-4': {

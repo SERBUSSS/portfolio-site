@@ -63,7 +63,7 @@ window.addEventListener('load', function() {
             trigger: section,
             pin: true,
             start: "top top",
-            end: `+=${sectionCards.length * 100 + 25}%`,
+            end: `+=${sectionCards.length * 40 + 25}%`,
             scrub: 1,
             anticipatePin: 1,
             fastScrollEnd: true,

@@ -127,92 +127,92 @@ window.addEventListener('load', function() {
     // Define final positions for up to 20 cards with complete transform data
     const finalPositionsConfig = {
         'project-1': [
-            { x: '-20vw', y: '-20vh', rotation: -30, scale: 0.45, opacity: 1 },
-            { x: '0vw', y: '-25vh', rotation: 0, scale: 0.5, opacity: 1 },
-            { x: '20vw', y: '-20vh', rotation: 30, scale: 0.45, opacity: 1 },
-            { x: '25vw', y: '0vh', rotation: 25, scale: 0.55, opacity: 1 },
-            { x: '20vw', y: '20vh', rotation: 20, scale: 0.5, opacity: 1 },
-            { x: '0vw', y: '25vh', rotation: 0, scale: 0.65, opacity: 1 },
-            { x: '-20vw', y: '20vh', rotation: -20, scale: 0.7, opacity: 1 },
-            { x: '-25vw', y: '0vh', rotation: -25, scale: 0.7, opacity: 1 },
-            { x: '-10vw', y: '-10vh', rotation: -35, scale: 0.65, opacity: 1 },
-            { x: '10vw', y: '-10vh', rotation: 35, scale: 0.65, opacity: 1 },
-            { x: '15vw', y: '5vh', rotation: 22, scale: 0.67, opacity: 1 },
-            { x: '5vw', y: '15vh', rotation: 10, scale: 0.55, opacity: 1 },
-            { x: '-5vw', y: '15vh', rotation: -10, scale: 0.51, opacity: 1 },
-            { x: '-15vw', y: '5vh', rotation: -22, scale: 0.52, opacity: 1 },
-            { x: '-5vw', y: '-15vh', rotation: -28, scale: 0.5, opacity: 1 },
-            { x: '5vw', y: '-15vh', rotation: 28, scale: 0.5, opacity: 1 },
-            { x: '0vw', y: '10vh', rotation: 0, scale: 0.53, opacity: 1 }
+            { x: '-20vw', y: '-20vh', rotation: -30, scale: 0.45, opacity: 0.8 },
+            { x: '0vw', y: '-25vh', rotation: 0, scale: 0.5, opacity: 0.8 },
+            { x: '20vw', y: '-20vh', rotation: 30, scale: 0.45, opacity: 0.8 },
+            { x: '25vw', y: '0vh', rotation: 25, scale: 0.55, opacity: 0.8 },
+            { x: '20vw', y: '20vh', rotation: 20, scale: 0.5, opacity: 0.8 },
+            { x: '0vw', y: '25vh', rotation: 0, scale: 0.65, opacity: 0.8 },
+            { x: '-20vw', y: '20vh', rotation: -20, scale: 0.7, opacity: 0.8 },
+            { x: '-25vw', y: '0vh', rotation: -25, scale: 0.7, opacity: 0.8 },
+            { x: '-10vw', y: '-10vh', rotation: -35, scale: 0.65, opacity: 0.8 },
+            { x: '10vw', y: '-10vh', rotation: 35, scale: 0.65, opacity: 0.8 },
+            { x: '15vw', y: '5vh', rotation: 22, scale: 0.67, opacity: 0.8 },
+            { x: '5vw', y: '15vh', rotation: 10, scale: 0.55, opacity: 0.8 },
+            { x: '-5vw', y: '15vh', rotation: -10, scale: 0.51, opacity: 0.8 },
+            { x: '-15vw', y: '5vh', rotation: -22, scale: 0.52, opacity: 0.8 },
+            { x: '-5vw', y: '-15vh', rotation: -28, scale: 0.5, opacity: 0.8 },
+            { x: '5vw', y: '-15vh', rotation: 28, scale: 0.5, opacity: 0.8 },
+            { x: '0vw', y: '10vh', rotation: 0, scale: 0.53, opacity: 0.8 }
         ],
         
         'project-2': [
             // Different layout for project 2 - maybe more circular
-            { x: '-25vw', y: '-25vh', rotation: -20, scale: 0.4, opacity: 1 },
-            { x: '0vw', y: '-30vh', rotation: 0, scale: 0.45, opacity: 1 },
-            { x: '25vw', y: '-25vh', rotation: 20, scale: 0.4, opacity: 1 },
-            { x: '30vw', y: '0vh', rotation: 15, scale: 0.5, opacity: 1 },
-            { x: '25vw', y: '25vh', rotation: 10, scale: 0.45, opacity: 1 },
-            { x: '0vw', y: '30vh', rotation: 0, scale: 0.5, opacity: 1 },
-            { x: '-25vw', y: '25vh', rotation: -10, scale: 0.45, opacity: 1 },
-            { x: '-30vw', y: '0vh', rotation: -15, scale: 0.5, opacity: 1 },
+            { x: '-25vw', y: '-25vh', rotation: -20, scale: 0.4, opacity: 0.8 },
+            { x: '0vw', y: '-30vh', rotation: 0, scale: 0.45, opacity: 0.8 },
+            { x: '25vw', y: '-25vh', rotation: 20, scale: 0.4, opacity: 0.8 },
+            { x: '30vw', y: '0vh', rotation: 15, scale: 0.5, opacity: 0.8 },
+            { x: '25vw', y: '25vh', rotation: 10, scale: 0.45, opacity: 0.8 },
+            { x: '0vw', y: '30vh', rotation: 0, scale: 0.5, opacity: 0.8 },
+            { x: '-25vw', y: '25vh', rotation: -10, scale: 0.45, opacity: 0.8 },
+            { x: '-30vw', y: '0vh', rotation: -15, scale: 0.5, opacity: 0.8 },
             // Add more positions as needed for project 2
-            { x: '-15vw', y: '-15vh', rotation: -25, scale: 0.4, opacity: 1 },
-            { x: '15vw', y: '-15vh', rotation: 25, scale: 0.4, opacity: 1 },
-            { x: '20vw', y: '10vh', rotation: 12, scale: 0.48, opacity: 1 },
-            { x: '10vw', y: '20vh', rotation: 5, scale: 0.47, opacity: 1 },
-            { x: '-10vw', y: '20vh', rotation: -5, scale: 0.47, opacity: 1 },
-            { x: '-20vw', y: '10vh', rotation: -12, scale: 0.48, opacity: 1 },
-            { x: '-15vw', y: '-5vh', rotation: -18, scale: 0.46, opacity: 1 },
-            { x: '15vw', y: '-5vh', rotation: 18, scale: 0.46, opacity: 1 },
-            { x: '0vw', y: '15vh', rotation: 0, scale: 0.49, opacity: 1 },
-            { x: '8vw', y: '-20vh', rotation: 8, scale: 0.42, opacity: 1 },
-            { x: '-8vw', y: '-20vh', rotation: -8, scale: 0.42, opacity: 1 }
+            { x: '-15vw', y: '-15vh', rotation: -25, scale: 0.4, opacity: 0.8 },
+            { x: '15vw', y: '-15vh', rotation: 25, scale: 0.4, opacity: 0.8 },
+            { x: '20vw', y: '10vh', rotation: 12, scale: 0.48, opacity: 0.8 },
+            { x: '10vw', y: '20vh', rotation: 0, scale: 0.47, opacity: 0.8 },
+            { x: '-10vw', y: '20vh', rotation: 0, scale: 0.47, opacity: 0.8 },
+            { x: '-20vw', y: '10vh', rotation: -12, scale: 0.48, opacity: 0.8 },
+            { x: '-15vw', y: '-5vh', rotation: -18, scale: 0.46, opacity: 0.8 },
+            { x: '15vw', y: '-5vh', rotation: 18, scale: 0.46, opacity: 0.8 },
+            { x: '0vw', y: '15vh', rotation: 0, scale: 0.49, opacity: 0.8 },
+            { x: '8vw', y: '-20vh', rotation: 8, scale: 0.42, opacity: 0.8 },
+            { x: '-8vw', y: '-20vh', rotation: -8, scale: 0.42, opacity: 0.8 }
         ],
         
         'project-3': [
             // Tighter spiral layout for project 3
-            { x: '-20vw', y: '-20vh', rotation: -30, scale: 0.45, opacity: 1 },
-            { x: '0vw', y: '-25vh', rotation: 0, scale: 0.5, opacity: 1 },
-            { x: '20vw', y: '-20vh', rotation: 30, scale: 0.45, opacity: 1 },
-            { x: '25vw', y: '0vh', rotation: 25, scale: 0.55, opacity: 1 },
-            { x: '20vw', y: '20vh', rotation: 20, scale: 0.5, opacity: 1 },
-            { x: '0vw', y: '25vh', rotation: 0, scale: 0.55, opacity: 1 },
-            { x: '-20vw', y: '20vh', rotation: -20, scale: 0.5, opacity: 1 },
-            { x: '-25vw', y: '0vh', rotation: -25, scale: 0.55, opacity: 1 },
-            { x: '-10vw', y: '-10vh', rotation: -35, scale: 0.4, opacity: 1 },
-            { x: '10vw', y: '-10vh', rotation: 35, scale: 0.4, opacity: 1 },
-            { x: '15vw', y: '5vh', rotation: 22, scale: 0.52, opacity: 1 },
-            { x: '5vw', y: '15vh', rotation: 10, scale: 0.51, opacity: 1 },
-            { x: '-5vw', y: '15vh', rotation: -10, scale: 0.51, opacity: 1 },
-            { x: '-15vw', y: '5vh', rotation: -22, scale: 0.52, opacity: 1 },
-            { x: '-5vw', y: '-15vh', rotation: -28, scale: 0.43, opacity: 1 },
-            { x: '5vw', y: '-15vh', rotation: 28, scale: 0.43, opacity: 1 },
-            { x: '0vw', y: '10vh', rotation: 0, scale: 0.53, opacity: 1 }
+            { x: '-20vw', y: '-20vh', rotation: -30, scale: 0.45, opacity: 0.8 },
+            { x: '0vw', y: '-25vh', rotation: 0, scale: 0.5, opacity: 0.8 },
+            { x: '20vw', y: '-20vh', rotation: 30, scale: 0.45, opacity: 0.8 },
+            { x: '25vw', y: '0vh', rotation: 25, scale: 0.55, opacity: 0.8 },
+            { x: '20vw', y: '20vh', rotation: 20, scale: 0.5, opacity: 0.8 },
+            { x: '0vw', y: '25vh', rotation: 0, scale: 0.55, opacity: 0.8 },
+            { x: '-20vw', y: '20vh', rotation: -20, scale: 0.5, opacity: 0.8 },
+            { x: '-25vw', y: '0vh', rotation: -25, scale: 0.55, opacity: 0.8 },
+            { x: '-10vw', y: '-10vh', rotation: -35, scale: 0.4, opacity: 0.8 },
+            { x: '10vw', y: '-10vh', rotation: 35, scale: 0.4, opacity: 0.8 },
+            { x: '15vw', y: '5vh', rotation: 22, scale: 0.52, opacity: 0.8 },
+            { x: '5vw', y: '15vh', rotation: 10, scale: 0.51, opacity: 0.8 },
+            { x: '-5vw', y: '15vh', rotation: -10, scale: 0.51, opacity: 0.8 },
+            { x: '-15vw', y: '5vh', rotation: -22, scale: 0.52, opacity: 0.8 },
+            { x: '-5vw', y: '-15vh', rotation: -28, scale: 0.43, opacity: 0.8 },
+            { x: '5vw', y: '-15vh', rotation: 28, scale: 0.43, opacity: 0.8 },
+            { x: '0vw', y: '10vh', rotation: 0, scale: 0.53, opacity: 0.8 }
         ],
         
         'project-4': [
             // Different layout for project 4 - maybe more circular
-            { x: '-25vw', y: '-25vh', rotation: -20, scale: 0.4, opacity: 1 },
-            { x: '0vw', y: '-30vh', rotation: 0, scale: 0.45, opacity: 1 },
-            { x: '25vw', y: '-25vh', rotation: 20, scale: 0.4, opacity: 1 },
-            { x: '30vw', y: '0vh', rotation: 15, scale: 0.5, opacity: 1 },
-            { x: '25vw', y: '25vh', rotation: 10, scale: 0.45, opacity: 1 },
-            { x: '0vw', y: '30vh', rotation: 0, scale: 0.5, opacity: 1 },
-            { x: '-25vw', y: '25vh', rotation: -10, scale: 0.45, opacity: 1 },
-            { x: '-30vw', y: '0vh', rotation: -15, scale: 0.5, opacity: 1 },
+            { x: '-25vw', y: '-25vh', rotation: -20, scale: 0.4, opacity: 0.8 },
+            { x: '0vw', y: '-30vh', rotation: 0, scale: 0.45, opacity: 0.8 },
+            { x: '25vw', y: '-25vh', rotation: 20, scale: 0.4, opacity: 0.8 },
+            { x: '30vw', y: '0vh', rotation: 15, scale: 0.5, opacity: 0.8 },
+            { x: '25vw', y: '25vh', rotation: 10, scale: 0.45, opacity: 0.8 },
+            { x: '0vw', y: '30vh', rotation: 0, scale: 0.5, opacity: 0.8 },
+            { x: '-25vw', y: '25vh', rotation: -10, scale: 0.45, opacity: 0.8 },
+            { x: '-30vw', y: '0vh', rotation: -15, scale: 0.5, opacity: 0.8 },
             // Add more positions as needed for project 2
-            { x: '-15vw', y: '-15vh', rotation: -25, scale: 0.4, opacity: 1 },
-            { x: '15vw', y: '-15vh', rotation: 25, scale: 0.4, opacity: 1 },
-            { x: '20vw', y: '10vh', rotation: 12, scale: 0.48, opacity: 1 },
-            { x: '10vw', y: '20vh', rotation: 5, scale: 0.47, opacity: 1 },
-            { x: '-10vw', y: '20vh', rotation: -5, scale: 0.47, opacity: 1 },
-            { x: '-20vw', y: '10vh', rotation: -12, scale: 0.48, opacity: 1 },
-            { x: '-15vw', y: '-5vh', rotation: -18, scale: 0.46, opacity: 1 },
-            { x: '15vw', y: '-5vh', rotation: 18, scale: 0.46, opacity: 1 },
-            { x: '0vw', y: '15vh', rotation: 0, scale: 0.49, opacity: 1 },
-            { x: '8vw', y: '-20vh', rotation: 8, scale: 0.42, opacity: 1 },
-            { x: '-8vw', y: '-20vh', rotation: -8, scale: 0.42, opacity: 1 }
+            { x: '-15vw', y: '-15vh', rotation: -25, scale: 0.4, opacity: 0.8 },
+            { x: '15vw', y: '-15vh', rotation: 25, scale: 0.4, opacity: 0.8 },
+            { x: '20vw', y: '10vh', rotation: 12, scale: 0.48, opacity: 0.8 },
+            { x: '10vw', y: '20vh', rotation: 0, scale: 0.47, opacity: 0.8 },
+            { x: '-10vw', y: '20vh', rotation: 0, scale: 0.47, opacity: 0.8 },
+            { x: '-20vw', y: '10vh', rotation: -12, scale: 0.48, opacity: 0.8 },
+            { x: '-15vw', y: '-5vh', rotation: -18, scale: 0.46, opacity: 0.8 },
+            { x: '15vw', y: '-5vh', rotation: 18, scale: 0.46, opacity: 0.8 },
+            { x: '0vw', y: '15vh', rotation: 0, scale: 0.49, opacity: 0.8 },
+            { x: '8vw', y: '-20vh', rotation: 8, scale: 0.42, opacity: 0.8 },
+            { x: '-8vw', y: '-20vh', rotation: -8, scale: 0.42, opacity: 0.8 }
         ]
     };
     
@@ -268,7 +268,10 @@ window.addEventListener('load', function() {
                 y: -window.innerHeight * 0.1, // Slightly above center
                 scale: 1,
                 opacity: 0,
-                rotation: 0
+                rotation: 0,
+                force3D: true,
+                transformOrigin: "50% 50%",
+                willChange: "transform, opacity"
             });
         });
         
@@ -451,7 +454,8 @@ window.addEventListener('load', function() {
                         y: -5 * vh,
                         scale: 1,
                         opacity: slideProgress,
-                        rotation: 0
+                        rotation: 0,
+                        force3D: true
                     });
                 } else {
                     // Step 2: Move to final position
@@ -481,7 +485,9 @@ window.addEventListener('load', function() {
                         y: currentY,
                         scale: currentScale,
                         opacity: currentOpacity,
-                        rotation: currentRotation
+                        rotation: currentRotation,
+                        force3D: true
+                        
                     });
                 }
             } else {
@@ -491,7 +497,8 @@ window.addEventListener('load', function() {
                     y: -5 * vh,
                     scale: 1,
                     opacity: 0,
-                    rotation: 0
+                    rotation: 0,
+                        force3D: true
                 });
             }
         });

@@ -137,6 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const initForm = () => {
     console.log('initForm called');
 
+    // Check if form was previously submitted
+    checkPreviousSubmission();
+
     // Reset current step to 0
     currentStep = 0;
     
@@ -207,10 +210,28 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Setup all event listeners
   const setupEventListeners = () => {
-    // Open form button
-    if (formOpenBtn) {
-      formOpenBtn.addEventListener('click', openForm);
-    }
+    // Open form buttons (multiple instances)
+    const formOpenButtons = document.querySelectorAll('.form-open-btn');
+    formOpenButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        openForm();
+        // Scroll to form-entry section after a short delay
+        setTimeout(() => {
+          scrollToFormEntry();
+        }, 100);
+      });
+    });
+
+    // Scroll to form-entry section
+    const scrollToFormEntry = () => {
+      const formEntrySection = document.getElementById('form-entry');
+      if (formEntrySection) {
+        formEntrySection.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    };
     
     // Add more social media fields
     if (addSocialButton) {
@@ -247,7 +268,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Previous buttons
     prevButtons.forEach(button => {
-      button.addEventListener('click', goToPrevStep);
+      button.addEventListener('click', (e) => {
+        // Check if this is the existing email message prev button
+        const isExistingEmailPrev = button.closest('#existing-email-message');
+        
+        if (isExistingEmailPrev) {
+          goBackFromExistingEmail();
+        } else {
+          goToPrevStep();
+        }
+      });
     });
     
     // Close buttons
@@ -1002,6 +1032,40 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'back.out(1.2)'
     });
   };
+
+  // Disable form entry after successful submission
+  const disableFormEntry = () => {
+    const formOpenButtons = document.querySelectorAll('.form-open-btn');
+    const formEntrySection = document.getElementById('form-entry');
+    
+    // Store submission state
+    localStorage.setItem('formSubmitted', 'true');
+    localStorage.setItem('submissionTime', new Date().toISOString());
+    
+    // Update all form open buttons
+    formOpenButtons.forEach(button => {
+      button.innerHTML = 'Form Submitted ✓';
+      button.disabled = true;
+      button.style.cursor = 'not-allowed';
+      button.style.opacity = '0.6';
+      button.removeEventListener('click', openForm);
+    });
+    
+    // Update description text
+    const descriptionText = formEntrySection.querySelector('p');
+    if (descriptionText) {
+      descriptionText.textContent = 'Thank you! Your inquiry has been submitted successfully.';
+    }
+  };
+
+  // Check if form was already submitted (on page load)
+  const checkPreviousSubmission = () => {
+    const wasSubmitted = localStorage.getItem('formSubmitted');
+    
+    if (wasSubmitted === 'true') {
+      disableFormEntry();
+    }
+  };
   
   // Show error message
   const showErrorMessage = () => {
@@ -1109,6 +1173,37 @@ document.addEventListener('DOMContentLoaded', () => {
       opacity: 1,
       ease: 'back.out(1.2)'
     });
+  };
+
+  // Handle going back from existing email message
+  const goBackFromExistingEmail = () => {
+    const existingEmailMessage = document.getElementById('existing-email-message');
+    const firstStep = steps[0]; // Go back to the first step
+    
+    // Animate existing email message out
+    gsap.to(existingEmailMessage, {
+      duration: animDurations.cardSlide,
+      x: '100vw',
+      opacity: 0,
+      ease: 'power2.in',
+      onComplete: () => {
+        existingEmailMessage.classList.add('hidden');
+      }
+    });
+    
+    // Restore the first step to its original centered position
+    gsap.to(firstStep, {
+      duration: animDurations.cardStack,
+      scale: activeCardScale,
+      rotation: 0,
+      x: 0,
+      y: 0,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Re-enable interaction with the first step
+        firstStep.style.pointerEvents = 'auto';
+      }
+    }, '-=0.3');
   };
   
   // ---------------

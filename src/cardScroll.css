@@ -119,3 +119,36 @@ body {
         max-width: 24rem;
     }
 }
+
+#form-entry {
+  position: relative;
+  z-index: 1;
+}
+
+#form-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 50 !important;
+}
+
+/* Ensure success message positioning */
+#success-message {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+}
+
+/* Ensure stacked cards stay in viewport */
+.step {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  max-width: 90vw;
+}

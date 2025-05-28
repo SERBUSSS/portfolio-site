@@ -76,11 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Define final positions for the staggered card stack pattern
   const finalPositions = [
-    { x: '-7px', y: '-150px', rotation: -3, scale: 0.5 },
-    { x: '-30px', y: '-100px', rotation: 2, scale: 0.5 },
-    { x: '10px', y: '0px', rotation: -1, scale: 0.5 },
-    { x: '30px', y: '100px', rotation: 3, scale: 0.5 },
-    { x: '70px', y: '1500px', rotation: -2, scale: 0.5 },
+    { x: '-30px', y: '-150px', rotation: -3, scale: 0.5 },
+    { x: '25px', y: '-140px', rotation: 2, scale: 0.5 },
+    { x: '-27px', y: '10px', rotation: -1, scale: 0.5 },
+    { x: '30px', y: '0px', rotation: 3, scale: 0.5 },
+    { x: '0px', y: '100px', rotation: -2, scale: 0.5 },
     { x: '0px', y: '0px', rotation: 0, scale: 0.7 }, // For success message
     { x: '0px', y: '0px', rotation: 0, scale: 0.7 } // For error message
   ];
@@ -335,6 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
     formContainer.style.justifyContent = 'center';
     formContainer.style.alignItems = 'center';
     formContainer.style.zIndex = '50';
+    formContainer.style.padding = '0';
+    formContainer.style.overflow = 'visible';
     
     // Make sure the form takes the full space
     form.style.position = 'relative';
@@ -343,6 +345,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.style.display = 'flex';
     form.style.justifyContent = 'center';
     form.style.alignItems = 'center';
+    form.style.padding = '0';
+    form.style.overflow = 'visible';
     
     // Disable background scrolling
     document.body.style.overflow = 'hidden';
@@ -421,6 +425,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Position success message using the last position in finalPositions array
       const successIndex = steps.length; // This corresponds to the success message index in finalPositions
       
+      // Apply final position transform to success message
+      const finalPos = finalPositions[Math.min(successIndex, finalPositions.length - 1)];
+      
       // Make sure overlay fades out
       gsap.to(formOverlay, {
         duration: animDurations.overlay,
@@ -432,33 +439,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       
-      // Make sure the success message is in the correct position
+      // Animate success message to final stacked position
       gsap.to(successMessage, {
         duration: animDurations.cardStack,
-        scale: finalPositions[successIndex].scale,
-        rotation: finalPositions[successIndex].rotation,
-        x: finalPositions[successIndex].x,
-        y: finalPositions[successIndex].y,
+        scale: finalPos.scale,
+        rotation: finalPos.rotation,
+        x: finalPos.x,
+        y: finalPos.y,
         ease: 'power2.inOut',
         onComplete: () => {
-          // Make success message non-interactive
+          // Make success message non-interactive but keep it positioned
           successMessage.style.pointerEvents = 'none';
-          // Make sure it stays visible
           successMessage.classList.remove('hidden');
           successMessage.style.display = 'block';
+          
+          // Keep the form container visible but non-interactive for stacked cards
+          formContainer.style.pointerEvents = 'none';
+          formContainer.classList.remove('hidden');
         }
       });
       
-      // Apply the same positioning to the success message's container for better positioning
-      formContainer.style.position = 'fixed';
-      formContainer.style.top = '0';
-      formContainer.style.left = '0';
-      formContainer.style.width = '100vw';
-      formContainer.style.height = '100vh';
-      formContainer.style.zIndex = '50';
-      formContainer.style.pointerEvents = 'none';
-      
-      // Hide previous steps completely
+      // Hide all previous steps completely
       steps.forEach((step, index) => {
         if (index !== currentStep) {
           step.classList.add('hidden');
@@ -845,6 +846,28 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => {
       console.error('Error:', error);
+      
+      // Enhanced error handling
+      let errorMessageText = 'An error occurred processing your request. ';
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorMessageText += 'Please check your internet connection and try again.';
+      } else if (error.message.includes('429')) {
+        errorMessageText += 'Too many requests. Please wait a moment and try again.';
+      } else if (error.message.includes('500')) {
+        errorMessageText += 'Server error. Please try again in a few minutes or contact me directly at sergiu@bustiuc.digital';
+      } else if (error.message.includes('400')) {
+        errorMessageText += 'Invalid form data. Please check your inputs and try again.';
+      } else {
+        errorMessageText += 'Please try again later or contact me directly at sergiu@bustiuc.digital';
+      }
+      
+      // Update error message content
+      const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+      if (errorMessageElement) {
+        errorMessageElement.textContent = errorMessageText;
+      }
+      
       // Show error message
       showErrorMessage();
     })

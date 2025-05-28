@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const finalPositions = [
     { x: '-30px', y: '-150px', rotation: -3, scale: 0.5 },
     { x: '25px', y: '-140px', rotation: 2, scale: 0.5 },
-    { x: '-27px', y: '10px', rotation: -1, scale: 0.5 },
+    { x: '-40px', y: '-300px', rotation: -1, scale: 0.5 },
     { x: '30px', y: '0px', rotation: 3, scale: 0.5 },
     { x: '0px', y: '100px', rotation: -2, scale: 0.5 },
     { x: '0px', y: '0px', rotation: 0, scale: 0.7 }, // For success message
@@ -422,11 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (wasSuccessful) {
       // Form was submitted successfully
-      // Position success message using the last position in finalPositions array
-      const successIndex = steps.length; // This corresponds to the success message index in finalPositions
-      
-      // Apply final position transform to success message
-      const finalPos = finalPositions[Math.min(successIndex, finalPositions.length - 1)];
+      const finalPos = finalPositions[Math.min(steps.length, finalPositions.length - 1)];
       
       // Make sure overlay fades out
       gsap.to(formOverlay, {
@@ -439,32 +435,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       
-      // Animate success message to final stacked position
-      gsap.to(successMessage, {
-        duration: animDurations.cardStack,
-        scale: finalPos.scale,
-        rotation: finalPos.rotation,
-        x: finalPos.x,
-        y: finalPos.y,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          // Make success message non-interactive but keep it positioned
-          successMessage.style.pointerEvents = 'none';
-          successMessage.classList.remove('hidden');
-          successMessage.style.display = 'block';
-          
-          // Keep the form container visible but non-interactive for stacked cards
-          formContainer.style.pointerEvents = 'none';
-          formContainer.classList.remove('hidden');
-        }
-      });
+      // Get the form entry section
+      const formEntrySection = document.getElementById('form-entry');
       
-      // Hide all previous steps completely
-      steps.forEach((step, index) => {
-        if (index !== currentStep) {
-          step.classList.add('hidden');
-        }
-      });
+      // Move the success message to be a child of form-entry section
+      // First, change its positioning to be relative to the section
+      successMessage.style.position = 'absolute';
+      successMessage.style.left = '50%';
+      successMessage.style.top = '50%';
+      successMessage.style.transform = `translate(-50%, -50%) scale(${finalPos.scale}) rotate(${finalPos.rotation}deg)`;
+      successMessage.style.zIndex = '45';
+      successMessage.style.pointerEvents = 'none';
+      
+      // Apply the final position offset
+      const offsetX = parseFloat(finalPos.x) || 0;
+      const offsetY = parseFloat(finalPos.y) || 0;
+      successMessage.style.left = `calc(50% + ${offsetX}px)`;
+      successMessage.style.top = `calc(50% + ${offsetY}px)`;
+      
+      // Move the success message from form-container to form-entry section
+      formEntrySection.appendChild(successMessage);
+      
+      // Hide the form container
+      setTimeout(() => {
+        formContainer.classList.add('hidden');
+        formContainer.style.display = 'none';
+      }, 100);
+      
+      // Don't reset the form since we want to keep the success message visible
     } else {
       // Form was not submitted - animate all cards out, then hide everything
       const allCards = Array.from(steps);

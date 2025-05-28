@@ -125,6 +125,11 @@ body {
   z-index: 1;
 }
 
+/* Success message when stacked */
+#success-message {
+  /* Will be set dynamically by JavaScript */
+}
+
 #form-container {
   position: fixed !important;
   top: 0 !important;

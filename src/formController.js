@@ -2,6 +2,11 @@
 // This handles all form interactions, animations, and validation
 
 document.addEventListener('DOMContentLoaded', () => {
+  const supabase = window.supabase.createClient(
+    'https://guyjtfegraqcthngbhvf.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1eWp0ZmVncmFxY3RobmdiaHZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NDUyNzIsImV4cCI6MjA2NDAyMTI3Mn0.i-yK2m0JRx_KI-h6LINIjH4UwQav6A2iJdsNOxrVevs'
+  );
+
   // DOM Elements
   const formOpenBtn = document.getElementById('open-form-btn');
   const formContainer = document.getElementById('form-container');
@@ -614,11 +619,57 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   // NAVIGATION
   // ---------------
-  
+  const checkEmailExists = async (email) => {
+    try {
+      const { data, error } = await supabase
+        .from('form_submissions')
+        .select('email')
+        .eq('email', email.toLowerCase())
+        .limit(1);
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        return false; // Allow submission on error
+      }
+      
+      return data && data.length > 0;
+    } catch (error) {
+      console.error('Email check error:', error);
+      return false; // Allow submission on error
+    }
+  };
+
   // Go to next step
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (currentStep >= steps.length - 1 || isNavigating) return;
     
+    // Special handling for step 0 - check email before proceeding
+    if (currentStep === 0) {
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim();
+      
+      if (email) {
+        // Show loading state
+        const nextButton = steps[currentStep].querySelector('.next-button');
+        const originalText = nextButton.innerHTML;
+        nextButton.innerHTML = '<span class="text-xl">Checking...</span>';
+        nextButton.disabled = true;
+        
+        const emailExists = await checkEmailExists(email);
+        
+        if (emailExists) {
+          // Show existing email message instead of progressing
+          showExistingEmailMessage();
+          return;
+        }
+        
+        // Reset button state
+        nextButton.innerHTML = originalText;
+        nextButton.disabled = false;
+      }
+    }
+    
+    // Continue with existing logic...
     isNavigating = true;
     
     const currentCard = steps[currentStep];
@@ -811,42 +862,39 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Collect form data
     const formData = new FormData(form);
     
-    // Process service checkboxes into a comma-separated string
+    // Process service checkboxes into an array
     const servicesChecked = Array.from(document.querySelectorAll('input[name="services"]:checked'))
-      .map(checkbox => checkbox.value)
-      .join(', ');
-      
-    formData.set('services', servicesChecked);
+      .map(checkbox => checkbox.value);
     
     // Process social media fields
     const socialMediaFields = document.querySelectorAll('.social-media-field');
-    const socialMediaProfiles = [];
+    const socialMediaData = {};
     
     socialMediaFields.forEach((field, index) => {
-      const type = field.querySelector(`select[name="social-media-type-${index}"]`).value;
-      const profile = field.querySelector(`input[name="social-media-profile-${index}"]`).value;
+      const type = field.querySelector(`select[name="social-media-type-${index}"]`)?.value;
+      const profile = field.querySelector(`input[name="social-media-profile-${index}"]`)?.value;
       
-      if (profile.trim()) {
-        socialMediaProfiles.push(`${type}: ${profile}`);
+      if (type && profile && profile.trim()) {
+        socialMediaData[`social-media-type-${index}`] = type;
+        socialMediaData[`social-media-profile-${index}`] = profile.trim();
       }
     });
     
-    // Set the first social media as Instagram profile for compatibility
-    if (socialMediaProfiles.length > 0) {
-      formData.set('instagramProfile', socialMediaProfiles.join(', '));
-    }
-    
-    // Convert FormData to JSON
+    // Convert FormData to JSON and add processed data
     const formDataJson = {};
     formData.forEach((value, key) => {
       formDataJson[key] = value;
     });
+    
+    // Add processed data
+    formDataJson.services = servicesChecked;
+    Object.assign(formDataJson, socialMediaData);
     
     // Show loading state
     const submitButton = document.querySelector('button[type="submit"]');
@@ -854,26 +902,35 @@ document.addEventListener('DOMContentLoaded', () => {
     submitButton.innerHTML = '<span class="text-xl">Sending...</span>';
     submitButton.disabled = true;
     
-    // Send form data to server
-    fetch(form.action, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formDataJson)
-    })
-    .then(response => {
+    try {
+      // Send form data to server
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataJson)
+      });
+      
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json();
-    })
-    .then(data => {
-      // Show success message
-      showSuccessMessage();
-    })
-    .catch(error => {
-      console.error('Error:', error);
+      
+      const responseData = await response.json();
+      
+      // Check if this was a duplicate submission
+      if (responseData.duplicate) {
+        console.log('Duplicate submission detected by backend');
+        // Still show success to user for good UX
+        showSuccessMessage();
+      } else {
+        // Normal successful submission
+        console.log('Form submitted successfully:', responseData);
+        showSuccessMessage();
+      }
+      
+    } catch (error) {
+      console.error('Submission error:', error);
       
       // Enhanced error handling
       let errorMessageText = 'An error occurred processing your request. ';
@@ -898,12 +955,11 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Show error message
       showErrorMessage();
-    })
-    .finally(() => {
+    } finally {
       // Reset button state
       submitButton.innerHTML = originalButtonText;
       submitButton.disabled = false;
-    });
+    }
   };
   
   // Show success message
@@ -1010,6 +1066,48 @@ document.addEventListener('DOMContentLoaded', () => {
       onComplete: () => {
         currentCard.style.pointerEvents = 'auto';
       }
+    });
+  };
+
+  // Show existing email message
+  const showExistingEmailMessage = () => {
+    const currentCard = steps[currentStep];
+    const existingEmailMessage = document.getElementById('existing-email-message');
+    
+    // Stack the current card
+    gsap.to(currentCard, {
+      duration: animDurations.cardStack,
+      scale: finalPositions[currentStep].scale,
+      rotation: finalPositions[currentStep].rotation,
+      x: finalPositions[currentStep].x,
+      y: finalPositions[currentStep].y,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        currentCard.style.pointerEvents = 'none';
+      }
+    });
+    
+    // Show existing email message
+    existingEmailMessage.classList.remove('hidden');
+    
+    // Position for animation
+    gsap.set(existingEmailMessage, {
+      position: 'absolute',
+      left: '50%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+      y: '20px',
+      opacity: 0,
+      scale: 1,
+      rotation: 0
+    });
+    
+    // Animate in
+    gsap.to(existingEmailMessage, {
+      duration: 0.5,
+      y: 0,
+      opacity: 1,
+      ease: 'back.out(1.2)'
     });
   };
   

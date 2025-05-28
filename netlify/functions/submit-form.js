@@ -1,5 +1,6 @@
 // netlify/functions/submit-form.js
 const sgMail = require('@sendgrid/mail');
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
   // Set CORS headers
@@ -28,6 +29,12 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // Initialize Supabase client
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
     // Parse the incoming JSON data
     const data = JSON.parse(event.body);
     
@@ -50,6 +57,80 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Normalize email for consistent checking
+    const normalizedEmail = data.email.toLowerCase().trim();
+
+    // Check if email already exists in Supabase
+    const { data: existingSubmission, error: checkError } = await supabase
+      .from('form_submissions')
+      .select('email')
+      .eq('email', normalizedEmail)
+      .limit(1);
+
+    if (checkError) {
+      console.error('Supabase check error:', checkError);
+      // Continue with submission if database check fails
+    } else if (existingSubmission && existingSubmission.length > 0) {
+      // Email already exists - return success but don't process
+      console.log('Duplicate email submission attempted:', normalizedEmail);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ 
+          message: 'Form submitted successfully',
+          duplicate: true 
+        })
+      };
+    }
+
+    // Process service checkboxes into a comma-separated string
+    const servicesChecked = Array.from(data.services || []).join(', ');
+    
+    // Process social media fields
+    const socialMediaProfiles = [];
+    let index = 0;
+    while (data[`social-media-type-${index}`]) {
+      const type = data[`social-media-type-${index}`];
+      const profile = data[`social-media-profile-${index}`];
+      
+      if (profile && profile.trim()) {
+        socialMediaProfiles.push(`${type}: ${profile}`);
+      }
+      index++;
+    }
+
+    // Prepare complete form data for storage
+    const formDataForStorage = {
+      fullName: data.fullName,
+      email: normalizedEmail,
+      businessName: data.businessName || '',
+      socialMediaProfiles: socialMediaProfiles.join(', '),
+      businessDescription: data.businessDescription || '',
+      businessChallenges: data.businessChallenges || '',
+      services: servicesChecked,
+      projectObjectives: data.projectObjectives || '',
+      projectVision: data.projectVision || '',
+      budget: data.budget || '',
+      customBudget: data.customBudget || '',
+      referralSource: data.referralSource || '',
+      submittedAt: new Date().toISOString()
+    };
+
+    // Store in Supabase
+    const { data: storedData, error: storeError } = await supabase
+      .from('form_submissions')
+      .insert([{
+        email: normalizedEmail,
+        form_data: formDataForStorage
+      }]);
+
+    if (storeError) {
+      console.error('Supabase storage error:', storeError);
+      // Continue with email sending even if storage fails
+    } else {
+      console.log('Form data stored successfully in Supabase');
+    }
+
     // Set SendGrid API key from environment variable
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     
@@ -59,13 +140,14 @@ exports.handler = async (event, context) => {
       <p><strong>Name:</strong> ${data.fullName}</p>
       <p><strong>Email:</strong> ${data.email}</p>
       <p><strong>Business Name:</strong> ${data.businessName || 'Not specified'}</p>
-      <p><strong>Social Media:</strong> ${data.instagramProfile || 'Not specified'}</p>
+      <p><strong>Social Media:</strong> ${socialMediaProfiles.join(', ') || 'Not specified'}</p>
       <p><strong>Business Description:</strong> ${data.businessDescription || 'Not specified'}</p>
       <p><strong>Business Challenges:</strong> ${data.businessChallenges || 'Not specified'}</p>
-      <p><strong>Services Requested:</strong> ${data.services || 'Not specified'}</p>
+      <p><strong>Services Requested:</strong> ${servicesChecked || 'Not specified'}</p>
       <p><strong>Project Objectives:</strong> ${data.projectObjectives || 'Not specified'}</p>
       <p><strong>Project Vision:</strong> ${data.projectVision || 'Not specified'}</p>
       <p><strong>Budget Range:</strong> ${data.budget || 'Not specified'}</p>
+      ${data.customBudget ? `<p><strong>Custom Budget:</strong> ${data.customBudget}</p>` : ''}
       <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
     
@@ -108,7 +190,10 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ message: 'Form submitted successfully' })
+      body: JSON.stringify({ 
+        message: 'Form submitted successfully',
+        stored: !storeError 
+      })
     };
   } catch (error) {
     console.error('Error:', error);

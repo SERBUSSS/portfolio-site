@@ -13,22 +13,48 @@
         <!-- <link rel="stylesheet" href="src/formStyles.css"> -->
     </head>
     <body>
-        <header id="nav-bar-cont" class="w-full h-auto flex absolute top-0 left-0">
+        <header id="nav-bar-cont" class="w-[100vw] min-[70rem]:h-32 max-[70rem]:h-[6.5rem] h-auto flex absolute justify-center top-0 left-0 ">
             <div id="nav-bar" class="w-full inline-flex items-center justify-between p-4 pt-10 pb-4">
-                <div class="basis-1/3">
-                    <a href="#">
-                        <img src="" alt="">
-                    </a>
+                <!-- Mobile layout (existing) -->
+                <div class="min-[70rem]:hidden w-full inline-flex items-center justify-between">
+                    <div class="basis-1/3">
+                        <a href="#">
+                            <img src="" alt="">
+                        </a>
+                    </div>
+                    <div class="basis-1/3 h-auto flex justify-center">
+                        <a href="#" class="w-full h-auto flex justify-center items-center">
+                            <img id="head-logo" src="/src/icons/LogoV1.svg" alt="Buștiuc Sergiu Logo" class="h-12">
+                        </a>
+                    </div>
+                    <div class="basis-1/3 flex justify-end">
+                        <a href="#" class="menu-toggle">
+                            <img src="/src/icons/ham-menu.svg" alt="menu icon">
+                        </a>
+                    </div>
                 </div>
-                <div class="basis-1/3 h-auto flex justify-center">
-                    <a href="#" class="w-full h-auto flex justify-center items-center">
-                        <img id="head-logo" src="/src/icons/LogoV1.svg" alt="Buștiuc Sergiu Logo" class="h-12">
-                    </a>
-                </div>
-                <div class="basis-1/3 flex justify-end">
-                    <a href="#" class="menu-toggle">
-                        <img src="/src/icons/ham-menu.svg" alt="menu icon">
-                    </a>
+
+                <!-- Desktop layout -->
+                <div class="hidden min-[70rem]:flex w-full justify-between items-center py-2 md:max-[70rem]:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+                    <!-- Logo -->
+                    <div class="w-36 h-14">
+                        <a href="#" class="w-full h-auto">
+                            <img src="/src/icons/LogoV1.svg" alt="Buștiuc Sergiu Logo" class="h-full w-auto">
+                        </a>
+                    </div>
+                    
+                    <!-- Navigation Links -->
+                    <nav class="flex justify-start items-center gap-8">
+                        <a href="#project-1" class="text-black text-2xl font-normal font-display leading-10 hover:text-[#5c6cb9] transition-colors">Projects</a>
+                        <a href="#process" class="text-black text-2xl font-normal font-display leading-10 hover:text-[#5c6cb9] transition-colors">My process</a>
+                        <a href="#services" class="text-black text-2xl font-normal font-display leading-10 hover:text-[#5c6cb9] transition-colors">Services</a>
+                        <a href="#FAQ" class="text-black text-2xl font-normal font-display leading-10 hover:text-[#5c6cb9] transition-colors">FAQ</a>
+                    </nav>
+                    
+                    <!-- CTA Button -->
+                    <div class="w-48 px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] hover:bg-[#6f7ec5] hover:outline-[#3649a2] flex justify-center items-center gap-2 transition-colors">
+                        <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-lg font-bold font-sans leading-none">Start a project</button>
+                    </div>
                 </div>
             </div>
         
@@ -91,14 +117,14 @@
             </div>
         </header>
 
-        <section id="hero-section" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-between py-12">
+        <section id="hero-section" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full flex flex-col items-center justify-between py-12 lg:py-20">
                 <div class="w-full h-auto flex justify-center">
                     
                 </div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
-                    <h1 class="self-stretch text-center justify-start text-black text-4xl leading-10 font-normal font-display">Web Designer & Digital Marketing Strategist</h1>
-                    <h3 class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Combining web design with marketing strategy to help businesses convert more visitors into paying customers.</h3>
+                <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
+                    <h1 class="self-stretch text-center justify-start text-black text-4xl leading-10 font-normal font-display md:text-5xl md:leading-14 lg:text-6xl lg:leading-16">Web Designer & Digital Marketing Strategist</h1>
+                    <h3 class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-tight md:text-2xl md:leading-8">Combining web design with marketing strategy to help businesses convert more visitors into paying customers.</h3>
                 </div>
                 <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
                     <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
@@ -107,30 +133,30 @@
             </div>
         </section>
         
-        <section id="background-p-1" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
+        <section id="background-p-1" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans">Project 01</div>
-                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display">From zero budget to live business in 30 days - proving that great design doesn't require deep pockets, just smart strategy.</h3>
+                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 01</div>
+                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">From zero budget to live business in 30 days - proving that great design doesn't require deep pockets, just smart strategy.</h3>
                 </div>
                 <div class="inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
-                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
+                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
+                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
+                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                 </div>
             </div>
         </section>
 
-        <section id="project-1" class="section scroll-section">
+        <section id="project-1" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-1" class="project-tooltip hidden">
-                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2">
+                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-full">
                     <div id="tt-project-name-1" class="text-center justify-start text-[#000101] text-2xl font-normal font-display">Si Punct Media</div>
                     <p id="tt-card-description-1" class="self-stretch justify-start text-[#000101] text-lg font-normal font-sans leading-6"></p>
                 </div>
             </div>
             <div class="wrapper h-screen">
                 <div role="list" class="list flex justify-center align-center h-full relative">
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden md:w-1/2">
                         <div class="flex-1 px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -167,7 +193,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card02-v2.webp 480w"
@@ -184,7 +210,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card03-v2.webp 480w"
@@ -201,7 +227,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card04-v2.webp 480w"
@@ -235,7 +261,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card06-v2.webp 480w"
@@ -252,7 +278,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card07-v2.webp 480w"
@@ -269,7 +295,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card08-v2.webp 480w"
@@ -286,7 +312,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card09-v2.webp 480w"
@@ -303,7 +329,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card10-v2.webp 480w"
@@ -320,7 +346,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card11-v2.webp 480w"
@@ -337,7 +363,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card12-v2.webp 480w"
@@ -354,7 +380,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card13-v2.webp 480w"
@@ -371,7 +397,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card14-v2.webp 480w"
@@ -388,7 +414,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p1/webp/Project01-Card15-v2.webp 480w"
@@ -405,7 +431,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-1/2">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -449,30 +475,30 @@
             </div>
         </section>
 
-        <section id="background-p-2" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
+        <section id="background-p-2" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans">Project 02</div>
-                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display">Building a supplement brand from market research to Meta ads - a masterclass in e-commerce complexity and pivoting under pressure.</h3>
+                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 02</div>
+                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Building a supplement brand from market research to Meta ads - a masterclass in e-commerce complexity and pivoting under pressure.</h3>
                 </div>
                 <div class="inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
-                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
+                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
+                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
+                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                 </div>
             </div>
         </section>
 
-        <section id="project-2" class="section scroll-section">
+        <section id="project-2" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-2" class="project-tooltip hidden">
-                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2">
+                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-full">
                     <div id="tt-project-name-2" class="text-center justify-start text-[#000101] text-2xl font-normal font-display">EnergNature</div>
                     <p id="tt-card-description-2" class="self-stretch justify-start text-[#000101] text-lg font-normal font-sans leading-6"></p>
                 </div>
             </div>
             <div class="wrapper h-screen">
                 <div role="list" class="list flex justify-center align-center h-full relative">
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden md:w-1/2">
                         <div class="flex-1 px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -509,7 +535,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card01-v2.webp 480w"
@@ -526,7 +552,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card02-v2.webp 480w"
@@ -543,7 +569,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card04-v2.webp 480w"
@@ -560,7 +586,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card05-v2.webp 480w"
@@ -577,7 +603,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card06-v2.webp 480w"
@@ -594,7 +620,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card07-v2.webp 480w"
@@ -611,7 +637,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card08-v2.webp 480w"
@@ -628,7 +654,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card09-v2.webp 480w"
@@ -645,7 +671,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card10-v2.webp 480w"
@@ -662,7 +688,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card11-v2.webp 480w"
@@ -679,7 +705,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card12-v2.webp 480w"
@@ -696,7 +722,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card13-v2.webp 480w"
@@ -713,7 +739,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card14-v2.webp 480w"
@@ -730,7 +756,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card15-v2.webp 480w"
@@ -747,7 +773,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card16-v2.webp 480w"
@@ -764,7 +790,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card17-v2.webp 480w"
@@ -781,7 +807,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p2/webp/Project02-Card18-v2.webp 480w"
@@ -798,7 +824,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-1/2">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -842,38 +868,40 @@
             </div>
         </section>
 
-        <section id="background-p-3" class="section w-full h-screen pr-4 pl-4 flex flex-col gap-10">
-            <div class="w-full h-36 flex justify-center">
-                &nbsp;
-            </div>
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
-                <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans">Project 03</div>
-                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display">Team collaboration at its finest - where tight deadlines meet conversion optimization in the competitive German supplement market.</h3>
+        <section id="background-p-3" class="section w-full h-screen pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full h-auto flex flex-col gap-10 justify-center items-center md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
+                <div class="w-full h-36 flex justify-center">
+                    &nbsp;
                 </div>
-                <div class="inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
-                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
-                </div>
-            </div>
-            <div class="self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4">
-                <div class="inline-flex justify-start items-center gap-2.5">
-                    <div class="w-10 h-10 relative bg-[#070b0d] rounded-lg flex justify-center items-center">
-                        <img class="w-full h-auto" src="/src/icons/AnDPerfBlock.png" alt="AnDPerformance logo" />
+                <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
+                    <div class="self-stretch flex flex-col justify-start items-center gap-4">
+                        <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 03</div>
+                        <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Team collaboration at its finest - where tight deadlines meet conversion optimization in the competitive German supplement market.</h3>
                     </div>
-                    <div class="inline-flex flex-col justify-center items-start pt-[3px]">
-                        <div class="text-center justify-start text-[#262728] text-xs font-bold font-sans">Ahmed M.</div>
-                        <div class="text-center justify-start text-[#4C4F50] text-[10px] font-normal font-sans leading-4">Owner, A&D Performance</div>
+                    <div class="inline-flex w-full h-auto justify-center items-center gap-2">
+                        <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
+                        <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
+                        <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                     </div>
                 </div>
-                <p class="self-stretch text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-[1.3rem]">“Finally, a designer who thinks like a business owner. He understood our fast pace and delivered designs that actually moved the needle on sales.”</p>
+                <div class="self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4 ">
+                    <div class="inline-flex justify-start items-center gap-2.5">
+                        <div class="w-10 h-10 relative bg-[#070b0d] rounded-lg flex justify-center items-center">
+                            <img class="w-full h-auto" src="/src/icons/AnDPerfBlock.png" alt="AnDPerformance logo" />
+                        </div>
+                        <div class="inline-flex flex-col justify-center items-start pt-[3px]">
+                            <div class="text-center justify-start text-[#262728] text-xs font-bold font-sans">Ahmed M.</div>
+                            <div class="text-center justify-start text-[#4C4F50] text-[10px] font-normal font-sans leading-4">Owner, A&D Performance</div>
+                        </div>
+                    </div>
+                    <p class="self-stretch text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-[1.3rem]">“Finally, a designer who thinks like a business owner. He understood our fast pace and delivered designs that actually moved the needle on sales.”</p>
+                </div>
             </div>
         </section>
 
-        <section id="project-3" class="section scroll-section">
+        <section id="project-3" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-3" class="project-tooltip hidden">
-                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2">
+                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-full">
                     <div id="tt-project-name-3" class="text-center justify-start text-[#000101] text-2xl font-normal font-display">A&D Performance</div>
                     <p id="tt-card-description-3" class="self-stretch justify-start text-[#000101] text-lg font-normal font-sans leading-6"></p>
                 </div>
@@ -917,7 +945,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card02-v2.webp 480w"
@@ -934,7 +962,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card03-v2.webp 480w"
@@ -951,7 +979,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card04-v2.webp 480w"
@@ -985,7 +1013,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card06-v2.webp 480w"
@@ -1002,7 +1030,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card07-v2.webp 480w"
@@ -1019,7 +1047,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card08-v2.webp 480w"
@@ -1036,7 +1064,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card09-v2.webp 480w"
@@ -1053,7 +1081,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card10-v2.webp 480w"
@@ -1070,7 +1098,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card11-v2.webp 480w"
@@ -1087,7 +1115,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card12-v2.webp 480w"
@@ -1104,7 +1132,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card13-v2.webp 480w"
@@ -1121,7 +1149,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card14-v2.webp 480w"
@@ -1138,7 +1166,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card15-v2.webp 480w"
@@ -1155,7 +1183,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p3/webp/Project03-Card16-v2.webp 480w"
@@ -1216,30 +1244,30 @@
             </div>
         </section>
 
-        <section id="background-p-4" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
+        <section id="background-p-4" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans">Project 04</div>
-                    <div class="self-stretch text-center justify-start text-black text-2xl font-normal font-display">Redesigning the home essentials shopping experience - where comprehensive research meets user-centered design innovation.</div>
+                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 04</div>
+                    <div class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Redesigning the home essentials shopping experience - where comprehensive research meets user-centered design innovation.</div>
                 </div>
                 <div class="inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
-                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
+                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
+                    <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
+                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                 </div>
             </div>
         </section>
 
-        <section id="project-4" class="section scroll-section">
+        <section id="project-4" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-4" class="project-tooltip hidden">
-                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2">
+                <div class="w-[90vw] h-auto px-6 py-4 bg-[#efece6]/60 rounded-2xl outline-1 outline-offset-[-1px] outline-[#dbdbdb] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-full">
                     <div id="tt-project-name-4" class="text-center justify-start text-[#000101] text-2xl font-normal font-display">Casamare</div>
                     <p id="tt-card-description-4" class="self-stretch justify-start text-[#000101] text-lg font-normal font-sans leading-6"></p>
                 </div>
             </div>
             <div class="wrapper h-screen">
                 <div role="list" class="list flex justify-center align-center h-full relative">
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex justify-start items-center gap-2 overflow-hidden md:w-1/2">
                         <div class="flex-1 px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -1276,7 +1304,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card02-v2.webp 480w"
@@ -1293,7 +1321,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card03-v2.webp 480w"
@@ -1310,7 +1338,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card04-v2.webp 480w"
@@ -1344,7 +1372,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card06-v2.webp 480w"
@@ -1361,7 +1389,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card07-v2.webp 480w"
@@ -1378,7 +1406,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card08-v2.webp 480w"
@@ -1395,7 +1423,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card09-v2.webp 480w"
@@ -1412,7 +1440,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card10-v2.webp 480w"
@@ -1429,7 +1457,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card11-v2.webp 480w"
@@ -1446,7 +1474,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card12-v2.webp 480w"
@@ -1463,7 +1491,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card13-v2.webp 480w"
@@ -1480,7 +1508,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card14-v2.webp 480w"
@@ -1497,7 +1525,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card15-v2.webp 480w"
@@ -1514,7 +1542,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card16-v2.webp 480w"
@@ -1531,7 +1559,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card17-v2.webp 480w"
@@ -1548,7 +1576,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card18-v2.webp 480w"
@@ -1565,7 +1593,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl ">
+                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 data-srcset="/images/p4/webp/Project04-Card19-v2.webp 480w"
@@ -1582,7 +1610,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] p-2 bg-[#4c4f50] rounded-2xl inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-1/2">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#fefdfb] rounded-lg flex flex-col justify-center items-start gap-2 overflow-hidden">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -1626,12 +1654,12 @@
             </div>
         </section>
 
-        <section id="background-process" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-between py-30">
+        <section id="background-process" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full flex flex-col items-center justify-between py-30 lg:py-20">
                 <div class="w-full h-auto flex justify-center"></div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">My Design Process</h3>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-5.5">I believe great projects start with great communication. That's why I've developed a clear, collaborative process that keeps you informed and engaged every step of the way—from understanding your vision to delivering results that exceed expectations.</p>
+                <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
+                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Design Process</h3>
+                    <p class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-5.5 md:text-2xl md:leading-8">I believe great projects start with great communication. That's why I've developed a clear, collaborative process that keeps you informed and engaged every step of the way—from understanding your vision to delivering results that exceed expectations.</p>
                 </div>
                 <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
                     <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
@@ -1640,10 +1668,10 @@
             </div>
         </section>
 
-        <section id="process" class="section scroll-section-2 w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4">
+        <section id="process" class="section scroll-section-2 w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="wrapper h-screen">
                 <div role="list" class="list flex justify-center align-center h-full relative">
-                    <div role="listitem" class="item card absolute w-[90vw] h-96 p-6 bg-[#E6EFF8] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#E6EFF8] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden md:w-[40vw]">
                         <div class="self-stretch flex-1 flex flex-col justify-between items-center">
                             <div class="self-stretch inline-flex justify-between items-start">
                                 <p class="text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-none">step #1</p>
@@ -1661,7 +1689,7 @@
                             <div class="self-stretch h-4"></div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-96 p-6 bg-[#E6F8EE] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#E6F8EE] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden md:w-[40vw]">
                         <div class="self-stretch flex-1 flex flex-col justify-between items-center">
                             <div class="self-stretch inline-flex justify-between items-start">
                                 <p class="text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-none">step #2</p>
@@ -1679,7 +1707,7 @@
                             <div class="self-stretch h-4"></div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-96 p-6 bg-[#F7F8E6] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#F7F8E6] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden md:w-[40vw]">
                         <div class="self-stretch flex-1 flex flex-col justify-between items-center">
                             <div class="self-stretch inline-flex justify-between items-start">
                                 <p class="text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-none">step #3</p>
@@ -1697,7 +1725,7 @@
                             <div class="self-stretch h-4"></div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-96 p-6 bg-[#F8E6E6] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
+                    <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#F8E6E6] rounded-sm inline-flex flex-col justify-center items-start gap-2 overflow-hidden md:w-[40vw]">
                         <div class="self-stretch flex-1 flex flex-col justify-between items-center">
                             <div class="self-stretch inline-flex justify-between items-start">
                                 <p class="text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-none">step #4</p>
@@ -1718,21 +1746,21 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full flex flex-col items-center justify-center gap-2 pb-6 z-10">
-                <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+            <div class="w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw]">
+                <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                     <button data-open-form="true" id="open-form-btn-2" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-5">Complete Form</button>
                 </div>
                 <p class="self-stretch text-center justify-start text-[#828282] text-sm font-normal font-display leading-5">fill out the 5-min inquiry form!</p>
             </div> 
         </section>
 
-        <section id="services" class="section w-full h-auto flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8">
+        <section id="services" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8 lg:py-20">
                 <div id="s-intro" class="inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">My Services</h3>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Combining web design expertise with marketing strategy to create digital solutions that don't just look great—they deliver measurable results for your business.</p>
+                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Services</h3>
+                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight md:text-2xl md:leading-8">Combining web design expertise with marketing strategy to create digital solutions that don't just look great—they deliver measurable results for your business.</p>
                 </div>
-                <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-10">
+                <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-10 md:flex-row md:justify-between md:items-center md:gap-4">
                     <div id="s1-webdesign" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
                         <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2.5">
                             <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
@@ -1762,7 +1790,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s1-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center">
+                    <div id="s1-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center md:rotate-90 md:w-1 md-h-full">
                         <img src="/src/icons/line-v2.svg" alt="divider line" class="w-full h-auto">
                     </div>
                     <div id="s2-branding" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
@@ -1795,7 +1823,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s2-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center">
+                    <div id="s2-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center md:rotate-90 md:w-1 md-h-full">
                         <img src="/src/icons/line-v2.svg" alt="divider line" class="w-full h-auto">
                     </div>
                     <div id="s3-SMM" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
@@ -1827,17 +1855,17 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s3-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center">
+                    <div id="s3-divider" class="w-full h-auto self-stretch inline-flex justify-center items-center md:hidden">
                         <img src="/src/icons/line-v2.svg" alt="divider line" class="w-full h-auto">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="FAQ" class="section w-full h-auto flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8">
+        <section id="FAQ" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8 lg:py-20">
                 <div id="faq-intro" class="inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">FAQ</h3>
+                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">FAQ</h3>
                 </div>
                 <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-4">
                     <div id="faq-divider-0" class="faq-divider w-full h-auto self-stretch inline-flex justify-center items-center">
@@ -1999,8 +2027,8 @@
             </div>
         </section>
 
-        <section id="form-entry" class="section w-full h-screen flex pr-4 pl-4">
-            <div class="w-full flex flex-col items-center justify-between py-30">
+        <section id="form-entry" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="w-full flex flex-col items-center justify-between py-30 lg:py-20">
                 <div class="w-full h-auto flex justify-center"></div>
                 <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
                     <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">Ready to talk things into reality?</h3>
@@ -2021,14 +2049,14 @@
 
         <!-- Form container - contains the cards -->
         <div id="form-container" class="relative h-full inset-0 z-50 hidden">
-            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="relative overflow-hidden h-full w-full flex justify-center items-center flex-col">
+            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="relative overflow-hidden h-full w-full flex justify-center items-center flex-col lg:px-0">
                 <!-- Honeypot field for spam protection (hidden from users) -->
                 <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
                 
                 <!-- Security token field (if needed for CSRF protection) -->
                 <input type="hidden" name="_csrf" value="">
                 
-                <div id="step-0" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-0" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button (invisible on first step) -->
@@ -2150,7 +2178,7 @@
                 </div>
                 
                 <!-- Step 1: Contact Details -->
-                <div id="step-1" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-1" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -2258,7 +2286,7 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -2386,7 +2414,7 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -2573,7 +2601,7 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -2744,7 +2772,7 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl p-4 pb-6 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <!-- Progress navigation -->
                     <div class="flex items-center justify-between mb-4">
                         <!-- Back button -->
@@ -2859,7 +2887,7 @@
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="step hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <div class="flex justify-between items-center mb-6">
                         <div></div>
                         <h2 class="text-3xl font-medium font-display text-center">Form Sent!</h2>
@@ -2892,7 +2920,7 @@
                 </div>
 
                 <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="step hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <div class="flex flex-col items-center">
                         <div class="inline-flex">
                             <h3 class="text-xl font-medium text-red-800">Oopss...</h3>
@@ -2919,7 +2947,7 @@
                 </div>
 
                 <!-- Existing email state -->
-                <div id="existing-email-message" class="step hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                 <!-- Progress navigation -->
                 <div class="flex items-center justify-between mb-4">
                     <button type="button" class="prev-button" aria-label="Previous step">

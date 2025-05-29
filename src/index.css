@@ -141,3 +141,16 @@ button:focus-visible {
 body.menu-open {
   overflow: hidden;
 }
+
+@media (min-width: 1024px) {
+    .section {
+        min-height: auto;
+    }
+}
+
+/* Ensure form stays centered on larger screens */
+@media (min-width: 1280px) {
+    #form-container form {
+        max-width: 90vw;
+    }
+}

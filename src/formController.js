@@ -19,6 +19,131 @@ document.addEventListener('DOMContentLoaded', () => {
   const successMessage = document.getElementById('success-message');
   const errorMessage = document.getElementById('error-message');
   const tryAgainButton = document.getElementById('try-again-button');
+
+  // Enhanced validation helper functions
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidName = (name) => {
+    return name.trim().length >= 2;
+  };
+
+  // Visual feedback helper functions
+  const showFieldValidation = (fieldId, isValid, message = '') => {
+    const field = document.getElementById(fieldId);
+    const successIcon = document.getElementById(`${fieldId}-success-icon`);
+    const errorIcon = document.getElementById(`${fieldId}-error-icon`);
+    const messageEl = document.getElementById(`${fieldId}-validation-message`);
+    
+    if (!field) return;
+    
+    // Remove all validation classes
+    field.classList.remove('valid', 'invalid');
+    
+    if (field.value.trim() === '') {
+      // Empty field - neutral state
+      hideAllIcons(fieldId);
+      hideMessage(fieldId);
+      return;
+    }
+    
+    if (isValid) {
+      // Valid state
+      field.classList.add('valid');
+      showIcon(successIcon);
+      hideIcon(errorIcon);
+      if (message) {
+        showMessage(fieldId, message, 'success');
+      } else {
+        hideMessage(fieldId);
+      }
+    } else {
+      // Invalid state
+      field.classList.add('invalid');
+      showIcon(errorIcon);
+      hideIcon(successIcon);
+      showMessage(fieldId, message, 'error');
+    }
+  };
+
+  const showIcon = (icon) => {
+    if (icon) {
+      icon.classList.remove('hidden');
+      icon.classList.add('visible');
+    }
+  };
+
+  const hideIcon = (icon) => {
+    if (icon) {
+      icon.classList.remove('visible');
+      icon.classList.add('hidden');
+    }
+  };
+
+  const hideAllIcons = (fieldId) => {
+    const successIcon = document.getElementById(`${fieldId}-success-icon`);
+    const errorIcon = document.getElementById(`${fieldId}-error-icon`);
+    hideIcon(successIcon);
+    hideIcon(errorIcon);
+  };
+
+  const showMessage = (fieldId, message, type) => {
+    const messageEl = document.getElementById(`${fieldId}-validation-message`);
+    if (messageEl) {
+      messageEl.textContent = message;
+      messageEl.classList.remove('hidden', 'error', 'success');
+      messageEl.classList.add('visible', type);
+    }
+  };
+
+  const hideMessage = (fieldId) => {
+    const messageEl = document.getElementById(`${fieldId}-validation-message`);
+    if (messageEl) {
+      messageEl.classList.remove('visible', 'error', 'success');
+      messageEl.classList.add('hidden');
+    }
+  };
+
+  // Enhanced field validation
+  const validateField = (field) => {
+    const fieldId = field.id;
+    const value = field.value.trim();
+    
+    switch (field.type) {
+      case 'email':
+        if (value === '') {
+          showFieldValidation(fieldId, true); // Neutral for empty
+          return false; // But still invalid for form submission
+        } else if (isValidEmail(value)) {
+          showFieldValidation(fieldId, true, 'Valid email address');
+          return true;
+        } else {
+          showFieldValidation(fieldId, false, 'Please enter a valid email address');
+          return false;
+        }
+        
+      case 'text':
+        if (fieldId === 'fullName') {
+          if (value === '') {
+            showFieldValidation(fieldId, true); // Neutral for empty
+            return false;
+          } else if (isValidName(value)) {
+            showFieldValidation(fieldId, true);
+            return true;
+          } else {
+            showFieldValidation(fieldId, false, 'Name must be at least 2 characters long');
+            return false;
+          }
+        }
+        // For other text fields, just check if not empty
+        return value !== '';
+        
+      default:
+        return value !== '';
+    }
+  };
   
   // Social media functionality
   const addSocialButton = document.querySelector('.add-social-button');
@@ -682,7 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show loading state
         const nextButton = steps[currentStep].querySelector('.next-button');
         const originalText = nextButton.innerHTML;
-        nextButton.innerHTML = '<span class="text-xl">Checking...</span>';
+        nextButton.innerHTML = '<span class="text-[#fffdff] text-xl font-bold font-sans leading-5">Checking...</span>';
         nextButton.disabled = true;
         
         const emailExists = await checkEmailExists(email);
@@ -832,41 +957,56 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to check if all required fields are filled
     const checkFields = () => {
-      let allFilled = true;
+      let allValid = true;
       
       requiredFields.forEach(field => {
-        // Check if field is empty based on type
         if (field.type === 'checkbox' || field.type === 'radio') {
           // For checkboxes and radios, we need at least one checked in the group
           const name = field.name;
           const group = step.querySelectorAll(`[name="${name}"]`);
           const checked = Array.from(group).some(input => input.checked);
-          
-          if (!checked) allFilled = false;
+          if (!checked) allValid = false;
         } else {
-          // For text inputs, emails, etc.
-          if (!field.value.trim()) allFilled = false;
+          // Use enhanced validation for text and email fields
+          if (!validateField(field)) {
+            allValid = false;
+          }
         }
       });
       
       // Enable/disable next button based on validation
-      nextButton.disabled = !allFilled;
+      nextButton.disabled = !allValid;
     };
     
     // Check fields initially
     checkFields();
     
-    // Add event listeners to all required fields
+    // Add event listeners with debouncing for better UX
     requiredFields.forEach(field => {
-      // Remove existing listeners to avoid duplicates
-      field.removeEventListener('input', checkFields);
-      field.removeEventListener('change', checkFields);
+      let timeoutId;
+      
+      const debouncedValidation = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(checkFields, 300); // 300ms delay
+      };
+      
+      const immediateValidation = () => {
+        clearTimeout(timeoutId);
+        checkFields();
+      };
+      
+      // Remove existing listeners
+      field.removeEventListener('input', debouncedValidation);
+      field.removeEventListener('blur', immediateValidation);
+      field.removeEventListener('change', immediateValidation);
       
       // Add appropriate listeners based on field type
       if (field.type === 'checkbox' || field.type === 'radio') {
-        field.addEventListener('change', checkFields);
+        field.addEventListener('change', immediateValidation);
       } else {
-        field.addEventListener('input', checkFields);
+        // For text/email: debounced on input, immediate on blur
+        field.addEventListener('input', debouncedValidation);
+        field.addEventListener('blur', immediateValidation);
       }
     });
   };

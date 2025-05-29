@@ -842,7 +842,10 @@
             </div>
         </section>
 
-        <section id="background-p-3" class="section w-full h-screen flex pr-4 pl-4">
+        <section id="background-p-3" class="section w-full h-screen pr-4 pl-4 flex flex-col gap-10">
+            <div class="w-full h-36 flex justify-center">
+                &nbsp;
+            </div>
             <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
                     <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans">Project 03</div>
@@ -853,6 +856,18 @@
                     <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans">scroll horizontally to explore the project</p>
                     <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35">
                 </div>
+            </div>
+            <div class="self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4">
+                <div class="inline-flex justify-start items-center gap-2.5">
+                    <div class="w-10 h-10 relative bg-[#070b0d] rounded-lg flex justify-center items-center">
+                        <img class="w-full h-auto" src="/src/icons/AnDPerfBlock.png" alt="AnDPerformance logo" />
+                    </div>
+                    <div class="inline-flex flex-col justify-center items-start pt-[3px]">
+                        <div class="text-center justify-start text-[#262728] text-xs font-bold font-sans">Ahmed M.</div>
+                        <div class="text-center justify-start text-[#4C4F50] text-[10px] font-normal font-sans leading-4">Owner, A&D Performance</div>
+                    </div>
+                </div>
+                <p class="self-stretch text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-[1.3rem]">“Finally, a designer who thinks like a business owner. He understood our fast pace and delivered designs that actually moved the needle on sales.”</p>
             </div>
         </section>
 
@@ -1714,8 +1729,8 @@
         <section id="services" class="section w-full h-auto flex pr-4 pl-4">
             <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8">
                 <div id="s-intro" class="inline-flex flex-col justify-center items-center gap-2">
-                    <h2 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">My services</h2>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Lorem ipsum dolor sit amet consectetur. Placerat sagittis elementum et tincidunt. Sit pellentesque neque eleifend quis sapien.</p>
+                    <h2 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">My Services</h2>
+                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Combining web design expertise with marketing strategy to create digital solutions that don't just look great—they deliver measurable results for your business.</p>
                 </div>
                 <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-10">
                     <div id="s1-webdesign" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
@@ -1823,7 +1838,6 @@
             <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8">
                 <div id="faq-intro" class="inline-flex flex-col justify-center items-center gap-2">
                     <h2 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display">FAQ</h2>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight">Lorem ipsum dolor sit amet consectetur. Placerat sagittis elementum et tincidunt. Sit pellentesque neque eleifend quis sapien.</p>
                 </div>
                 <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-4">
                     <div id="faq-divider-0" class="faq-divider w-full h-auto self-stretch inline-flex justify-center items-center">
@@ -2051,28 +2065,59 @@
                         
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
-                            <div>
+                            <div class="form-field">
                                 <label for="fullName" class="flex text-[1rem] font-medium text-gray-900 mb-2">Full Name:</label>
-                                <input 
-                                    type="text" 
-                                    name="fullName" 
-                                    id="fullName" 
-                                    required 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
-                                    placeholder="John Doe"
-                                >
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        name="fullName" 
+                                        id="fullName" 
+                                        required 
+                                        class="form-input w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        placeholder="John Doe"
+                                        autocomplete="name"
+                                    >
+                                    <!-- Validation icons -->
+                                    <div class="validation-icon hidden" id="fullName-success-icon">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-green-500">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="validation-icon hidden" id="fullName-error-icon">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="validation-message hidden" id="fullName-validation-message"></div>
                             </div>
 
-                            <div>
+                            <div class="form-field">
                                 <label for="email" class="flex text-[1rem] font-medium text-gray-900 mb-2">Enter your email:</label>
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    id="email" 
-                                    required 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
-                                    placeholder="example@email.com"
-                                >
+                                <div class="relative">
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        id="email" 
+                                        required 
+                                        class="form-input w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        placeholder="example@email.com"
+                                        autocomplete="email"
+                                    >
+                                    <!-- Validation icons -->
+                                    <div class="validation-icon hidden" id="email-success-icon">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-green-500">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="validation-icon hidden" id="email-error-icon">
+                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <!-- Validation message -->
+                                <div class="validation-message hidden" id="email-validation-message"></div>
                             </div>
                         </div>
                         
@@ -2094,12 +2139,12 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[1.1rem]">Next: Contact Details</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Contact Details</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2183,7 +2228,7 @@
                                 <!-- Add more social media button -->
                                 <button 
                                     type="button"
-                                    class="add-social-button mt-3 flex items-center text-gray-600 font-medium"
+                                    class="add-social-button mt-3 flex items-center text-[#5c6cb9] font-medium"
                                 >
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="mr-2">
                                         <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2202,12 +2247,12 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[1.1rem]">Next: Your Business</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Your Business</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2278,7 +2323,7 @@
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2316,7 +2361,7 @@
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2330,12 +2375,12 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[1.1rem]">Next: Project Objectives</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Project Objectives</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2503,7 +2548,7 @@
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2517,12 +2562,12 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[1.1rem]">Next: Vision and Budget</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Vision and Budget</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2594,7 +2639,7 @@
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2688,12 +2733,12 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[1.1rem]">Review and Submit</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Review and Submit</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2790,7 +2835,7 @@
                                         class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2804,11 +2849,11 @@
                     <!-- Submit button -->
                     <button 
                         type="submit" 
-                        class="w-full flex items-center justify-center space-x-2 py-4 px-6 bg-white border-2 border-black rounded-xl text-black font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        class="w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <span class="text-[1.1rem]">Submit Form</span>
+                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Submit Form</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -2850,7 +2895,7 @@
                 <div id="error-message" class="step hidden w-full max-w-xl p-4 pb-6 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
                     <div class="flex flex-col items-center">
                         <div class="inline-flex">
-                            <h3 class="text-xl font-medium text-red-800">There was an error submitting your inquiry</h3>
+                            <h3 class="text-xl font-medium text-red-800">Oopss...</h3>
                             <button type="button" class="close-button" aria-label="Close form">
                                 <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
@@ -2859,7 +2904,7 @@
                             
                         </div>
                         <div class="mt-2 text-lg text-red-700">
-                            <p>Please try again later or contact me directly via email at sergiu@bustiuc.digital</p>
+                            <p>There was an error submitting your inquiry. Please try again later or contact me directly via email at sergiu@bustiuc.digital</p>
                         </div>
                         <div class="w-full mt-4">
                             <button 

@@ -133,3 +133,84 @@
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Email validation states */
+.form-field {
+  position: relative;
+}
+
+.form-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input.invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-input.invalid:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.form-input.valid {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-input.valid:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Validation message styles */
+.validation-message {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.validation-message.error {
+  color: #ef4444;
+}
+
+.validation-message.success {
+  color: #10b981;
+}
+
+.validation-message.hidden {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.validation-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Icon styles */
+.validation-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.validation-icon.hidden {
+  opacity: 0;
+}
+
+.validation-icon.visible {
+  opacity: 1;
+}

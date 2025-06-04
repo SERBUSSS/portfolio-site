@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
     gsap.set(header, {
         position: 'fixed',
         width: '100%',
-        background: 'rgba(255, 255, 255, 0)', // Start transparent
+        background: 'rgba(16, 21, 47, 0)', // Start transparent
         backdropFilter: 'blur(0px)',
         transition: 'background 0.3s, backdrop-filter 0.3s'
     });
@@ -41,7 +41,7 @@ window.addEventListener('load', function() {
                     gsap.to(header, {
                         paddingTop: '16px',
                         paddingBottom: '16px',
-                        background: 'rgba(255, 255, 255, 0.9)',
+                        background: 'rgba(16, 21, 47, 0.95)',
                         backdropFilter: 'blur(10px)',
                         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
                         duration: 0.3
@@ -58,7 +58,7 @@ window.addEventListener('load', function() {
                     gsap.to(header, {
                         paddingTop: '24px', 
                         paddingBottom: '16px',
-                        background: 'rgba(255, 255, 255, 0.9)',
+                        background: 'rgba(16, 21, 47, 0.95)',
                         backdropFilter: 'blur(10px)',
                         duration: 0.3
                     });
@@ -75,7 +75,7 @@ window.addEventListener('load', function() {
                 gsap.to(header, {
                     paddingTop: '24px',
                     paddingBottom: '16px',
-                    background: 'rgba(255, 255, 255, 0)',
+                    background: 'rgba(16, 21, 47, 0)',
                     backdropFilter: 'blur(0px)',
                     boxShadow: 'none',
                     duration: 0.3

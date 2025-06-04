@@ -17,10 +17,10 @@ function SilkBackground() {
     }}>
       <Silk 
         speed={3}
-        scale={1.2}
-        color="#7B7481"
-        noiseIntensity={1.5}
-        rotation={0}
+        scale={1}
+        color="#22243f"
+        noiseIntensity={2.8}
+        rotation={2}
       />
     </div>
   )

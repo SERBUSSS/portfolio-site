@@ -90,10 +90,21 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Moderniz";
+    src: url('/src/fonts/Moderniz.woff2') format('woff2'),
+         url('/src/fonts/Moderniz.woff') format('woff'),
+         url('/src/fonts/Moderniz.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
 
 @theme {
     --font-sans: "Onest", sans-serif;
     --font-display: "Margarine", sans-serif;
+    --font-mono: "Moderniz", sans-serif;
 }
 
 /* Custom styles */

@@ -1874,3 +1874,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize the form
   initForm();
 });
+
+window.FormController = {
+  openForm,
+  closeForm,
+  currentStep,
+  // Add other methods you want React to access
+}

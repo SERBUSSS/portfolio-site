@@ -52,7 +52,7 @@
                     </nav>
                     
                     <!-- CTA Button -->
-                    <div class="w-48 px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] hover:bg-[#6f7ec5] hover:outline-[#3649a2] flex justify-center items-center gap-2 transition-colors">
+                    <div class="w-48 px-6 py-4 bg-[#5c6cb9] rounded-lg border-2 border-[#1b2551] hover:bg-[#6f7ec5] hover:outline-[#3649a2] flex justify-center items-center gap-2 transition-colors">
                         <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-lg font-bold font-sans leading-none">Start a project</button>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="w-full flex flex-col items-center justify-center gap-2">
-                            <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                            <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                                 <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-5">Complete Form</button>
                             </div>
                             <p class="self-stretch text-center justify-start text-[#828282] text-sm font-normal font-display leading-5">fill out the 5-min inquiry form!</p>
@@ -117,29 +117,32 @@
             </div>
         </header>
 
-        <section id="hero-section" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="w-full flex flex-col items-center justify-between py-12 lg:py-20">
-                <div class="w-full h-auto flex justify-center">
-                    
-                </div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
-                    <h1 class="self-stretch text-center justify-start text-black text-4xl leading-10 font-normal font-display md:text-5xl md:leading-14 lg:text-6xl lg:leading-16">Web Designer & Digital Marketing Strategist</h1>
-                    <h3 class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-tight md:text-2xl md:leading-8">Combining web design with marketing strategy to help businesses convert more visitors into paying customers.</h3>
-                </div>
-                <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
-                    <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
-                    <img src="/src/icons/down-arrow.svg" alt="arrow down" class="w-full h-8">
+        <section id="hero-section">
+            <div class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+                <div class="w-full flex flex-col items-center justify-between py-12 lg:py-20">
+                    <div class="w-full h-auto flex justify-center">
+                        
+                    </div>
+                    <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
+                        <h1 id="blur-reveal-title" class="self-stretch text-center justify-start text-black text-4xl leading-10 font-normal font-display md:text-5xl md:leading-14 lg:text-6xl lg:leading-16">Web Designer & Digital Marketing Strategist</h1>
+                        <h3 id="scroll-reveal-paragraph" class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-tight md:text-2xl md:leading-8">Combining web design with marketing strategy to help businesses convert more visitors into paying customers.</h3>
+                    </div>
+                    <div id="fade-reveal-element" class="w-full h-auto flex flex-col items-center justify-center gap-2">
+                        <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
+                        <img src="/src/icons/down-arrow.svg" alt="arrow down" class="w-full h-8">
+                    </div>
                 </div>
             </div>
+            <div id="background-effects"></div> <!-- React mount point -->
         </section>
         
         <section id="background-p-1" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 01</div>
-                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">From zero budget to live business in 30 days - proving that great design doesn't require deep pockets, just smart strategy.</h3>
+                    <div id="fade-reveal-element" class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 01</div>
+                    <h3 id="scroll-reveal-heading" class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">From zero budget to live business in 30 days - proving that great design doesn't require deep pockets, just smart strategy.</h3>
                 </div>
-                <div class="inline-flex w-full h-auto justify-center items-center gap-2">
+                <div id="fade-reveal-element" class="inline-flex w-full h-auto justify-center items-center gap-2">
                     <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                     <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
                     <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
@@ -478,10 +481,10 @@
         <section id="background-p-2" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 02</div>
-                    <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Building a supplement brand from market research to Meta ads - a masterclass in e-commerce complexity and pivoting under pressure.</h3>
+                    <div id="fade-reveal-element" class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 02</div>
+                    <h3 id="scroll-reveal-heading" class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Building a supplement brand from market research to Meta ads - a masterclass in e-commerce complexity and pivoting under pressure.</h3>
                 </div>
-                <div class="inline-flex w-full h-auto justify-center items-center gap-2">
+                <div id="fade-reveal-element" class="inline-flex w-full h-auto justify-center items-center gap-2">
                     <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                     <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
                     <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
@@ -875,16 +878,16 @@
                 </div>
                 <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
                     <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                        <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 03</div>
-                        <h3 class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Team collaboration at its finest - where tight deadlines meet conversion optimization in the competitive German supplement market.</h3>
+                        <div id="fade-reveal-element" class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 03</div>
+                        <h3 id="scroll-reveal-heading" class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Team collaboration at its finest - where tight deadlines meet conversion optimization in the competitive German supplement market.</h3>
                     </div>
-                    <div class="inline-flex w-full h-auto justify-center items-center gap-2">
+                    <div id="fade-reveal-element" class="inline-flex w-full h-auto justify-center items-center gap-2">
                         <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                         <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
                         <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                     </div>
                 </div>
-                <div class="self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4 ">
+                <div id="animate-reveal-element" class="self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4 ">
                     <div class="inline-flex justify-start items-center gap-2.5">
                         <div class="w-10 h-10 relative bg-[#070b0d] rounded-lg flex justify-center items-center">
                             <img class="w-full h-auto" src="/src/icons/AnDPerfBlock.png" alt="AnDPerformance logo" />
@@ -1247,10 +1250,10 @@
         <section id="background-p-4" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
                 <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 04</div>
-                    <div class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Redesigning the home essentials shopping experience - where comprehensive research meets user-centered design innovation.</div>
+                    <div id="fade-reveal-element" class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 04</div>
+                    <div id="scroll-reveal-heading" class="self-stretch text-center justify-start text-black text-2xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Redesigning the home essentials shopping experience - where comprehensive research meets user-centered design innovation.</div>
                 </div>
-                <div class="inline-flex w-full h-auto justify-center items-center gap-2">
+                <div id="fade-reveal-element" class="inline-flex w-full h-auto justify-center items-center gap-2">
                     <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
                     <p class="self-stretch text-center justify-start text-black text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
                     <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
@@ -1658,10 +1661,10 @@
             <div class="w-full flex flex-col items-center justify-between py-30 lg:py-20">
                 <div class="w-full h-auto flex justify-center"></div>
                 <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Design Process</h3>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-5.5 md:text-2xl md:leading-8">I believe great projects start with great communication. That's why I've developed a clear, collaborative process that keeps you informed and engaged every step of the way—from understanding your vision to delivering results that exceed expectations.</p>
+                    <h3 id="blur-reveal-title" class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Design Process</h3>
+                    <p id="scroll-reveal-paragraph" class="self-stretch text-center justify-start text-black text-lg font-normal font-sans leading-5.5 md:text-2xl md:leading-8">I believe great projects start with great communication. That's why I've developed a clear, collaborative process that keeps you informed and engaged every step of the way—from understanding your vision to delivering results that exceed expectations.</p>
                 </div>
-                <div class="w-full h-auto flex flex-col items-center justify-center gap-2">
+                <div id="fade-reveal-element" class="w-full h-auto flex flex-col items-center justify-center gap-2">
                     <p class="text-center justify-start text-black text-sm font-light font-sans leading-tight">scroll down</p>
                     <img src="/src/icons/down-arrow.svg" alt="arrow down" class="w-full h-8">
                 </div>
@@ -1757,8 +1760,8 @@
         <section id="services" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8 lg:py-20">
                 <div id="s-intro" class="inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Services</h3>
-                    <p class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight md:text-2xl md:leading-8">Combining web design expertise with marketing strategy to create digital solutions that don't just look great—they deliver measurable results for your business.</p>
+                    <h3 id="blur-reveal-title" class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Services</h3>
+                    <p id="scroll-reveal-paragraph" class="self-stretch text-center justify-start text-black text-lg font-light font-sans leading-tight md:text-2xl md:leading-8">Combining web design expertise with marketing strategy to create digital solutions that don't just look great—they deliver measurable results for your business.</p>
                 </div>
                 <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-10 md:flex-row md:justify-between md:items-center md:gap-4">
                     <div id="s1-webdesign" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
@@ -1784,7 +1787,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6">
                                 <p class="basis-1/2 justify-start text-[#828282] text-sm font-normal font-display leading-5">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                                     <button data-open-form="true" id="open-form-btn-3" type="button" class="form-open-btn text-[#fffdff] text-[1rem] font-bold font-sans leading-5">start a project</button>
                                 </div>
                             </div>
@@ -1817,7 +1820,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6">
                                 <p class="basis-1/2 justify-start text-[#828282] text-sm font-normal font-display leading-5">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                                     <button data-open-form="true" id="open-form-btn-4" type="button" class="form-open-btn text-[#fffdff] text-[1rem] font-bold font-sans leading-5">start a project</button>
                                 </div>
                             </div>
@@ -1849,7 +1852,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6">
                                 <p class="basis-1/2 justify-start text-[#828282] text-sm font-normal font-display leading-5">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                                <div class="basis-1/2 h-auto px-5 py-3.5 bg-[#5c6cb9] rounded-md border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                                     <button data-open-form="true" id="open-form-btn-5" type="button" class="form-open-btn text-[#fffdff] text-[1rem] font-bold font-sans leading-5">start a project</button>
                                 </div>
                             </div>
@@ -1865,7 +1868,7 @@
         <section id="FAQ" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8 lg:py-20">
                 <div id="faq-intro" class="inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">FAQ</h3>
+                    <h3 id="blur-reveal-title" class="self-stretch text-center justify-start text-black text-4xl font-normal font-display md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">FAQ</h3>
                 </div>
                 <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-4">
                     <div id="faq-divider-0" class="faq-divider w-full h-auto self-stretch inline-flex justify-center items-center">
@@ -2013,7 +2016,7 @@
                                 </p>
                             </div>
                             <div class="w-full flex flex-col items-center justify-center gap-2 pb-6">
-                                <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                                <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                                     <button data-open-form="true" id="open-form-btn-6" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-5">Start a Project</button>
                                 </div>
                                 <p class="self-stretch text-center justify-start text-[#828282] text-sm font-normal font-display leading-5">fill out the 5-min inquiry form!</p>
@@ -2036,7 +2039,7 @@
                     </p>
                 </div>
                 <div class="w-full flex flex-col items-center justify-center gap-2 pb-6">
-                    <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg outline outline-2 outline-offset-[-2px] outline-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
+                    <div class="w-full h-auto px-6 py-4 bg-[#5c6cb9] rounded-lg border-2 border-[#1b2551] inline-flex justify-center items-center gap-2 hover::bg-[#6f7ec5] hover::outline-[#3649a2]">
                         <button data-open-form="true" id="open-form-btn-7" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-5">Complete Form</button>
                     </div>
                     <p class="self-stretch text-center justify-start text-[#828282] text-sm font-normal font-display leading-5">fill out the 5-min inquiry form!</p>
@@ -3006,6 +3009,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+        <!-- Load React bootstrap BEFORE your existing scripts -->
+        <script type="module" src="src/reactBootstrap.jsx"></script>
+
         <script type="module" src="src/cardScrollType1.js" defer></script>
         <script type="module" src="src/cardScrollType2.js" defer></script>
         <script type="module" src="src/headerAnimation.js" defer></script>

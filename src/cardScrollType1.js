@@ -108,6 +108,10 @@ class ProjectTooltipManager {
     }
 }
 
+const updateTooltip = (projectId, cardIndex) => {
+  window.ReactBridge?.emit('tooltip-update', { projectId, cardIndex })
+}
+
 // Animation for project sections with hybrid horizontal scroll
 window.addEventListener('load', function() {
     // Register ScrollTrigger plugin

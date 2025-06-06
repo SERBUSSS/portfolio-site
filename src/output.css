@@ -51,6 +51,8 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
     --leading-tight: 1.25;
     --leading-snug: 1.375;
     --leading-relaxed: 1.625;
@@ -248,8 +250,14 @@
   .top-\[80vh\] {
     top: 80vh;
   }
+  .right-0 {
+    right: calc(var(--spacing) * 0);
+  }
   .right-6 {
     right: calc(var(--spacing) * 6);
+  }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
   }
   .bottom-6 {
     bottom: calc(var(--spacing) * 6);
@@ -319,6 +327,12 @@
     @media (width >= 96rem) {
       max-width: 96rem !important;
     }
+  }
+  .m-4 {
+    margin: calc(var(--spacing) * 4);
+  }
+  .mx-4 {
+    margin-inline: calc(var(--spacing) * 4);
   }
   .my-5 {
     margin-block: calc(var(--spacing) * 5);
@@ -431,14 +445,8 @@
   .h-10 {
     height: calc(var(--spacing) * 10);
   }
-  .h-12 {
-    height: calc(var(--spacing) * 12);
-  }
   .h-14 {
     height: calc(var(--spacing) * 14);
-  }
-  .h-16 {
-    height: calc(var(--spacing) * 16);
   }
   .h-36 {
     height: calc(var(--spacing) * 36);
@@ -454,6 +462,9 @@
   }
   .h-full {
     height: 100%;
+  }
+  .h-min {
+    height: min-content;
   }
   .h-screen {
     height: 100vh;
@@ -529,9 +540,6 @@
   }
   .basis-1\/2 {
     flex-basis: calc(1/2 * 100%);
-  }
-  .basis-1\/3 {
-    flex-basis: calc(1/3 * 100%);
   }
   .border-collapse {
     border-collapse: collapse;
@@ -707,6 +715,9 @@
   .border-\[\#1b2551\] {
     border-color: #1b2551;
   }
+  .border-\[\#4c4f50\] {
+    border-color: #4c4f50;
+  }
   .border-black {
     border-color: var(--color-black);
   }
@@ -722,8 +733,20 @@
   .bg-\[\#5c6cb9\] {
     background-color: #5c6cb9;
   }
+  .bg-\[\#070B0D\] {
+    background-color: #070B0D;
+  }
   .bg-\[\#070b0d\] {
     background-color: #070b0d;
+  }
+  .bg-\[\#191a1b\] {
+    background-color: #191a1b;
+  }
+  .bg-\[\#262728\]\/70 {
+    background-color: color-mix(in oklab, #262728 70%, transparent);
+  }
+  .bg-\[\#262728\]\/90 {
+    background-color: color-mix(in oklab, #262728 90%, transparent);
   }
   .bg-\[\#E6EFF8\] {
     background-color: #E6EFF8;
@@ -842,9 +865,6 @@
   .pr-12 {
     padding-right: calc(var(--spacing) * 12);
   }
-  .pb-4 {
-    padding-bottom: calc(var(--spacing) * 4);
-  }
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
   }
@@ -862,6 +882,9 @@
   }
   .text-center {
     text-align: center;
+  }
+  .font-\[\'MODERNIZ\'\] {
+    font-family: 'MODERNIZ';
   }
   .font-\[\'Margarine\'\] {
     font-family: 'Margarine';
@@ -916,6 +939,9 @@
   .text-\[1\.2rem\] {
     font-size: 1.2rem;
   }
+  .text-\[1\.35rem\] {
+    font-size: 1.35rem;
+  }
   .text-\[1rem\] {
     font-size: 1rem;
   }
@@ -969,9 +995,17 @@
     --tw-leading: var(--leading-tight);
     line-height: var(--leading-tight);
   }
+  .font-black {
+    --tw-font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-black);
+  }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
+  }
+  .font-extrabold {
+    --tw-font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-extrabold);
   }
   .font-light {
     --tw-font-weight: var(--font-weight-light);
@@ -998,9 +1032,6 @@
   .text-\[\#070b0d\] {
     color: #070b0d;
   }
-  .text-\[\#000101\] {
-    color: #000101;
-  }
   .text-\[\#3649a2\] {
     color: #3649a2;
   }
@@ -1018,6 +1049,12 @@
   }
   .text-\[\#b5b5b5a4\] {
     color: #b5b5b5a4;
+  }
+  .text-\[\#c6c9cb\] {
+    color: #c6c9cb;
+  }
+  .text-\[\#d2d2d2\] {
+    color: #d2d2d2;
   }
   .text-\[\#fffdff\] {
     color: #fffdff;
@@ -1116,11 +1153,27 @@
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
   }
+  .outline-2 {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
+  }
+  .outline-offset-\[-0\.50px\] {
+    outline-offset: -0.50px;
+  }
   .outline-offset-\[-1px\] {
     outline-offset: -1px;
   }
+  .outline-offset-\[-2px\] {
+    outline-offset: -2px;
+  }
+  .outline-\[\#7f8385\] {
+    outline-color: #7f8385;
+  }
   .outline-\[\#dbdbdb\] {
     outline-color: #dbdbdb;
+  }
+  .outline-white {
+    outline-color: var(--color-white);
   }
   .blur {
     --tw-blur: blur(8px);
@@ -1174,6 +1227,9 @@
   .will-change-\[transform\,filter\,opacity\] {
     will-change: transform,filter,opacity;
   }
+  .\[s\:�\] {
+    s: �;
+  }
   .hover\:scale-105 {
     &:hover {
       @media (hover: hover) {
@@ -1205,10 +1261,10 @@
       }
     }
   }
-  .hover\:text-\[\#5c6cb9\] {
+  .hover\:text-\[\#6f7ec5\] {
     &:hover {
       @media (hover: hover) {
-        color: #5c6cb9;
+        color: #6f7ec5;
       }
     }
   }
@@ -1502,14 +1558,14 @@
       line-height: calc(var(--spacing) * 16);
     }
   }
-  .min-\[70rem\]\:flex {
-    @media (width >= 70rem) {
-      display: flex;
-    }
-  }
   .min-\[70rem\]\:hidden {
     @media (width >= 70rem) {
       display: none;
+    }
+  }
+  .min-\[70rem\]\:inline-flex {
+    @media (width >= 70rem) {
+      display: inline-flex;
     }
   }
   .min-\[70rem\]\:h-32 {
@@ -1707,6 +1763,42 @@
 }
 .validation-icon.visible {
   opacity: 1;
+}
+.shiny-border {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background-clip: padding-box;
+}
+.shiny-border-active::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  background: conic-gradient( from var(--angle, 225deg), transparent 0deg, transparent 270deg, #ffffff80 300deg, #ffffff 315deg, #ffffff80 330deg, transparent 360deg );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: wave-from-bottom-left 3s linear infinite;
+}
+@keyframes wave-from-bottom-left {
+  0% {
+    --angle: 225deg;
+  }
+  25% {
+    --angle: 315deg;
+  }
+  50% {
+    --angle: 45deg;
+  }
+  75% {
+    --angle: 135deg;
+  }
+  100% {
+    --angle: 225deg;
+  }
 }
 @property --tw-translate-x {
   syntax: "*";

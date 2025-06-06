@@ -225,3 +225,41 @@
 .validation-icon.visible {
   opacity: 1;
 }
+
+.shiny-border {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background-clip: padding-box;
+}
+
+.shiny-border-active::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--angle, 225deg),
+    transparent 0deg,
+    transparent 270deg,
+    #ffffff80 300deg,
+    #ffffff 315deg,
+    #ffffff80 330deg,
+    transparent 360deg
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: wave-from-bottom-left 3s linear infinite;
+}
+
+@keyframes wave-from-bottom-left {
+  0% { --angle: 225deg; }
+  25% { --angle: 315deg; }
+  50% { --angle: 45deg; }
+  75% { --angle: 135deg; }
+  100% { --angle: 225deg; }
+}
+

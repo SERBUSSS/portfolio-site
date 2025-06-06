@@ -7,13 +7,14 @@ window.addEventListener('load', function() {
     const header = document.getElementById('nav-bar');
     const headerContainer = document.getElementById('nav-bar-cont');
     const headerLogo = document.getElementById('head-logo');
+    const mobileBar = document.getElementById('mobile-bar');
     
     // Set initial state with an appropriate z-index
     gsap.set(header, {
         position: 'fixed',
         width: '100%',
-        background: 'rgba(16, 21, 47, 0)', // Start transparent
-        backdropFilter: 'blur(0px)',
+        backdropFilter: 'blur(6px)',
+        boxShadow: 'none',
         transition: 'background 0.3s, backdrop-filter 0.3s'
     });
     
@@ -39,11 +40,10 @@ window.addEventListener('load', function() {
                 if (scrollDirection === 'down' && headerVisible) {
                     // Scrolling down - minimize header
                     gsap.to(header, {
-                        paddingTop: '16px',
-                        paddingBottom: '16px',
-                        background: 'rgba(16, 21, 47, 0.95)',
-                        backdropFilter: 'blur(10px)',
-                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                        // paddingTop: '16px',
+                        // paddingBottom: '16px',
+                        backdropFilter: 'blur(6px)',
+                        boxShadow: 'none',
                         duration: 0.3
                     });
                     
@@ -56,10 +56,10 @@ window.addEventListener('load', function() {
                 } else if (scrollDirection === 'up' && !headerVisible) {
                     // Scrolling up - maximize header
                     gsap.to(header, {
-                        paddingTop: '24px', 
-                        paddingBottom: '16px',
-                        background: 'rgba(16, 21, 47, 0.95)',
-                        backdropFilter: 'blur(10px)',
+                        // paddingTop: '24px', 
+                        // paddingBottom: '16px',
+                        backdropFilter: 'blur(6px)',
+                        boxShadow: 'none',
                         duration: 0.3
                     });
                     
@@ -73,10 +73,9 @@ window.addEventListener('load', function() {
             } else {
                 // At the top of the page - fully transparent header
                 gsap.to(header, {
-                    paddingTop: '24px',
-                    paddingBottom: '16px',
-                    background: 'rgba(16, 21, 47, 0)',
-                    backdropFilter: 'blur(0px)',
+                    // paddingTop: '24px',
+                    // paddingBottom: '16px',
+                    backdropFilter: 'blur(6px)',
                     boxShadow: 'none',
                     duration: 0.3
                 });

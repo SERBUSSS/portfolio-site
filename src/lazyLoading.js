@@ -1,4 +1,8 @@
-// src/lazyLoading.js
+// Add this as the FIRST line in src/lazyLoading.js
+console.log('🔥 LAZY LOADING SCRIPT LOADED - Production Debug');
+console.log('Environment:', window.location.hostname);
+
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Lazy loading script started'); // Debug log
     

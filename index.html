@@ -3056,7 +3056,33 @@
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
         <script type="module" src="src/formController.js" defer></script>
+
+        <script type="module">
+            console.log('🔧 Module loading test - before lazyLoading');
+        </script>
+
         <script type="module" src="src/lazyLoading.js" defer></script>
+
+        <script type="module">
+            console.log('🔧 Module loading test - before lazyLoading');
+        </script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Checking lazy images on page load:');
+            const lazyImages = document.querySelectorAll('img[data-src]');
+            console.log('Found lazy images:', lazyImages.length);
+            
+            lazyImages.forEach((img, index) => {
+                console.log(`Image ${index}:`, {
+                    dataSrc: img.dataset.src,
+                    src: img.src,
+                    element: img
+                });
+            });
+        });
+        </script> 
+
         <!-- <script src="src/formFunctionality.js" defer></script> 
         <script src="src/formAnimation.js" defer></script>
         <script src="src/formValidation.js" defer></script>

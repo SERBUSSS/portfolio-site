@@ -156,28 +156,28 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #fffdff;
+  box-shadow: inset 0 0 0 2px rgba(192, 192, 190, 1);
 }
 
 .form-input.invalid {
   border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: inset 0 0 0 2px rgba(239, 68, 68, 0.1);
 }
 
 .form-input.invalid:focus {
   border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  box-shadow: inset 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 .form-input.valid {
   border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.1);
 }
 
 .form-input.valid:focus {
   border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
 /* Validation message styles */

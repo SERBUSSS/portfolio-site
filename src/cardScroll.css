@@ -59,7 +59,7 @@ body {
 /* Add smooth transitions for better UX */
 .item {
     position: absolute;
-    filter: drop-shadow(0px 8px 24px rgba(149, 157, 165, 0.2));
+    filter: drop-shadow(0px 6px 5px rgba(149, 157, 165, 0.2));
     overflow: hidden;
     will-change: transform, opacity;
     transition: box-shadow 0.3s ease;

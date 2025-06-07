@@ -1370,8 +1370,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Updated HTML with better flex control for the input field
     newField.innerHTML = `
       <div class="flex rounded-xl border border-gray-300 overflow-hidden">
-        <div class="bg-gray-100 flex items-center px-4 py-3 border-r border-gray-300">
-          <select name="social-media-type-${index}" class="bg-gray-100 border-none focus:ring-0 social-media-type">
+        <div class="bg-[#333435] rounded-lg inline-flex items-center px-4 py-3 outline-2 outline-offset-[-2px] outline-[#4c4f50]">
+          <select name="social-media-type-${index}" class="border-none focus:ring-0 social-media-type">
             <option value="instagram">Instagram</option>
             <option value="facebook">Facebook</option>
             <option value="twitter">Twitter</option>

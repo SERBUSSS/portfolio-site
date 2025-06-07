@@ -237,15 +237,29 @@ function navigateToCard(sectionId, direction, cards) {
     const scrollData = horizontalScrollData[sectionId];
     if (!state || !scrollData || state.isNavigating) return;
 
-    const targetIndex = direction === 'next' 
-        ? Math.min(state.currentCard + 1, cards.length - 1)
-        : Math.max(state.currentCard - 1, 0);
+    const progressPerCard = 0.9 / cards.length;
+    const currentProgress = scrollData.scrollX / scrollData.maxScroll;
     
-    if (targetIndex === state.currentCard) return;
+    let targetIndex;
+    
+    if (direction === 'next') {
+        // FIXED: Simple logic - if we're in preview (less than 50% of first card), go to card 0
+        // Otherwise, increment normally
+        if (currentProgress < (0.5 * progressPerCard)) {
+            targetIndex = 0;
+        } else {
+            // Calculate which card we should go to based on current progress
+            const currentCardFromProgress = Math.floor(currentProgress / progressPerCard);
+            targetIndex = Math.min(currentCardFromProgress + 1, cards.length - 1);
+        }
+    } else {
+        // For previous, always use progress-based calculation
+        const currentCardFromProgress = Math.floor(currentProgress / progressPerCard);
+        targetIndex = Math.max(currentCardFromProgress - 1, 0);
+    }
 
     state.isNavigating = true;
-    const progressPerCard = 0.9 / cards.length;
-    const targetProgress = (targetIndex + 0.15) * progressPerCard;
+    const targetProgress = (targetIndex + 0.6) * progressPerCard;
     
     gsap.to(scrollData, {
         scrollX: targetProgress * scrollData.maxScroll,
@@ -256,7 +270,9 @@ function navigateToCard(sectionId, direction, cards) {
             updateHorizontalAnimation(sectionId, progress, cards);
         },
         onComplete: () => {
-            state.currentCard = targetIndex;
+            // FIXED: Always sync currentCard with actual progress
+            const finalProgress = scrollData.scrollX / scrollData.maxScroll;
+            state.currentCard = Math.floor(finalProgress / progressPerCard);
             state.isNavigating = false;
             updateNavButtons(sectionId);
         }
@@ -267,6 +283,13 @@ function showAutoPreview(sectionId, cards) {
     const state = navigationStates[sectionId];
     const scrollData = horizontalScrollData[sectionId];
     if (!state || !scrollData || state.autoPreviewShown) return;
+
+    // FIXED: Only show preview if there's no existing scroll progress
+    if (scrollData.scrollX > 0) {
+        // There's already progress, don't show preview
+        state.autoPreviewShown = true; // Mark as shown to prevent future calls
+        return;
+    }
 
     state.autoPreviewShown = true;
     const progressPerCard = 0.9 / cards.length;
@@ -326,8 +349,6 @@ function hideNavigation(sectionId) {
             opacity: 0, 
             duration: 0.3,
             onComplete: () => {
-                state.autoPreviewShown = false;
-                state.currentCard = 0;
                 state.isNavigating = false;
             }
         });
@@ -339,7 +360,8 @@ function syncNavWithScroll(sectionId, progress, totalCards) {
     if (!state || state.isNavigating) return;
     
     const progressPerCard = 0.9 / totalCards;
-    const newCardIndex = Math.floor(progress / progressPerCard);
+    // FIXED: Use 0.6 threshold to match navigation logic
+    const newCardIndex = Math.floor((progress + 0.3 * progressPerCard) / progressPerCard);
     
     if (newCardIndex !== state.currentCard && newCardIndex >= 0 && newCardIndex < totalCards) {
         state.currentCard = newCardIndex;

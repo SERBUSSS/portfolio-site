@@ -1,5 +1,5 @@
 // Animation for process section with static background
-window.addEventListener('load', function() {
+window.addEventListener('siteLoaded', function() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     

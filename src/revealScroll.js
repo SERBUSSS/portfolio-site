@@ -1,5 +1,5 @@
 // Wait for window to fully load (including all resources)
-window.addEventListener('load', function() {
+window.addEventListener('siteLoaded', function() {
     // console.log("Window loaded - checking for GSAP");
     
     // Check if GSAP and ScrollTrigger are loaded

@@ -1,5 +1,5 @@
 // Header animation that responds to scroll
-window.addEventListener('load', function() {
+window.addEventListener('siteLoaded', function() {
     // Register ScrollTrigger plugin if not already registered
     gsap.registerPlugin(ScrollTrigger);
     

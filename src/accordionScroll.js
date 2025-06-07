@@ -1,4 +1,4 @@
-document.addEventListener('siteLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     // Check if GSAP and ScrollTrigger are loaded
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
         console.error('GSAP or ScrollTrigger not loaded');

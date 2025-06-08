@@ -375,3 +375,21 @@ body.loaded main,
 body.loaded section:not(#loading-screen) {
   opacity: 1;
 }
+
+
+/* Mobile input stability */
+@media (max-width: 768px) {
+  #step-1 {
+    transform: translate(-50%, -50%) !important;
+  }
+  
+  .form-input {
+    font-size: 16px !important; /* Prevents iOS zoom */
+    max-width: 100% !important;
+  }
+  
+  .form-input:-webkit-autofill {
+    -webkit-box-shadow: inset 0 0 0 1000px #4C4F50 !important;
+    -webkit-text-fill-color: #fffdff !important;
+  }
+}

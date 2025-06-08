@@ -814,18 +814,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   const checkEmailExists = async (email) => {
     try {
-      const { data, error } = await supabase
-        .from('form_submissions')
-        .select('email')
-        .eq('email', email.toLowerCase())
-        .limit(1);
+      const response = await fetch('/.netlify/functions/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.toLowerCase() })
+      });
       
-      if (error) {
-        console.error('Supabase error:', error);
+      if (!response.ok) {
+        console.error('Email check failed:', response.status);
         return false; // Allow submission on error
       }
       
-      return data && data.length > 0;
+      const data = await response.json();
+      return data.exists;
     } catch (error) {
       console.error('Email check error:', error);
       return false; // Allow submission on error
@@ -1091,6 +1092,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Final email validation check before submission
+    const emailField = document.getElementById('email');
+    const email = emailField?.value?.trim();
+    
+    if (email) {
+      try {
+        const emailExists = await checkEmailExists(email);
+        if (emailExists) {
+          // Show error and stop submission
+          const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+          if (errorMessageElement) {
+            errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
+          }
+          showErrorMessage();
+          return; // Stop submission
+        }
+      } catch (error) {
+        console.warn('Email validation failed, proceeding with submission:', error);
+        // Continue with submission even if email check fails
+      }
+    }
+    
     // Collect form data
     const formData = new FormData(form);
     
@@ -1169,6 +1192,8 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessageText += 'Server error. Please try again in a few minutes or contact me directly at sergiu@bustiuc.digital';
       } else if (error.message.includes('400')) {
         errorMessageText += 'Invalid form data. Please check your inputs and try again.';
+      } else if (error.message.includes('409')) {
+        errorMessageText = 'This email has already been used for an inquiry. Please use a different email address.';
       } else {
         errorMessageText += 'Please try again later or contact me directly at sergiu@bustiuc.digital';
       }
@@ -1911,26 +1936,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     input.dataset.scrolling = 'true';
     
-    const currentCard = steps[currentStep];
-    const inputRect = input.getBoundingClientRect();
-    const cardRect = currentCard.getBoundingClientRect();
-    
-    console.log(`📍 Card position: ${cardRect.top}, Input position: ${inputRect.top}`);
-    console.log(`📱 Viewport height: ${window.innerHeight}`);
-    
-    const targetPosition = window.innerHeight * 0.25;
-    
-    // For step-1, check if the card is already too high
-    if (currentStep === 1 && cardRect.top < 50) {
-      console.log('🔍 Step-1 card is already too high, not scrolling');
+    // CRITICAL FIX: Skip step-1 (index 0) entirely
+    if (currentStep === 0) {
+      console.log('🚫 Skipping scroll for step-1');
       input.dataset.scrolling = 'false';
       return;
     }
     
+    const currentCard = steps[currentStep];
+    const inputRect = input.getBoundingClientRect();
+    const targetPosition = window.innerHeight * 0.25;
+    
     if (inputRect.top > targetPosition) {
       const scrollAmount = Math.min(inputRect.top - targetPosition, window.innerHeight * 0.3);
-      
-      console.log(`📏 Scroll amount: ${scrollAmount}`);
       
       gsap.to(currentCard, {
         duration: 0.3,

@@ -462,6 +462,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Input fields validation
     setupInputValidation();
+
+    document.querySelectorAll('input[type="text"], input[type="email"], textarea, select').forEach(input => {
+      // Remove any existing listeners first
+      input.removeEventListener('focus', handleInputScroll);
+      
+      // Add the listener once
+      input.addEventListener('focus', () => {
+        setTimeout(() => handleInputScroll(input), 0);
+      });
+    });
   };
   
   // ---------------
@@ -470,6 +480,34 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Open the form with animation
   const openForm = () => {
+    const debugStep1Position = () => {
+      const step1 = document.getElementById('step-1');
+      console.log('🔍 DEBUGGING STEP-1 POSITION:');
+      console.log('📏 Element rect:', step1.getBoundingClientRect());
+      console.log('🎨 Computed styles:', window.getComputedStyle(step1).transform);
+      console.log('📐 Inline styles:', step1.style.transform);
+      console.log('📦 Offset details:', {
+        offsetTop: step1.offsetTop,
+        offsetLeft: step1.offsetLeft,
+        offsetParent: step1.offsetParent?.tagName
+      });
+      console.log('🏠 Parent container:', step1.parentElement.getBoundingClientRect());
+    };
+
+    // Check what's actually applied
+    const step1 = document.getElementById('step-1');
+    console.log('CSS transform:', step1.style.transform);
+    console.log('GSAP _gsap object:', step1._gsap);
+
+    const originalGsapSet = gsap.set;
+    gsap.set = function(target, vars) {
+      if (target === '#step-1' || (target && target.id === 'step-1')) {
+        console.log('🎯 GSAP.set called on step-1:', vars);
+        console.trace(); // This shows you exactly where it's called from
+      }
+      return originalGsapSet.apply(this, arguments);
+    };
+
     // Set state immediately
     formIsOpen = true;
     preventViewportResize = true; // Prevent resize interference
@@ -833,14 +871,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show next card and position it off-screen to the right
     nextCard.classList.remove('hidden');
     nextCard.style.display = 'block';
+
+    // Ensure next card starts from proper center position
+    gsap.set(nextCard, { 
+      x: '100vw', 
+      y: 0,  // Start at center Y
+      opacity: 0,
+      scale: 1,
+      rotation: 0
+    });
     
     // Make sure the next card is properly positioned
     nextCard.style.position = 'absolute';
     nextCard.style.left = '50%';
     nextCard.style.top = '50%';
-    nextCard.style.transform = 'translate(-50%, -50%)';
-    
-    gsap.set(nextCard, { x: '100vw', opacity: 0 });
+    // nextCard.style.transform = 'translate(-50%, -50%)'; // 
+
+    gsap.set(nextCard, { 
+      x: '100vw', 
+      y: 0,
+      xPercent: -50,  // Use GSAP's xPercent instead
+      yPercent: -50,  // Use GSAP's yPercent instead
+      opacity: 0 
+    });
+
+    console.log('🔧 After GSAP set:', nextCard.style.transform);
+    console.log('📐 Computed transform:', window.getComputedStyle(nextCard).transform);
     
     // Animation timeline
     const tl = gsap.timeline({
@@ -1369,30 +1425,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Updated HTML with better flex control for the input field
     newField.innerHTML = `
-      <div class="flex rounded-xl border border-gray-300 overflow-hidden">
-        <div class="bg-[#333435] rounded-lg inline-flex items-center px-4 py-3 outline-2 outline-offset-[-2px] outline-[#4c4f50]">
-          <select name="social-media-type-${index}" class="border-none focus:ring-0 social-media-type">
-            <option value="instagram">Instagram</option>
-            <option value="facebook">Facebook</option>
-            <option value="twitter">Twitter</option>
-            <option value="linkedin">LinkedIn</option>
-            <option value="website">Website</option>
+      <div class="flex rounded-xl border border-[#4c4f50] bg-[#333435] overflow-hidden">
+        <div class="self-stretch bg-[#4c4f50] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] inline-flex justify-start items-center px-2">
+          <select name="social-media-type-${index}" class="border-none focus:ring-0 bg-[#4c4f50] text-[#fffdff] social-media-type">
+            <option value="instagram" class="text-[#fffdff] bg-[#4c4f50]">Instagram</option>
+            <option value="facebook" class="text-[#fffdff] bg-[#4c4f50]">Facebook</option>
+            <option value="twitter" class="text-[#fffdff] bg-[#4c4f50]">Twitter</option>
+            <option value="linkedin" class="text-[#fffdff] bg-[#4c4f50]">LinkedIn</option>
+            <option value="website" class="text-[#fffdff] bg-[#4c4f50]">Website</option>
           </select>
         </div>
         <input 
           type="text" 
           name="social-media-profile-${index}"
-          class="flex-grow min-w-0 px-4 py-3 bg-white social-media-profile" 
+          class="form-input flex-grow min-w-0 px-4 py-3 social-media-profile rounded-l-none shadow-none! placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE]" 
           placeholder="e.g. @username"
-          style="min-width: 0; flex-shrink: 1;"
         >
         <button 
           type="button" 
-          class="delete-social-field bg-red-50 hover:bg-red-100 px-3 py-3 border-l border-gray-300 text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
+          class="delete-social-field bg-[#333435] hover:bg-[#4c4f50] px-3 py-3 text-red-600 hover:text-red-700 transition-colors flex-shrink-0 rounded-r-xl"
           title="Remove this social media field"
-          style="flex: 0 0 auto; width: 44px; display: flex; align-items: center; justify-content: center;"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
@@ -1420,14 +1474,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     input.addEventListener('focus', function() {
-      // Using standard setTimeout to ensure this happens after everything else
       setTimeout(() => {
         handleInputScroll(this);
       }, 0);
     });
 
     select.addEventListener('focus', function() {
-      // Using standard setTimeout to ensure this happens after everything else
       setTimeout(() => {
         handleInputScroll(this);
       }, 0);
@@ -1442,7 +1494,14 @@ document.addEventListener('DOMContentLoaded', () => {
           gsap.to(currentCard, {
             duration: 0.3,
             y: 0,
-            ease: 'power2.out'
+            ease: 'power2.out',
+            onComplete: () => {
+              // Ensure it maintains proper centering
+              currentCard.style.left = '50%';
+              currentCard.style.top = '50%';
+              currentCard.style.transform = 'translate(-50%, -50%)';
+              delete currentCard.dataset.scrollOffset;
+            }
           });
           
           // Clear the stored offset
@@ -1537,9 +1596,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update the label color to black
       const label = developmentCheckbox.parentNode.nextElementSibling;
       if (label) {
-        label.classList.remove('text-gray-400');
+        label.classList.remove('text-[#969696]');
         label.classList.remove('cursor-not-allowed');
-        label.classList.add('text-black');
+        label.classList.add('text-[#fffdff]');
         label.classList.add('cursor-pointer');
       }
     } else {
@@ -1552,9 +1611,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update the label color to gray
       const label = developmentCheckbox.parentNode.nextElementSibling;
       if (label) {
-        label.classList.add('text-gray-400');
+        label.classList.add('text-[#969696]');
         label.classList.add('cursor-not-allowed');
-        label.classList.remove('text-black');
+        label.classList.remove('text-[#fffdff]');
         label.classList.remove('cursor-pointer');
       }
       
@@ -1579,36 +1638,101 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function setupInputVisualStates() {
-    // For checkboxes
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-      checkbox.addEventListener('change', function() {
-        const icon = this.parentNode.querySelector('.checkbox-icon');
+    const webDesignCheckbox = document.querySelector('#webDesign');
+    const developmentCheckbox = document.querySelector('#development');
+    
+    // webDesign checkbox logic
+    webDesignCheckbox.addEventListener('change', function() {
+        const container = this.parentNode;
+        const selectedIcon = container.querySelector('.selected-checkbox');
+        const emptyIcon = container.querySelector('.empty-checkbox');
+        
         if (this.checked) {
-          icon.classList.remove('hidden');
+            selectedIcon.classList.remove('hidden');
+            emptyIcon.classList.add('hidden');
+            
+            // Enable development checkbox
+            developmentCheckbox.disabled = false;
+            const devContainer = developmentCheckbox.parentNode;
+            const devDisabledIcon = devContainer.querySelector('.disabled-checkbox');
+            const devEmptyIcon = devContainer.querySelector('.empty-checkbox');
+            
+            devDisabledIcon.classList.add('hidden');
+            devEmptyIcon.classList.remove('hidden');
         } else {
-          icon.classList.add('hidden');
+            selectedIcon.classList.add('hidden');
+            emptyIcon.classList.remove('hidden');
+            
+            // Disable development checkbox
+            developmentCheckbox.disabled = true;
+            developmentCheckbox.checked = false;
+            const devContainer = developmentCheckbox.parentNode;
+            const devSelectedIcon = devContainer.querySelector('.selected-checkbox');
+            const devEmptyIcon = devContainer.querySelector('.empty-checkbox');
+            const devDisabledIcon = devContainer.querySelector('.disabled-checkbox');
+            
+            devSelectedIcon.classList.add('hidden');
+            devEmptyIcon.classList.add('hidden');
+            devDisabledIcon.classList.remove('hidden');
         }
-      });
+    });
+    
+    // development checkbox logic
+    developmentCheckbox.addEventListener('change', function() {
+        if (!this.disabled) {
+            const container = this.parentNode;
+            const selectedIcon = container.querySelector('.selected-checkbox');
+            const emptyIcon = container.querySelector('.empty-checkbox');
+            
+            if (this.checked) {
+                selectedIcon.classList.remove('hidden');
+                emptyIcon.classList.add('hidden');
+            } else {
+                selectedIcon.classList.add('hidden');
+                emptyIcon.classList.remove('hidden');
+            }
+        }
+    });
+    
+    // Handle other checkboxes (brandStrategy, rebranding, other)
+    document.querySelectorAll('input[type="checkbox"]:not(#webDesign):not(#development)').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const container = this.parentNode;
+            const selectedIcon = container.querySelector('.selected-checkbox');
+            const emptyIcon = container.querySelector('.empty-checkbox');
+            
+            if (this.checked) {
+                selectedIcon.classList.remove('hidden');
+                emptyIcon.classList.add('hidden');
+            } else {
+                selectedIcon.classList.add('hidden');
+                emptyIcon.classList.remove('hidden');
+            }
+        });
     });
     
     // For radio buttons
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        const name = this.getAttribute('name');
-        const group = document.querySelectorAll(`input[name="${name}"]`);
-        
-        // Hide all dots in the group
-        group.forEach(item => {
-          const dot = item.parentNode.querySelector('.radio-selected');
-          if (dot) dot.classList.add('hidden');
+        radio.addEventListener('change', function() {
+            const name = this.getAttribute('name');
+            const group = document.querySelectorAll(`input[name="${name}"]`);
+            
+            // Reset all radios in group to empty
+            group.forEach(item => {
+                const emptyIcon = item.parentNode.querySelector('.empty-radio');
+                const selectedIcon = item.parentNode.querySelector('.selected-radio');
+                if (emptyIcon) emptyIcon.classList.remove('hidden');
+                if (selectedIcon) selectedIcon.classList.add('hidden');
+            });
+            
+            // Set selected radio
+            if (this.checked) {
+                const emptyIcon = this.parentNode.querySelector('.empty-radio');
+                const selectedIcon = this.parentNode.querySelector('.selected-radio');
+                if (emptyIcon) emptyIcon.classList.add('hidden');
+                if (selectedIcon) selectedIcon.classList.remove('hidden');
+            }
         });
-        
-        // Show the selected dot
-        if (this.checked) {
-          const dot = this.parentNode.querySelector('.radio-selected');
-          if (dot) dot.classList.remove('hidden');
-        }
-      });
     });
   };
   
@@ -1687,9 +1811,12 @@ document.addEventListener('DOMContentLoaded', () => {
           editingView.style.left = '50%';
           editingView.style.transform = 'translateX(-50%)';
           editingView.style.width = '90vw';
-          editingView.style.backgroundColor = 'white';
+          editingView.style.backgroundColor = '#4C4F50';
+          editingView.style.opacity = '0.95';
           editingView.style.padding = '1rem';
-          editingView.style.borderRadius = '0.75rem';
+          editingView.style.borderRadius = '0.25rem';
+          editingView.style.borderColor = "#777777";
+          editingView.style.borderWidth = '1px';
           editingView.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
           editingView.style.zIndex = '60';
           
@@ -1779,24 +1906,44 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Handle scrolling when input is focused (for non-mobile special state)
   const handleInputScroll = (input) => {
+    if (input.dataset.scrolling === 'true') return;
     if (!isMobile()) return;
+    
+    input.dataset.scrolling = 'true';
     
     const currentCard = steps[currentStep];
     const inputRect = input.getBoundingClientRect();
-    const targetPosition = window.innerHeight * 0.2; // Position input at 20% from top
+    const cardRect = currentCard.getBoundingClientRect();
+    
+    console.log(`📍 Card position: ${cardRect.top}, Input position: ${inputRect.top}`);
+    console.log(`📱 Viewport height: ${window.innerHeight}`);
+    
+    const targetPosition = window.innerHeight * 0.25;
+    
+    // For step-1, check if the card is already too high
+    if (currentStep === 1 && cardRect.top < 50) {
+      console.log('🔍 Step-1 card is already too high, not scrolling');
+      input.dataset.scrolling = 'false';
+      return;
+    }
     
     if (inputRect.top > targetPosition) {
-      const scrollAmount = inputRect.top - targetPosition;
+      const scrollAmount = Math.min(inputRect.top - targetPosition, window.innerHeight * 0.3);
       
-      // For all inputs, just scroll the current step card
+      console.log(`📏 Scroll amount: ${scrollAmount}`);
+      
       gsap.to(currentCard, {
         duration: 0.3,
         y: -scrollAmount,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        onComplete: () => {
+          input.dataset.scrolling = 'false';
+        }
       });
       
-      // Store the scroll amount to reset later
       currentCard.dataset.scrollOffset = scrollAmount;
+    } else {
+      input.dataset.scrolling = 'false';
     }
   };
 
@@ -1813,7 +1960,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.to(currentCard, {
           duration: 0.3,
           y: 0,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onComplete: () => {
+            // Ensure it maintains proper centering
+            currentCard.style.left = '50%';
+            currentCard.style.top = '50%';
+            currentCard.style.transform = 'translate(-50%, -50%)';
+            delete currentCard.dataset.scrollOffset;
+          }
         });
         
         // Clear the stored offset

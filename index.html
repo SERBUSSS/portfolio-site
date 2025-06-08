@@ -2382,7 +2382,7 @@
                                         name="fullName" 
                                         id="fullName" 
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="John Doe"
                                         autocomplete="name"
                                     >
@@ -2409,7 +2409,7 @@
                                         name="email" 
                                         id="email" 
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="example@email.com"
                                         autocomplete="email"
                                     >
@@ -2498,12 +2498,12 @@
                                 </linearGradient>
                                 </defs>
                             </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
                                 <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
                                 </linearGradient>
                                 </defs>
                             </svg>
@@ -2536,7 +2536,7 @@
                                     name="businessName" 
                                     id="businessName" 
                                     required 
-                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6]" 
+                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                     placeholder="Your Business Name"
                                 >
                             </div>
@@ -2547,7 +2547,7 @@
                                 <div class="social-media-fields">
                                     <!-- Initial social media field -->
                                     <div class="social-media-field">
-                                        <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+                                        <div class="flex rounded-xl border border-[#4c4f50] bg-[#333435] overflow-hidden">
                                             <div class="self-stretch bg-[#4c4f50] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] inline-flex justify-start items-center px-2">
                                                 <select name="social-media-type-0" class="border-none focus:ring-0 bg-[#4c4f50] text-[#fffdff]">
                                                     <option value="instagram" selected class="text-[#fffdff]">Instagram</option>
@@ -2561,7 +2561,7 @@
                                                 type="text" 
                                                 name="social-media-profile-0"
                                                 required 
-                                                class="flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans" 
+                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE]" 
                                                 placeholder="e.g. @username"
                                             >
                                         </div>
@@ -2602,45 +2602,79 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                    <div class="w-full flex items-center justify-between mb-4 ">
+                        <!-- Back button (invisible on first step) -->
+                        <button type="button" class="prev-button invisible" aria-label="Previous step">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2 items-center">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
-                            <div class="h-1 w-12 bg-black rounded"></div>
-                            <div class="h-1 w-12 bg-black rounded"></div>
+                        <div class="flex items-center justify-between gap-1">
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FFFDFF"/>
+                                <stop offset="1" stop-color="#E5E6E7"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                     </div>
                     
                     <div id="card-content">
-                        <!-- Step title -->
-                        <h2 class="text-3xl font-medium font-display mb-3 text-center">About Your Business</h2>
-                        
-                        <p class="text-gray-800 leading-5 mb-5">
-                            In this step, we focus on understanding the nature and context of your business.
-                        </p>
+                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
+                            <!-- Step title and description -->
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">About Your Business</h2>
+                            
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                In this step, we focus on understanding the nature and context of your business.
+                            </p>
+                        </div>
                         
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
                             <!-- Business description field -->
                             <div class="question-container">
-                                <label for="businessDescription" class="flex text-[1rem] font-medium text-gray-900 mb-2">
+                                <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
                                     Describe your business: What products or services do you offer?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -2652,22 +2686,25 @@
                                     <textarea 
                                         name="businessDescription" 
                                         id="businessDescription" 
-                                        rows="4"
+                                        rows="3"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
+                                    <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-4">
+                                        Describe your business: What products or services do you offer?
+                                    </label>
                                     <textarea 
                                         name="businessDescription-editing" 
                                         id="businessDescription-editing" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2678,7 +2715,7 @@
                             
                             <!-- Business challenges field -->
                             <div class="question-container">
-                                <label for="businessChallenges" class="flex text-[1rem] font-medium text-gray-900 mb-2">
+                                <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
                                     What are the main challenges of your business? What aspects do you want to improve?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -2690,22 +2727,25 @@
                                     <textarea 
                                         name="businessChallenges" 
                                         id="businessChallenges" 
-                                        rows="4"
+                                        rows="3"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
+                                    <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-4">
+                                        What are the main challenges of your business? What aspects do you want to improve?
+                                    </label>
                                     <textarea 
                                         name="businessChallenges-editing" 
                                         id="businessChallenges-editing" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2719,10 +2759,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Project Objectives</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Project Objectives</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -2730,53 +2770,87 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                    <div class="w-full flex items-center justify-between mb-4 ">
+                        <!-- Back button (invisible on first step) -->
+                        <button type="button" class="prev-button invisible" aria-label="Previous step">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2 items-center">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
-                            <div class="h-1 w-12 bg-black rounded"></div>
+                        <div class="flex items-center justify-between gap-1">
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FFFDFF"/>
+                                <stop offset="1" stop-color="#E5E6E7"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                     </div>
                     
                     <div id="card-content">
-                        <!-- Step title -->
-                        <h2 class="text-3xl font-medium font-display mb-3 text-center">Project Objectives</h2>
-                        
-                        <p class="text-gray-800 leading-5 mb-5">
-                            Here you choose which services you are interested in and clarify your objectives.
-                        </p>
+                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
+                            <!-- Step title and description -->
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Project Objectives</h2>
+                            
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                Here you choose which services you are interested in and clarify your objectives.
+                            </p>
+                        </div>
                         
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
                             <!-- Services selection -->
                             <div>
-                                <label class="flex text-[1rem] font-medium text-gray-900">Desired Services:</label>
-                                <p class="text-gray-500 mb-3 text-sm">Select one or more options:</p>
+                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Desired Services:</label>
+                                <p class="text-[#969696] mb-3 text-sm">Select one or more options:</p>
                                 
                                 <div class="space-y-4">
                                     <!-- Web Design & Development group -->
                                     <div class="inline-flex gap-4">
                                         <!-- Web Design checkbox -->
                                         <div class="flex items-center">
-                                            <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
                                                 <input 
                                                     type="checkbox" 
                                                     id="webDesign" 
@@ -2784,16 +2858,20 @@
                                                     value="webDesign" 
                                                     class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                                 >
-                                                <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
+                                                </svg>
+
+                                                <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                                 </svg>
                                             </div>
-                                            <label for="webDesign" class="text-[1.2rem] font-medium cursor-pointer">Web Design</label>
+                                            <label for="webDesign" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Web Design</label>
                                         </div>
 
                                         <!-- Development checkbox (initially disabled) -->
                                         <div class="flex items-center">
-                                            <div class="w-6 h-6 mr-2.5 border-2 border-gray-300 relative flex items-center justify-center checkbox-container">
+                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
                                                 <input 
                                                     type="checkbox" 
                                                     id="development" 
@@ -2802,17 +2880,25 @@
                                                     class="opacity-0 absolute cursor-not-allowed w-full h-full z-10"
                                                     disabled
                                                 >
-                                                <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
+                                                </svg>
+
+                                                <svg class="hidden empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
+                                                </svg>
+
+                                                <svg class="disabled-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM11.6667 18.3333H28.3333V21.6667H11.6667V18.3333Z" fill="#969696"/>
                                                 </svg>
                                             </div>
-                                            <label for="development" class="text-[1.2rem] font-medium text-gray-400 cursor-not-allowed">Development</label>
+                                            <label for="development" class="text-[1.1rem]  font-bold font-sans text-[#969696] cursor-not-allowed pt-[2px]">Development</label>
                                         </div>
                                     </div>
 
                                     <!-- Brand Strategy checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="brandStrategy" 
@@ -2820,16 +2906,20 @@
                                                 value="brandStrategy" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="brandStrategy" class="text-[1.2rem] font-medium cursor-pointer">Brand Strategy</label>
+                                        <label for="brandStrategy" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Brand Strategy</label>
                                     </div>
                                     
                                     <!-- Rebranding checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="rebranding" 
@@ -2837,16 +2927,20 @@
                                                 value="rebranding" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="rebranding" class="text-[1.2rem] font-medium cursor-pointer">Rebranding</label>
+                                        <label for="rebranding" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Rebranding</label>
                                     </div>
                                     
                                     <!-- Other checkbox -->
                                     <div class="flex items-center mb-2">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
                                             <input 
                                                 type="checkbox" 
                                                 id="other" 
@@ -2854,18 +2948,22 @@
                                                 value="other" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <svg class="hidden checkbox-icon w-4 h-4" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="other" class="text-[1.2rem] font-medium cursor-pointer">Other <span class="text-gray-500 font-normal">(specify below)</span></label>
+                                        <label for="other" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Other <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Project objectives -->
                             <div class="question-container">
-                                <label for="projectObjectives" class="flex text-[1rem] font-medium text-gray-900 mb-2">
+                                <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
                                     What objectives do you want to achieve with this project?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -2877,22 +2975,25 @@
                                     <textarea 
                                         name="projectObjectives" 
                                         id="projectObjectives" 
-                                        rows="4"
+                                        rows="3"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
+                                    <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                        What objectives do you want to achieve with this project?
+                                    </label>
                                     <textarea 
                                         name="projectObjectives-editing" 
                                         id="projectObjectives-editing" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2906,10 +3007,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Next: Vision and Budget</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Vision and Budget</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -2917,46 +3018,83 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                    <div class="w-full flex items-center justify-between mb-4 ">
+                        <!-- Back button (invisible on first step) -->
+                        <button type="button" class="prev-button invisible" aria-label="Previous step">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                         
                         <!-- Progress indicators -->
-                        <div class="flex space-x-2 items-center">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateOpen.svg" alt="Step Completed icon">
+                        <div class="flex items-center justify-between gap-1">
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FFFDFF"/>
+                                <stop offset="1" stop-color="#E5E6E7"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                     </div>
                     
                     <div id="card-content">
-                        <!-- Step title -->
-                        <h2 class="text-3xl font-medium font-display mb-2 text-center">Vision and Budget</h2>
-                        <p class="text-gray-800 text-[1.1rem] mb-3 text-center">Last step!</p>
-                        
-                        <p class="text-gray-800 leading-5 mb-5">
-                            The last step focuses on your vision for the project and the details of the collaboration.
-                        </p>
+                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
+                            <!-- Step title and description -->
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Vision and Budget</h2>
+
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                Last step!
+                            </p>
+                            
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                The last step focuses on your vision for the project and the details of the collaboration.
+                            </p>
+                        </div>
                         
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
                             <!-- Vision textarea -->
                             <div class="question-container">
-                                <label for="projectVision" class="flex text-[1rem] font-medium text-gray-900 mb-2">
+                                <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
                                     What is your vision for the new website/branding?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -2968,22 +3106,25 @@
                                     <textarea 
                                         name="projectVision" 
                                         id="projectVision" 
-                                        rows="4"
+                                        rows="3"
                                         required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
+                                    <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                        What is your vision for the new website/branding?
+                                    </label>
                                     <textarea 
                                         name="projectVision-editing" 
                                         id="projectVision-editing" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -2994,13 +3135,13 @@
                             
                             <!-- Budget selection -->
                             <div>
-                                <label class="flex text-[1rem] font-medium text-gray-900">Project investment:</label>
-                                <p class="text-gray-500 mb-3 text-sm">Select one:</p>
+                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Project investment:</label>
+                                <p class="text-[#969696] mb-3 text-sm">Select one:</p>
                                 
                                 <div class="space-y-4">
                                     <!-- $100 - $500 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget1" 
@@ -3009,14 +3150,20 @@
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                                 required
                                             >
-                                            <div class="hidden radio-selected w-3 h-3 bg-black rounded-full"></div>
+                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
+                                            </svg>
                                         </div>
-                                        <label for="budget1" class="text-xl font-medium cursor-pointer">$100 - $500</label>
+                                        <label for="budget1" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$100 - $500</label>
                                     </div>
                                     
                                     <!-- $501 - $1000 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget2" 
@@ -3024,14 +3171,20 @@
                                                 value="501-1000" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <div class="hidden radio-selected w-3 h-3 bg-black rounded-full"></div>
+                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
+                                            </svg>
                                         </div>
-                                        <label for="budget2" class="text-xl font-medium cursor-pointer">$501 - $1000</label>
+                                        <label for="budget2" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$501 - $1000</label>
                                     </div>
                                     
                                     <!-- $1001 - $5000+ radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budget3" 
@@ -3039,14 +3192,20 @@
                                                 value="1001-5000+" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <div class="hidden radio-selected w-3 h-3 bg-black rounded-full"></div>
+                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
+                                            </svg>
                                         </div>
-                                        <label for="budget3" class="text-xl font-medium cursor-pointer">$1001 - $5000+</label>
+                                        <label for="budget3" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$1001 - $5000+</label>
                                     </div>
                                     
                                     <!-- Custom radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 mr-2.5 border-2 border-black rounded-full relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
                                             <input 
                                                 type="radio" 
                                                 id="budgetCustom" 
@@ -3054,9 +3213,15 @@
                                                 value="custom" 
                                                 class="opacity-0 absolute cursor-pointer w-full h-full z-10"
                                             >
-                                            <div class="hidden radio-selected w-3 h-3 bg-black rounded-full"></div>
+                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
+                                            </svg>
+
+                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
+                                            </svg>
                                         </div>
-                                        <label for="budgetCustom" class="text-xl font-medium cursor-pointer">Custom <span class="text-gray-500 font-normal">(specify below)</span></label>
+                                        <label for="budgetCustom" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Custom <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
                                     </div>
                                     
                                     <!-- Custom amount input (hidden by default) -->
@@ -3065,7 +3230,7 @@
                                             type="text" 
                                             id="customBudget" 
                                             name="customBudget" 
-                                            class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                            class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                             placeholder="$200 - $750"
                                         >
                                     </div>
@@ -3077,10 +3242,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Review and Submit</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Review and Submit</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -3088,54 +3253,90 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white hidden shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <!-- Progress navigation -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                    <div class="w-full flex items-center justify-between mb-4 ">
+                        <!-- Back button (invisible on first step) -->
+                        <button type="button" class="prev-button invisible" aria-label="Previous step">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                         
-                        <!-- Progress indicators on final step -->
-                        <div class="flex space-x-2 items-center">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
-                            <img src="/src/icons/PBStateCompleted.svg" alt="Step Completed icon">
+                        <!-- Progress indicators -->
+                        <div class="flex items-center justify-between gap-1">
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4AB656"/>
+                                <stop offset="1" stop-color="#2F943A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                         
                         <!-- Close button -->
                         <button type="button" class="close-button" aria-label="Close form">
-                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                     </div>
 
                     <div id="card-content">
-                        <!-- Form completed title and description -->
-                        <h2 class="text-3xl font-medium font-display mb-2 text-center">Form Completed!</h2>
-                        <p class="text-gray-800 text-xl mb-3 text-center">Ready to be sent!</p>
-                        
-                        <p class="text-gray-800 leading-5 mb-5">
-                            Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
-                        </p>
+                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
+                            <!-- Step title and description -->
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Completed!</h2>
+
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                Ready to be sent!
+                            </p>
+                            
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                                Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
+                            </p>
+                        </div>
                         
                         <!-- Optional question section -->
                         <div class="mb-6">
-                            <p class="font-medium text-gray-900 leading-5 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-gray-600">(optional)</span></p>
+                            <p class="text-[#fffdff] text-base font-light font-sans leading-5 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-[#969696]">(optional)</span></p>
                             
                             <!-- Toggle question button - shown when question is hidden -->
                             <button 
                                 type="button" 
                                 id="show-question-button" 
-                                class="flex items-center text-gray-600 font-medium mb-4"
+                                class="flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
                             >
-                                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
+                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.28549 15.6517L6.67561 15.2203L7.33184 12.7713C6.34091 12.4063 5.43043 11.875 4.63422 11.2113L2.83978 13.0057L1.66127 11.8272L3.45571 10.0328C2.46309 8.84208 1.7667 7.39571 1.47974 5.80698L3.1198 5.50879C3.75233 9.01066 6.81601 11.6669 10.5001 11.6669C14.1842 11.6669 17.2479 9.01066 17.8804 5.50879L19.5205 5.80698C19.2335 7.39571 18.5371 8.84208 17.5445 10.0328L19.3389 11.8272L18.1604 13.0057L16.366 11.2113C15.5698 11.875 14.6593 12.4063 13.6683 12.7713L14.3246 15.2203L12.7148 15.6517L12.0583 13.2017C11.5518 13.2884 11.0313 13.3336 10.5001 13.3336C9.969 13.3336 9.44834 13.2884 8.942 13.2017L8.28549 15.6517Z" fill="#FFFDFF"/>
                                 </svg>
                                 Show question
                             </button>
@@ -3144,18 +3345,17 @@
                             <button 
                                 type="button" 
                                 id="hide-question-button" 
-                                class="hidden flex items-center text-gray-600 font-medium mb-4"
+                                class="hidden flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
                             >
-                                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5004 2.5C14.9938 2.5 18.7322 5.73313 19.5159 10C18.7322 14.2668 14.9938 17.5 10.5004 17.5C6.00693 17.5 2.26862 14.2668 1.48486 10C2.26862 5.73313 6.00693 2.5 10.5004 2.5ZM10.5004 15.8333C14.0301 15.8333 17.0504 13.3767 17.8149 10C17.0504 6.62336 14.0301 4.16667 10.5004 4.16667C6.97066 4.16667 3.95035 6.62336 3.18581 10C3.95035 13.3767 6.97066 15.8333 10.5004 15.8333ZM10.5004 13.75C8.42931 13.75 6.75038 12.0711 6.75038 10C6.75038 7.92893 8.42931 6.25 10.5004 6.25C12.5714 6.25 14.2504 7.92893 14.2504 10C14.2504 12.0711 12.5714 13.75 10.5004 13.75ZM10.5004 12.0833C11.651 12.0833 12.5837 11.1506 12.5837 10C12.5837 8.84942 11.651 7.91667 10.5004 7.91667C9.34983 7.91667 8.41705 8.84942 8.41705 10C8.41705 11.1506 9.34983 12.0833 10.5004 12.0833Z" fill="#FFFDFF"/>
                                 </svg>
                                 Hide question
                             </button>
                             
                             <!-- Optional question content - hidden initially -->
                             <div id="optional-question-container" class="hidden question-container">
-                                <label for="referralSource" class="flex text-[1rem] font-medium text-gray-900 mb-2">
+                                <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
                                     How did you hear about me? Why do you want to collaborate with me?
                                 </label>
                                 
@@ -3164,22 +3364,25 @@
                                     <textarea 
                                         name="referralSource" 
                                         id="referralSource" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
                                 </div>
                                 
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
+                                    <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                        How did you hear about me? Why do you want to collaborate with me?
+                                    </label>
                                     <textarea 
                                         name="referralSource-editing" 
                                         id="referralSource-editing" 
-                                        rows="4"
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50" 
+                                        rows="3"
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#5c6cb9] font-medium flex items-center justify-center w-full py-2">
+                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
                                         Mark as done 
                                         <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 6L9 17l-5-5"/>
@@ -3193,34 +3396,34 @@
                     <!-- Submit button -->
                     <button 
                         type="submit" 
-                        class="w-full flex items-center justify-center space-x-2 py-4 px-6 bg-[#5c6cb9] border-2 border-[#1b2551] rounded-lg hover::bg-[#6f7ec5] hover::outline-[#3649a2] focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <span class="text-[#fffdff] text-[1.1rem] font-bold font-sans leading-5">Submit Form</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Submit Form</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13.0001 22.0003L11.0002 22.0005V5.82859L7.05044 9.77829L5.63623 8.36409L12.0002 2.00009L18.3642 8.36409L16.9499 9.77829L13.0002 5.82849L13.0001 22.0003Z" fill="#FFFDFF"/>
                         </svg>
                     </button>
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div></div>
-                        <h2 class="text-3xl font-medium font-display text-center">Form Sent!</h2>
+                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Sent!</h2>
                         <button type="button" class="close-button">
-                            <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
                     </div>
                     
                     <div class="text-center mb-10">
-                        <p class="text-xl mb-4">Congrats, your form was sent successfully!</p>
-                        <p class="text-lg mb-6">I will review it and will get back to you as soon as possible. Thank you!</p>
+                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">Congrats, your form was sent successfully!</p>
+                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">I will review it and will get back to you as soon as possible. Thank you!</p>
                     </div>
                     
-                    <div class="text-center">
-                        <p class="text-lg mb-4">While you wait, check out my socials:</p>
+                    <div class="space-y-4">
+                        <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
                         <div class="flex justify-center items-center space-x-8">
                             <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
                                 <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
@@ -3236,25 +3439,25 @@
                 </div>
 
                 <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
+                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <div class="flex flex-col items-center">
-                        <div class="inline-flex">
-                            <h3 class="text-xl font-medium text-red-800">Oopss...</h3>
+                        <div class="inline-flex justify-between w-full mb-4">
+                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Oopss...</h3>
                             <button type="button" class="close-button" aria-label="Close form">
-                                <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                                <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
                                 </svg>
                             </button>
                             
                         </div>
-                        <div class="mt-2 text-lg text-red-700">
-                            <p>There was an error submitting your inquiry. Please try again later or contact me directly via email at sergiu@bustiuc.digital</p>
+                        <div class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p>There was an error submitting your inquiry. Please try again later or contact me directly via email at <a href="mailto:sergiu@bustiuc.digital" class="no-underline text-[#fffdff] text-base font-normal font-sans">sergiu@bustiuc.digital</a></p>
                         </div>
                         <div class="w-full mt-4">
                             <button 
                                 type="button" 
                                 id="try-again-button"
-                                class="w-full px-4 py-2 bg-white border border-black rounded-md text-[#FFFDFF] text-[1.1rem] font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-[#fffdff] text-base font-bold font-sans leading-6"
                             >
                                 Try Again
                             </button>
@@ -3263,56 +3466,89 @@
                 </div>
 
                 <!-- Existing email state -->
-                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded-xl bg-white shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)]">
-                <!-- Progress navigation -->
-                <div class="flex items-center justify-between mb-4">
-                    <button type="button" class="prev-button" aria-label="Previous step">
-                    <svg class="back-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M32 17.7551L8.09443 19.3061M15.5649 10C13.5898 12.1267 8.53183 16.1236 8.01143 19.5C7.76285 21.1128 11.6419 23.4837 12.5975 24.3685C14.4004 26.0378 16.4529 28.4864 18.9266 29" stroke="black" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
-                    </button>
-                    
-                    <div class="flex space-x-2 items-center">
-                    <div class="h-1 w-12 bg-black rounded"></div>
-                    <div class="h-1 w-12 bg-black rounded"></div>
-                    <div class="h-1 w-12 bg-black rounded"></div>
-                    <div class="h-1 w-12 bg-black rounded"></div>
+                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <!-- Progress navigation -->
+                    <div class="flex items-center justify-between mb-4">
+                        <button type="button" class="prev-button" aria-label="Previous step">
+                            <svg class="back-arrow" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Progress indicators -->
+                        <div class="flex items-center justify-between gap-1">
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#999C9D"/>
+                                <stop offset="1" stop-color="#66696A"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        
+                        <button type="button" class="close-button" aria-label="Close form">
+                            <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
+                            </svg>
+                        </button>
                     </div>
-                    
-                    <button type="button" class="close-button" aria-label="Close form">
-                    <svg class="close-x-btn" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 9L32 30.4762M28.7273 10.0476L8 31" stroke="black" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
-                    </button>
-                </div>
 
-                <div class="text-center">
-                    <h2 class="text-3xl font-medium font-display mb-6">Great!</h2>
-                    
-                    <div class="space-y-6 mb-8">
-                    <p class="text-lg leading-relaxed">It seems like you completed this already. If I haven't replied to you after 48h of you completing the enquiry form, please reach out on my socials mentioning your email.</p>
-                    
-                    <div class="space-y-4">
-                        <p class="text-xl font-medium">If we worked in the past...</p>
-                        <p class="text-lg leading-relaxed">...great to hear from you again. Please reach out through our last communication platform. Can't wait to hear from you!</p>
+                    <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
+                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Great!</h2>
+                        
+                        <div class="space-y-6 mb-8">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">It seems like you completed this already. If I haven't replied to you after 48h of you completing the enquiry form, please reach out on my socials mentioning your email.</p>
+                            
+                            <div class="space-y-4">
+                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">If we worked in the past...</p>
+                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">...great to hear from you again. Please reach out through our last communication platform. Can't wait to hear from you!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
+                            <div class="flex justify-center items-center space-x-8">
+                                <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
+                                    <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
+                                </a>
+                                <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
+                                    <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-12 h-auto">
+                                </a>
+                                <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
+                                    <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-12 h-auto">
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                    
-                    <div class="space-y-4">
-                    <p class="text-lg font-medium">You can reach out on:</p>
-                    <div class="flex justify-center items-center space-x-8">
-                        <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity">
-                        <img src="/src/icons/icons8-instagram.svg" alt="Instagram" class="w-12 h-auto">
-                        </a>
-                        <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity">
-                        <img src="/src/icons/icons8-twitter.svg" alt="Twitter" class="w-12 h-auto">
-                        </a>
-                        <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity">
-                        <img src="/src/icons/icons8-upwork.svg" alt="Upwork" class="w-12 h-auto">
-                        </a>
-                    </div>
-                    </div>
-                </div>
                 </div>
             </form>
         </div>

@@ -26,11 +26,23 @@ const finalPositions = [
   { x: '0px', y: '0px', rotation: 0, scale: 0.7 }, // For success message
   { x: '0px', y: '0px', rotation: 0, scale: 0.7 } // For error message
 ];
+
 const animDurations = {
   overlay: 0.3,
   cardSlide: 0.5,
   cardStack: 0.3,
   stagger: 0.1
+};
+
+const isDevelopment = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1' ||
+                     window.location.search.includes('dev=true'); // Add URL param bypass
+
+const checkDatabaseEnvironment = async () => {
+  console.log('🔍 Checking database environment...');
+  console.log('🌐 Current URL:', window.location.href);
+  console.log('🔑 Using Supabase URL:', globalSupabase?.supabaseUrl);
+  console.log('🔑 Using Supabase Key prefix:', globalSupabase?.supabaseKey?.substring(0, 20) + '...');
 };
 
 // DOM Elements (to be initialized in DOMContentLoaded)
@@ -54,18 +66,21 @@ const showIcon = (icon) => {
       icon.classList.add('visible');
     }
 };
+
 const hideIcon = (icon) => {
     if (icon) {
       icon.classList.remove('visible');
       icon.classList.add('hidden');
     }
 };
+
 const hideAllIcons = (fieldId) => {
     const successIcon = document.getElementById(`${fieldId}-success-icon`);
     const errorIcon = document.getElementById(`${fieldId}-error-icon`);
     hideIcon(successIcon);
     hideIcon(errorIcon);
 };
+
 const showMessage = (fieldId, message, type) => {
     const messageEl = document.getElementById(`${fieldId}-validation-message`);
     if (messageEl) {
@@ -74,6 +89,7 @@ const showMessage = (fieldId, message, type) => {
       messageEl.classList.add('visible', type);
     }
 };
+
 const hideMessage = (fieldId) => {
     const messageEl = document.getElementById(`${fieldId}-validation-message`);
     if (messageEl) {
@@ -89,9 +105,11 @@ const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 };
+
 const isValidName = (name) => {
     return name.trim().length >= 2;
-  };
+};
+
 const showFieldValidation = (fieldId, isValid, message = '') => {
     const field = document.getElementById(fieldId);
     const successIcon = document.getElementById(`${fieldId}-success-icon`);
@@ -128,6 +146,7 @@ const showFieldValidation = (fieldId, isValid, message = '') => {
       showMessage(fieldId, message, 'error');
     }
 };
+
 const validateField = (field) => {
     const fieldId = field.id;
     const value = field.value.trim();
@@ -165,6 +184,7 @@ const validateField = (field) => {
         return value !== '';
     }
 };
+
 const validateStep = (stepIndex) => {
     const step = steps[stepIndex];
     const nextButton = step.querySelector('.next-button');
@@ -265,6 +285,7 @@ const testSupabaseConnection = async () => {
     return { success: false, error: err };
   }
 };
+
 const testCheckEmailEndpoint = async (testEmail) => {
   console.log('🔍 Testing check-email endpoint with:', testEmail);
   
@@ -286,6 +307,7 @@ const testCheckEmailEndpoint = async (testEmail) => {
     return { success: false, error: err };
   }
 };
+
 const runEmailValidationDiagnostics = async () => {
   console.log('🚀 STARTING EMAIL VALIDATION DIAGNOSTICS');
   console.log('==========================================');
@@ -317,6 +339,7 @@ const runEmailValidationDiagnostics = async () => {
   console.log('==========================================');
   console.log('🏁 DIAGNOSTICS COMPLETE');
 };
+
 const verifyDatabase = async () => {
   console.log('🔍 VERIFYING DATABASE CONTENTS...');
   
@@ -369,9 +392,30 @@ const verifyDatabase = async () => {
     console.error('❌ Database verification failed:', err);
   }
 };
+
 const checkEmailExists = async (email) => {
   console.log('🔍 Checking email existence:', email);
   
+  // Development bypass - you can add ?dev=true to URL for testing
+  if (isDevelopment || window.location.search.includes('dev=true')) {
+    console.log('🔧 Development mode - simulating email check');
+    
+    // Simulate email checking for testing different scenarios
+    if (window.location.search.includes('test=existing')) {
+      console.log('🎭 Test mode: simulating existing email');
+      return true;  // Simulate existing email
+    }
+    
+    if (window.location.search.includes('test=error')) {
+      console.log('🎭 Test mode: simulating error');
+      throw new Error('Test error for debugging');
+    }
+    
+    console.log('🎭 Test mode: simulating new email (allowing progression)');
+    return false; // Allow form progression
+  }
+  
+  // Production email checking logic
   try {
     const response = await fetch('/.netlify/functions/check-email', {
       method: 'POST',
@@ -381,15 +425,13 @@ const checkEmailExists = async (email) => {
     
     console.log('📡 Response status:', response.status);
     
-    // Handle different response types
     if (!response.ok) {
       if (response.status === 429) {
         throw new Error('Too many requests. Please wait a moment and try again.');
       } else if (response.status === 404) {
-        console.log('🔧 Endpoint not found - likely in development mode');
-        return false; // Allow submission when endpoint not available
+        console.log('🔧 Endpoint not found');
+        return false;
       } else {
-        // Try to get error message from response
         try {
           const data = await response.json();
           throw new Error(data.message || `Email validation failed: ${response.status}`);
@@ -410,7 +452,7 @@ const checkEmailExists = async (email) => {
     
   } catch (error) {
     console.error('❌ Email check failed:', error);
-    throw error; // Fail secure - don't allow submission on errors
+    throw error;
   }
 };
 
@@ -440,11 +482,13 @@ const enforceStepVisibility = () => {
       }
     });
 };
+
 const handleScrollProtection = () => {
     if (formIsOpen && !isNavigating) {
       enforceStepVisibility();
     }
 };
+
 const debouncedScrollHandler = () => {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(handleScrollProtection, 50);
@@ -464,7 +508,8 @@ const showStep = (stepIndex) => {
         console.log(`Step ${index} hidden`);
       }
     });
-  };
+};
+
 const openForm = () => {
   const debugStep1Position = () => {
     const step1 = document.getElementById('step-1');
@@ -590,6 +635,7 @@ const openForm = () => {
   // Validate the first step
   validateStep(0);
 };
+
 const closeForm = () => {
   // Set state immediately
   formIsOpen = false;
@@ -714,6 +760,7 @@ const closeForm = () => {
     });
   }
 };
+
 const resetForm = () => {
   // Reset current step
   currentStep = 0;
@@ -790,6 +837,7 @@ const resetForm = () => {
   // Validate first step
   validateStep(0);
 };
+
 const goToNextStep = async () => {
   console.log('🚀 goToNextStep called, currentStep:', currentStep);
   
@@ -921,6 +969,7 @@ const goToNextStep = async () => {
   currentStep++;
   validateStep(currentStep);
 };
+
 const goToPrevStep = () => {
   console.log(`goToPrevStep called. Current step: ${currentStep}`);
   
@@ -1020,6 +1069,7 @@ const showSuccessMessage = () => {
       ease: 'back.out(1.2)'
     });
 };
+
 const showErrorMessage = () => {
     // Don't hide the current step, just add it to the stack
     const currentCard = steps[currentStep];
@@ -1063,6 +1113,7 @@ const showErrorMessage = () => {
       ease: 'power2.out'
     });
 };
+
 const hideErrorMessage = () => {
     // Hide error message
     errorMessage.classList.add('hidden');
@@ -1082,6 +1133,7 @@ const hideErrorMessage = () => {
       }
     });
 };
+
 const showErrorWithMessage = (message) => {
   console.log('🚨 Showing error with message:', message);
   
@@ -1099,6 +1151,7 @@ const showErrorWithMessage = (message) => {
   
   showErrorMessage();
 };
+
 const showExistingEmailMessage = () => {
     const currentCard = steps[currentStep];
     const existingEmailMessage = document.getElementById('existing-email-message');
@@ -1139,6 +1192,7 @@ const showExistingEmailMessage = () => {
       ease: 'back.out(1.2)'
     });
 };
+
 const goBackFromExistingEmail = () => {
     const existingEmailMessage = document.getElementById('existing-email-message');
     const firstStep = steps[0]; // Go back to the first step
@@ -1293,6 +1347,7 @@ const handleSubmit = async (e) => {
     console.log('🏁 FORM SUBMISSION COMPLETE');
   }
 };
+
 const disableFormEntry = () => {
     const formOpenButtons = document.querySelectorAll('.form-open-btn');
     const formEntrySection = document.getElementById('form-entry');
@@ -1316,6 +1371,7 @@ const disableFormEntry = () => {
       descriptionText.textContent = 'Thank you! Your inquiry has been submitted successfully.';
     }
 };
+
 const checkPreviousSubmission = () => {
     const wasSubmitted = localStorage.getItem('formSubmitted');
     
@@ -1451,6 +1507,7 @@ const addSocialMediaField = () => {
     // Revalidate
     validateStep(currentStep);
 };
+
 const updateSocialMediaIndexes = () => {
     const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
     
@@ -1462,12 +1519,14 @@ const updateSocialMediaIndexes = () => {
       if (input) input.name = `social-media-profile-${index}`;
     });
 };
+
 const hideMaxFieldsMessage = () => {
     const socialFields = socialMediaFields.querySelectorAll('.social-media-field');
     if (socialFields.length < 5) {
       maxSocialFieldsMessage.classList.add('hidden');
     }
 };
+
 const updatePlaceholder = (select, input) => {
     const type = select.value;
     
@@ -1477,6 +1536,7 @@ const updatePlaceholder = (select, input) => {
       input.placeholder = 'e.g. @username';
     }
 };
+
 const toggleCustomBudget = () => {
     if (budgetCustomRadio.checked) {
       customBudgetContainer.classList.remove('hidden');
@@ -1484,6 +1544,7 @@ const toggleCustomBudget = () => {
       customBudgetContainer.classList.add('hidden');
     }
 };
+
 const updateDevelopmentCheckbox = () => {
     if (webDesignCheckbox.checked) {
       // Enable development checkbox
@@ -1520,11 +1581,13 @@ const updateDevelopmentCheckbox = () => {
       developmentCheckbox.dispatchEvent(changeEvent);
     }
 };
+
 const showOptionalQuestion = () => {
     optionalQuestionContainer.classList.remove('hidden');
     showQuestionButton.classList.add('hidden');
     hideQuestionButton.classList.remove('hidden');
 };
+
 const hideOptionalQuestion = () => {
     optionalQuestionContainer.classList.add('hidden');
     showQuestionButton.classList.remove('hidden');
@@ -1573,6 +1636,7 @@ const setupResponsiveCards = () => {
       setTimeout(enforceStepVisibility, 50);
     }
 };
+
 const handleInputScroll = (input) => {
     if (input.dataset.scrolling === 'true') return;
     if (!isMobile()) return;
@@ -1616,6 +1680,7 @@ const handleInputScroll = (input) => {
       input.dataset.scrolling = 'false';
     }
 };
+
 const setupKeyboardDetection = () => {
     if (!isMobile()) return;
     
@@ -1791,6 +1856,7 @@ const setupEventListeners = () => {
       });
     });
 };
+
 const setupInputValidation = () => {
     // Add validation to all required fields
     const requiredFields = form.querySelectorAll('[required]');
@@ -1805,6 +1871,7 @@ const setupInputValidation = () => {
       });
     });
 };
+
 const setupInputVisualStates = () => {
     const webDesignCheckbox = document.querySelector('#webDesign');
     const developmentCheckbox = document.querySelector('#development');
@@ -1903,6 +1970,7 @@ const setupInputVisualStates = () => {
         });
     });
 }; // this was a function 
+
 const setupTextareaHandlers = () => {
     questionContainers.forEach(container => {
       const textarea = container.querySelector('textarea');
@@ -2025,6 +2093,7 @@ const setupTextareaHandlers = () => {
       });
     });
 };
+
 const setupSocialMediaTypeHandlers = () => {
     // Get all initial social media selects
     document.querySelectorAll('.social-media-type').forEach(select => {
@@ -2035,6 +2104,7 @@ const setupSocialMediaTypeHandlers = () => {
       });
     });
 };
+
 const setupInitialSocialMediaButtons = () => {
     // Setup delete buttons on any existing social media fields
     const initialSocialFields = socialMediaFields.querySelectorAll('.social-media-field');
@@ -2143,6 +2213,7 @@ const initForm = () => {
       }, 300);
     }
 };
+
 const testSuccessState = () => {
     // Go to the last step first
     currentStep = steps.length - 1;

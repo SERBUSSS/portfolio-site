@@ -44,13 +44,28 @@ const checkDatabaseEnvironment = async () => {
 const testCredentialsMatch = async () => {
   console.log('🔍 Testing database connection...');
   
+  if (!globalSupabase) {
+    console.log('❌ globalSupabase not initialized yet, skipping test');
+    return;
+  }
+  
   try {
-    // Test using secure function instead of direct table access
-    const result = await globalSupabase.rpc('check_email_exists', {
+    // Test using secure function
+    const { data, error } = await globalSupabase.rpc('check_email_exists', {
       input_email: 'test@example.com'
     });
     
-    console.log('✅ Database connection working:', result);
+    console.log('🔧 Full RPC response:');
+    console.log('- error:', error);
+    console.log('- data type:', typeof data);
+    console.log('- data value:', data);
+    console.log('- data.exists:', data?.exists);
+    
+    if (error) {
+      console.log('❌ Database test failed:', error);
+    } else {
+      console.log('✅ Database connection working');
+    }
   } catch (error) {
     console.log('❌ Database test failed:', error);
   }
@@ -294,19 +309,31 @@ const validateStep = (stepIndex) => {
 
 const checkEmailExists = async (email) => {
   try {
-    // Use the secure function instead of direct table access
+    console.log('🔍 Checking email:', email);
+    
     const { data, error } = await globalSupabase.rpc('check_email_exists', {
       input_email: email
     });
     
     if (error) {
-      console.error('Email check error:', error);
+      console.error('❌ Email check RPC error:', error);
       return { exists: false, error: error.message };
     }
     
-    return data;
+    console.log('📧 RPC response data:', data);
+    
+    // The RPC function returns a JSON object directly as 'data'
+    // data should be something like: { exists: false, checked_email: "...", timestamp: ... }
+    if (data && typeof data === 'object') {
+      console.log('✅ Email exists check result:', data.exists);
+      return { exists: data.exists };
+    } else {
+      console.error('❌ Unexpected RPC response format:', data);
+      return { exists: false, error: 'Invalid response format' };
+    }
+    
   } catch (error) {
-    console.error('Email check failed:', error);
+    console.error('❌ Email check failed:', error);
     return { exists: false, error: 'Network error' };
   }
 };

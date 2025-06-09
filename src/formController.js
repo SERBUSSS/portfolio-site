@@ -1198,7 +1198,13 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🏁 DIAGNOSTICS COMPLETE');
   };
 
-
+  // Make functions globally available for testing
+  window.debugEmailValidation = {
+    testSupabaseConnection,
+    testCheckEmailEndpoint,
+    debugCheckEmailExists,
+    runEmailValidationDiagnostics
+  };
   
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -2192,10 +2198,3 @@ window.FormController = {
   // Add other methods you want React to access
 }
 
-// Make functions globally available for testing
-window.debugEmailValidation = {
-  testSupabaseConnection,
-  testCheckEmailEndpoint,
-  debugCheckEmailExists,
-  runEmailValidationDiagnostics
-};

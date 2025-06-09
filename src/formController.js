@@ -739,15 +739,27 @@ const goToNextStep = async () => {
     nextButton.disabled = true;
     
     try {
-      const emailExists = await checkEmailExists(email);
+      const emailCheck = await checkEmailExists(email);
       
-      if (emailExists) {
+      // Check for errors first
+      if (emailCheck.error) {
+        console.error('❌ Email check error:', emailCheck.error);
+        nextButton.innerHTML = originalText;
+        nextButton.disabled = false;
+        showErrorWithMessage('Unable to verify email. Please try again.');
+        return;
+      }
+      
+      // Now check if email exists
+      if (emailCheck.exists === true) {
         console.log('🚫 Email exists - showing existing email message');
         nextButton.innerHTML = originalText;
         nextButton.disabled = false;
         showExistingEmailMessage();
         return;
       }
+      
+      console.log('✅ Email available - proceeding to next step');
       
     } catch (error) {
       console.error('❌ Email validation failed:', error);

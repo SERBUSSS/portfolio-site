@@ -46,31 +46,6 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Get client IP for rate limiting
-    const clientIP = event.headers['x-forwarded-for'] || 
-                    event.headers['x-real-ip'] || 
-                    '127.0.0.1';
-
-    // Check rate limit for submissions
-    const { data: rateLimitResult, error: rateLimitError } = await supabase
-      .rpc('check_rate_limit', {
-        client_ip: clientIP,
-        action_name: 'form_submit',
-        max_requests: 3, // 3 submissions per hour
-        window_minutes: 60
-      });
-
-    if (rateLimitError || !rateLimitResult) {
-      return {
-        statusCode: 429,
-        headers,
-        body: JSON.stringify({ 
-          message: 'Too many submissions. Please try again later.',
-          error: 'RATE_LIMITED'
-        })
-      };
-    }
-
     // Process form data
     const servicesChecked = Array.from(data.services || []).join(', ');
     
@@ -86,28 +61,41 @@ exports.handler = async (event, context) => {
       index++;
     }
 
-    const formDataForStorage = {
-      fullName: data.fullName,
-      email: data.email.toLowerCase().trim(),
-      businessName: data.businessName || '',
-      socialMediaProfiles: socialMediaProfiles.join(', '),
-      businessDescription: data.businessDescription || '',
-      businessChallenges: data.businessChallenges || '',
-      services: servicesChecked,
-      projectObjectives: data.projectObjectives || '',
-      projectVision: data.projectVision || '',
-      budget: data.budget || '',
-      customBudget: data.customBudget || '',
-      referralSource: data.referralSource || '',
-      submittedAt: new Date().toISOString()
-    };
+    // Direct database insertion (no RPC functions)
+    const { data: insertResult, error: insertError } = await supabase
+      .from('form_submissions')
+      .insert([{
+        full_name: data.fullName,
+        email: data.email.toLowerCase().trim(),
+        business_name: data.businessName || '',
+        social_media_profiles: socialMediaProfiles.join(', '),
+        business_description: data.businessDescription || '',
+        business_challenges: data.businessChallenges || '',
+        services: servicesChecked,
+        project_objectives: data.projectObjectives || '',
+        project_vision: data.projectVision || '',
+        budget: data.budget || '',
+        custom_budget: data.customBudget || '',
+        referral_source: data.referralSource || '',
+        submitted_at: new Date().toISOString()
+      }])
+      .select();
 
-    // Use secure database function for submission
-    const { data: submitResult, error: submitError } = await supabase
-      .rpc('submit_form_secure', { form_data: formDataForStorage });
-
-    if (submitError) {
-      console.error('Submission function error:', submitError);
+    if (insertError) {
+      console.error('Database insertion error:', insertError);
+      
+      // Check for duplicate email
+      if (insertError.code === '23505') {
+        return {
+          statusCode: 409,
+          headers,
+          body: JSON.stringify({
+            message: 'This email has already been used for an inquiry.',
+            error: 'DUPLICATE_EMAIL'
+          })
+        };
+      }
+      
       return {
         statusCode: 500,
         headers,
@@ -118,30 +106,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    if (!submitResult.success) {
-      // Handle specific errors
-      if (submitResult.error === 'DUPLICATE_EMAIL') {
-        return {
-          statusCode: 409,
-          headers,
-          body: JSON.stringify({
-            message: submitResult.message,
-            error: 'DUPLICATE_EMAIL'
-          })
-        };
-      }
-      
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          message: submitResult.message,
-          error: submitResult.error
-        })
-      };
-    }
-
-    // Send emails using SendGrid (your existing email logic)
+    // Send emails (your existing email logic continues...)
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     
     const formattedDetails = `
@@ -190,19 +155,19 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         message: 'Form submitted successfully',
-        id: submitResult.id
+        success: true
       })
     };
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Function error:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        message: 'An error occurred processing your request',
+        message: 'Server error',
         error: 'INTERNAL_ERROR'
       })
     };

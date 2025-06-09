@@ -46,8 +46,57 @@ const checkDatabaseEnvironment = async () => {
 };
 
 const testCredentialsMatch = async () => {
-    const frontendResult = await globalSupabase.from('form_submissions').select('email').limit(1);
-    console.log('🖥️ Frontend sees:', frontendResult.data?.length || 0, 'records');
+    console.log('🔍 Testing if frontend and backend use same database...');
+    
+    // Check if globalSupabase is initialized
+    if (!globalSupabase) {
+        console.log('❌ globalSupabase not initialized yet, skipping test');
+        return;
+    }
+    
+    console.log('🔑 Frontend using Supabase URL:', globalSupabase.supabaseUrl);
+    
+    try {
+        // Test frontend connection
+        const frontendResult = await globalSupabase
+            .from('form_submissions')
+            .select('email')
+            .limit(1);
+        
+        console.log('🖥️ Frontend result:', frontendResult.data?.length || 0, 'records');
+        console.log('🖥️ Frontend error:', frontendResult.error);
+        
+        if (frontendResult.error) {
+            console.log('❌ Frontend connection failed:', frontendResult.error);
+        }
+        
+    } catch (error) {
+        console.log('❌ Frontend test failed:', error.message);
+    }
+    
+    // Test backend connection (but only if not rate limited)
+    try {
+        console.log('🌐 Testing backend connection...');
+        const backendTest = await fetch('/.netlify/functions/check-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: 'test@example.com' })
+        });
+        
+        console.log('🌐 Backend status:', backendTest.status);
+        
+        if (backendTest.status === 200) {
+            const data = await backendTest.json();
+            console.log('✅ Backend working, response:', data);
+        } else if (backendTest.status === 429) {
+            console.log('⚠️ Backend rate limited but accessible');
+        } else {
+            console.log('❌ Backend error:', backendTest.status);
+        }
+        
+    } catch (error) {
+        console.log('❌ Backend test failed:', error.message);
+    }
 };
 
 console.log('🔧 Debugging Steps:');
@@ -65,6 +114,24 @@ let budgetCustomRadio, customBudgetContainer;
 let questionContainers, webDesignCheckbox, developmentCheckbox;
 let formOpenButtons; // Multiple buttons with class 'form-open-btn'
 let addSocialButton;
+
+let supabaseClient = null;
+
+export const getSupabaseClient = () => {
+  if (!supabaseClient) {
+    supabaseClient = createClient(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false, // Prevent multiple instances
+          autoRefreshToken: false
+        }
+      }
+    );
+  }
+  return supabaseClient;
+};
 
 // =============================================================================
 // 2. UTILITY & HELPER FUNCTIONS
@@ -267,166 +334,8 @@ const validateStep = (stepIndex) => {
 // =============================================================================
 // 4. EMAIL VERIFICATION MODULE
 // =============================================================================
-const testSupabaseConnection = async () => {
-  console.log('🔍 Testing Supabase connection...');
-  
-  if (!globalSupabase) {
-    console.error('❌ Supabase not initialized');
-    return { success: false, error: 'Supabase not initialized' };
-  }
-  
-  try {
-    const { data, error } = await globalSupabase
-      .from('form_submissions')
-      .select('*')
-      .limit(5);
-    
-    console.log('✅ Supabase connection successful');
-    console.log('📊 Sample data:', data);
-    console.log('❌ Error (if any):', error);
-    
-    if (data && data.length > 0) {
-      console.log('📋 Table structure example:', Object.keys(data[0]));
-      console.log('📧 Email values:', data.map(row => row.email));
-    }
-    
-    return { success: true, data, error };
-  } catch (err) {
-    console.error('❌ Supabase connection failed:', err);
-    return { success: false, error: err };
-  }
-};
-
-const testCheckEmailEndpoint = async (testEmail) => {
-  console.log('🔍 Testing check-email endpoint with:', testEmail);
-  
-  try {
-    const response = await fetch('/.netlify/functions/check-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: testEmail.toLowerCase() })
-    });
-    
-    console.log('📡 Response status:', response.status);
-    
-    const data = await response.json();
-    console.log('📦 Response data:', data);
-    
-    return { success: response.ok, status: response.status, data };
-  } catch (err) {
-    console.error('❌ Check-email endpoint failed:', err);
-    return { success: false, error: err };
-  }
-};
-
-const runEmailValidationDiagnostics = async () => {
-  console.log('🚀 STARTING EMAIL VALIDATION DIAGNOSTICS');
-  console.log('==========================================');
-  
-  // Test 1: Connection
-  await testSupabaseConnection();
-  
-  console.log('\n');
-  
-  // Test 2: Check a known email - YOU NEED TO REPLACE THIS
-  const testEmail = 'YOUR_ACTUAL_EMAIL_FROM_DATABASE@example.com'; // ← CHANGE THIS!
-  console.log('🎯 Testing with email:', testEmail);
-  await testCheckEmailEndpoint(testEmail);
-  
-  console.log('\n');
-  
-  // Test 3: Check a non-existent email
-  const fakeEmail = 'definitely-not-in-database@fake.com';
-  console.log('🎯 Testing with fake email:', fakeEmail);
-  await testCheckEmailEndpoint(fakeEmail);
-  
-  console.log('\n');
-  
-  // Test 4: Check if functions exist
-  console.log('🔧 Function availability check:');
-  console.log('   window.checkEmailExists exists:', typeof window.checkEmailExists);
-  console.log('   goToNextStep exists:', typeof window.goToNextStep);
-  
-  console.log('==========================================');
-  console.log('🏁 DIAGNOSTICS COMPLETE');
-};
-
-const verifyDatabase = async () => {
-  console.log('🔍 VERIFYING DATABASE CONTENTS...');
-  
-  try {
-    // Use the hardcoded Supabase client to check what's actually there
-    const supabase = window.supabase.createClient(
-      'https://guyjtfegraqcthngbhvf.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1eWp0ZmVncmFxY3RobmdiaHZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NDUyNzIsImV4cCI6MjA2NDAyMTI3Mn0.i-yK2m0JRx_KI-h6LINIjH4UwQav6A2iJdsNOxrVevs'
-    );
-    
-    // Check if the table exists and has data
-    const { data: allData, error: allError } = await supabase
-      .from('form_submissions')
-      .select('*')
-      .limit(10);
-    
-    console.log('📊 All data query result:');
-    console.log('  Data:', allData);
-    console.log('  Error:', allError);
-    
-    if (allData && allData.length > 0) {
-      console.log('✅ Database has data!');
-      console.log('📧 Emails in database:');
-      allData.forEach((row, i) => {
-        console.log(`  ${i + 1}. "${row.email}" (created: ${row.created_at})`);
-      });
-      
-      // Test with the first email found
-      const testEmail = allData[0].email;
-      console.log(`🎯 Testing with known email: ${testEmail}`);
-      
-      const { data: testData, error: testError } = await supabase
-        .from('form_submissions')
-        .select('email')
-        .eq('email', testEmail)
-        .limit(1);
-      
-      console.log('🔍 Direct query test:');
-      console.log('  Data:', testData);
-      console.log('  Error:', testError);
-      console.log('  Should exist:', testData && testData.length > 0);
-      
-    } else if (allError) {
-      console.log('❌ Database query failed:', allError);
-    } else {
-      console.log('📭 Database is empty - no form submissions yet');
-    }
-    
-  } catch (err) {
-    console.error('❌ Database verification failed:', err);
-  }
-};
 
 const checkEmailExists = async (email) => {
-  console.log('🔍 Checking email existence:', email);
-  
-  // Development bypass - you can add ?dev=true to URL for testing
-  if (isDevelopment || window.location.search.includes('dev=true')) {
-    console.log('🔧 Development mode - simulating email check');
-    
-    // Simulate email checking for testing different scenarios
-    if (window.location.search.includes('test=existing')) {
-      console.log('🎭 Test mode: simulating existing email');
-      return true;  // Simulate existing email
-    }
-    
-    if (window.location.search.includes('test=error')) {
-      console.log('🎭 Test mode: simulating error');
-      throw new Error('Test error for debugging');
-    }
-    
-    console.log('🎭 Test mode: simulating new email (allowing progression)');
-    return false; // Allow form progression
-  }
-  
-  // Production email checking logic
   try {
     const response = await fetch('/.netlify/functions/check-email', {
       method: 'POST',
@@ -434,35 +343,17 @@ const checkEmailExists = async (email) => {
       body: JSON.stringify({ email: email.toLowerCase() })
     });
     
-    console.log('📡 Response status:', response.status);
+    if (response.status === 429) {
+      throw new Error('Too many requests. Please wait and try again.');
+    }
     
     if (!response.ok) {
-      if (response.status === 429) {
-        throw new Error('Too many requests. Please wait a moment and try again.');
-      } else if (response.status === 404) {
-        console.log('🔧 Endpoint not found');
-        return false;
-      } else {
-        try {
-          const data = await response.json();
-          throw new Error(data.message || `Email validation failed: ${response.status}`);
-        } catch (parseError) {
-          throw new Error(`Email validation failed: ${response.status}`);
-        }
-      }
+      throw new Error(`Server error: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('📦 Response data:', data);
-    
-    if (data.error === 'RATE_LIMITED') {
-      throw new Error('Rate limited. Please try again later.');
-    }
-    
-    return data.exists === true;
-    
+    return data.exists;
   } catch (error) {
-    console.error('❌ Email check failed:', error);
     throw error;
   }
 };
@@ -868,7 +759,7 @@ const goToNextStep = async () => {
     nextButton.disabled = true;
     
     try {
-      const emailExists = await checkEmailExistsWithRateLimit(email);
+      const emailExists = await checkEmailExistsWithBypass(email);
       
       if (emailExists) {
         console.log('🚫 Email exists - showing existing email message');
@@ -2240,30 +2131,18 @@ const testSuccessState = () => {
 };
 
 // =============================================================================
-// RATE LIMITING SOLUTION
-// =============================================================================
-
-const checkEmailExistsWithRateLimit = async (email) => {
-  const now = Date.now();
-  
-  if (now - lastEmailCheck < EMAIL_CHECK_COOLDOWN) {
-    const waitTime = Math.ceil((EMAIL_CHECK_COOLDOWN - (now - lastEmailCheck)) / 1000);
-    throw new Error(`Please wait ${waitTime} more seconds before trying again.`);
-  }
-  
-  lastEmailCheck = now;
-  return await checkEmailExists(email);
-};
-
-// =============================================================================
 // 13. DOM CONTENT LOADED EVENT
 // =============================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Supabase
+    // Initialize Supabase FIRST
     const supabase = window.supabase.createClient(
-        'https://guyjtfegraqcthngbhvf.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1eWp0ZmVncmFxY3RobmdiaHZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NDUyNzIsImV4cCI6MjA2NDAyMTI3Mn0.i-yK2m0JRx_KI-h6LINIjH4UwQav6A2iJdsNOxrVevs'
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_ANON_KEY
     );
+
+    globalSupabase = supabase;
+    
+    console.log('🔑 Frontend initialized with Supabase URL:', globalSupabase.supabaseUrl);
 
     setTimeout(() => {
         testCredentialsMatch();
@@ -2305,6 +2184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize the form
     initForm();
+
+    // Test credentials AFTER everything is initialized
+    setTimeout(() => {
+        testCredentialsMatch();
+    }, 3000); // Wait 3 seconds for everything to be ready
 });
 
 // =============================================================================
@@ -2313,12 +2197,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Make functions globally available (keep only essential ones)
 window.checkEmailExists = checkEmailExists;
 window.goToNextStep = goToNextStep;
-
-// Development/debugging functions
-window.testSupabaseConnection = testSupabaseConnection;
-window.testCheckEmailEndpoint = testCheckEmailEndpoint;
-window.runEmailValidationDiagnostics = runEmailValidationDiagnostics;
-window.verifyDatabase = verifyDatabase;
 
 // Main form controller API
 window.FormController = {
@@ -2329,9 +2207,3 @@ window.FormController = {
     resetForm,
     getCurrentStep: () => currentStep
 };
-
-// Auto-run database verification
-console.log('🔧 Auto-running database verification...');
-setTimeout(() => {
-    verifyDatabase();
-}, 1000);

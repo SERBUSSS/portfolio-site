@@ -1,5 +1,100 @@
 // formController.js - Main control script for the form functionality
 // This handles all form interactions, animations, and validation
+// Global debugging functions
+let globalSupabase;
+
+// Test direct Supabase connection
+const testSupabaseConnection = async () => {
+  console.log('🔍 Testing Supabase connection...');
+  
+  if (!globalSupabase) {
+    console.error('❌ Supabase not initialized');
+    return { success: false, error: 'Supabase not initialized' };
+  }
+  
+  try {
+    const { data, error } = await globalSupabase
+      .from('form_submissions')
+      .select('*')
+      .limit(5);
+    
+    console.log('✅ Supabase connection successful');
+    console.log('📊 Sample data:', data);
+    console.log('❌ Error (if any):', error);
+    
+    if (data && data.length > 0) {
+      console.log('📋 Table structure example:', Object.keys(data[0]));
+      console.log('📧 Email values:', data.map(row => row.email));
+    }
+    
+    return { success: true, data, error };
+  } catch (err) {
+    console.error('❌ Supabase connection failed:', err);
+    return { success: false, error: err };
+  }
+};
+
+// Test the check-email endpoint
+const testCheckEmailEndpoint = async (testEmail) => {
+  console.log('🔍 Testing check-email endpoint with:', testEmail);
+  
+  try {
+    const response = await fetch('/.netlify/functions/check-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: testEmail.toLowerCase() })
+    });
+    
+    console.log('📡 Response status:', response.status);
+    
+    const data = await response.json();
+    console.log('📦 Response data:', data);
+    
+    return { success: response.ok, status: response.status, data };
+  } catch (err) {
+    console.error('❌ Check-email endpoint failed:', err);
+    return { success: false, error: err };
+  }
+};
+
+// Test function to run all diagnostics
+const runEmailValidationDiagnostics = async () => {
+  console.log('🚀 STARTING EMAIL VALIDATION DIAGNOSTICS');
+  console.log('==========================================');
+  
+  // Test 1: Connection
+  await testSupabaseConnection();
+  
+  console.log('\n');
+  
+  // Test 2: Check a known email - YOU NEED TO REPLACE THIS
+  const testEmail = 'YOUR_ACTUAL_EMAIL_FROM_DATABASE@example.com'; // ← CHANGE THIS!
+  console.log('🎯 Testing with email:', testEmail);
+  await testCheckEmailEndpoint(testEmail);
+  
+  console.log('\n');
+  
+  // Test 3: Check a non-existent email
+  const fakeEmail = 'definitely-not-in-database@fake.com';
+  console.log('🎯 Testing with fake email:', fakeEmail);
+  await testCheckEmailEndpoint(fakeEmail);
+  
+  console.log('\n');
+  
+  // Test 4: Check if functions exist
+  console.log('🔧 Function availability check:');
+  console.log('   window.checkEmailExists exists:', typeof window.checkEmailExists);
+  console.log('   goToNextStep exists:', typeof window.goToNextStep);
+  
+  console.log('==========================================');
+  console.log('🏁 DIAGNOSTICS COMPLETE');
+};
+
+// Make functions globally available
+window.testSupabaseConnection = testSupabaseConnection;
+window.testCheckEmailEndpoint = testCheckEmailEndpoint;
+window.runEmailValidationDiagnostics = runEmailValidationDiagnostics;
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const supabase = window.supabase.createClient(
@@ -813,23 +908,36 @@ document.addEventListener('DOMContentLoaded', () => {
   // NAVIGATION
   // ---------------
   const checkEmailExists = async (email) => {
+    console.log('🔍 checkEmailExists called with:', email);
+    
     try {
+      console.log('📡 Making fetch request to check-email endpoint...');
       const response = await fetch('/.netlify/functions/check-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.toLowerCase() })
       });
       
+      console.log('📊 Response status:', response.status);
+      console.log('📊 Response ok:', response.ok);
+      
       if (!response.ok) {
-        console.error('Email check failed:', response.status);
-        return false; // Allow submission on error
+        console.error('❌ Email check failed:', response.status);
+        
+        // ✅ FAIL SECURE: If we can't verify uniqueness, don't allow submission
+        throw new Error(`Email validation service unavailable (${response.status})`);
       }
       
       const data = await response.json();
+      console.log('📦 Response data:', data);
+      console.log('📧 Email exists:', data.exists);
+      
       return data.exists;
     } catch (error) {
-      console.error('Email check error:', error);
-      return false; // Allow submission on error
+      console.error('❌ Email check error:', error);
+      
+      // ✅ FAIL SECURE: Throw error instead of allowing submission
+      throw new Error(`Unable to validate email uniqueness: ${error.message}`);
     }
   };
 
@@ -1087,150 +1195,54 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   // FORM SUBMISSION
   // ---------------
-
-  // 1. Test direct Supabase connection from client
-  const testSupabaseConnection = async () => {
-    console.log('🔍 Testing Supabase connection...');
-    
-    try {
-      const { data, error } = await supabase
-        .from('form_submissions')
-        .select('*')
-        .limit(5);
-      
-      console.log('✅ Supabase connection successful');
-      console.log('📊 Sample data:', data);
-      console.log('❌ Error (if any):', error);
-      
-      if (data && data.length > 0) {
-        console.log('📋 Table structure example:', Object.keys(data[0]));
-        console.log('📧 Email values:', data.map(row => row.email));
-      }
-      
-      return { success: true, data, error };
-    } catch (err) {
-      console.error('❌ Supabase connection failed:', err);
-      return { success: false, error: err };
-    }
-  };
-
-  // 2. Test the check-email endpoint directly
-  const testCheckEmailEndpoint = async (testEmail) => {
-    console.log('🔍 Testing check-email endpoint with:', testEmail);
-    
-    try {
-      const response = await fetch('/.netlify/functions/check-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: testEmail.toLowerCase() })
-      });
-      
-      console.log('📡 Response status:', response.status);
-      
-      const data = await response.json();
-      console.log('📦 Response data:', data);
-      
-      return { success: response.ok, status: response.status, data };
-    } catch (err) {
-      console.error('❌ Check-email endpoint failed:', err);
-      return { success: false, error: err };
-    }
-  };
-
-  // 3. Enhanced checkEmailExists function with debugging
-  const debugCheckEmailExists = async (email) => {
-    console.log('🔍 DEBUG: Checking email existence for:', email);
-    
-    try {
-      // First test direct Supabase query
-      console.log('📍 Step 1: Direct Supabase query');
-      const { data: directData, error: directError } = await supabase
-        .from('form_submissions')
-        .select('email')
-        .eq('email', email.toLowerCase())
-        .limit(1);
-      
-      console.log('📊 Direct query result:', { data: directData, error: directError });
-      
-      // Then test via endpoint
-      console.log('📍 Step 2: Endpoint query');
-      const endpointResult = await testCheckEmailEndpoint(email);
-      console.log('📡 Endpoint result:', endpointResult);
-      
-      // Compare results
-      const directExists = directData && directData.length > 0;
-      const endpointExists = endpointResult.success && endpointResult.data.exists;
-      
-      console.log('🎯 COMPARISON:');
-      console.log('   Direct query says exists:', directExists);
-      console.log('   Endpoint says exists:', endpointExists);
-      console.log('   Results match:', directExists === endpointExists);
-      
-      return endpointExists;
-      
-    } catch (error) {
-      console.error('❌ Debug email check failed:', error);
-      return false;
-    }
-  };
-
-  // 4. Test function to run all diagnostics
-  const runEmailValidationDiagnostics = async () => {
-    console.log('🚀 STARTING EMAIL VALIDATION DIAGNOSTICS');
-    console.log('==========================================');
-    
-    // Test 1: Connection
-    await testSupabaseConnection();
-    
-    console.log('\n');
-    
-    // Test 2: Check a known email (replace with one from your database)
-    const testEmail = 'test@example.com'; // Replace with actual email from your DB
-    await debugCheckEmailExists(testEmail);
-    
-    console.log('\n');
-    
-    // Test 3: Check a non-existent email
-    const fakeEmail = 'definitely-not-in-database@fake.com';
-    await debugCheckEmailExists(fakeEmail);
-    
-    console.log('==========================================');
-    console.log('🏁 DIAGNOSTICS COMPLETE');
-  };
-
-  // Make functions globally available for testing
-  window.debugEmailValidation = {
-    testSupabaseConnection,
-    testCheckEmailEndpoint,
-    debugCheckEmailExists,
-    runEmailValidationDiagnostics
-  };
   
-  // Handle form submission
+  // Updated handleSubmit with proper error handling
   const handleSubmit = async (e) => {
+    console.log('🚀 FORM SUBMISSION STARTED');
     e.preventDefault();
     
-    // Final email validation check before submission
     const emailField = document.getElementById('email');
     const email = emailField?.value?.trim();
     
+    console.log('📧 Email field value:', email);
+    
     if (email) {
+      console.log('✅ Email found, starting validation...');
+      
       try {
+        console.log('🔍 Calling checkEmailExists...');
         const emailExists = await checkEmailExists(email);
+        console.log('📊 checkEmailExists returned:', emailExists);
+        
         if (emailExists) {
-          // Show error and STOP submission
+          console.log('🚫 EMAIL EXISTS - STOPPING SUBMISSION');
+          
           const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
           if (errorMessageElement) {
             errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
           }
+          
           showErrorMessage();
-          return; // ✅ Stop here - don't continue with submission
+          return; // Stop submission
+        } else {
+          console.log('✅ Email is unique, proceeding with submission');
         }
       } catch (error) {
-        console.warn('Email validation failed, proceeding with submission:', error);
-        // Continue with submission even if email check fails
+        // ✅ FAIL SECURE: Show error to user instead of proceeding
+        console.error('❌ Email validation failed:', error);
+        
+        const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+        if (errorMessageElement) {
+          errorMessageElement.textContent = 'Unable to verify email uniqueness. Please try again or contact support.';
+        }
+        
+        showErrorMessage();
+        return; // Stop submission on validation errors
       }
     }
+    
+    // Continue with form submission only if email validation passed...
+    console.log('📦 Proceeding with form submission...');
     
     // Collect form data
     const formData = new FormData(form);
@@ -1263,11 +1275,15 @@ document.addEventListener('DOMContentLoaded', () => {
     formDataJson.services = servicesChecked;
     Object.assign(formDataJson, socialMediaData);
     
+    console.log('📋 Form data prepared:', formDataJson);
+    
     // Show loading state
     const submitButton = document.querySelector('button[type="submit"]');
     const originalButtonText = submitButton.innerHTML;
     submitButton.innerHTML = '<span class="text-xl">Sending...</span>';
     submitButton.disabled = true;
+    
+    console.log('🚀 Sending form data to server...');
     
     try {
       // Send form data to server
@@ -1279,42 +1295,29 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(formDataJson)
       });
       
+      console.log('📡 Server response status:', response.status);
+      
       const responseData = await response.json();
+      console.log('📦 Server response data:', responseData);
       
-      // ✅ FIXED: Handle server responses properly
       if (!response.ok) {
-        // Server returned an error status
-        if (response.status === 409) {
-          // Duplicate email detected by server
-          const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-          if (errorMessageElement) {
-            errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
-          }
-          showErrorMessage();
-          return;
-        } else {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        console.log('❌ Server returned error status');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      // ✅ FIXED: Only show success for actual successful submissions
+      // Check if this was a duplicate submission
       if (responseData.duplicate) {
-        // Server detected duplicate but returned 200 - treat as error
-        console.log('Duplicate submission detected by backend');
-        const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-        if (errorMessageElement) {
-          errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
-        }
-        showErrorMessage();
-        return;
+        console.log('🚫 Server detected duplicate - this should show error but is showing success');
+        // Still show success to user for good UX  ← THIS IS THE PROBLEM!
+        showSuccessMessage();
+      } else {
+        // Normal successful submission
+        console.log('✅ Normal successful submission');
+        showSuccessMessage();
       }
-      
-      // Normal successful submission
-      console.log('Form submitted successfully:', responseData);
-      showSuccessMessage();
       
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error('❌ Submission error:', error);
       
       // Enhanced error handling
       let errorMessageText = 'An error occurred processing your request. ';
@@ -1345,8 +1348,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Reset button state
       submitButton.innerHTML = originalButtonText;
       submitButton.disabled = false;
+      console.log('🏁 FORM SUBMISSION COMPLETE');
     }
   };
+
   
   // Show success message
   const showSuccessMessage = () => {

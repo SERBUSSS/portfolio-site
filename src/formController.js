@@ -10,6 +10,11 @@ let formIsOpen = false;
 let isNavigating = false;
 let preventViewportResize = false;
 let keyboardOpen = false;
+let scrollTimeout;
+
+// Add rate limiting protection on the frontend
+let lastEmailCheck = 0;
+const EMAIL_CHECK_COOLDOWN = 3000; // 3 seconds between checks
 
 const activeCardScale = 1;
 const finalPositions = [
@@ -376,18 +381,29 @@ const checkEmailExists = async (email) => {
     
     console.log('📡 Response status:', response.status);
     
-    const data = await response.json();
-    console.log('📦 Response data:', data);
-    
     // Handle different response types
     if (!response.ok) {
       if (response.status === 429) {
         throw new Error('Too many requests. Please wait a moment and try again.');
-      } else if (data.error === 'RATE_LIMITED') {
-        throw new Error('Rate limited. Please try again later.');
+      } else if (response.status === 404) {
+        console.log('🔧 Endpoint not found - likely in development mode');
+        return false; // Allow submission when endpoint not available
       } else {
-        throw new Error(`Email validation failed: ${data.message || 'Unknown error'}`);
+        // Try to get error message from response
+        try {
+          const data = await response.json();
+          throw new Error(data.message || `Email validation failed: ${response.status}`);
+        } catch (parseError) {
+          throw new Error(`Email validation failed: ${response.status}`);
+        }
       }
+    }
+    
+    const data = await response.json();
+    console.log('📦 Response data:', data);
+    
+    if (data.error === 'RATE_LIMITED') {
+      throw new Error('Rate limited. Please try again later.');
     }
     
     return data.exists === true;
@@ -793,7 +809,7 @@ const goToNextStep = async () => {
     nextButton.disabled = true;
     
     try {
-      const emailExists = await checkEmailExists(email);
+      const emailExists = await checkEmailExistsWithRateLimit(email);
       
       if (emailExists) {
         console.log('🚫 Email exists - showing existing email message');
@@ -808,8 +824,20 @@ const goToNextStep = async () => {
       nextButton.innerHTML = originalText;
       nextButton.disabled = false;
       
-      // Show user-friendly error
-      showErrorWithMessage(error.message || 'Unable to verify email. Please try again.');
+      // Show user-friendly error with specific message
+      let errorMessage = 'Unable to verify email. ';
+      
+      if (error.message.includes('Too many requests')) {
+        errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+      } else if (error.message.includes('Rate limited')) {
+        errorMessage = 'Rate limited. Please wait a moment and try again.';
+      } else if (error.message.includes('fetch')) {
+        errorMessage = 'Connection error. Please check your internet and try again.';
+      } else {
+        errorMessage += error.message || 'Please try again.';
+      }
+      
+      showErrorWithMessage(errorMessage);
       return;
     }
     
@@ -1055,11 +1083,21 @@ const hideErrorMessage = () => {
     });
 };
 const showErrorWithMessage = (message) => {
-    const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-    if (errorMessageElement) {
-      errorMessageElement.textContent = message;
-    }
-    showErrorMessage();
+  console.log('🚨 Showing error with message:', message);
+  
+  // Update the detailed error message
+  const errorExpElement = document.querySelector('#error-message .form-error-exp');
+  if (errorExpElement) {
+    errorExpElement.textContent = message;
+  }
+  
+  // Also update the main error message if it exists
+  const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+  if (errorMessageElement) {
+    errorMessageElement.textContent = message;
+  }
+  
+  showErrorMessage();
 };
 const showExistingEmailMessage = () => {
     const currentCard = steps[currentStep];
@@ -2117,6 +2155,22 @@ const testSuccessState = () => {
       
       console.log('Success state activated for testing');
     }, 500);
+};
+
+// =============================================================================
+// RATE LIMITING SOLUTION
+// =============================================================================
+
+const checkEmailExistsWithRateLimit = async (email) => {
+  const now = Date.now();
+  
+  if (now - lastEmailCheck < EMAIL_CHECK_COOLDOWN) {
+    const waitTime = Math.ceil((EMAIL_CHECK_COOLDOWN - (now - lastEmailCheck)) / 1000);
+    throw new Error(`Please wait ${waitTime} more seconds before trying again.`);
+  }
+  
+  lastEmailCheck = now;
+  return await checkEmailExists(email);
 };
 
 // =============================================================================

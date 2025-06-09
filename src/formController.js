@@ -1220,6 +1220,8 @@ const handleSubmit = async (e) => {
     // Success!
     console.log('✅ Form submitted successfully');
     showSuccessMessage();
+
+    disableFormButtons();
     
   } catch (error) {
     console.error('❌ Submission error:', error);
@@ -1536,79 +1538,32 @@ const setupResponsiveCards = () => {
 };
 
 const handleInputScroll = (input) => {
-    if (input.dataset.scrolling === 'true') return;
     if (!isMobile()) return;
-
-    input.dataset.scrolling = 'true';
     
-    const currentCard = steps[currentStep];
-    const inputRect = input.getBoundingClientRect();
-    const cardRect = currentCard.getBoundingClientRect();
-    
-    console.log(`📍 Card position: ${cardRect.top}, Input position: ${inputRect.top}`);
-    console.log(`📱 Viewport height: ${window.innerHeight}`);
-    
-    const targetPosition = window.innerHeight * 0.25;
-    
-    // For step-1, check if the card is already too high
-    if (currentStep === 1 && cardRect.top < 50) {
-      console.log('🔍 Step-1 card is already too high, not scrolling');
-      input.dataset.scrolling = 'false';
-      return;
-    }
-
-    if (inputRect.top > targetPosition) {
-      const scrollAmount = Math.min(inputRect.top - targetPosition, window.innerHeight * 0.3);
-      
-      console.log(`📏 Scroll amount: ${scrollAmount}`);
-
-      // For all inputs, just scroll the current step card
-      gsap.to(currentCard, {
-        duration: 0.3,
-        y: -scrollAmount,
-        ease: 'power2.out',
-        onComplete: () => {
-          input.dataset.scrolling = 'false';
-        }
-      });
-
-      // Store the scroll amount to reset later
-      currentCard.dataset.scrollOffset = scrollAmount;
-    } else {
-      input.dataset.scrolling = 'false';
-    }
+    // Use browser's native scrollIntoView - it's optimized and handles keyboard automatically
+    requestAnimationFrame(() => {
+        input.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
+    });
 };
 
 const setupKeyboardDetection = () => {
     if (!isMobile()) return;
     
-    let initialViewportHeight = window.visualViewport?.height || window.innerHeight;
-    
-    const handleViewportChange = () => {
-      if (!formIsOpen) return;
-      
-      const currentHeight = window.visualViewport?.height || window.innerHeight;
-      const heightDifference = initialViewportHeight - currentHeight;
-      
-      // If height decreased by more than 150px, likely keyboard is open
-      keyboardOpen = heightDifference > 150;
-      preventViewportResize = keyboardOpen;
-      
-      // Force correct visibility when keyboard state changes
-      if (formIsOpen) {
-        enforceStepVisibility();
-      }
-    };
-    
-    // Listen for both visualViewport and resize events
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-    }
-    
-    let resizeTimeout;
+    // Let the browser handle viewport changes naturally
     window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleViewportChange, 100);
+        if (document.activeElement && document.activeElement.tagName !== 'BODY') {
+            // Re-center focused input after keyboard state changes
+            setTimeout(() => {
+                document.activeElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 100);
+        }
     });
 };
 
@@ -2126,6 +2081,55 @@ const testSuccessState = () => {
     }, 500);
 };
 
+const disableFormButtons = () => {
+    sessionStorage.setItem('formSubmittedThisSession', 'true');
+    
+    document.querySelectorAll('.form-open-btn').forEach(button => {
+        button.disabled = true;
+        button.innerHTML = 'Form Already Submitted ✓';
+        button.style.opacity = '0.6';
+        button.style.cursor = 'not-allowed';
+        
+        // Show notification on click
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSubmissionNotification();
+        });
+    });
+};
+
+const showSubmissionNotification = () => {
+    // Create or get existing notification
+    let notification = document.getElementById('submission-notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'submission-notification';
+        notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-[9999]';
+        notification.textContent = 'You have already submitted the form in this session.';
+        document.body.appendChild(notification);
+    }
+    
+    // Show with animation
+    gsap.fromTo(notification, 
+        { opacity: 0, x: 100 }, 
+        { opacity: 1, x: 0, duration: 0.3 }
+    );
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        gsap.to(notification, {
+            opacity: 0, x: 100, duration: 0.3,
+            onComplete: () => notification.remove()
+        });
+    }, 3000);
+};
+
+const checkSessionSubmission = () => {
+    if (sessionStorage.getItem('formSubmittedThisSession') === 'true') {
+        disableFormButtons();
+    }
+};
+
 // =============================================================================
 // 13. DOM CONTENT LOADED EVENT
 // =============================================================================
@@ -2177,6 +2181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Form open buttons (multiple with class)
     formOpenButtons = document.querySelectorAll('.form-open-btn');
+
+    checkSessionSubmission();
     
     // Initialize the form
     initForm();

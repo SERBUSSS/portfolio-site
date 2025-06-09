@@ -13,7 +13,6 @@ body {
 .section {
     position: relative;
     width: 100%;
-    /* Add cursor indication for horizontal scroll sections */
 }
 
 .section[id^="project-"] {
@@ -53,7 +52,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible; /* Changed from hidden to visible */
+    overflow: visible;
 }
 
 /* Add smooth transitions for better UX */
@@ -63,13 +62,13 @@ body {
     overflow: hidden;
     will-change: transform, opacity;
     transition: box-shadow 0.3s ease;
-    pointer-events: auto; /* Ensure cards remain interactive */
+    pointer-events: auto;
 }
 
 /* Mobile specific adjustments */
 @media (max-width: 768px) {
     .section[id^="project-"] {
-        touch-action: pan-x pan-y; /* Allow both horizontal and vertical touch */
+        touch-action: pan-x pan-y;
     }
     
     .horizontal-scroll-hint {
@@ -82,7 +81,6 @@ body {
 /* Project Tooltip Styles */
 .project-tooltip {
     position: absolute;
-    /* top: 5vh;  10% from top of section */
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -109,7 +107,6 @@ body {
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .project-tooltip {
-        /* top: 5vh; */
         left: 50%;
         transform: translateX(-50%);
     }
@@ -120,64 +117,43 @@ body {
     }
 }
 
+/* FORM STYLES - Simplified */
 #form-entry {
-  position: relative;
-  z-index: 1;
-}
-
-/* Success message when stacked */
-#success-message {
-  /* Will be set dynamically by JavaScript */
+    position: relative;
+    z-index: 1;
 }
 
 #form-container {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 50 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 50 !important;
+    overflow-y: auto; /* Allow natural scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
 }
 
-/* Ensure success message positioning */
-#success-message {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  transform-origin: center center;
-}
-
-/* Ensure stacked cards stay in viewport */
+/* Simplified step positioning */
 .step {
-  position: absolute;
-  /*left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  transform-origin: center center; */
-  max-width: 90vw;
+    position: relative; /* Changed from absolute */
+    margin: 20px auto; /* Natural centering */
+    max-width: 90vw;
 }
 
-/* Prevent transform conflicts on step-1 */
-#step-1 {
-  transform: translate(-50%, -50%) !important;
-  will-change: auto !important;
+/* Success message positioning */
+#success-message {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
 }
 
-#step-1.scrolling {
-  will-change: transform;
-}
-
-/* Prevent input zoom and overflow issues */
+/* Mobile form improvements */
 @media (max-width: 768px) {
-  #step-1 .form-input {
-    font-size: 16px !important;
-    max-width: calc(100vw - 2rem) !important;
-    box-sizing: border-box !important;
-  }
-  
-  #step-1 {
-    max-width: calc(100vw - 2rem) !important;
-    overflow: visible !important;
-  }
+    .form-input {
+        font-size: 16px !important; /* Prevents iOS zoom */
+        scroll-margin: 20px; /* Creates space around focused inputs */
+    }
 }

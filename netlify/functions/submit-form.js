@@ -71,14 +71,14 @@ exports.handler = async (event, context) => {
       console.error('Supabase check error:', checkError);
       // Continue with submission if database check fails
     } else if (existingSubmission && existingSubmission.length > 0) {
-      // Email already exists - return success but don't process
-      console.log('Duplicate email submission attempted:', normalizedEmail);
+      // ✅ Email already exists - return error, don't process
+      console.log('Duplicate email submission blocked:', normalizedEmail);
       return {
-        statusCode: 200,
+        statusCode: 409, // Conflict status code
         headers,
         body: JSON.stringify({ 
-          message: 'Form submitted successfully',
-          duplicate: true 
+          message: 'This email has already been used for an inquiry',
+          error: 'DUPLICATE_EMAIL'
         })
       };
     }

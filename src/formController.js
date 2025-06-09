@@ -1100,17 +1100,24 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const emailExists = await checkEmailExists(email);
         if (emailExists) {
-          // Show error and stop submission
+          // Show error and STOP submission
           const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
           if (errorMessageElement) {
             errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
           }
-          showErrorMessage();
-          return; // Stop submission
+          
+          // Show the error message
+          const errorMessage = document.getElementById('error-message');
+          if (errorMessage) {
+            errorMessage.classList.remove('hidden');
+          }
+          
+          // ✅ CRITICAL: Return here to stop submission
+          return;
         }
       } catch (error) {
-        console.warn('Email validation failed, proceeding with submission:', error);
-        // Continue with submission even if email check fails
+        console.error('Email validation error during submission:', error);
+        // Continue with submission if email check fails (network issues)
       }
     }
     

@@ -41,7 +41,28 @@ const DEFAULT_CONFIGS = {
   }
 }
 
-function createBackgroundWrapper(Component, config) {
+function createGradientOverlay() {
+  return (
+    <div style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100vh',
+      zIndex: 1,
+      pointerEvents: 'none',
+      background: `linear-gradient(
+        to bottom,
+        #070B0D 0%,
+        rgba(7, 11, 13, 0.25) 30%,
+        rgba(7, 11, 13, 0.25) 70%,
+        #070B0D 100%
+      )`
+    }} />
+  )
+}
+
+function createBackgroundWrapper(Component, config, index) {
   return function BackgroundWrapper() {
     return (
       <div style={{
@@ -54,6 +75,7 @@ function createBackgroundWrapper(Component, config) {
         pointerEvents: 'none'
       }}>
         <Component {...config} />
+        {createGradientOverlay()}
       </div>
     )
   }
@@ -64,7 +86,6 @@ function initializeBackgrounds() {
   
   console.log(`🔍 Found ${containers.length} background containers`)
   
-  // Process containers with a small delay to avoid WebGL context conflicts
   containers.forEach((container, index) => {
     setTimeout(() => {
       const backgroundType = container.dataset.background
@@ -87,7 +108,6 @@ function initializeBackgrounds() {
       
       const config = { ...DEFAULT_CONFIGS[backgroundType], ...customConfig }
       
-      // Add unique key to force separate React roots
       const WrappedComponent = () => (
         <div key={`${backgroundType}-${index}`} style={{
           position: 'absolute',
@@ -99,15 +119,15 @@ function initializeBackgrounds() {
           pointerEvents: 'none'
         }}>
           <Component {...config} />
+          {createGradientOverlay()}
         </div>
       )
       
       console.log(`🚀 Mounting ${backgroundType} background ${index + 1}...`)
       const root = ReactDOM.createRoot(container)
       root.render(<WrappedComponent />)
-    }, index * 100) // 100ms delay between each background
+    }, index * 100)
   })
 }
 
-// Run initialization
 initializeBackgrounds()

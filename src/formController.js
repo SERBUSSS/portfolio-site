@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => {
       clearTimeout(setupCardsTimeout);
       setupCardsTimeout = setTimeout(() => {
-        if (!preventViewportResize) {
+        if (!preventViewportResize && !formIsOpen) {
           setupResponsiveCards();
         }
       }, 150);

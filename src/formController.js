@@ -1105,19 +1105,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (errorMessageElement) {
             errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
           }
-          
-          // Show the error message
-          const errorMessage = document.getElementById('error-message');
-          if (errorMessage) {
-            errorMessage.classList.remove('hidden');
-          }
-          
-          // ✅ CRITICAL: Return here to stop submission
-          return;
+          showErrorMessage();
+          return; // ✅ Stop here - don't continue with submission
         }
       } catch (error) {
-        console.error('Email validation error during submission:', error);
-        // Continue with submission if email check fails (network issues)
+        console.warn('Email validation failed, proceeding with submission:', error);
+        // Continue with submission even if email check fails
       }
     }
     
@@ -1168,22 +1161,39 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(formDataJson)
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
       const responseData = await response.json();
       
-      // Check if this was a duplicate submission
-      if (responseData.duplicate) {
-        console.log('Duplicate submission detected by backend');
-        // Still show success to user for good UX
-        showSuccessMessage();
-      } else {
-        // Normal successful submission
-        console.log('Form submitted successfully:', responseData);
-        showSuccessMessage();
+      // ✅ FIXED: Handle server responses properly
+      if (!response.ok) {
+        // Server returned an error status
+        if (response.status === 409) {
+          // Duplicate email detected by server
+          const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+          if (errorMessageElement) {
+            errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
+          }
+          showErrorMessage();
+          return;
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
       }
+      
+      // ✅ FIXED: Only show success for actual successful submissions
+      if (responseData.duplicate) {
+        // Server detected duplicate but returned 200 - treat as error
+        console.log('Duplicate submission detected by backend');
+        const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+        if (errorMessageElement) {
+          errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
+        }
+        showErrorMessage();
+        return;
+      }
+      
+      // Normal successful submission
+      console.log('Form submitted successfully:', responseData);
+      showSuccessMessage();
       
     } catch (error) {
       console.error('Submission error:', error);
@@ -1194,7 +1204,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         errorMessageText += 'Please check your internet connection and try again.';
       } else if (error.message.includes('429')) {
-        errorMessageText += 'Too many requests. Please wait a moment and try again.';
+        errorMessageText += 'Please wait a moment and try again.';
       } else if (error.message.includes('500')) {
         errorMessageText += 'Server error. Please try again in a few minutes or contact me directly at sergiu@bustiuc.digital';
       } else if (error.message.includes('400')) {

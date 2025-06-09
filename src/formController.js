@@ -42,57 +42,18 @@ const checkDatabaseEnvironment = async () => {
 };
 
 const testCredentialsMatch = async () => {
-    console.log('🔍 Testing if frontend and backend use same database...');
+  console.log('🔍 Testing database connection...');
+  
+  try {
+    // Test using secure function instead of direct table access
+    const result = await globalSupabase.rpc('check_email_exists', {
+      input_email: 'test@example.com'
+    });
     
-    // Check if globalSupabase is initialized
-    if (!globalSupabase) {
-        console.log('❌ globalSupabase not initialized yet, skipping test');
-        return;
-    }
-    
-    console.log('🔑 Frontend using Supabase URL:', globalSupabase.supabaseUrl);
-    
-    try {
-        // Test frontend connection
-        const frontendResult = await globalSupabase
-            .from('form_submissions')
-            .select('email')
-            .limit(1);
-        
-        console.log('🖥️ Frontend result:', frontendResult.data?.length || 0, 'records');
-        console.log('🖥️ Frontend error:', frontendResult.error);
-        
-        if (frontendResult.error) {
-            console.log('❌ Frontend connection failed:', frontendResult.error);
-        }
-        
-    } catch (error) {
-        console.log('❌ Frontend test failed:', error.message);
-    }
-    
-    // Test backend connection (but only if not rate limited)
-    try {
-        console.log('🌐 Testing backend connection...');
-        const backendTest = await fetch('/.netlify/functions/check-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'test@example.com' })
-        });
-        
-        console.log('🌐 Backend status:', backendTest.status);
-        
-        if (backendTest.status === 200) {
-            const data = await backendTest.json();
-            console.log('✅ Backend working, response:', data);
-        } else if (backendTest.status === 429) {
-            console.log('⚠️ Backend rate limited but accessible');
-        } else {
-            console.log('❌ Backend error:', backendTest.status);
-        }
-        
-    } catch (error) {
-        console.log('❌ Backend test failed:', error.message);
-    }
+    console.log('✅ Database connection working:', result);
+  } catch (error) {
+    console.log('❌ Database test failed:', error);
+  }
 };
 
 console.log('🔧 Debugging Steps:');
@@ -333,24 +294,20 @@ const validateStep = (stepIndex) => {
 
 const checkEmailExists = async (email) => {
   try {
-    const response = await fetch('/.netlify/functions/check-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email.toLowerCase() })
+    // Use the secure function instead of direct table access
+    const { data, error } = await globalSupabase.rpc('check_email_exists', {
+      input_email: email
     });
     
-    if (response.status === 429) {
-      throw new Error('Too many requests. Please wait and try again.');
+    if (error) {
+      console.error('Email check error:', error);
+      return { exists: false, error: error.message };
     }
     
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    return data.exists;
+    return data;
   } catch (error) {
-    throw error;
+    console.error('Email check failed:', error);
+    return { exists: false, error: 'Network error' };
   }
 };
 
@@ -1193,30 +1150,26 @@ const handleSubmit = async (e) => {
   console.log('🚀 Sending form data to server...');
   
   try {
-    const response = await fetch(form.action, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formDataJson)
+    const { data, error } = await globalSupabase.rpc('submit_form_secure', {
+      form_data: formDataJson
     });
-    
-    console.log('📡 Server response status:', response.status);
-    
-    const responseData = await response.json();
-    console.log('📦 Server response data:', responseData);
-    
-    if (!response.ok) {
-      // Handle specific error cases
-      if (response.status === 409 && responseData.error === 'DUPLICATE_EMAIL') {
+
+    if (error) {
+      console.error('Submission error:', error);
+      
+      // Handle specific errors
+      if (error.message.includes('DUPLICATE_EMAIL')) {
         showErrorWithMessage('This email has already been used for an inquiry. Please use a different email address.');
         return;
-      } else if (response.status === 429) {
-        showErrorWithMessage('Too many submissions. Please wait before trying again.');
-        return;
       } else {
-        throw new Error(responseData.message || `Server error: ${response.status}`);
+        throw new Error(error.message);
       }
     }
-    
+
+    if (!data.success) {
+      throw new Error(data.message || 'Submission failed');
+    }
+
     // Success!
     console.log('✅ Form submitted successfully');
     showSuccessMessage();

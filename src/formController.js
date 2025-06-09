@@ -1933,23 +1933,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleInputScroll = (input) => {
     if (input.dataset.scrolling === 'true') return;
     if (!isMobile()) return;
-    
+
     input.dataset.scrolling = 'true';
-    
-    // CRITICAL FIX: Skip step-1 (index 0) entirely
-    if (currentStep === 0) {
-      console.log('🚫 Skipping scroll for step-1');
-      input.dataset.scrolling = 'false';
-      return;
-    }
     
     const currentCard = steps[currentStep];
     const inputRect = input.getBoundingClientRect();
+    const cardRect = currentCard.getBoundingClientRect();
+    
+    console.log(`📍 Card position: ${cardRect.top}, Input position: ${inputRect.top}`);
+    console.log(`📱 Viewport height: ${window.innerHeight}`);
+    
     const targetPosition = window.innerHeight * 0.25;
     
+    // For step-1, check if the card is already too high
+    if (currentStep === 1 && cardRect.top < 50) {
+      console.log('🔍 Step-1 card is already too high, not scrolling');
+      input.dataset.scrolling = 'false';
+      return;
+    }
+
     if (inputRect.top > targetPosition) {
       const scrollAmount = Math.min(inputRect.top - targetPosition, window.innerHeight * 0.3);
       
+      console.log(`📏 Scroll amount: ${scrollAmount}`);
+
+      // For all inputs, just scroll the current step card
       gsap.to(currentCard, {
         duration: 0.3,
         y: -scrollAmount,
@@ -1958,7 +1966,8 @@ document.addEventListener('DOMContentLoaded', () => {
           input.dataset.scrolling = 'false';
         }
       });
-      
+
+      // Store the scroll amount to reset later
       currentCard.dataset.scrollOffset = scrollAmount;
     } else {
       input.dataset.scrolling = 'false';

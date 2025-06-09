@@ -1,25 +1,17 @@
-// netlify/functions/submit-form.js
 const sgMail = require('@sendgrid/mail');
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
-  // Set CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': '*', // Restrict this to your domain in production
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 
-  // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: ''
-    };
+    return { statusCode: 200, headers, body: '' };
   }
 
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -29,16 +21,13 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Initialize Supabase client
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY
     );
 
-    // Parse the incoming JSON data
     const data = JSON.parse(event.body);
     
-    // Basic validation
     if (!data.fullName || !data.email) {
       return {
         statusCode: 400,
@@ -46,48 +35,45 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ message: 'Missing required fields' })
       };
     }
-    
-    // Check honeypot field if you have one
-    if (data.website) { // "website" is a hidden field that should be empty
+
+    // Honeypot check
+    if (data.website) {
       console.log("Bot submission detected");
       return {
-        statusCode: 200, // Return 200 to not alert bots
+        statusCode: 200,
         headers,
         body: JSON.stringify({ message: 'Form submitted successfully' })
       };
     }
 
-    // Normalize email for consistent checking
-    const normalizedEmail = data.email.toLowerCase().trim();
+    // Get client IP for rate limiting
+    const clientIP = event.headers['x-forwarded-for'] || 
+                    event.headers['x-real-ip'] || 
+                    '127.0.0.1';
 
-    // Check if email already exists in Supabase
-    const { data: existingSubmission, error: checkError } = await supabase
-      .from('form_submissions')
-      .select('email')
-      .eq('email', normalizedEmail)
-      .limit(1);
+    // Check rate limit for submissions
+    const { data: rateLimitResult, error: rateLimitError } = await supabase
+      .rpc('check_rate_limit', {
+        client_ip: clientIP,
+        action_name: 'form_submit',
+        max_requests: 3, // 3 submissions per hour
+        window_minutes: 60
+      });
 
-    if (checkError) {
-      console.error('Supabase check error:', checkError);
-      // Continue with submission if database check fails (graceful degradation)
-    } else if (existingSubmission && existingSubmission.length > 0) {
-      // ✅ Email already exists - return proper error response
-      console.log('Duplicate email submission blocked:', normalizedEmail);
+    if (rateLimitError || !rateLimitResult) {
       return {
-        statusCode: 409, // Conflict - indicates duplicate resource
+        statusCode: 429,
         headers,
         body: JSON.stringify({ 
-          message: 'This email has already been used for an inquiry',
-          error: 'DUPLICATE_EMAIL',
-          duplicate: true
+          message: 'Too many submissions. Please try again later.',
+          error: 'RATE_LIMITED'
         })
       };
     }
 
-    // Process service checkboxes into a comma-separated string
+    // Process form data
     const servicesChecked = Array.from(data.services || []).join(', ');
     
-    // Process social media fields
     const socialMediaProfiles = [];
     let index = 0;
     while (data[`social-media-type-${index}`]) {
@@ -100,10 +86,9 @@ exports.handler = async (event, context) => {
       index++;
     }
 
-    // Prepare complete form data for storage
     const formDataForStorage = {
       fullName: data.fullName,
-      email: normalizedEmail,
+      email: data.email.toLowerCase().trim(),
       businessName: data.businessName || '',
       socialMediaProfiles: socialMediaProfiles.join(', '),
       businessDescription: data.businessDescription || '',
@@ -117,25 +102,48 @@ exports.handler = async (event, context) => {
       submittedAt: new Date().toISOString()
     };
 
-    // Store in Supabase
-    const { data: storedData, error: storeError } = await supabase
-      .from('form_submissions')
-      .insert([{
-        email: normalizedEmail,
-        form_data: formDataForStorage
-      }]);
+    // Use secure database function for submission
+    const { data: submitResult, error: submitError } = await supabase
+      .rpc('submit_form_secure', { form_data: formDataForStorage });
 
-    if (storeError) {
-      console.error('Supabase storage error:', storeError);
-      // Continue with email sending even if storage fails
-    } else {
-      console.log('Form data stored successfully in Supabase');
+    if (submitError) {
+      console.error('Submission function error:', submitError);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          message: 'Form submission failed',
+          error: 'SUBMISSION_ERROR'
+        })
+      };
     }
 
-    // Set SendGrid API key from environment variable
+    if (!submitResult.success) {
+      // Handle specific errors
+      if (submitResult.error === 'DUPLICATE_EMAIL') {
+        return {
+          statusCode: 409,
+          headers,
+          body: JSON.stringify({
+            message: submitResult.message,
+            error: 'DUPLICATE_EMAIL'
+          })
+        };
+      }
+      
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          message: submitResult.message,
+          error: submitResult.error
+        })
+      };
+    }
+
+    // Send emails using SendGrid (your existing email logic)
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     
-    // Format the email content
     const formattedDetails = `
       <h2>Project Inquiry Details</h2>
       <p><strong>Name:</strong> ${data.fullName}</p>
@@ -152,39 +160,30 @@ exports.handler = async (event, context) => {
       <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
     
-    // Email to you
     const emailToYou = {
-      to: 's1.bustiuc@gmail.com', // Your email
-      from: 'sergiu@bustiuc.digital', // Must be verified in SendGrid
+      to: 's1.bustiuc@gmail.com',
+      from: 'sergiu@bustiuc.digital',
       subject: `New Project Inquiry from ${data.fullName}`,
-      html: `
-        <h1>New Project Inquiry</h1>
-        ${formattedDetails}
-      `
+      html: `<h1>New Project Inquiry</h1>${formattedDetails}`
     };
     
-    // Email to the client
     const emailToClient = {
       to: data.email,
-      from: 'sergiu@bustiuc.digital', // Must be verified in SendGrid
+      from: 'sergiu@bustiuc.digital',
       subject: 'Thank you for your project inquiry!',
       html: `
         <h1>Thank You for Your Project Inquiry</h1>
         <p>Hello ${data.fullName},</p>
         <p>I've received your project inquiry and will review it shortly. 
            I'll be in touch within 2 business days to discuss the next steps.</p>
-        
         <p>For your reference, here's a copy of the information you submitted:</p>
-        
         ${formattedDetails}
-        
         <p>Best regards,</p>
         <p>Sergiu Buștiuc</p>
         <p><a href="https://bustiuc.digital">bustiuc.digital</a></p>
       `
     };
     
-    // Send both emails
     await sgMail.send(emailToYou);
     await sgMail.send(emailToClient);
     
@@ -193,18 +192,18 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({ 
         message: 'Form submitted successfully',
-        stored: !storeError 
+        id: submitResult.id
       })
     };
+
   } catch (error) {
     console.error('Error:', error);
-    
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
         message: 'An error occurred processing your request',
-        error: error.message
+        error: 'INTERNAL_ERROR'
       })
     };
   }

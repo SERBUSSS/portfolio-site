@@ -90,10 +90,74 @@ const runEmailValidationDiagnostics = async () => {
   console.log('🏁 DIAGNOSTICS COMPLETE');
 };
 
+const verifyDatabase = async () => {
+  console.log('🔍 VERIFYING DATABASE CONTENTS...');
+  
+  try {
+    // Use the hardcoded Supabase client to check what's actually there
+    const supabase = window.supabase.createClient(
+      'https://guyjtfegraqcthngbhvf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1eWp0ZmVncmFxY3RobmdiaHZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NDUyNzIsImV4cCI6MjA2NDAyMTI3Mn0.i-yK2m0JRx_KI-h6LINIjH4UwQav6A2iJdsNOxrVevs'
+    );
+    
+    // Check if the table exists and has data
+    const { data: allData, error: allError } = await supabase
+      .from('form_submissions')
+      .select('*')
+      .limit(10);
+    
+    console.log('📊 All data query result:');
+    console.log('  Data:', allData);
+    console.log('  Error:', allError);
+    
+    if (allData && allData.length > 0) {
+      console.log('✅ Database has data!');
+      console.log('📧 Emails in database:');
+      allData.forEach((row, i) => {
+        console.log(`  ${i + 1}. "${row.email}" (created: ${row.created_at})`);
+      });
+      
+      // Test with the first email found
+      const testEmail = allData[0].email;
+      console.log(`🎯 Testing with known email: ${testEmail}`);
+      
+      const { data: testData, error: testError } = await supabase
+        .from('form_submissions')
+        .select('email')
+        .eq('email', testEmail)
+        .limit(1);
+      
+      console.log('🔍 Direct query test:');
+      console.log('  Data:', testData);
+      console.log('  Error:', testError);
+      console.log('  Should exist:', testData && testData.length > 0);
+      
+    } else if (allError) {
+      console.log('❌ Database query failed:', allError);
+    } else {
+      console.log('📭 Database is empty - no form submissions yet');
+    }
+    
+  } catch (err) {
+    console.error('❌ Database verification failed:', err);
+  }
+};
+
 // Make functions globally available
 window.testSupabaseConnection = testSupabaseConnection;
 window.testCheckEmailEndpoint = testCheckEmailEndpoint;
 window.runEmailValidationDiagnostics = runEmailValidationDiagnostics;
+
+window.verifyDatabase = verifyDatabase;
+window.checkEmailExists = checkEmailExists;
+window.goToNextStep = goToNextStep;
+window.handleSubmit = handleSubmit;
+
+// Auto-run database verification
+console.log('🔧 Auto-running database verification...');
+setTimeout(() => {
+  verifyDatabase();
+}, 1000);
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -908,68 +972,85 @@ document.addEventListener('DOMContentLoaded', () => {
   // NAVIGATION
   // ---------------
   const checkEmailExists = async (email) => {
-    console.log('🔍 checkEmailExists called with:', email);
+    console.log('🔍 Checking email existence:', email);
     
     try {
-      console.log('📡 Making fetch request to check-email endpoint...');
       const response = await fetch('/.netlify/functions/check-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.toLowerCase() })
       });
       
-      console.log('📊 Response status:', response.status);
-      console.log('📊 Response ok:', response.ok);
-      
-      if (!response.ok) {
-        console.error('❌ Email check failed:', response.status);
-        
-        // ✅ FAIL SECURE: If we can't verify uniqueness, don't allow submission
-        throw new Error(`Email validation service unavailable (${response.status})`);
-      }
+      console.log('📡 Response status:', response.status);
       
       const data = await response.json();
       console.log('📦 Response data:', data);
-      console.log('📧 Email exists:', data.exists);
       
-      return data.exists;
+      // Handle different response types
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Too many requests. Please wait a moment and try again.');
+        } else if (data.error === 'RATE_LIMITED') {
+          throw new Error('Rate limited. Please try again later.');
+        } else {
+          throw new Error(`Email validation failed: ${data.message || 'Unknown error'}`);
+        }
+      }
+      
+      return data.exists === true;
+      
     } catch (error) {
-      console.error('❌ Email check error:', error);
-      
-      // ✅ FAIL SECURE: Throw error instead of allowing submission
-      throw new Error(`Unable to validate email uniqueness: ${error.message}`);
+      console.error('❌ Email check failed:', error);
+      throw error; // Fail secure - don't allow submission on errors
     }
   };
 
-  // Go to next step
+  // Updated goToNextStep with better error handling
   const goToNextStep = async () => {
+    console.log('🚀 goToNextStep called, currentStep:', currentStep);
+    
     if (currentStep >= steps.length - 1 || isNavigating) return;
     
-    // Special handling for step 0 - check email before proceeding
     if (currentStep === 0) {
       const emailInput = document.getElementById('email');
-      const email = emailInput.value.trim();
+      const email = emailInput?.value?.trim();
       
-      if (email) {
-        // Show loading state
-        const nextButton = steps[currentStep].querySelector('.next-button');
-        const originalText = nextButton.innerHTML;
-        nextButton.innerHTML = '<span class="text-[#fffdff] text-xl font-bold font-sans leading-5">Checking...</span>';
-        nextButton.disabled = true;
-        
+      if (!email) return;
+      
+      const nextButton = steps[currentStep].querySelector('.next-button');
+      if (!nextButton) return;
+      
+      const originalText = nextButton.innerHTML;
+      nextButton.innerHTML = '<span class="text-[#fffdff] text-xl font-bold font-sans leading-5">Checking...</span>';
+      nextButton.disabled = true;
+      
+      try {
         const emailExists = await checkEmailExists(email);
         
         if (emailExists) {
-          // Show existing email message instead of progressing
+          console.log('🚫 Email exists - showing existing email message');
+          nextButton.innerHTML = originalText;
+          nextButton.disabled = false;
           showExistingEmailMessage();
           return;
         }
         
-        // Reset button state
+      } catch (error) {
+        console.error('❌ Email validation failed:', error);
         nextButton.innerHTML = originalText;
         nextButton.disabled = false;
+        
+        // Show user-friendly error
+        showErrorWithMessage(error.message || 'Unable to verify email. Please try again.');
+        return;
       }
+      
+      nextButton.innerHTML = originalText;
+      nextButton.disabled = false;
     }
+    
+    // Continue with normal navigation...
+    console.log('✅ Proceeding with step navigation');
     
     // Continue with existing logic...
     isNavigating = true;
@@ -1204,54 +1285,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailField = document.getElementById('email');
     const email = emailField?.value?.trim();
     
-    console.log('📧 Email field value:', email);
-    
-    if (email) {
-      console.log('✅ Email found, starting validation...');
-      
-      try {
-        console.log('🔍 Calling checkEmailExists...');
-        const emailExists = await checkEmailExists(email);
-        console.log('📊 checkEmailExists returned:', emailExists);
-        
-        if (emailExists) {
-          console.log('🚫 EMAIL EXISTS - STOPPING SUBMISSION');
-          
-          const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-          if (errorMessageElement) {
-            errorMessageElement.textContent = 'This email has already been used for an inquiry. Please use a different email address.';
-          }
-          
-          showErrorMessage();
-          return; // Stop submission
-        } else {
-          console.log('✅ Email is unique, proceeding with submission');
-        }
-      } catch (error) {
-        // ✅ FAIL SECURE: Show error to user instead of proceeding
-        console.error('❌ Email validation failed:', error);
-        
-        const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-        if (errorMessageElement) {
-          errorMessageElement.textContent = 'Unable to verify email uniqueness. Please try again or contact support.';
-        }
-        
-        showErrorMessage();
-        return; // Stop submission on validation errors
-      }
+    if (!email) {
+      console.log('❌ No email found during submission');
+      showErrorWithMessage('Email is required');
+      return;
     }
     
-    // Continue with form submission only if email validation passed...
-    console.log('📦 Proceeding with form submission...');
+    console.log('📧 Final email validation for:', email);
     
-    // Collect form data
+    // Final email check before submission
+    try {
+      const emailExists = await checkEmailExists(email);
+      console.log('📊 Final email check result:', emailExists);
+      
+      if (emailExists) {
+        console.log('🚫 BLOCKING SUBMISSION - Email already exists');
+        showErrorWithMessage('This email has already been used for an inquiry. Please use a different email address.');
+        return;
+      }
+      
+    } catch (error) {
+      console.error('❌ Final email validation failed:', error);
+      showErrorWithMessage(error.message || 'Unable to verify email uniqueness. Please try again.');
+      return;
+    }
+    
+    console.log('✅ Email validation passed - proceeding with submission');
+    
+    // Collect and process form data
     const formData = new FormData(form);
-    
-    // Process service checkboxes into an array
     const servicesChecked = Array.from(document.querySelectorAll('input[name="services"]:checked'))
       .map(checkbox => checkbox.value);
     
-    // Process social media fields
     const socialMediaFields = document.querySelectorAll('.social-media-field');
     const socialMediaData = {};
     
@@ -1265,17 +1330,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     
-    // Convert FormData to JSON and add processed data
     const formDataJson = {};
     formData.forEach((value, key) => {
       formDataJson[key] = value;
     });
     
-    // Add processed data
     formDataJson.services = servicesChecked;
     Object.assign(formDataJson, socialMediaData);
-    
-    console.log('📋 Form data prepared:', formDataJson);
     
     // Show loading state
     const submitButton = document.querySelector('button[type="submit"]');
@@ -1286,12 +1347,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Sending form data to server...');
     
     try {
-      // Send form data to server
       const response = await fetch(form.action, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formDataJson)
       });
       
@@ -1301,55 +1359,54 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('📦 Server response data:', responseData);
       
       if (!response.ok) {
-        console.log('❌ Server returned error status');
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Handle specific error cases
+        if (response.status === 409 && responseData.error === 'DUPLICATE_EMAIL') {
+          showErrorWithMessage('This email has already been used for an inquiry. Please use a different email address.');
+          return;
+        } else if (response.status === 429) {
+          showErrorWithMessage('Too many submissions. Please wait before trying again.');
+          return;
+        } else {
+          throw new Error(responseData.message || `Server error: ${response.status}`);
+        }
       }
       
-      // Check if this was a duplicate submission
-      if (responseData.duplicate) {
-        console.log('🚫 Server detected duplicate - this should show error but is showing success');
-        // Still show success to user for good UX  ← THIS IS THE PROBLEM!
-        showSuccessMessage();
-      } else {
-        // Normal successful submission
-        console.log('✅ Normal successful submission');
-        showSuccessMessage();
-      }
+      // Success!
+      console.log('✅ Form submitted successfully');
+      showSuccessMessage();
       
     } catch (error) {
       console.error('❌ Submission error:', error);
       
-      // Enhanced error handling
-      let errorMessageText = 'An error occurred processing your request. ';
+      let errorMessage = 'An error occurred processing your request. ';
       
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        errorMessageText += 'Please check your internet connection and try again.';
+      if (error.message.includes('fetch')) {
+        errorMessage += 'Please check your internet connection and try again.';
       } else if (error.message.includes('429')) {
-        errorMessageText += 'Please wait a moment and try again.';
+        errorMessage += 'Please wait a moment and try again.';
       } else if (error.message.includes('500')) {
-        errorMessageText += 'Server error. Please try again in a few minutes or contact me directly at sergiu@bustiuc.digital';
-      } else if (error.message.includes('400')) {
-        errorMessageText += 'Invalid form data. Please check your inputs and try again.';
-      } else if (error.message.includes('409')) {
-        errorMessageText = 'This email has already been used for an inquiry. Please use a different email address.';
+        errorMessage += 'Server error. Please try again in a few minutes or contact me directly at sergiu@bustiuc.digital';
       } else {
-        errorMessageText += 'Please try again later or contact me directly at sergiu@bustiuc.digital';
+        errorMessage += error.message || 'Please try again later or contact me directly at sergiu@bustiuc.digital';
       }
       
-      // Update error message content
-      const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
-      if (errorMessageElement) {
-        errorMessageElement.textContent = errorMessageText;
-      }
+      showErrorWithMessage(errorMessage);
       
-      // Show error message
-      showErrorMessage();
     } finally {
       // Reset button state
       submitButton.innerHTML = originalButtonText;
       submitButton.disabled = false;
       console.log('🏁 FORM SUBMISSION COMPLETE');
     }
+  };
+
+  // Helper function for showing errors
+  const showErrorWithMessage = (message) => {
+    const errorMessageElement = document.querySelector('#error-message .text-red-700 p');
+    if (errorMessageElement) {
+      errorMessageElement.textContent = message;
+    }
+    showErrorMessage();
   };
 
   

@@ -1087,6 +1087,118 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------
   // FORM SUBMISSION
   // ---------------
+
+  // 1. Test direct Supabase connection from client
+  const testSupabaseConnection = async () => {
+    console.log('🔍 Testing Supabase connection...');
+    
+    try {
+      const { data, error } = await supabase
+        .from('form_submissions')
+        .select('*')
+        .limit(5);
+      
+      console.log('✅ Supabase connection successful');
+      console.log('📊 Sample data:', data);
+      console.log('❌ Error (if any):', error);
+      
+      if (data && data.length > 0) {
+        console.log('📋 Table structure example:', Object.keys(data[0]));
+        console.log('📧 Email values:', data.map(row => row.email));
+      }
+      
+      return { success: true, data, error };
+    } catch (err) {
+      console.error('❌ Supabase connection failed:', err);
+      return { success: false, error: err };
+    }
+  };
+
+  // 2. Test the check-email endpoint directly
+  const testCheckEmailEndpoint = async (testEmail) => {
+    console.log('🔍 Testing check-email endpoint with:', testEmail);
+    
+    try {
+      const response = await fetch('/.netlify/functions/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: testEmail.toLowerCase() })
+      });
+      
+      console.log('📡 Response status:', response.status);
+      
+      const data = await response.json();
+      console.log('📦 Response data:', data);
+      
+      return { success: response.ok, status: response.status, data };
+    } catch (err) {
+      console.error('❌ Check-email endpoint failed:', err);
+      return { success: false, error: err };
+    }
+  };
+
+  // 3. Enhanced checkEmailExists function with debugging
+  const debugCheckEmailExists = async (email) => {
+    console.log('🔍 DEBUG: Checking email existence for:', email);
+    
+    try {
+      // First test direct Supabase query
+      console.log('📍 Step 1: Direct Supabase query');
+      const { data: directData, error: directError } = await supabase
+        .from('form_submissions')
+        .select('email')
+        .eq('email', email.toLowerCase())
+        .limit(1);
+      
+      console.log('📊 Direct query result:', { data: directData, error: directError });
+      
+      // Then test via endpoint
+      console.log('📍 Step 2: Endpoint query');
+      const endpointResult = await testCheckEmailEndpoint(email);
+      console.log('📡 Endpoint result:', endpointResult);
+      
+      // Compare results
+      const directExists = directData && directData.length > 0;
+      const endpointExists = endpointResult.success && endpointResult.data.exists;
+      
+      console.log('🎯 COMPARISON:');
+      console.log('   Direct query says exists:', directExists);
+      console.log('   Endpoint says exists:', endpointExists);
+      console.log('   Results match:', directExists === endpointExists);
+      
+      return endpointExists;
+      
+    } catch (error) {
+      console.error('❌ Debug email check failed:', error);
+      return false;
+    }
+  };
+
+  // 4. Test function to run all diagnostics
+  const runEmailValidationDiagnostics = async () => {
+    console.log('🚀 STARTING EMAIL VALIDATION DIAGNOSTICS');
+    console.log('==========================================');
+    
+    // Test 1: Connection
+    await testSupabaseConnection();
+    
+    console.log('\n');
+    
+    // Test 2: Check a known email (replace with one from your database)
+    const testEmail = 'test@example.com'; // Replace with actual email from your DB
+    await debugCheckEmailExists(testEmail);
+    
+    console.log('\n');
+    
+    // Test 3: Check a non-existent email
+    const fakeEmail = 'definitely-not-in-database@fake.com';
+    await debugCheckEmailExists(fakeEmail);
+    
+    console.log('==========================================');
+    console.log('🏁 DIAGNOSTICS COMPLETE');
+  };
+
+
   
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -2079,3 +2191,11 @@ window.FormController = {
   currentStep,
   // Add other methods you want React to access
 }
+
+// Make functions globally available for testing
+window.debugEmailValidation = {
+  testSupabaseConnection,
+  testCheckEmailEndpoint,
+  debugCheckEmailExists,
+  runEmailValidationDiagnostics
+};

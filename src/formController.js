@@ -1137,10 +1137,18 @@ const handleSubmit = async (e) => {
   
   // Final email check before submission
   try {
-    const emailExists = await checkEmailExists(email);
-    console.log('📊 Final email check result:', emailExists);
+    const emailCheck = await checkEmailExists(email);
+    console.log('📊 Final email check result:', emailCheck);
     
-    if (emailExists) {
+    // Check for errors first
+    if (emailCheck.error) {
+      console.log('❌ Email validation error:', emailCheck.error);
+      showErrorWithMessage('Unable to verify email. Please try again.');
+      return;
+    }
+    
+    // Now check if email actually exists
+    if (emailCheck.exists === true) {
       console.log('🚫 BLOCKING SUBMISSION - Email already exists');
       showErrorWithMessage('This email has already been used for an inquiry. Please use a different email address.');
       return;
@@ -1151,7 +1159,7 @@ const handleSubmit = async (e) => {
     showErrorWithMessage(error.message || 'Unable to verify email uniqueness. Please try again.');
     return;
   }
-  
+
   console.log('✅ Email validation passed - proceeding with submission');
   
   // Collect and process form data

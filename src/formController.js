@@ -759,7 +759,7 @@ const goToNextStep = async () => {
     nextButton.disabled = true;
     
     try {
-      const emailExists = await checkEmailExistsWithBypass(email);
+      const emailExists = await checkEmailExists(email);
       
       if (emailExists) {
         console.log('🚫 Email exists - showing existing email message');

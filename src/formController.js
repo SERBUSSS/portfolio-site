@@ -45,6 +45,17 @@ const checkDatabaseEnvironment = async () => {
   console.log('🔑 Using Supabase Key prefix:', globalSupabase?.supabaseKey?.substring(0, 20) + '...');
 };
 
+const testCredentialsMatch = async () => {
+    const frontendResult = await globalSupabase.from('form_submissions').select('email').limit(1);
+    console.log('🖥️ Frontend sees:', frontendResult.data?.length || 0, 'records');
+};
+
+console.log('🔧 Debugging Steps:');
+console.log('1. Go to Netlify Dashboard > Site Settings > Environment Variables');
+console.log('2. Verify SUPABASE_URL matches: https://guyjtfegraqcthngbhvf.supabase.co');
+console.log('3. Verify SUPABASE_ANON_KEY matches the key in your frontend');
+console.log('4. Redeploy your site after setting variables');
+
 // DOM Elements (to be initialized in DOMContentLoaded)
 let formContainer, formOverlay, form, steps, nextButtons, prevButtons, closeButtons;
 let successMessage, errorMessage, tryAgainButton;
@@ -2253,6 +2264,10 @@ document.addEventListener('DOMContentLoaded', () => {
         'https://guyjtfegraqcthngbhvf.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1eWp0ZmVncmFxY3RobmdiaHZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NDUyNzIsImV4cCI6MjA2NDAyMTI3Mn0.i-yK2m0JRx_KI-h6LINIjH4UwQav6A2iJdsNOxrVevs'
     );
+
+    setTimeout(() => {
+        testCredentialsMatch();
+    }, 2000);
     
     // Initialize ALL DOM elements
     formContainer = document.getElementById('form-container');

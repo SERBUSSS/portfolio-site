@@ -157,3 +157,27 @@ body {
   transform-origin: center center; */
   max-width: 90vw;
 }
+
+/* Prevent transform conflicts on step-1 */
+#step-1 {
+  transform: translate(-50%, -50%) !important;
+  will-change: auto !important;
+}
+
+#step-1.scrolling {
+  will-change: transform;
+}
+
+/* Prevent input zoom and overflow issues */
+@media (max-width: 768px) {
+  #step-1 .form-input {
+    font-size: 16px !important;
+    max-width: calc(100vw - 2rem) !important;
+    box-sizing: border-box !important;
+  }
+  
+  #step-1 {
+    max-width: calc(100vw - 2rem) !important;
+    overflow: visible !important;
+  }
+}

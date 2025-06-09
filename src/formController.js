@@ -1937,40 +1937,41 @@ document.addEventListener('DOMContentLoaded', () => {
     input.dataset.scrolling = 'true';
     
     const currentCard = steps[currentStep];
-    
-    // Clear any existing GSAP transforms first
-    gsap.set(currentCard, { clearProps: "transform" });
-    
-    // Reapply the centering immediately
-    currentCard.style.position = 'absolute';
-    currentCard.style.left = '50%';
-    currentCard.style.top = '50%';
-    currentCard.style.transform = 'translate(-50%, -50%)';
-    
-    // Force a reflow
-    currentCard.offsetHeight;
-    
     const inputRect = input.getBoundingClientRect();
+    const cardRect = currentCard.getBoundingClientRect();
+    
+    console.log(`📍 Card position: ${cardRect.top}, Input position: ${inputRect.top}`);
+    console.log(`📱 Viewport height: ${window.innerHeight}`);
+    
     const targetPosition = window.innerHeight * 0.25;
     
+    // For step-1, check if the card is already too high
+    if (currentStep === 1 && cardRect.top < 50) {
+      console.log('🔍 Step-1 card is already too high, not scrolling');
+      input.dataset.scrolling = 'false';
+      return;
+    }
+
     if (inputRect.top > targetPosition) {
       const scrollAmount = Math.min(inputRect.top - targetPosition, window.innerHeight * 0.3);
       
-      // Use CSS transforms instead of GSAP for step-1
-      if (currentStep === 1) {
-        currentCard.style.transform = `translate(-50%, calc(-50% - ${scrollAmount}px))`;
-      } else {
-        gsap.to(currentCard, {
-          duration: 0.3,
-          y: -scrollAmount,
-          ease: 'power2.out'
-        });
-      }
-      
+      console.log(`📏 Scroll amount: ${scrollAmount}`);
+
+      // For all inputs, just scroll the current step card
+      gsap.to(currentCard, {
+        duration: 0.3,
+        y: -scrollAmount,
+        ease: 'power2.out',
+        onComplete: () => {
+          input.dataset.scrolling = 'false';
+        }
+      });
+
+      // Store the scroll amount to reset later
       currentCard.dataset.scrollOffset = scrollAmount;
+    } else {
+      input.dataset.scrolling = 'false';
     }
-    
-    input.dataset.scrolling = 'false';
   };
 
   // Update the blur handler for inputs

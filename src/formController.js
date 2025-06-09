@@ -12,10 +12,6 @@ let preventViewportResize = false;
 let keyboardOpen = false;
 let scrollTimeout;
 
-// Add rate limiting protection on the frontend
-let lastEmailCheck = 0;
-const EMAIL_CHECK_COOLDOWN = 3000; // 3 seconds between checks
-
 const activeCardScale = 1;
 const finalPositions = [
   { x: '-30px', y: '-150px', rotation: -3, scale: 0.5 },

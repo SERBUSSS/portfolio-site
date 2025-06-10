@@ -1248,38 +1248,6 @@ const handleSubmit = async (e) => {
   }
 };
 
-const disableFormEntry = () => {
-    const formOpenButtons = document.querySelectorAll('.form-open-btn');
-    const formEntrySection = document.getElementById('form-entry');
-    
-    // Store submission state
-    localStorage.setItem('formSubmitted', 'true');
-    localStorage.setItem('submissionTime', new Date().toISOString());
-    
-    // Update all form open buttons
-    formOpenButtons.forEach(button => {
-      button.innerHTML = 'Form Submitted ✓';
-      button.disabled = true;
-      button.style.cursor = 'not-allowed';
-      button.style.opacity = '0.6';
-      button.removeEventListener('click', openForm);
-    });
-    
-    // Update description text
-    const descriptionText = formEntrySection.querySelector('p');
-    if (descriptionText) {
-      descriptionText.textContent = 'Thank you! Your inquiry has been submitted successfully.';
-    }
-};
-
-const checkPreviousSubmission = () => {
-    const wasSubmitted = localStorage.getItem('formSubmitted');
-    
-    if (wasSubmitted === 'true') {
-      disableFormEntry();
-    }
-};
-
 // =============================================================================
 // 9. SPECIAL FEATURES MODULE (Social Media, Budget, etc.)
 // =============================================================================
@@ -1995,9 +1963,6 @@ const setupInitialSocialMediaButtons = () => {
 // =============================================================================
 const initForm = () => {
     console.log('initForm called');
-
-    // Check if form was previously submitted
-    checkPreviousSubmission();
 
     // Reset current step to 0
     currentStep = 0;

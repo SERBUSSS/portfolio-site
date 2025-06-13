@@ -457,6 +457,9 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
+  }
   .w-\[2\.5rem\] {
     width: 2.5rem;
   }
@@ -1348,6 +1351,11 @@
   .md\:h-8 {
     @media (width >= 48rem) {
       height: calc(var(--spacing) * 8);
+    }
+  }
+  .md\:h-full {
+    @media (width >= 48rem) {
+      height: 100%;
     }
   }
   .md\:w-1 {

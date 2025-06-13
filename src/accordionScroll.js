@@ -6,16 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     gsap.registerPlugin(ScrollTrigger);
-    
+
     // Get the FAQ intro element
     const faqIntro = document.querySelector('#FAQ .inline-flex');
-    
+
     // Get all question elements
     const questions = document.querySelectorAll('#FAQ [id^="q-"]');
-    
+
     // Get all dividers
     const dividers = document.querySelectorAll('#FAQ [id="divider"]');
-    
+
     /*
     console.log("FAQ Elements found:", {
         faqIntro: !!faqIntro,
@@ -23,40 +23,40 @@ document.addEventListener('DOMContentLoaded', function() {
         dividers: dividers.length
     });
     */
-    
+
     // Make everything visible first (fallback)
     document.querySelectorAll('#FAQ *').forEach(el => {
         el.style.opacity = 1;
     });
-    
+
     // Basic accordion functionality
     questions.forEach((question) => {
         const header = question.querySelector('div:first-child');
         const content = question.querySelector('div:nth-child(2)');
         const chevron = header.querySelector('img');
-        
+
         if (!header || !content) return;
-        
+
         // Store the original chevron src
         const defaultChevronSrc = chevron ? chevron.src : '';
         // Prepare the active chevron src by replacing the filename
         const activeChevronSrc = defaultChevronSrc.replace('Chev-down.svg', 'Chev-down-active.svg');
-        
+
         // Initially hide content
         gsap.set(content, { height: 0, overflow: 'hidden' });
-        
+
         // Add click event
         header.addEventListener('click', function() {
             // Toggle this question
             const isOpen = content.style.height !== '0px' && content.style.height !== '';
-            
+
             if (isOpen) {
                 // Close
                 gsap.to(content, {
                     height: 0,
                     duration: 0.3
                 });
-                
+
                 // Change chevron back to default
                 if (chevron) {
                     chevron.src = defaultChevronSrc;
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (chev) chev.src = defaultChevronSrc;
                     }
                 });
-                
+
                 // Open this one
                 gsap.set(content, { height: 'auto' });
                 const height = content.offsetHeight;
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     height: height,
                     duration: 0.5
                 });
-                
+
                 // Change chevron to active
                 if (chevron) {
                     chevron.src = activeChevronSrc;
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Open first question by default
     if (questions.length > 0) {
         const firstHeader = questions[0].querySelector('div:first-child');

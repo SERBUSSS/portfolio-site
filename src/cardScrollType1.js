@@ -5,6 +5,9 @@ let navigationStates = {};
 let horizontalScrollData = {};
 let tooltipManagers = {};
 let scrollTimeout = {};
+let sectionScrollProgress = {};
+// Cache the animation frame for better performance
+let scrollAnimationFrame = null;
 
 // Define final positions for up to 20 cards with complete transform data
 const finalPositionsConfig = {
@@ -988,6 +991,152 @@ function getCardVisibilityOpacity(cardIndex, progress, totalCards) {
     return 1; // Fully visible
 }
 
+// Create invisible scroll zones
+function createScrollZones(section, sectionId, sectionCards) {
+    // Only for desktop
+    if (window.innerWidth < 768) return null;
+    
+    const zonesContainer = document.createElement('div');
+    zonesContainer.className = 'scroll-zones-container';
+    zonesContainer.id = `scroll-zones-${sectionId}`;
+    
+    const leftZone = document.createElement('div');
+    leftZone.className = 'scroll-zone scroll-zone-left';
+    
+    const rightZone = document.createElement('div');
+    rightZone.className = 'scroll-zone scroll-zone-right';
+    
+    // Left zone: Continue vertical page scroll (bypass pinning)
+    leftZone.addEventListener('wheel', (e) => {
+        if (!horizontalScrollData[sectionId].isActive) return;
+        
+        if (e.deltaY > 0) { // Scrolling down
+            e.preventDefault();
+            // Force exit from pinned section and continue page scroll
+            bypassSectionScroll(sectionId, 'down');
+        } else if (e.deltaY < 0) { // Scrolling up
+            e.preventDefault();
+            bypassSectionScroll(sectionId, 'up');
+        }
+    }, { passive: false });
+    
+    // Right zone: Horizontal card navigation
+    rightZone.addEventListener('wheel', (e) => {
+        if (!horizontalScrollData[sectionId].isActive) return;
+        e.preventDefault();
+        handleDesktopCardNavigation(e, sectionId, sectionCards);
+    }, { passive: false });
+    
+    zonesContainer.appendChild(leftZone);
+    zonesContainer.appendChild(rightZone);
+    section.appendChild(zonesContainer);
+    
+    return zonesContainer;
+}
+
+// Function to bypass section pinning and continue page scroll
+function bypassSectionScroll(sectionId, direction) {
+    // Cancel any existing scroll animation
+    if (scrollAnimationFrame) {
+        cancelAnimationFrame(scrollAnimationFrame);
+    }
+    
+    // Get the actual section element
+    const section = document.getElementById(sectionId);
+    const body = document.body;
+    const html = document.documentElement;
+    
+    // Calculate document height and current position
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const viewportHeight = window.innerHeight;
+    const currentScroll = window.pageYOffset;
+    
+    // Calculate new position with bounds checking
+    const scrollIncrement = direction === 'down' ? 120 : -120;
+    let newScroll = currentScroll + scrollIncrement;
+    
+    // Ensure we don't scroll past document bounds
+    newScroll = Math.max(0, Math.min(newScroll, docHeight - viewportHeight));
+    
+    // Only disable ScrollTriggers for THIS specific section
+    const currentSectionTriggers = ScrollTrigger.getAll().filter(st => 
+        st.trigger && st.trigger.id === sectionId
+    );
+    
+    // Temporarily disable only current section's triggers
+    currentSectionTriggers.forEach(st => st.disable());
+    
+    // Deactivate current section
+    horizontalScrollData[sectionId].isActive = false;
+    deactivateScrollZones(sectionId);
+    toggleNavigation(true);
+    hideNavigation(sectionId);
+    
+    // Use requestAnimationFrame for smooth scrolling
+    const startTime = performance.now();
+    const startScroll = currentScroll;
+    const distance = newScroll - startScroll;
+    const duration = 400; // ms
+    
+    function animateScroll(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const position = startScroll + (distance * easeOut);
+        
+        window.scrollTo(0, position);
+        
+        if (progress < 1) {
+            scrollAnimationFrame = requestAnimationFrame(animateScroll);
+        } else {
+            scrollAnimationFrame = null;
+            
+            // Re-enable only the current section's triggers after animation
+            setTimeout(() => {
+                currentSectionTriggers.forEach(st => st.enable());
+                // Only refresh if no other sections are active
+                if (!Object.values(horizontalScrollData).some(data => data.isActive)) {
+                    ScrollTrigger.refresh();
+                }
+            }, 100);
+        }
+    }
+    
+    scrollAnimationFrame = requestAnimationFrame(animateScroll);
+}
+
+// Initialize scroll progress tracking when section becomes active
+function initSectionScrollProgress(sectionId) {
+    if (!sectionScrollProgress[sectionId]) {
+        const section = document.getElementById(sectionId);
+        const scrollTriggerInstance = ScrollTrigger.getAll().find(st => st.trigger === section);
+        
+        if (scrollTriggerInstance) {
+            // Start tracking from current scroll position or trigger start
+            sectionScrollProgress[sectionId] = Math.max(
+                window.pageYOffset, 
+                scrollTriggerInstance.start
+            );
+        }
+    }
+}
+
+// Reset scroll progress when section is fully exited
+function resetSectionScrollProgress(sectionId) {
+    delete sectionScrollProgress[sectionId];
+}
+
+function activateScrollZones(sectionId) {
+    const zones = document.getElementById(`scroll-zones-${sectionId}`);
+    if (zones) zones.classList.add('active');
+}
+
+function deactivateScrollZones(sectionId) {
+    const zones = document.getElementById(`scroll-zones-${sectionId}`);
+    if (zones) zones.classList.remove('active');
+}
+
 // Animation for project sections with hybrid horizontal scroll
 window.addEventListener('siteLoaded', function() {
     // Register ScrollTrigger plugin
@@ -1045,6 +1194,8 @@ window.addEventListener('siteLoaded', function() {
             // Hide the original background section
             backgroundElement.style.display = 'none';
         }
+
+        createScrollZones(section, sectionId, sectionCards);
         
         // Set initial states for cards
         sectionCards.forEach(card => {
@@ -1084,23 +1235,31 @@ window.addEventListener('siteLoaded', function() {
             preventOverlaps: true,
             onEnter: () => {
                 horizontalScrollData[sectionId].isActive = true;
+                initSectionScrollProgress(sectionId);
+                activateScrollZones(sectionId);
                 toggleNavigation(false);
                 showNavigation(sectionId);
                 setTimeout(() => showAutoPreview(sectionId, sectionCards), 500);
             },
             onLeave: () => {
                 horizontalScrollData[sectionId].isActive = false;
+                resetSectionScrollProgress(sectionId);
+                deactivateScrollZones(sectionId);
                 toggleNavigation(true);
                 hideNavigation(sectionId);
             },
             onEnterBack: () => {
                 horizontalScrollData[sectionId].isActive = true;
+                initSectionScrollProgress(sectionId);
+                activateScrollZones(sectionId);
                 toggleNavigation(false);
                 showNavigation(sectionId);
                 setTimeout(() => showAutoPreview(sectionId, sectionCards), 300);
             },  
             onLeaveBack: () => {
                 horizontalScrollData[sectionId].isActive = false;
+                resetSectionScrollProgress(sectionId);
+                deactivateScrollZones(sectionId);
                 toggleNavigation(true);
                 hideNavigation(sectionId);
             },

@@ -390,3 +390,27 @@ body.loaded section:not(#loading-screen) {
     -webkit-text-fill-color: #fffdff !important;
   }
 }
+
+.faq-content {
+    overflow: hidden;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default state: show chevron, keep line hidden */
+.chevron {
+    opacity: 1;
+}
+
+.open-q {
+    opacity: 0;
+}
+
+/* Open state: hide chevron, show line (override hidden class) */
+.faq-open .chevron {
+    opacity: 0;
+}
+
+.faq-open .open-q {
+    opacity: 1;
+    display: block !important; /* Override the hidden class */
+}

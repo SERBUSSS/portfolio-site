@@ -1270,7 +1270,6 @@ window.addEventListener('siteLoaded', function() {
     projectSections.forEach(section => {
         const sectionId = section.id;
         tooltipManagers[sectionId] = new ProjectTooltipManager(sectionId);
-        // ADD THIS LINE:
         initProjectNavigation(sectionId, section.querySelectorAll('.item'));
     });
 

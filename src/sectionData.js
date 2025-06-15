@@ -1,189 +1,5 @@
-<!DOCTYPE html>
-<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Language" content="en, ro">
-        <link rel="alternate" hreflang="en" href="index.html">
-        <link rel="alternate" hreflang="ro" href="index.ro.html">
-        <title>Buștiuc Sergiu</title>
-        <link rel="icon" type="image/x-icon" href="src/icons/Logo Mark.svg">
-        <link rel="stylesheet" href="src/output.css">
-        <link rel="stylesheet" href="src/cardScroll.css">
-        <!-- <link rel="stylesheet" href="src/formStyles.css"> -->
-    </head>
-    <body class="bg-[#070B0D] loading">
-
-        <div id="loading-screen">
-            <!-- Logo -->
-            <div class="loading-logo">
-                <svg width="80" height="80" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M38.1268 64L12.5251 0H31.7266L57.329 64H38.1268Z" fill="#FFFDFF"/>
-                <path d="M4.83555 19.2L0 38.5307L33.7341 61.0183L17.0055 19.2H4.83555Z" fill="#FFFDFF"/>
-                <path d="M64 19.3115L59.2367 38.4H50.288L35.9105 2.45894L64 19.3115Z" fill="#FFFDFF"/>
-                </svg>
-            </div>
-            
-            <!-- Spinner -->
-            <div class="loading-spinner"></div>
-            
-            <!-- Loading text -->
-            <p class="loading-text">Loading experience...</p>
-        </div>
-        
-        <header id="nav-bar-cont" class="w-[100vw] min-[70rem]:h-32 max-[70rem]:h-[6.5rem] h-auto flex fixed justify-center top-0 left-0">
-            <div id="nav-bar" class="w-full inline-flex items-center justify-between mt-4">
-                <!-- Mobile layout (existing) -->
-                <div id="mobile-bar" class="min-[70rem]:hidden w-full p-4 mx-4 bg-[#262728]/70 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm inline-flex justify-between items-center">
-                    <div class="basis-1/2 h-auto flex justify-start">
-                        <a href="#" class="w-full h-auto flex justify-start items-center">
-                            <svg id="head-logo" width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M38.1268 64L12.5251 0H31.7266L57.329 64H38.1268Z" fill="#FFFDFF"/>
-                                <path d="M4.83555 19.2L0 38.5307L33.7341 61.0183L17.0055 19.2H4.83555Z" fill="#FFFDFF"/>
-                                <path d="M64 19.3115L59.2367 38.4H50.288L35.9105 2.45894L64 19.3115Z" fill="#FFFDFF"/>
-                            </svg>
-                        </a>
-                    </div>
-                    <div class="basis-1/2 flex justify-end">
-                        <a href="#" class="menu-toggle">
-                            <svg width="29" height="26" viewBox="0 0 29 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M27.4737 26L29 20H1.52632L0 26H27.4737Z" fill="#FFFDFF"/>
-                                <path d="M27.4737 16L29 10H1.52632L3.88162e-07 16H27.4737Z" fill="#FFFDFF"/>
-                                <path d="M27.4737 6L29 0H1.52632L5.33723e-07 6H27.4737Z" fill="#FFFDFF"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Desktop layout -->
-                <div class="hidden min-[70rem]:inline-flex w-full bg-[#262728]/70 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm justify-between items-center py-6 px-6 md:max-[70rem]:px-16 xl:my-0 xl:mx-auto xl:max-w-[1200px] lg:px-4 lg:py-4">
-                    <!-- Logo -->
-                    <div class=" w-auto h-auto md:pl-2" >
-                        <a href="#" class="w-full h-auto">
-                            <svg id="head-logo" class="w-[2.5rem] h-auto lg:w-[3rem] xl:w-[4rem]" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M38.1268 64L12.5251 0H31.7266L57.329 64H38.1268Z" fill="#FFFDFF"/>
-                                <path d="M4.83555 19.2L0 38.5307L33.7341 61.0183L17.0055 19.2H4.83555Z" fill="#FFFDFF"/>
-                                <path d="M64 19.3115L59.2367 38.4H50.288L35.9105 2.45894L64 19.3115Z" fill="#FFFDFF"/>
-                            </svg>
-                        </a>
-                    </div>
-                    
-                    <!-- Navigation Links -->
-                    <nav class="flex justify-start items-center gap-8">
-                        <a href="#project-1" data-scroll-to="project-1" class="text-[#FFFDFF] text-[1.35rem] font-normal font-sans leading-10 hover:font-bold">Projects</a>
-                        <a href="#process" data-scroll-to="process" class="text-[#FFFDFF] text-[1.35rem] font-normal font-sans leading-10 hover:font-bold">My process</a>
-                        <a href="#services" data-scroll-to="services" class="text-[#FFFDFF] text-[1.35rem] font-normal font-sans leading-10 hover:font-bold">Services</a>
-                        <a href="#faq" data-scroll-to="faq" class="text-[#FFFDFF] text-[1.35rem] font-normal font-sans leading-10 hover:font-bold">FAQ</a>
-                    </nav>
-                    
-                    <!-- CTA Button -->
-                    <div class="w-auto h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover:bg-[#333435]/95 rounded backdrop-blur-sm lg:px-4 lg:py-4">
-                        <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6 lg:text-[1.25rem]">Start a Project</button>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- open state of the menu -->
-            <div class="hidden mobile-nav-container bg-[#262728]/70 w-auto h-min fixed top-0 left-0 right-0 bottom-0 p-4 pb-8 m-4 bg-opacity-20 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm z-50">
-                <div class="w-full inline-flex items-center justify-between pb-8">
-                    <div class="basis-1/2 h-auto flex justify-start">
-                        <a href="#" class="w-full h-auto flex justify-start items-center">
-                            <svg id="head-logo" width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M38.1268 64L12.5251 0H31.7266L57.329 64H38.1268Z" fill="#FFFDFF"/>
-                                <path d="M4.83555 19.2L0 38.5307L33.7341 61.0183L17.0055 19.2H4.83555Z" fill="#FFFDFF"/>
-                                <path d="M64 19.3115L59.2367 38.4H50.288L35.9105 2.45894L64 19.3115Z" fill="#FFFDFF"/>
-                            </svg>
-                        </a>
-                    </div>
-                    <div class="basis-1/2 flex justify-end">
-                        <a href="#" class="menu-close">
-                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.6431 20L4.65491 7.0118L7.01192 4.65479L20.0001 17.6429L32.9883 4.65479L35.3453 7.0118L22.3571 20L35.3453 32.988L32.9883 35.3452L20.0001 22.357L7.01192 35.3452L4.65491 32.988L17.6431 20Z" fill="#FFFDFF"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-full h-auto inline-flex flex-col justify-between items-start">
-                    <div class="w-full h-auto inline-flex flex-col justify-start items-start gap-8">
-                        <div class="w-full h-auto inline-flex flex-col justify-center items-center gap-4">
-                            <div class="w-full inline-flex gap-1">
-                                <a href="#project-1" data-scroll-to="project-1" class="w-full self-stretch text-center text-[#FFFDFF] text-3xl font-bold font-sans leading-snug">Projects</a>
-                            </div>
-                            <div class="w-full inline-flex gap-1">
-                                <a href="#process" data-scroll-to="process" class="w-full self-stretch text-center text-[#FFFDFF] text-3xl font-bold font-sans leading-snug">My Process</a>
-                            </div>
-                            <div class="w-full inline-flex gap-1">
-                                <a href="#services" data-scroll-to="services" class="w-full self-stretch text-center text-[#FFFDFF] text-3xl font-bold font-sans leading-snug">Services</a>
-                            </div>
-                            <div class="w-full inline-flex gap-1">
-                                <a href="#faq" data-scroll-to="faq" class="w-full self-stretch text-center text-[#FFFDFF] text-3xl font-bold font-sans leading-snug">FAQ</a>
-                            </div>
-                        </div>
-                        <div class="w-full flex flex-col items-center justify-center gap-2">
-                            <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
-                                <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
-                            </div>
-                            <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
-                        </div>
-                    </div>
-                    <div class="self-stretch inline-flex flex-col justify-start items-center gap-6 mt-16">
-                        <p class="w-full self-stretch text-center justify-start text-[#FFFDFF] text-base font-normal font-sans leading-5">Find me on:</p>
-                        <div class="self-stretch inline-flex justify-evenly items-center">
-                            <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social 1">
-                                <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="40px" height="40px"> 
-                                    <path d="M 8 3 C 5.243 3 3 5.243 3 8 L 3 16 C 3 18.757 5.243 21 8 21 L 16 21 C 18.757 21 21 18.757 21 16 L 21 8 C 21 5.243 18.757 3 16 3 L 8 3 z M 8 5 L 16 5 C 17.654 5 19 6.346 19 8 L 19 16 C 19 17.654 17.654 19 16 19 L 8 19 C 6.346 19 5 17.654 5 16 L 5 8 C 5 6.346 6.346 5 8 5 z M 17 6 A 1 1 0 0 0 16 7 A 1 1 0 0 0 17 8 A 1 1 0 0 0 18 7 A 1 1 0 0 0 17 6 z M 12 7 C 9.243 7 7 9.243 7 12 C 7 14.757 9.243 17 12 17 C 14.757 17 17 14.757 17 12 C 17 9.243 14.757 7 12 7 z M 12 9 C 13.654 9 15 10.346 15 12 C 15 13.654 13.654 15 12 15 C 10.346 15 9 13.654 9 12 C 9 10.346 10.346 9 12 9 z" fill="#FFFDFF"/>
-                                </svg>
-                            </a>
-                            <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social 2">
-                                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="40px" height="40px">
-                                    <path d="M26.37,26l-8.795-12.822l0.015,0.012L25.52,4h-2.65l-6.46,7.48L11.28,4H4.33l8.211,11.971L12.54,15.97L3.88,26h2.65 l7.182-8.322L19.42,26H26.37z M10.23,6l12.34,18h-2.1L8.12,6H10.23z" fill="#FFFDFF"/>
-                                </svg>
-                            </a>
-                            <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social 3">
-                                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="40px" height="40px">
-                                    <path d="M 1 9 C 0.448 9 0 9.448 0 10 L 0 24.115234 C 0 30.276234 4.6829844 35.631469 10.833984 35.980469 C 16.730984 36.314469 21.747875 32.176391 22.796875 26.650391 C 23.366875 27.420391 23.94625 28.135969 24.53125 28.792969 L 21.001953 43.771484 C 20.932953 44.069484 21.002406 44.380094 21.191406 44.621094 C 21.382406 44.859094 21.670563 45 21.976562 45 L 27.095703 45 C 27.559703 45 27.959406 44.687328 28.066406 44.236328 C 28.687406 41.615328 29.660969 37.508156 30.542969 33.785156 L 31.453125 34.3125 C 33.618125 35.4335 35.815 36 38 36 C 45.192 36 50.926 29.641 49.875 22.25 C 49.179 17.354 45.414078 13.318344 40.580078 12.277344 C 34.951078 11.064344 29.525359 13.949141 27.193359 18.744141 C 27.193359 18.744141 26.934562 19.318578 26.726562 19.892578 C 25.076563 17.046578 24.107609 14.094078 23.599609 11.955078 C 23.414609 11.175078 23.137469 9.762875 23.105469 9.671875 C 22.966469 9.268875 22.589109 9 22.162109 9 L 17 9 C 16.448 9 16 9.448 16 10 L 16 24.300781 C 16 26.649781 14.287219 28.750516 11.949219 28.978516 C 9.2672187 29.240516 7 27.13 7 24.5 L 7 10 C 7 9.448 6.552 9 6 9 L 1 9 z M 38 19 C 40.757 19 43 21.243 43 24 C 43 26.757 40.757 29 38 29 C 35.775 29 33.713531 27.658281 32.269531 26.488281 C 32.796531 24.263281 33.15025 22.773047 33.15625 22.748047 C 33.72425 20.541047 35.717 19 38 19 z" fill="#FFFDFF"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <section id="hero-section">
-            <div class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-                <div class="w-full flex flex-col items-center justify-between py-12 lg:py-20">
-                    <div class="w-full h-auto flex justify-center">
-                        
-                    </div>
-                    <div class="inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
-                        <h1 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-2xl leading-10 font-normal font-mono md:text-3xl md:leading-12 lg:text-4xl lg:leading-14 xl:text-5xl xl:leading-16">Web Designer & Digital Marketing Strategist</h1>
-                        <h3 class="scroll-reveal-paragraph self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-tight md:text-xl md:leading-6 lg:text-2xl lg:leading-8 xl:text-3xl xl:leading-10">Combining web design with marketing strategy to help businesses convert more visitors into paying customers.</h3>
-                    </div>
-                    <div class="fade-reveal-element fade-reveal-element w-full h-auto flex flex-col items-center justify-center gap-2">
-                        <svg class="w-10 h-auto xl:w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fffdff"><path d="M13.0001 1.99974L11.0002 1.9996L11.0002 18.1715L7.05044 14.2218L5.63623 15.636L12.0002 22L18.3642 15.636L16.9499 14.2218L13.0002 18.1716L13.0001 1.99974Z"></path></svg>
-                        <p class="text-center justify-start text-[#FFFDFF] text-sm font-light font-sans leading-tight lg:text-lg lg:leading-4 xl:text-xl xl:leading-6">scroll down</p>
-                    </div>
-                </div>
-            </div>
-            <div data-background="silk" class="background-container"></div>
-        </section>
-        
-        <section id="background-p-1" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
-                <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="fade-reveal-element self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 01</div>
-                    <h3 class="scroll-reveal-heading self-stretch text-center justify-start font-extrabold text-[#FFFDFF] text-2xl font-sans leading-[1.8rem] md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">From zero budget to live business in 30 days - proving that great design doesn't require deep pockets, just smart strategy.</h3>
-                </div>
-                <div class="fade-reveal-element inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                    <p class="self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                </div>
-            </div>
-        </section>
-
-        <section id="project-1" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+export const heavySections = {
+  'project-1': `<section id="project-1" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-1" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
                 <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
                 data-direction="prev" 
@@ -252,6 +68,7 @@
                     </div>
                     <div role="listitem" class="item card shiny-border absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
+                            <!-- Desktop images for large screens -->
                             <source 
                                 media="(min-width: 768px)"
                                 data-srcset="/images/desktop/p1/webp/d-b-project01-card02-v3.webp 1024w, 
@@ -264,6 +81,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card02-v3.png 1440w"
                                 sizes="50vw">
                             
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card02-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -281,6 +99,7 @@
                     </div>
                     <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
+                            <!-- Desktop images for large screens -->
                             <source 
                                 media="(min-width: 768px)"
                                 data-srcset="/images/desktop/p1/webp/d-b-project01-card03-v3.webp 1024w, 
@@ -293,7 +112,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card03-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card03-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -323,7 +142,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card04-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card04-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -353,7 +172,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card05-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card05-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -383,7 +202,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card06-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card06-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -413,7 +232,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card07-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card07-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -443,7 +262,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card08-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card08-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -473,7 +292,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card09-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card09-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -503,7 +322,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card10-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card10-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -533,7 +352,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card11-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card11-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -563,7 +382,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card12-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card12-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -593,7 +412,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card13-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card13-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -623,7 +442,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card14-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card14-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -653,7 +472,7 @@
                                             /images/desktop/p1/pngs/d-b-project01-card15-v3.png 1440w"
                                 sizes="50vw">
                             
-                            
+                            <!-- Mobile images for small screens -->
                             <source 
                                 data-srcset="/images/p1/webp/m-b-project01-card15-v3.webp 480w"
                                 sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -706,6 +525,7 @@
                 </div>
             </div>
             <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
+                <!-- Previous/Left Button -->
                 <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
                     data-direction="prev" 
                     aria-label="Previous card">
@@ -716,8 +536,10 @@
                     </div>
                 </div>
                 
+                <!-- Helper text (keep existing) -->
                 <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
                 
+                <!-- Next/Right Button -->
                 <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
                     data-direction="next" 
                     aria-label="Next card">
@@ -728,23 +550,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="background-p-2" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
-                <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="fade-reveal-element self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 02</div>
-                    <h3 class="scroll-reveal-heading self-stretch text-center justify-start font-extrabold text-[#FFFDFF] text-2xl font-sans leading-[1.8rem] md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Building a supplement brand from market research to Meta ads - a masterclass in e-commerce complexity and pivoting under pressure.</h3>
-                </div>
-                <div class="fade-reveal-element inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                    <p class="self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                </div>
-            </div>
-        </section>
-
-        <section id="project-2" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+        </section>`,
+  'project-2': `<section id="project-2" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-2" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
                 <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
                 data-direction="prev" 
@@ -1383,40 +1190,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="background-p-3" class="section w-full h-screen pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="w-full h-auto flex flex-col gap-10 justify-center items-center md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
-                <div class="w-full h-36 flex justify-center">
-                    &nbsp;
-                </div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-6">
-                    <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                        <div class="fade-reveal-element self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 03</div>
-                        <h3 class="scroll-reveal-heading self-stretch text-center justify-start font-extrabold text-[#FFFDFF] text-2xl font-sans leading-[1.8rem] md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Team collaboration at its finest - where tight deadlines meet conversion optimization in the competitive German supplement market.</h3>
-                    </div>
-                    <div class="fade-reveal-element inline-flex w-full h-auto justify-center items-center gap-2">
-                        <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                        <p class="self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
-                        <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                    </div>
-                </div>
-                <div class="animate-reveal-element self-stretch px-4 py-6 bg-[#f7f8e6]/90 rounded-lg shadow-[0px_4px_8px_0px_rgba(0,0,0,0.05)] inline-flex flex-col justify-start items-center gap-4 ">
-                    <div class="inline-flex justify-start items-center gap-2.5">
-                        <div class="w-10 h-10 relative bg-[#070b0d] rounded-lg flex justify-center items-center">
-                            <img class="w-full h-auto" src="/src/icons/AnDPerfBlock.png" alt="AnDPerformance logo" />
-                        </div>
-                        <div class="inline-flex flex-col justify-center items-start pt-[3px]">
-                            <div class="text-center justify-start text-[#262728] text-xs font-bold font-sans">Ahmed M.</div>
-                            <div class="text-center justify-start text-[#4C4F50] text-[10px] font-normal font-sans leading-4">Owner, A&D Performance</div>
-                        </div>
-                    </div>
-                    <p class="self-stretch text-center justify-start text-[#070b0d] text-base font-normal font-sans leading-[1.3rem]">“Finally, a designer who thinks like a business owner. He understood our fast pace and delivered designs that actually moved the needle on sales.”</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="project-3" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+        </section>`,
+  'project-3': `<section id="project-3" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-3" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
                 <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
                 data-direction="prev" 
@@ -1995,23 +1770,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="background-p-4" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="px-4 inline-flex flex-col justify-center items-center gap-6 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42 lg:py-20">
-                <div class="self-stretch flex flex-col justify-start items-center gap-4">
-                    <div class="fade-reveal-element self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:font-normal md:text-lg lg:text-xl">Project 04</div>
-                    <div class="scroll-reveal-heading self-stretch text-center justify-start font-extrabold text-[#FFFDFF] text-2xl font-sans leading-[1.8rem] md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Redesigning the home essentials shopping experience - where comprehensive research meets user-centered design innovation.</div>
-                </div>
-                <div class="fade-reveal-element inline-flex w-full h-auto justify-center items-center gap-2">
-                    <img src="/src/icons/form-back-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                    <p class="self-stretch text-center justify-start text-[#FFFDFF] text-sm font-light font-sans md:text-lg lg:text-xl lg:leading-8">scroll horizontally to explore the project</p>
-                    <img src="/src/icons/next-arrow.svg" alt="back arrow" class="w-auto h-6 opacity-35 md:h-8 lg:h-10">
-                </div>
-            </div>
-        </section>
-
-        <section id="project-4" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+        </section>`,
+  'project-4': `<section id="project-4" class="section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div id="tooltip-project-4" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
                 <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
                 data-direction="prev" 
@@ -2704,23 +2464,11 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>`
+}
 
-        <section id="background-process" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="w-full flex flex-col items-center justify-between py-40 lg:py-20">
-                <div class="w-full h-auto flex justify-center"></div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-5 xl:gap-6 lg:px-20 xl:px-42">
-                    <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-4xl font-normal font-mono leading-12 md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Working with me</h3>
-                    <p class="scroll-reveal-paragraph self-stretch text-center justify-start text-[#FFFDFF] text-[1rem] font-normal font-sans leading-5.5 md:text-2xl md:leading-8">I believe great projects start with great communication. That's why I've developed a clear, collaborative process that keeps you informed and engaged every step of the way—from understanding your vision to delivering results that exceed expectations.</p>
-                </div>
-                <div class="fade-reveal-element fade-reveal-element w-full h-auto flex flex-col items-center justify-center gap-2">
-                    <svg class="w-10 h-auto xl:w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fffdff"><path d="M13.0001 1.99974L11.0002 1.9996L11.0002 18.1715L7.05044 14.2218L5.63623 15.636L12.0002 22L18.3642 15.636L16.9499 14.2218L13.0002 18.1716L13.0001 1.99974Z"></path></svg>
-                    <p class="text-center justify-start text-[#FFFDFF] text-sm font-light font-sans leading-tight lg:text-lg lg:leading-4 xl:text-xl xl:leading-6">scroll down</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="process" class="section scroll-section-2 w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+export const otherSections = {
+  'process': `<section id="process" class="section scroll-section-2 w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="wrapper h-screen">
                 <div role="list" class="list flex justify-center align-center h-full relative">
                     <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#262728]/95 rounded outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-[40vw]">
@@ -2816,9 +2564,8 @@
                 </div>
                 <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
             </div> 
-        </section>
-
-        <section id="services" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+        </section>`,
+  'services': `<section id="services" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="w-full flex flex-col items-center justify-start pt-20 pb-16 gap-8 lg:py-20">
                 <div id="s-intro" class="inline-flex flex-col justify-center items-center gap-2">
                     <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-4xl font-normal font-mono md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">My Services</h3>
@@ -2942,9 +2689,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="faq" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+        </section>`,
+  'faq': `<section id="faq" class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
             <div class="w-full flex flex-col items-center justify-start pt-10 pb-10 gap-8 lg:py-20">
                 <div id="faq-intro" class="inline-flex flex-col justify-center items-center gap-2">
                     <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-4xl font-normal font-mono md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">FAQ</h3>
@@ -3147,1318 +2893,5 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="form-entry" class="section w-full h-screen flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
-            <div class="w-full flex flex-col items-center justify-between py-40 lg:py-30">
-                <div class="w-full h-auto flex justify-center"></div>
-                <div class="px-4 inline-flex flex-col justify-center items-center gap-2">
-                    <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-2xl font-normal font-mono md:text-3xl md:leading-10 lg:text-5xl lg:leading-14">Ready to talk things into reality?</h3>
-                    <p class="scroll-reveal-paragraph self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl md:leading-8">This form will guide you through a few simple questions to help me better understand your business and what you want to achieve.
-                    </p>
-                </div>
-                <div class="fade-reveal-element w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw]">
-                    <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
-                        <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
-                    </div>
-                    <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
-                </div> 
-            </div>
-            <div data-background="balatro" class="background-container bg-gradient-to-b from-[#070b0d] via-[#070b0d]/0 to-[#070b0d]" data-color1="#081026" data-color2="#070B0D" data-color3="#0D1A3B"></div>
-        </section>
-
-        <!-- Form overlay - this appears when form is opened -->
-        <div id="form-overlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 hidden"></div>
-
-        <!-- Form container - contains the cards -->
-        <div id="form-container" class="relative h-full inset-0 z-50 hidden">
-            <form id="multi-step-form" action="/.netlify/functions/submit-form" method="POST" class="relative overflow-hidden h-full w-full flex justify-center items-center flex-col lg:px-0">
-                <!-- Honeypot field for spam protection (hidden from users) -->
-                <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
-                
-                <!-- Security token field (if needed for CSRF protection) -->
-                <input type="hidden" name="_csrf" value="">
-                
-                <div id="step-0" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button (invisible on first step) -->
-                        <button type="button" class="prev-button invisible" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Before we start</h2>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                Completing this form, you will provide basic information about you, your business, 
-                                services needed, and your vision and budget for the project.
-                            </p>
-                        </div>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
-                            <div class="form-field">
-                                <label for="fullName" class="flex text-base font-extrabold text-[#fffdff] mb-2">Enter Full Name:</label>
-                                <div class="relative">
-                                    <input 
-                                        type="text" 
-                                        name="fullName" 
-                                        id="fullName" 
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="John Doe"
-                                        autocomplete="name"
-                                    >
-                                    <!-- Validation icons -->
-                                    <div class="validation-icon hidden" id="fullName-success-icon">
-                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-green-500">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="validation-icon hidden" id="fullName-error-icon">
-                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="validation-message hidden" id="fullName-validation-message"></div>
-                            </div>
-
-                            <div class="form-field">
-                                <label for="email" class="flex text-base font-extrabold text-[#fffdff] mb-2">Enter your email:</label>
-                                <div class="relative">
-                                    <input 
-                                        type="email" 
-                                        name="email" 
-                                        id="email" 
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="example@email.com"
-                                        autocomplete="email"
-                                    >
-                                    <!-- Validation icons -->
-                                    <div class="validation-icon hidden" id="email-success-icon">
-                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-green-500">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="validation-icon hidden" id="email-error-icon">
-                                        <svg viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <!-- Validation message -->
-                                <div class="validation-message hidden" id="email-validation-message"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tip section -->
-                        <div class="mb-6">
-                            <div class="w-full inline-flex items-center gap-4 mb-2">
-                                <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
-                                <h3 class="text-xl font-medium text-center text-[#fffdff] font-sans">Tip!</h3>
-                                <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
-                            </div>
-                            <p class="text-[#fffdff] text-base font-light font-sans leading-5 mb-4">
-                                You'll be asked to share a mood board or any sources of inspiration. 
-                                You can do it at a later date too, if you don't have one right now.
-                            </p>
-                            <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Next button -->
-                    <button 
-                        type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Contact Details</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Step 1: Contact Details -->
-                <div id="step-1" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button  -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFFDFF"/>
-                                <stop offset="1" stop-color="#E5E6E7"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Your Contact Details</h2>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                This step collects basic information about your business.
-                            </p>
-                        </div>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
-                            <div>
-                                <label for="businessName" class="flex text-base font-extrabold text-[#fffdff] mb-2">Business Name:</label>
-                                <input 
-                                    type="text" 
-                                    name="businessName" 
-                                    id="businessName" 
-                                    required 
-                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                    placeholder="Your Business Name"
-                                >
-                            </div>
-                            
-                            <div>
-                                <label class="flex text-base font-extrabold text-[#fffdff] mb-2">Social Media Profiles:</label>
-                                
-                                <div class="social-media-fields">
-                                    <!-- Initial social media field -->
-                                    <div class="social-media-field">
-                                        <div class="flex rounded-xl border border-[#4c4f50] bg-[#333435] overflow-hidden">
-                                            <div class="self-stretch bg-[#4c4f50] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] inline-flex justify-start items-center px-2">
-                                                <select name="social-media-type-0" class="border-none focus:ring-0 bg-[#4c4f50] text-[#fffdff]">
-                                                    <option value="instagram" selected class="text-[#fffdff]">Instagram</option>
-                                                    <option value="facebook" class="text-[#fffdff]">Facebook</option>
-                                                    <option value="twitter" class="text-[#fffdff]">Twitter</option>
-                                                    <option value="linkedin" class="text-[#fffdff]">LinkedIn</option>
-                                                    <option value="website" class="text-[#fffdff]">Website</option>
-                                                </select>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                name="social-media-profile-0"
-                                                required 
-                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE]" 
-                                                placeholder="e.g. @username"
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Add more social media button -->
-                                <button 
-                                    type="button"
-                                    class="add-social-button mt-3 flex items-center text-[#fffdff] text-base font-medium font-sans "
-                                >
-                                    <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.75 8.25V3.75H10.25V8.25H14.75V9.75H10.25V14.25H8.75V9.75H4.25V8.25H8.75Z" fill="#FFFDFF"/>
-                                    </svg>
-
-                                    Add another social profile
-                                </button>
-                                
-                                <!-- Max fields message (hidden by default) -->
-                                <p id="max-social-fields-message" class="hidden mt-2 text-amber-600">
-                                    Maximum of 5 social profiles can be added.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Next button -->
-                    <button 
-                        type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Your Business</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button  -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFFDFF"/>
-                                <stop offset="1" stop-color="#E5E6E7"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">About Your Business</h2>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                In this step, we focus on understanding the nature and context of your business.
-                            </p>
-                        </div>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
-                            <!-- Business description field -->
-                            <div class="question-container">
-                                <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                    Describe your business: What products or services do you offer?
-                                </label>
-                                <!-- This will show when the question is answered -->
-                                <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
-                                </div>
-                                <!-- Normal textarea view -->
-                                <div class="textarea-container" data-question-label="Describe your business">
-                                    <textarea 
-                                        name="businessDescription" 
-                                        id="businessDescription" 
-                                        rows="3"
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="We offer [...] products/services to [...] ..."
-                                    ></textarea>
-                                </div>
-                                <!-- "Mark as done" view - hidden by default -->
-                                <div class="editing-view hidden">
-                                    <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-4">
-                                        Describe your business: What products or services do you offer?
-                                    </label>
-                                    <textarea 
-                                        name="businessDescription-editing" 
-                                        id="businessDescription-editing" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="We offer [...] products/services to [...] ..."
-                                    ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
-                                        Mark as done 
-                                        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Business challenges field -->
-                            <div class="question-container">
-                                <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                    What are the main challenges of your business? What aspects do you want to improve?
-                                </label>
-                                <!-- This will show when the question is answered -->
-                                <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
-                                </div>
-                                <!-- Normal textarea view -->
-                                <div class="textarea-container" data-question-label="Business challenges">
-                                    <textarea 
-                                        name="businessChallenges" 
-                                        id="businessChallenges" 
-                                        rows="3"
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="We are currently facing [problem] ..."
-                                    ></textarea>
-                                </div>
-                                <!-- "Mark as done" view - hidden by default -->
-                                <div class="editing-view hidden">
-                                    <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-4">
-                                        What are the main challenges of your business? What aspects do you want to improve?
-                                    </label>
-                                    <textarea 
-                                        name="businessChallenges-editing" 
-                                        id="businessChallenges-editing" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="We are currently facing [problem] ..."
-                                    ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
-                                        Mark as done 
-                                        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Next button -->
-                    <button 
-                        type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Project Objectives</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button  -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFFDFF"/>
-                                <stop offset="1" stop-color="#E5E6E7"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Project Objectives</h2>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                Here you choose which services you are interested in and clarify your objectives.
-                            </p>
-                        </div>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
-                            <!-- Services selection -->
-                            <div>
-                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Desired Services:</label>
-                                <p class="text-[#969696] mb-3 text-sm">Select one or more options:</p>
-                                
-                                <div class="space-y-4">
-                                    <!-- Web Design & Development group -->
-                                    <div class="inline-flex gap-4">
-                                        <!-- Web Design checkbox -->
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
-                                                <input 
-                                                    type="checkbox" 
-                                                    id="webDesign" 
-                                                    name="services" 
-                                                    value="webDesign" 
-                                                    class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                                >
-                                                <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
-                                                </svg>
-
-                                                <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
-                                                </svg>
-                                            </div>
-                                            <label for="webDesign" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Web Design</label>
-                                        </div>
-
-                                        <!-- Development checkbox (initially disabled) -->
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
-                                                <input 
-                                                    type="checkbox" 
-                                                    id="development" 
-                                                    name="services" 
-                                                    value="development" 
-                                                    class="opacity-0 absolute cursor-not-allowed w-full h-full z-10"
-                                                    disabled
-                                                >
-                                                <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
-                                                </svg>
-
-                                                <svg class="hidden empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
-                                                </svg>
-
-                                                <svg class="disabled-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM11.6667 18.3333H28.3333V21.6667H11.6667V18.3333Z" fill="#969696"/>
-                                                </svg>
-                                            </div>
-                                            <label for="development" class="text-[1.1rem]  font-bold font-sans text-[#969696] cursor-not-allowed pt-[2px]">Development</label>
-                                        </div>
-                                    </div>
-
-                                    <!-- Brand Strategy checkbox -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
-                                            <input 
-                                                type="checkbox" 
-                                                id="brandStrategy" 
-                                                name="services" 
-                                                value="brandStrategy" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="brandStrategy" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Brand Strategy</label>
-                                    </div>
-                                    
-                                    <!-- Rebranding checkbox -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
-                                            <input 
-                                                type="checkbox" 
-                                                id="rebranding" 
-                                                name="services" 
-                                                value="rebranding" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="rebranding" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Rebranding</label>
-                                    </div>
-                                    
-                                    <!-- Other checkbox -->
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
-                                            <input 
-                                                type="checkbox" 
-                                                id="other" 
-                                                name="services" 
-                                                value="other" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="hidden selected-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM18.3377 26.6667L11.2667 19.5957L13.6237 17.2385L18.3377 21.9527L27.7658 12.5245L30.1228 14.8816L18.3377 26.6667Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="empty-checkbox" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="other" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Other <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Project objectives -->
-                            <div class="question-container">
-                                <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                    What objectives do you want to achieve with this project?
-                                </label>
-                                <!-- This will show when the question is answered -->
-                                <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
-                                </div>
-                                <!-- Normal textarea view -->
-                                <div class="textarea-container" data-question-label="Project objectives">
-                                    <textarea 
-                                        name="projectObjectives" 
-                                        id="projectObjectives" 
-                                        rows="3"
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="For example: increasing the number of clients, improving online presence, etc."
-                                    ></textarea>
-                                </div>
-                                <!-- "Mark as done" view - hidden by default -->
-                                <div class="editing-view hidden">
-                                    <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                        What objectives do you want to achieve with this project?
-                                    </label>
-                                    <textarea 
-                                        name="projectObjectives-editing" 
-                                        id="projectObjectives-editing" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="For example: increasing the number of clients, improving online presence, etc."
-                                    ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
-                                        Mark as done 
-                                        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Next button -->
-                    <button 
-                        type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Vision and Budget</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-open" width="50" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M51.1764 0H5.85685L0.823486 20H46.1403L51.1764 0Z" fill="url(#paint0_linear_572_3455)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3455" x1="26" y1="0" x2="26" y2="20" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#FFFDFF"/>
-                                <stop offset="1" stop-color="#E5E6E7"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Vision and Budget</h2>
-
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                Last step!
-                            </p>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                The last step focuses on your vision for the project and the details of the collaboration.
-                            </p>
-                        </div>
-                        
-                        <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
-                            <!-- Vision textarea -->
-                            <div class="question-container">
-                                <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                    What is your vision for the new website/branding?
-                                </label>
-                                <!-- This will show when the question is answered -->
-                                <div class="question-status hidden">
-                                    <p class="text-green-500 font-medium text-sm mb-1">Question answered!</p>
-                                </div>
-                                <!-- Normal textarea view -->
-                                <div class="textarea-container" data-question-label="What is your vision for the new website/branding?">
-                                    <textarea 
-                                        name="projectVision" 
-                                        id="projectVision" 
-                                        rows="3"
-                                        required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
-                                    ></textarea>
-                                </div>
-                                <!-- "Mark as done" view - hidden by default -->
-                                <div class="editing-view hidden">
-                                    <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                        What is your vision for the new website/branding?
-                                    </label>
-                                    <textarea 
-                                        name="projectVision-editing" 
-                                        id="projectVision-editing" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
-                                    ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
-                                        Mark as done 
-                                        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Budget selection -->
-                            <div>
-                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Project investment:</label>
-                                <p class="text-[#969696] mb-3 text-sm">Select one:</p>
-                                
-                                <div class="space-y-4">
-                                    <!-- $100 - $500 radio option -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center radio-container">
-                                            <input 
-                                                type="radio" 
-                                                id="budget1" 
-                                                name="budget" 
-                                                value="100-500" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                                required
-                                            >
-                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="budget1" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$100 - $500</label>
-                                    </div>
-                                    
-                                    <!-- $501 - $1000 radio option -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
-                                            <input 
-                                                type="radio" 
-                                                id="budget2" 
-                                                name="budget" 
-                                                value="501-1000" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="budget2" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$501 - $1000</label>
-                                    </div>
-                                    
-                                    <!-- $1001 - $5000+ radio option -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
-                                            <input 
-                                                type="radio" 
-                                                id="budget3" 
-                                                name="budget" 
-                                                value="1001-5000+" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="budget3" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$1001 - $5000+</label>
-                                    </div>
-                                    
-                                    <!-- Custom radio option -->
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
-                                            <input 
-                                                type="radio" 
-                                                id="budgetCustom" 
-                                                name="budget" 
-                                                value="custom" 
-                                                class="opacity-0 absolute cursor-pointer w-full h-full z-10"
-                                            >
-                                            <svg class="empty-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19.6667 36.3333C10.4619 36.3333 3 28.8713 3 19.6667C3 10.4619 10.4619 3 19.6667 3C28.8713 3 36.3333 10.4619 36.3333 19.6667C36.3333 28.8713 28.8713 36.3333 19.6667 36.3333ZM19.6667 33C27.0305 33 33 27.0305 33 19.6667C33 12.3029 27.0305 6.33333 19.6667 6.33333C12.3029 6.33333 6.33333 12.3029 6.33333 19.6667C6.33333 27.0305 12.3029 33 19.6667 33Z" fill="#FFFDFF"/>
-                                            </svg>
-
-                                            <svg class="hidden selected-radio" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
-                                            </svg>
-                                        </div>
-                                        <label for="budgetCustom" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Custom <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
-                                    </div>
-                                    
-                                    <!-- Custom amount input (hidden by default) -->
-                                    <div id="customBudgetContainer" class="hidden mt-4">
-                                        <input 
-                                            type="text" 
-                                            id="customBudget" 
-                                            name="customBudget" 
-                                            class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                            placeholder="$200 - $750"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Next button -->
-                    <button 
-                        type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Review and Submit</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
-                        <!-- Back button -->
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-done" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3454)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3454" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4AB656"/>
-                                <stop offset="1" stop-color="#2F943A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <!-- Close button -->
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="card-content">
-                        <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                            <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Completed!</h2>
-
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                Ready to be sent!
-                            </p>
-                            
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
-                                Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
-                            </p>
-                        </div>
-                        
-                        <!-- Optional question section -->
-                        <div class="mb-6">
-                            <p class="text-[#fffdff] text-base font-light font-sans leading-5 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-[#969696]">(optional)</span></p>
-                            
-                            <!-- Toggle question button - shown when question is hidden -->
-                            <button 
-                                type="button" 
-                                id="show-question-button" 
-                                class="flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
-                            >
-                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8.28549 15.6517L6.67561 15.2203L7.33184 12.7713C6.34091 12.4063 5.43043 11.875 4.63422 11.2113L2.83978 13.0057L1.66127 11.8272L3.45571 10.0328C2.46309 8.84208 1.7667 7.39571 1.47974 5.80698L3.1198 5.50879C3.75233 9.01066 6.81601 11.6669 10.5001 11.6669C14.1842 11.6669 17.2479 9.01066 17.8804 5.50879L19.5205 5.80698C19.2335 7.39571 18.5371 8.84208 17.5445 10.0328L19.3389 11.8272L18.1604 13.0057L16.366 11.2113C15.5698 11.875 14.6593 12.4063 13.6683 12.7713L14.3246 15.2203L12.7148 15.6517L12.0583 13.2017C11.5518 13.2884 11.0313 13.3336 10.5001 13.3336C9.969 13.3336 9.44834 13.2884 8.942 13.2017L8.28549 15.6517Z" fill="#FFFDFF"/>
-                                </svg>
-                                Show question
-                            </button>
-                            
-                            <!-- Hide question button - hidden initially -->
-                            <button 
-                                type="button" 
-                                id="hide-question-button" 
-                                class="hidden flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
-                            >
-                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.5004 2.5C14.9938 2.5 18.7322 5.73313 19.5159 10C18.7322 14.2668 14.9938 17.5 10.5004 17.5C6.00693 17.5 2.26862 14.2668 1.48486 10C2.26862 5.73313 6.00693 2.5 10.5004 2.5ZM10.5004 15.8333C14.0301 15.8333 17.0504 13.3767 17.8149 10C17.0504 6.62336 14.0301 4.16667 10.5004 4.16667C6.97066 4.16667 3.95035 6.62336 3.18581 10C3.95035 13.3767 6.97066 15.8333 10.5004 15.8333ZM10.5004 13.75C8.42931 13.75 6.75038 12.0711 6.75038 10C6.75038 7.92893 8.42931 6.25 10.5004 6.25C12.5714 6.25 14.2504 7.92893 14.2504 10C14.2504 12.0711 12.5714 13.75 10.5004 13.75ZM10.5004 12.0833C11.651 12.0833 12.5837 11.1506 12.5837 10C12.5837 8.84942 11.651 7.91667 10.5004 7.91667C9.34983 7.91667 8.41705 8.84942 8.41705 10C8.41705 11.1506 9.34983 12.0833 10.5004 12.0833Z" fill="#FFFDFF"/>
-                                </svg>
-                                Hide question
-                            </button>
-                            
-                            <!-- Optional question content - hidden initially -->
-                            <div id="optional-question-container" class="hidden question-container">
-                                <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                    How did you hear about me? Why do you want to collaborate with me?
-                                </label>
-                                
-                                <!-- Normal textarea view -->
-                                <div class="textarea-container" data-question-label="How did you hear about me? Why do you want to collaborate with me?">
-                                    <textarea 
-                                        name="referralSource" 
-                                        id="referralSource" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
-                                    ></textarea>
-                                </div>
-                                
-                                <!-- "Mark as done" view - hidden by default -->
-                                <div class="editing-view hidden">
-                                    <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
-                                        How did you hear about me? Why do you want to collaborate with me?
-                                    </label>
-                                    <textarea 
-                                        name="referralSource-editing" 
-                                        id="referralSource-editing" 
-                                        rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
-                                        placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
-                                    ></textarea>
-                                    <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
-                                        Mark as done 
-                                        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Submit button -->
-                    <button 
-                        type="submit" 
-                        class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Submit Form</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.0001 22.0003L11.0002 22.0005V5.82859L7.05044 9.77829L5.63623 8.36409L12.0002 2.00009L18.3642 8.36409L16.9499 9.77829L13.0002 5.82849L13.0001 22.0003Z" fill="#FFFDFF"/>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <div class="inline-flex justify-between w-full mb-4">
-                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Sent!</h2>
-                        <button type="button" class="close-button">
-                            <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div class="text-center mb-10">
-                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">Congrats, your form was sent successfully!</p>
-                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">I will review it and will get back to you as soon as possible. Thank you!</p>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
-                        <div class="flex justify-center items-center space-x-8">
-                            <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
-                            </a>
-                            <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-12 h-auto">
-                            </a>
-                            <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-12 h-auto">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <div class="flex flex-col items-center">
-                        <div class="inline-flex justify-between w-full mb-4">
-                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Oopss...</h3>
-                            <button type="button" class="close-button" aria-label="Close form">
-                                <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                                </svg>
-                            </button>
-                            
-                        </div>
-                        <div class="flex flex-col gap-2 self-stretch justify-start mb-[12px]">
-                            <p class="form-error-exp text-[#fffdff] text-base font-light font-['Onest'] leading-5"></p>
-                            <p class="text-[#fffdff] text-base font-light font-['Onest'] leading-5">Please try again later or contact me directly via email at <a href="mailto:sergiu@bustiuc.digital" class="no-underline text-[#fffdff] text-base font-normal font-sans">sergiu@bustiuc.digital</a></p>
-                        </div>
-                        <div class="w-full mt-4">
-                            <button 
-                                type="button" 
-                                id="try-again-button"
-                                class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-[#fffdff] text-base font-bold font-sans leading-6"
-                            >
-                                Try Again
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Existing email state -->
-                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4">
-                        <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Progress indicators -->
-                        <div class="flex items-center justify-between gap-1">
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                            <svg class="s-closed" width="50" height="12" viewBox="0 0 50 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M47.3684 11.5L50 0.5H2.63158L0 11.5H47.3684Z" fill="url(#paint0_linear_572_3456)"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_572_3456" x1="25" y1="0.5" x2="25" y2="11.5" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#999C9D"/>
-                                <stop offset="1" stop-color="#66696A"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <button type="button" class="close-button" aria-label="Close form">
-                            <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Great!</h2>
-                        
-                        <div class="space-y-6 mb-8">
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">It seems like you completed this already. If I haven't replied to you after 48h of you completing the enquiry form, please reach out on my socials mentioning your email.</p>
-                            
-                            <div class="space-y-4">
-                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">If we worked in the past...</p>
-                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">...great to hear from you again. Please reach out through our last communication platform. Can't wait to hear from you!</p>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
-                            <div class="flex justify-center items-center space-x-8">
-                                <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
-                                </a>
-                                <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-12 h-auto">
-                                </a>
-                                <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-12 h-auto">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-
-        <!-- <script src="/src/lazyLoader.js"></script> -->
-
-        <script type="module" src="src/loadingScreen.js"></script>
-
-        <script type="module" src="src/reactBootstrap.jsx"></script>
-
-        <!-- <script type="module" src="src/viewportAnimations.jsx"></script> -->
-
-        <script type="module" src="src/simpleAnimations.js"></script>
-
-        <!-- <script type="module" src="src/shiny-border-observer.js"></script> -->
-        <script type="module" src="src/cardScrollType1.js" defer></script>
-        <script type="module" src="src/cardScrollType2.js" defer></script>
-        <script type="module" src="src/headerAnimation.js" defer></script>
-        <script type="module" src="src/navigationMenu.js" defer></script>
-        <script type="module" src="src/revealScroll.js" defer></script>
-        <script type="module" src="src/accordionScroll.js" defer></script>
-        <script type="module" src="src/formController.js" defer></script>
-        <script type="module" src="/lazyLoading.js" defer></script>
-
-        <!-- <script src="src/formFunctionality.js" defer></script> 
-        <script src="src/formAnimation.js" defer></script>
-        <script src="src/formValidation.js" defer></script>
-        <script src="src/formMain.js" defer></script>
-        <script src="src/formIntegration.js" defer></script> -->
-    </body>
-</html>
+        </section>`
+}

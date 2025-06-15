@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset styles and measure natural height
         content.style.height = '';
         content.style.overflow = '';
-        content.style.display = 'block';
+        content.style.display = 'inline-flex';
         
         const naturalHeight = content.scrollHeight;
         

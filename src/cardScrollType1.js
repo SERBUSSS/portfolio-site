@@ -5,9 +5,8 @@ let navigationStates = {};
 let horizontalScrollData = {};
 let tooltipManagers = {};
 let scrollTimeout = {};
-let sectionScrollProgress = {};
+// let sectionScrollProgress = {};
 // Cache the animation frame for better performance
-let scrollAnimationFrame = null;
 
 // Define final positions for up to 20 cards with complete transform data
 const finalPositionsConfig = {
@@ -406,36 +405,6 @@ class ProjectTooltipManager {
     }
 }
 
-// Enhanced wheel scroll handler for desktop smooth card-by-card navigation
-function addDesktopScrollListener(section, sectionId, sectionCards) {
-    let isDesktop = window.innerWidth >= 768; // md breakpoint
-    
-    // Update on resize
-    window.addEventListener('resize', () => {
-        isDesktop = window.innerWidth >= 768;
-    });
-
-    const handleHorizontalScroll = (e) => {
-        if (!horizontalScrollData[sectionId].isActive) return;
-        
-        e.preventDefault();
-        
-        // Different behavior for desktop vs mobile
-        if (isDesktop) {
-            // Desktop: Card-by-card navigation
-            handleDesktopCardNavigation(e, sectionId, sectionCards);
-        } else {
-            // Mobile: Smooth continuous scroll (existing behavior)
-            handleMobileScroll(e, sectionId, sectionCards);
-        }
-    };
-
-    section.addEventListener('wheel', handleHorizontalScroll, { passive: false });
-    
-    // Keep existing touch events for mobile
-    addTouchEvents(section, sectionId, sectionCards);
-}
-
 // Desktop card-by-card navigation function
 function handleDesktopCardNavigation(e, sectionId, sectionCards) {
     const state = navigationStates[sectionId];
@@ -525,13 +494,20 @@ function addTouchEvents(section, sectionId, sectionCards) {
     let touchStartY = 0;
     
     section.addEventListener('touchstart', (e) => {
-        if (!horizontalScrollData[sectionId].isActive) return;
+        // Check all conditions
+        if (!horizontalScrollData[sectionId]?.isActive) return;
+        if (!window.containerState?.isActive) return;
+        if (window.containerState.currentSection !== sectionId) return;
+        
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
     }, { passive: true });
     
     section.addEventListener('touchmove', (e) => {
-        if (!horizontalScrollData[sectionId].isActive) return;
+        // Check all conditions
+        if (!horizontalScrollData[sectionId]?.isActive) return;
+        if (!window.containerState?.isActive) return;
+        if (window.containerState.currentSection !== sectionId) return;
         
         const touchX = e.touches[0].clientX;
         const touchY = e.touches[0].clientY;
@@ -605,7 +581,11 @@ function initProjectNavigation(sectionId, cards) {
 function navigateToCard(sectionId, direction, cards) {
     const state = navigationStates[sectionId];
     const scrollData = horizontalScrollData[sectionId];
+    
+    // Check all conditions
     if (!state || !scrollData || state.isNavigating) return;
+    if (!window.containerState?.isActive) return;
+    if (window.containerState.currentSection !== sectionId) return;
 
     const progressPerCard = 0.9 / cards.length;
     const currentProgress = scrollData.scrollX / scrollData.maxScroll;
@@ -613,17 +593,13 @@ function navigateToCard(sectionId, direction, cards) {
     let targetIndex;
     
     if (direction === 'next') {
-        // FIXED: Simple logic - if we're in preview (less than 50% of first card), go to card 0
-        // Otherwise, increment normally
         if (currentProgress < (0.5 * progressPerCard)) {
             targetIndex = 0;
         } else {
-            // Calculate which card we should go to based on current progress
             const currentCardFromProgress = Math.floor(currentProgress / progressPerCard);
             targetIndex = Math.min(currentCardFromProgress + 1, cards.length - 1);
         }
     } else {
-        // For previous, always use progress-based calculation
         const currentCardFromProgress = Math.floor(currentProgress / progressPerCard);
         targetIndex = Math.max(currentCardFromProgress - 1, 0);
     }
@@ -640,7 +616,6 @@ function navigateToCard(sectionId, direction, cards) {
             updateHorizontalAnimation(sectionId, progress, cards);
         },
         onComplete: () => {
-            // FIXED: Always sync currentCard with actual progress
             const finalProgress = scrollData.scrollX / scrollData.maxScroll;
             state.currentCard = Math.floor(finalProgress / progressPerCard);
             state.isNavigating = false;
@@ -651,44 +626,81 @@ function navigateToCard(sectionId, direction, cards) {
 
 // Update preview amount for desktop
 function showAutoPreview(sectionId, cards) {
+    console.log(`showAutoPreview called for ${sectionId}`);
+    
     const state = navigationStates[sectionId];
     const scrollData = horizontalScrollData[sectionId];
-    if (!state || !scrollData || state.autoPreviewShown) return;
-
-    if (scrollData.scrollX > 0) {
-        state.autoPreviewShown = true;
+    
+    // Add more checks
+    if (!state || !scrollData) {
+        console.log('No state or scroll data - aborting showAutoPreview');
+        return;
+    }
+    
+    if (state.autoPreviewShown) {
+        console.log('Auto preview already shown - aborting');
+        return;
+    }
+    
+    if (!window.containerState?.isActive) {
+        console.log('Container not active - aborting showAutoPreview');
+        return;
+    }
+    
+    if (!horizontalScrollData[sectionId].isActive) {
+        console.log('Section not active - aborting showAutoPreview');
         return;
     }
 
-    state.autoPreviewShown = true;
-    const progressPerCard = 0.9 / cards.length;
+    console.log('All checks passed - showing auto preview');
     
-    const isDesktop = window.innerWidth >= 768;
-    const targetProgress = isDesktop ? 
-        0.25 * progressPerCard : 
-        0.15 * progressPerCard;
+    // ENSURE cards are in initial position first
+    setInitialCardPositions(sectionId);
+    
+    // Wait for positions to be set
+    setTimeout(() => {
+        state.autoPreviewShown = true;
+        
+        const progressPerCard = 0.9 / cards.length;
+        const isDesktop = window.innerWidth >= 768;
+        const targetProgress = isDesktop ? 0.25 * progressPerCard : 0.15 * progressPerCard;
 
-    gsap.to(scrollData, {
-        scrollX: targetProgress * scrollData.maxScroll,
-        duration: 1.2,
-        ease: "power2.out",
-        onUpdate: () => {
-            const progress = scrollData.scrollX / scrollData.maxScroll;
-            updateHorizontalAnimation(sectionId, progress, cards);
-        },
-        onComplete: () => {
-            // FIXED: Show tooltip immediately for desktop (even for card 0)
-            if (isDesktop) {
-                const tooltipManager = tooltipManagers[sectionId];
-                if (tooltipManager && cards.length > 1) {
-                    setTimeout(() => {
-                        // Show tooltip for card 0 on desktop (since we're in preview state)
-                        tooltipManager.showTooltip(0);
-                    }, 300);
+        console.log('Starting auto preview animation:', {
+            progressPerCard,
+            targetProgress,
+            targetScrollX: targetProgress * scrollData.maxScroll
+        });
+
+        gsap.to(scrollData, {
+            scrollX: targetProgress * scrollData.maxScroll,
+            duration: 1.2,
+            ease: "power2.out",
+            onUpdate: () => {
+                const progress = scrollData.scrollX / scrollData.maxScroll;
+                console.log('Auto preview progress:', progress);
+                updateHorizontalAnimation(sectionId, progress, cards);
+            },
+            onComplete: () => {
+                console.log('Auto preview animation complete');
+                if (isDesktop) {
+                    const tooltipManager = tooltipManagers[sectionId];
+                    if (tooltipManager && cards.length > 1) {
+                        setTimeout(() => {
+                            tooltipManager.showTooltip(0);
+                        }, 300);
+                    }
+                }
+                
+                // Show mobile navigation
+                if (state.mobileNavContainer) {
+                    gsap.to(state.mobileNavContainer, { 
+                        opacity: 1, 
+                        duration: 0.5 
+                    });
                 }
             }
-        }
-    });
+        });
+    }, 200);
 }
 
 function updateNavButtons(sectionId) {
@@ -793,8 +805,10 @@ const updateTooltip = (projectId, cardIndex) => {
   window.ReactBridge?.emit('tooltip-update', { projectId, cardIndex })
 }
 
+const originalUpdateHorizontalAnimation = updateHorizontalAnimation;
 // Function to update horizontal animation based on progress
 function updateHorizontalAnimation(sectionId, progress, cards) {
+    console.log(`updateHorizontalAnimation called: ${sectionId}, progress: ${progress}`);
     const totalCards = cards.length;
     const progressPerCard = 0.9 / totalCards;
     const tooltipManager = tooltipManagers[sectionId];
@@ -960,6 +974,8 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
     }
 
     syncNavWithScroll(sectionId, progress, cards.length);
+    // Call original function
+    return originalUpdateHorizontalAnimation(sectionId, progress, cards);
 }
 
 function getCardVisibilityOpacity(cardIndex, progress, totalCards) {
@@ -992,7 +1008,7 @@ function getCardVisibilityOpacity(cardIndex, progress, totalCards) {
 }
 
 // Create invisible scroll zones
-function createScrollZones(section, sectionId, sectionCards) {
+/*function createScrollZones(section, sectionId, sectionCards) {
     // Only for desktop
     if (window.innerWidth < 768) return null;
     
@@ -1032,10 +1048,10 @@ function createScrollZones(section, sectionId, sectionCards) {
     section.appendChild(zonesContainer);
     
     return zonesContainer;
-}
+}*/
 
 // Function to bypass section pinning and continue page scroll
-function bypassSectionScroll(sectionId, direction) {
+/*function bypassSectionScroll(sectionId, direction) {
     // Deactivate current section
     horizontalScrollData[sectionId].isActive = false;
     deactivateScrollZones(sectionId);
@@ -1052,10 +1068,10 @@ function bypassSectionScroll(sectionId, direction) {
     } else if (direction === 'up' && currentIndex > 0) {
         sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
     }
-}
+}*/
 
 // Initialize scroll progress tracking when section becomes active
-function initSectionScrollProgress(sectionId) {
+/*function initSectionScrollProgress(sectionId) {
     if (!sectionScrollProgress[sectionId]) {
         const section = document.getElementById(sectionId);
         const scrollTriggerInstance = ScrollTrigger.getAll().find(st => st.trigger === section);
@@ -1068,12 +1084,12 @@ function initSectionScrollProgress(sectionId) {
             );
         }
     }
-}
+}*/
 
 // Reset scroll progress when section is fully exited
-function resetSectionScrollProgress(sectionId) {
+/*function resetSectionScrollProgress(sectionId) {
     delete sectionScrollProgress[sectionId];
-}
+}*/
 
 function activateScrollZones(sectionId) {
     const zones = document.getElementById(`scroll-zones-${sectionId}`);
@@ -1085,156 +1101,370 @@ function deactivateScrollZones(sectionId) {
     if (zones) zones.classList.remove('active');
 }
 
+// UPDATE the scroll zones to work with container:
+function createScrollZones(section, sectionId, sectionCards) {
+    if (window.innerWidth < 768) return null;
+    
+    const zonesContainer = document.createElement('div');
+    zonesContainer.className = 'scroll-zones-container';
+    zonesContainer.id = `scroll-zones-${sectionId}`;
+    
+    const leftZone = document.createElement('div');
+    leftZone.className = 'scroll-zone scroll-zone-left';
+    
+    const rightZone = document.createElement('div');
+    rightZone.className = 'scroll-zone scroll-zone-right';
+    
+    // Left zone: Navigate between sections
+    leftZone.addEventListener('wheel', (e) => {
+        if (!horizontalScrollData[sectionId].isActive || !window.containerState?.isActive) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (e.deltaY > 0) {
+            navigateContainerSection(sectionId, 'next');
+        } else if (e.deltaY < 0) {
+            navigateContainerSection(sectionId, 'prev');
+        }
+    }, { passive: false });
+    
+    // Right zone: Horizontal card navigation
+    rightZone.addEventListener('wheel', (e) => {
+        if (!horizontalScrollData[sectionId].isActive || !window.containerState?.isActive) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        handleDesktopCardNavigation(e, sectionId, sectionCards);
+    }, { passive: false });
+    
+    zonesContainer.appendChild(leftZone);
+    zonesContainer.appendChild(rightZone);
+    section.appendChild(zonesContainer);
+    
+    return zonesContainer;
+}
+
+// new container navigation function:
+function navigateContainerSection(currentSectionId, direction) {
+    if (!window.containerScrollManager || !window.containerState?.isActive) return;
+    
+    // Use the container manager's navigation method
+    window.containerScrollManager.navigateToSection(direction);
+}
+
+function addDesktopScrollListener(section, sectionId, sectionCards) {
+    let isDesktop = window.innerWidth >= 768;
+    
+    // Update on resize
+    window.addEventListener('resize', () => {
+        isDesktop = window.innerWidth >= 768;
+    });
+
+    const handleHorizontalScroll = (e) => {
+        // Only handle if section is active AND container is active
+        if (!horizontalScrollData[sectionId].isActive || !window.containerState?.isActive) return;
+        
+        e.preventDefault();
+        
+        if (isDesktop) {
+            handleDesktopCardNavigation(e, sectionId, sectionCards);
+        } else {
+            handleMobileScroll(e, sectionId, sectionCards);
+        }
+    };
+
+    section.addEventListener('wheel', handleHorizontalScroll, { passive: false });
+    addTouchEvents(section, sectionId, sectionCards);
+}
+
+function resetSectionState(sectionId) {
+    const state = navigationStates[sectionId];
+    const scrollData = horizontalScrollData[sectionId];
+    
+    if (!state || !scrollData) return;
+    
+    // Reset to initial state
+    scrollData.scrollX = 0;
+    state.currentCard = 0;
+    state.autoPreviewShown = false;
+    
+    // Reset all cards to initial position
+    const section = document.getElementById(sectionId);
+    const cards = section.querySelectorAll('.item');
+    
+    cards.forEach(card => {
+        gsap.set(card, { 
+            x: window.innerWidth,
+            y: -window.innerHeight * 0.1,
+            scale: 1,
+            opacity: 0,
+            rotation: 0,
+            force3D: true
+        });
+    });
+    
+    // Hide navigation initially
+    if (state.mobileNavContainer) {
+        gsap.set(state.mobileNavContainer, { opacity: 0 });
+    }
+}
+
+function activateProjectSection(sectionId) {
+    console.log(`Activating project section: ${sectionId}`);
+    
+    // CRITICAL: Ensure horizontal scroll data exists
+    if (!horizontalScrollData[sectionId]) {
+        console.error(`No horizontal scroll data for ${sectionId}`);
+        return;
+    }
+    
+    // Activate horizontal scroll
+    horizontalScrollData[sectionId].isActive = true;
+    
+    // Reset section state to ensure clean start
+    if (window.resetSectionState) {
+        window.resetSectionState(sectionId);
+    }
+    
+    // Activate scroll zones
+    if (window.activateScrollZones) {
+        window.activateScrollZones(sectionId);
+    }
+    
+    // Show mobile navigation for this section
+    const state = navigationStates[sectionId];
+    if (state?.mobileNavContainer) {
+        gsap.to(state.mobileNavContainer, { 
+            opacity: 1, 
+            duration: 0.3 
+        });
+    }
+    
+    console.log(`Section ${sectionId} activated:`, {
+        isActive: horizontalScrollData[sectionId].isActive,
+        hasScrollData: !!horizontalScrollData[sectionId],
+        scrollX: horizontalScrollData[sectionId].scrollX,
+        maxScroll: horizontalScrollData[sectionId].maxScroll
+    });
+}
+
+function deactivateProjectSection(sectionId) {
+    console.log(`Deactivating project section: ${sectionId}`);
+    
+    if (!horizontalScrollData[sectionId]) return;
+    
+    // Deactivate horizontal scroll
+    horizontalScrollData[sectionId].isActive = false;
+    
+    // Deactivate scroll zones
+    if (window.deactivateScrollZones) {
+        window.deactivateScrollZones(sectionId);
+    }
+    
+    // Hide navigation
+    if (window.hideNavigation) {
+        window.hideNavigation(sectionId);
+    }
+    
+    // Hide tooltips
+    const tooltipManager = tooltipManagers[sectionId];
+    if (tooltipManager && tooltipManager.isVisible) {
+        tooltipManager.hideTooltip();
+    }
+}
+
+function debugSectionState(sectionId) {
+    console.log(`=== Debug State for ${sectionId} ===`);
+    console.log('Container State:', window.containerState);
+    console.log('Horizontal Scroll Data:', horizontalScrollData[sectionId]);
+    console.log('Navigation State:', navigationStates[sectionId]);
+    console.log('Tooltip Manager:', tooltipManagers[sectionId]);
+    
+    const section = document.getElementById(sectionId);
+    const cards = section?.querySelectorAll('.item');
+    console.log('Cards found:', cards?.length);
+    console.log('Section element:', section);
+    
+    return {
+        containerActive: window.containerState?.isActive,
+        currentSection: window.containerState?.currentSection,
+        sectionActive: horizontalScrollData[sectionId]?.isActive,
+        cardsCount: cards?.length,
+        scrollX: horizontalScrollData[sectionId]?.scrollX,
+        maxScroll: horizontalScrollData[sectionId]?.maxScroll
+    };
+}
+
+function debugCardPositions(sectionId) {
+    const section = document.getElementById(sectionId);
+    const cards = section.querySelectorAll('.item');
+    
+    console.log(`=== Card Positions Debug for ${sectionId} ===`);
+    console.log(`Found ${cards.length} cards`);
+    
+    cards.forEach((card, index) => {
+        const computedStyle = window.getComputedStyle(card);
+        const transform = computedStyle.transform;
+        const position = {
+            transform: transform,
+            left: computedStyle.left,
+            top: computedStyle.top,
+            opacity: computedStyle.opacity,
+            visibility: computedStyle.visibility
+        };
+        
+        console.log(`Card ${index}:`, position);
+        console.log(`Card ${index} GSAP values:`, {
+            x: gsap.getProperty(card, "x"),
+            y: gsap.getProperty(card, "y"),
+            scale: gsap.getProperty(card, "scale"),
+            opacity: gsap.getProperty(card, "opacity"),
+            rotation: gsap.getProperty(card, "rotation")
+        });
+    });
+}
+
+function debugAutoPreview(sectionId) {
+    const state = navigationStates[sectionId];
+    const scrollData = horizontalScrollData[sectionId];
+    
+    console.log(`=== Auto Preview Debug for ${sectionId} ===`);
+    console.log('Navigation State:', state);
+    console.log('Scroll Data:', scrollData);
+    console.log('Auto Preview Shown:', state?.autoPreviewShown);
+    console.log('Container State:', window.containerState);
+    console.log('Section Active:', horizontalScrollData[sectionId]?.isActive);
+}
+
+function setInitialCardPositions(sectionId) {
+    const section = document.getElementById(sectionId);
+    const cards = section.querySelectorAll('.item');
+    
+    console.log(`Setting initial positions for ${cards.length} cards in ${sectionId}`);
+    
+    cards.forEach((card, index) => {
+        // EXPLICIT initial position - FAR off screen to the right
+        gsap.set(card, { 
+            x: window.innerWidth + 200, // Extra offset to ensure off-screen
+            y: -window.innerHeight * 0.05, // Slightly above center
+            scale: 1,
+            opacity: 0,
+            rotation: 0,
+            force3D: true,
+            transformOrigin: "50% 50%",
+            willChange: "transform, opacity"
+        });
+        
+        console.log(`Card ${index} set to:`, {
+            x: window.innerWidth + 200,
+            y: -window.innerHeight * 0.05,
+            scale: 1,
+            opacity: 0
+        });
+    });
+    
+    // Verify positions were set
+    setTimeout(() => {
+        console.log('Verification after 100ms:');
+        debugCardPositions(sectionId);
+    }, 100);
+}
+
+window.debugCardPositions = debugCardPositions;
+window.debugAutoPreview = debugAutoPreview;
+window.setInitialCardPositions = setInitialCardPositions;
+window.activateProjectSection = activateProjectSection;
+window.deactivateProjectSection = deactivateProjectSection;
+window.debugSectionState = debugSectionState;
+window.resetSectionState = resetSectionState;
+window.showAutoPreview = showAutoPreview;
+window.activateScrollZones = activateScrollZones;
+window.deactivateScrollZones = deactivateScrollZones;
+window.hideNavigation = hideNavigation;
+window.horizontalScrollData = horizontalScrollData;
+
 // Animation for project sections with hybrid horizontal scroll
 window.addEventListener('siteLoaded', function() {
-    // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
     
-    // Select the project sections
     const projectSections = document.querySelectorAll('.project-section[id^="project-"]');
     
-    // Map of project IDs to their corresponding background sections
-    /*const backgroundMap = {
-        'project-1': 'background-p-1',
-        'project-2': 'background-p-2',
-        'project-3': 'background-p-3',
-        'project-4': 'background-p-4'
-    };*/
-    
-    // Process each project section
+    // Initialize all data structures FIRST
     projectSections.forEach(section => {
         const sectionCards = section.querySelectorAll('.item');
         const sectionId = section.id;
         
-        // Only initialize if we have cards to work with
         if (!sectionCards.length) return;
         
-        // Initialize horizontal scroll tracking for this section
+        // Initialize horizontal scroll tracking
         horizontalScrollData[sectionId] = {
             scrollX: 0,
             isActive: false,
             maxScroll: sectionCards.length * 120
         };
         
-        // Get background section if one is mapped
-        /*const backgroundId = backgroundMap[sectionId];
-        const backgroundElement = backgroundId ? document.getElementById(backgroundId) : null;
+        // Initialize navigation state
+        initProjectNavigation(sectionId, Array.from(sectionCards));
         
-        // If we have a background element for this section
-        if (backgroundElement) {
-            // Style the background element
-            gsap.set(backgroundElement, {
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                top: 0,
-                left: 0,
-                zIndex: -1
-            });
-            
-            // Clone and insert the background into the project section
-            const bgClone = backgroundElement.cloneNode(true);
-            bgClone.id = `${backgroundId}-clone`;
-            bgClone.style.position = 'absolute';
-            bgClone.style.zIndex = '-1';
-            section.insertBefore(bgClone, section.firstChild);
-            
-            // Hide the original background section
-            backgroundElement.style.display = 'none';
-        }
-        */
-        createScrollZones(section, sectionId, sectionCards);
-        
-        // Set initial states for cards
-        sectionCards.forEach(card => {
-            gsap.set(card, { 
-                x: window.innerWidth, // Start from right side of screen
-                y: -window.innerHeight * 0.1, // Slightly above center
-                scale: 1,
-                opacity: 0,
-                rotation: 0,
-                force3D: true,
-                transformOrigin: "50% 50%",
-                willChange: "transform, opacity"
-            });
-        });
-        
-        // Create ScrollTrigger for section pinning only
-        ScrollTrigger.create({
-            trigger: section,
-            //pin: true,
-            start: "top 5%",
-            end: "+=25%", // Reduced from 30% for faster exit
-            anticipatePin: 1,
-            fastScrollEnd: true,
-            preventOverlaps: true,
-        });
-        
-        // Add horizontal scroll listener when section is active
-        addDesktopScrollListener(section, sectionId, sectionCards);
-        
-        // Set section as active when it's pinned
-        ScrollTrigger.create({
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            onEnter: () => {
-                horizontalScrollData[sectionId].isActive = true;
-                activateScrollZones(sectionId);
-                toggleNavigation(false);
-                initSectionScrollProgress(sectionId);
-            },
-            onLeave: () => {
-                horizontalScrollData[sectionId].isActive = false;
-                deactivateScrollZones(sectionId);
-                toggleNavigation(true);
-                resetSectionScrollProgress(sectionId);
-            },
-            onEnterBack: () => {
-                horizontalScrollData[sectionId].isActive = true;
-                activateScrollZones(sectionId);
-                toggleNavigation(false);
-            },
-            onLeaveBack: () => {
-                horizontalScrollData[sectionId].isActive = false;
-                deactivateScrollZones(sectionId);
-                toggleNavigation(true);
-            }
-        });
-    });
-
-    // Initialize tooltip managers
-    projectSections.forEach(section => {
-        const sectionId = section.id;
+        // Initialize tooltip manager
         tooltipManagers[sectionId] = new ProjectTooltipManager(sectionId);
-        initProjectNavigation(sectionId, section.querySelectorAll('.item'));
+        
+        // Set initial card states
+        setInitialCardPositions(sectionId);
+        
+        // Create scroll zones
+        createScrollZones(section, sectionId, Array.from(sectionCards));
+        
+        // Add scroll listeners
+        addDesktopScrollListener(section, sectionId, Array.from(sectionCards));
+        
+        console.log(`Initialized section ${sectionId}:`, {
+            cardsCount: sectionCards.length,
+            maxScroll: horizontalScrollData[sectionId].maxScroll,
+            hasTooltipManager: !!tooltipManagers[sectionId],
+            hasNavigationState: !!navigationStates[sectionId]
+        });
     });
 
-    function toggleNavigation(show) {
-        const headerContainer = document.getElementById('nav-bar-cont');
-        if (headerContainer) {
-            gsap.to(headerContainer, {
-                opacity: show ? 1 : 0,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        }
-    }
-
-    // Add this after your existing event listeners
+    // Resize handler
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            // Recalculate positions on viewport change
             Object.keys(horizontalScrollData).forEach(sectionId => {
                 if (horizontalScrollData[sectionId].isActive) {
                     const section = document.getElementById(sectionId);
                     const cards = section.querySelectorAll('.item');
                     const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-                    updateHorizontalAnimation(sectionId, progress, cards);
+                    updateHorizontalAnimation(sectionId, progress, Array.from(cards));
                 }
             });
         }, 150);
+    });
+
+    const originalGsapTo = gsap.to;
+    gsap.to = function(target, vars) {
+        // Log any animations on .item elements
+        if (target && (
+            target.classList?.contains('item') || 
+            (target.length && Array.from(target).some(el => el.classList?.contains('item')))
+        )) {
+            console.log('GSAP animation on card:', {
+                target: target,
+                vars: vars,
+                stack: new Error().stack.split('\n').slice(1, 5)
+            });
+        }
+        
+        return originalGsapTo.call(this, target, vars);
+    };
+    
+    console.log('Card scroll initialization complete:', {
+        sectionsInitialized: Object.keys(horizontalScrollData),
+        horizontalScrollData: horizontalScrollData,
+        navigationStates: navigationStates,
+        tooltipManagers: tooltipManagers
     });
 });

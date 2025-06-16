@@ -10,6 +10,7 @@ window.addEventListener('siteLoaded', function() {
     // Only initialize if we have cards to work with
     if (!sectionCards.length) return;
     
+    /*
     // Get background section
     const backgroundElement = document.getElementById('background-process');
     
@@ -35,6 +36,7 @@ window.addEventListener('siteLoaded', function() {
         // Hide the original background section
         backgroundElement.style.display = 'none';
     }
+    */
     
     // Set initial states - all cards start off-screen at the bottom
     sectionCards.forEach((card) => {
@@ -61,7 +63,7 @@ window.addEventListener('siteLoaded', function() {
     const sectionTimeline = gsap.timeline({
         scrollTrigger: {
             trigger: section,
-            pin: true,
+            // pin: true,
             start: "top top",
             end: `+=${sectionCards.length * 45 + 25}%`,
             scrub: 1,
@@ -97,8 +99,8 @@ window.addEventListener('siteLoaded', function() {
         }
     });
 
-     // Add a delay at the end before unpinning the section
-     sectionTimeline.to({}, {
+    // Add a delay at the end before unpinning the section
+    sectionTimeline.to({}, {
         duration: 0.2, // This creates a pause at the end
         onComplete: function() {
             // Optional: You could add any final animation here

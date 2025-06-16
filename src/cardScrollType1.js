@@ -1036,74 +1036,22 @@ function createScrollZones(section, sectionId, sectionCards) {
 
 // Function to bypass section pinning and continue page scroll
 function bypassSectionScroll(sectionId, direction) {
-    // Cancel any existing scroll animation
-    if (scrollAnimationFrame) {
-        cancelAnimationFrame(scrollAnimationFrame);
-    }
-    
-    // Get the actual section element
-    const section = document.getElementById(sectionId);
-    const body = document.body;
-    const html = document.documentElement;
-    
-    // Calculate document height and current position
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    const viewportHeight = window.innerHeight;
-    const currentScroll = window.pageYOffset;
-    
-    // Calculate new position with bounds checking
-    const scrollIncrement = direction === 'down' ? 120 : -120;
-    let newScroll = currentScroll + scrollIncrement;
-    
-    // Ensure we don't scroll past document bounds
-    newScroll = Math.max(0, Math.min(newScroll, docHeight - viewportHeight));
-    
-    // Only disable ScrollTriggers for THIS specific section
-    const currentSectionTriggers = ScrollTrigger.getAll().filter(st => 
-        st.trigger && st.trigger.id === sectionId
-    );
-    
-    // Temporarily disable only current section's triggers
-    currentSectionTriggers.forEach(st => st.disable());
-    
     // Deactivate current section
     horizontalScrollData[sectionId].isActive = false;
     deactivateScrollZones(sectionId);
     toggleNavigation(true);
-    hideNavigation(sectionId);
     
-    // Use requestAnimationFrame for smooth scrolling
-    const startTime = performance.now();
-    const startScroll = currentScroll;
-    const distance = newScroll - startScroll;
-    const duration = 400; // ms
+    // Let container snap scroll handle the transition
+    const container = document.querySelector('.projects-container');
+    const currentSection = document.getElementById(sectionId);
+    const sections = Array.from(container.querySelectorAll('.project-section'));
+    const currentIndex = sections.indexOf(currentSection);
     
-    function animateScroll(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        const position = startScroll + (distance * easeOut);
-        
-        window.scrollTo(0, position);
-        
-        if (progress < 1) {
-            scrollAnimationFrame = requestAnimationFrame(animateScroll);
-        } else {
-            scrollAnimationFrame = null;
-            
-            // Re-enable only the current section's triggers after animation
-            setTimeout(() => {
-                currentSectionTriggers.forEach(st => st.enable());
-                // Only refresh if no other sections are active
-                if (!Object.values(horizontalScrollData).some(data => data.isActive)) {
-                    ScrollTrigger.refresh();
-                }
-            }, 100);
-        }
+    if (direction === 'down' && currentIndex < sections.length - 1) {
+        sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (direction === 'up' && currentIndex > 0) {
+        sections[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
     }
-    
-    scrollAnimationFrame = requestAnimationFrame(animateScroll);
 }
 
 // Initialize scroll progress tracking when section becomes active
@@ -1143,15 +1091,15 @@ window.addEventListener('siteLoaded', function() {
     gsap.registerPlugin(ScrollTrigger);
     
     // Select the project sections
-    const projectSections = document.querySelectorAll('[id^="project-"]');
+    const projectSections = document.querySelectorAll('.project-section[id^="project-"]');
     
     // Map of project IDs to their corresponding background sections
-    const backgroundMap = {
+    /*const backgroundMap = {
         'project-1': 'background-p-1',
         'project-2': 'background-p-2',
         'project-3': 'background-p-3',
         'project-4': 'background-p-4'
-    };
+    };*/
     
     // Process each project section
     projectSections.forEach(section => {
@@ -1169,7 +1117,7 @@ window.addEventListener('siteLoaded', function() {
         };
         
         // Get background section if one is mapped
-        const backgroundId = backgroundMap[sectionId];
+        /*const backgroundId = backgroundMap[sectionId];
         const backgroundElement = backgroundId ? document.getElementById(backgroundId) : null;
         
         // If we have a background element for this section
@@ -1194,7 +1142,7 @@ window.addEventListener('siteLoaded', function() {
             // Hide the original background section
             backgroundElement.style.display = 'none';
         }
-
+        */
         createScrollZones(section, sectionId, sectionCards);
         
         // Set initial states for cards
@@ -1214,7 +1162,7 @@ window.addEventListener('siteLoaded', function() {
         // Create ScrollTrigger for section pinning only
         ScrollTrigger.create({
             trigger: section,
-            pin: true,
+            //pin: true,
             start: "top 5%",
             end: "+=25%", // Reduced from 30% for faster exit
             anticipatePin: 1,
@@ -1228,41 +1176,30 @@ window.addEventListener('siteLoaded', function() {
         // Set section as active when it's pinned
         ScrollTrigger.create({
             trigger: section,
-            start: "top 5%",
-            end: "+=25%",
-            anticipatePin: 1,
-            fastScrollEnd: true,
-            preventOverlaps: true,
+            start: "top top",
+            end: "bottom top",
             onEnter: () => {
                 horizontalScrollData[sectionId].isActive = true;
-                initSectionScrollProgress(sectionId);
                 activateScrollZones(sectionId);
                 toggleNavigation(false);
-                showNavigation(sectionId);
-                setTimeout(() => showAutoPreview(sectionId, sectionCards), 500);
+                initSectionScrollProgress(sectionId);
             },
             onLeave: () => {
                 horizontalScrollData[sectionId].isActive = false;
-                resetSectionScrollProgress(sectionId);
                 deactivateScrollZones(sectionId);
                 toggleNavigation(true);
-                hideNavigation(sectionId);
+                resetSectionScrollProgress(sectionId);
             },
             onEnterBack: () => {
                 horizontalScrollData[sectionId].isActive = true;
-                initSectionScrollProgress(sectionId);
                 activateScrollZones(sectionId);
                 toggleNavigation(false);
-                showNavigation(sectionId);
-                setTimeout(() => showAutoPreview(sectionId, sectionCards), 300);
-            },  
+            },
             onLeaveBack: () => {
                 horizontalScrollData[sectionId].isActive = false;
-                resetSectionScrollProgress(sectionId);
                 deactivateScrollZones(sectionId);
                 toggleNavigation(true);
-                hideNavigation(sectionId);
-            },
+            }
         });
     });
 

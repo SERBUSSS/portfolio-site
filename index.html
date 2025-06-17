@@ -187,32 +187,66 @@
                 </div>
 
                 <div id="tooltip-project-1" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
+                    <div id="tooltip-container" class="tooltip-cont">
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
                     data-direction="prev" 
                     aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
+                            <div id="tt-project-name-1" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Si Punct Media</div>
+                            <p id="tt-card-description-1" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
+                        </div>
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
+                        data-direction="next" 
+                        aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                    <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
-                        <div id="tt-project-name-1" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Si Punct Media</div>
-                        <p id="tt-card-description-1" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
-                    </div>
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
-                    data-direction="next" 
-                    aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="prev" 
+                            aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
+                        
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="next" 
+                            aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="wrapper h-screen">
-                    <div role="list" class="list flex justify-center align-center h-full relative">
+                <div class="cards-container" data-section="project-1">
+
+                </div>
+
+                <div class="scroll-zones-container" data-section="project-1" style="display: none;">
+                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
+                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
+                </div>
+
+                <!-- <div class="wrapper h-screen">
+                    <div role="list" class="list cards-container flex justify-center align-center h-full relative">
                         <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                             <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
@@ -707,32 +741,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="prev" 
-                        aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
-                    
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="next" 
-                        aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
+                
             </section>
+            
             <!-- Project 2 - Unified Section -->
             <section id="project-2" class="section project-section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                 <div class="background-content w-full h-screen flex pr-4 pl-4">
@@ -750,32 +763,66 @@
                 </div>
 
                 <div id="tooltip-project-2" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
-                    data-direction="prev" 
-                    aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="tooltip-container" class="tooltip-cont">
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
+                        data-direction="prev" 
+                        aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                      </div>
+                        <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
+                            <div id="tt-project-name-2" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Si Punct Media</div>
+                            <p id="tt-card-description-2" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
+                      </div>
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
+                        data-direction="next" 
+                        aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                    <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
-                        <div id="tt-project-name-2" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">EnergNature</div>
-                        <p id="tt-card-description-2" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
-                    </div>
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
-                    data-direction="next" 
-                    aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="prev" 
+                            aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
+                        
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="next" 
+                            aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="wrapper h-screen">
-                    <div role="list" class="list flex justify-center align-center h-full relative">
+                <div class="cards-container" data-section="project-2">
+
+                </div>
+
+                <div class="scroll-zones-container" data-section="project-2" style="display: none;">
+                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
+                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
+                </div>
+
+                <!-- <div class="wrapper h-screen">
+                    <div role="list" class="list cards-container flex justify-center align-center h-full relative">
                         <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                             <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
@@ -830,7 +877,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card02-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card02-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -860,7 +907,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card03-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card03-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -890,7 +937,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card04-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card04-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -920,7 +967,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card05-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card05-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -950,7 +997,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card06-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card06-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -980,7 +1027,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card07-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card07-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1010,7 +1057,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card08-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card08-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1040,7 +1087,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card09-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card09-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1070,7 +1117,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card10-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card10-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1100,7 +1147,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card11-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card11-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1130,7 +1177,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card12-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card12-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1160,7 +1207,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card13-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card13-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1190,7 +1237,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card14-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card14-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1220,7 +1267,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card15-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card15-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1250,7 +1297,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card16-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card16-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1280,7 +1327,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card17-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card17-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1310,7 +1357,7 @@
                                                 /images/desktop/p2/pngs/d-b-project02-card18-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p2/webp/m-b-project02-card18-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1361,35 +1408,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                    <!-- Previous/Left Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="prev" 
-                        aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <!-- Helper text (keep existing) -->
-                    <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
-                    
-                    <!-- Next/Right Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="next" 
-                        aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
             </section>    
+
             <!-- Project 3 - Unified Section -->
             <section id="project-3" class="section project-section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                 <div class="background-content w-full h-screen flex pr-4 pl-4">
@@ -1424,32 +1446,66 @@
                 </div>
 
                 <div id="tooltip-project-3" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
-                    data-direction="prev" 
-                    aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="tooltip-container" class="tooltip-cont">
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
+                        data-direction="prev" 
+                        aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                      </div>
+                        <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
+                            <div id="tt-project-name-3" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Si Punct Media</div>
+                            <p id="tt-card-description-3" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
+                      </div>
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
+                        data-direction="next" 
+                        aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                    <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
-                        <div id="tt-project-name-3" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">A&D Performance</div>
-                        <p id="tt-card-description-3" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
-                    </div>
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
-                    data-direction="next" 
-                    aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="prev" 
+                            aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
+                        
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="next" 
+                            aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="wrapper h-screen">
-                    <div role="list" class="list flex justify-center align-center h-full relative">
+                <div class="cards-container" data-section="project-3">
+
+                </div>
+
+                <div class="scroll-zones-container" data-section="project-3" style="display: none;">
+                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
+                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
+                </div>
+
+                <!--<div class="wrapper h-screen">
+                    <div role="list" class="list cards-container flex justify-center align-center h-full relative">
                         <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                             <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
@@ -1504,7 +1560,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card02-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card02-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1534,7 +1590,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card03-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card03-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1564,7 +1620,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card04-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card04-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1594,7 +1650,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card05-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card05-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1624,7 +1680,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card06-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card06-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1654,7 +1710,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card07-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card07-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1684,7 +1740,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card08-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card08-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1714,7 +1770,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card09-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card09-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1744,7 +1800,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card10-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card10-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1774,7 +1830,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card11-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card11-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1804,7 +1860,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card12-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card12-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1834,7 +1890,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card13-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card13-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1864,7 +1920,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card14-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card14-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1894,7 +1950,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card15-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card15-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1924,7 +1980,7 @@
                                                 /images/desktop/p3/pngs/d-b-project03-card16-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p3/webp/m-b-project03-card16-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -1975,35 +2031,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
-                <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                    <!-- Previous/Left Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="prev" 
-                        aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <!-- Helper text (keep existing) -->
-                    <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
-                    
-                    <!-- Next/Right Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="next" 
-                        aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
             </section> 
+
             <!-- Project 4 - Unified Section -->
             <section id="project-4" class="section project-section scroll-section md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                 <div class="background-content w-full h-screen flex pr-4 pl-4">
@@ -2021,32 +2052,66 @@
                 </div>
 
                 <div id="tooltip-project-4" class="project-tooltip hidden inline-flex justify-center items-center gap-4">
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
-                    data-direction="prev" 
-                    aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="tooltip-container" class="tooltip-cont">
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-prev" 
+                        data-direction="prev" 
+                        aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                      </div>
+                        <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
+                            <div id="tt-project-name-4" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Si Punct Media</div>
+                            <p id="tt-card-description-4" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
+                      </div>
+                        <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
+                        data-direction="next" 
+                        aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                    <div class="shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 md:w-[600px] md:gap-3 md:py-6">
-                        <div id="tt-project-name-4" class="text-center justify-start text-[#FFFDFF] text-xl font-mono md:text-2xl">Casamare</div>
-                        <p id="tt-card-description-4" class="self-stretch justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 md:text-2xl"></p>
-                    </div>
-                    <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10 nav-btn nav-next" 
-                    data-direction="next" 
-                    aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
+                    <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="prev" 
+                            aria-label="Previous card">
+                            <div class="w-8 h-8 relative rotate-180 overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
+                        
+                        <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
+                            data-direction="next" 
+                            aria-label="Next card">
+                            <div class="w-8 h-8 relative overflow-hidden">
+                                <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="wrapper h-screen">
-                    <div role="list" class="list flex justify-center align-center h-full relative">
+                <div class="cards-container" data-section="project-4">
+
+                </div>
+
+                <div class="scroll-zones-container" data-section="project-4" style="display: none;">
+                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
+                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
+                </div>
+
+                <!-- <div class="wrapper h-screen">
+                    <div role="list" class="list cards-container flex justify-center align-center h-full relative">
                         <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                             <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
@@ -2101,7 +2166,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card02-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card02-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2131,7 +2196,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card03-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card03-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2161,7 +2226,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card04-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card04-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2191,7 +2256,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card05-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card05-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2221,7 +2286,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card06-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card06-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2251,7 +2316,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card07-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card07-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2281,7 +2346,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card08-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card08-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2311,7 +2376,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card09-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card09-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2341,7 +2406,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card10-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card10-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2371,7 +2436,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card11-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card11-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2401,7 +2466,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card12-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card12-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2431,7 +2496,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card13-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card13-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2461,7 +2526,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card14-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card14-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2491,7 +2556,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card15-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card15-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2521,7 +2586,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card16-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card16-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2551,7 +2616,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card17-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card17-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2581,7 +2646,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card18-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card18-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2611,7 +2676,7 @@
                                                 /images/desktop/p4/pngs/d-b-project04-card19-v3.png 1440w"
                                     sizes="50vw">
                                 
-                                <!-- Mobile images for small screens -->
+                                
                                 <source 
                                     data-srcset="/images/p4/webp/m-b-project04-card19-v3.webp 480w"
                                     sizes="(max-width: 480px) 90vw, (max-width: 768px) 70vw, 50vw"
@@ -2662,36 +2727,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div id="project-navigation" class="project-nav-btns absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                    <!-- Previous/Left Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="prev" 
-                        aria-label="Previous card">
-                        <div class="w-8 h-8 relative rotate-180 overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <!-- Helper text (keep existing) -->
-                    <div class="text-center justify-start text-[#999c9d] text-sm font-light font-['Onest'] leading-tight">you can also drag left/right to explore</div>
-                    
-                    <!-- Next/Right Button -->
-                    <div class="p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10" 
-                        data-direction="next" 
-                        aria-label="Next card">
-                        <div class="w-8 h-8 relative overflow-hidden">
-                            <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                
+                </div> -->
+            
             </section> 
+
             <!-- Process - Unified Section -->
             <section id="process" class="section project-section scroll-section-2 w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                 <div class="background-content w-full h-screen flex">
@@ -2708,8 +2747,12 @@
                     </div>
                 </div>
 
-                <div class="wrapper h-screen">
-                    <div role="list" class="list flex justify-center align-center h-full relative">
+                <div class="process-cards-container" data-section="process">
+
+                </div>
+
+                <!-- <div class="wrapper h-screen">
+                    <div role="list" class="list process-cards-container flex justify-center align-center h-full relative">
                         <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#262728]/95 rounded outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-[40vw]">
                             <div class="self-stretch flex-1 flex flex-col justify-between items-center">
                                 <div class="self-stretch inline-flex justify-between items-start">
@@ -2796,7 +2839,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
+
                 <div class="fade-reveal-element w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw]">
                     <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
                         <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
@@ -4423,6 +4467,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+        <script type="module">
+            // Import and initialize the project container system
+            import('./src/projectContainer/projectContainer.js')
+                .then(module => {
+                    // Initialization is handled automatically by the module
+                    console.log('Project Container system loaded');
+                })
+                .catch(error => {
+                    console.error('Failed to load Project Container system:', error);
+                });
+        </script>
 
         <!-- <script src="/src/lazyLoader.js"></script> -->
 

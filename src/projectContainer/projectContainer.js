@@ -1,5 +1,5 @@
 // ================================================
-// PROJECT CONTAINER - Main Orchestrator
+// PROJECT CONTAINER - Main Orchestrator (FIXED)
 // ================================================
 
 import { initSectionManagers, activateProjectSection, deactivateProjectSection, activateProcessSection, deactivateProcessSection } from './sectionManagers.js';
@@ -16,14 +16,17 @@ const SECTION_ORDER = ['project-1', 'project-2', 'project-3', 'project-4', 'proc
 
 let containerState = {
     isActive: false,
+    isLocked: false,
     currentSection: null,
     previousSection: null,
     isScrollLocked: false,
     device: 'desktop',
-    snapDirection: null, // 'up' | 'down' | null
+    snapDirection: null,
     isTransitioning: false,
     scrollAccumulator: 0,
+    lastSnapTime: 0,
     containerElement: null,
+    originalContainerStyles: {},
     observers: new Map(),
     eventListeners: new Map()
 };
@@ -42,6 +45,60 @@ function validateSectionId(sectionId) {
 
 function sanitizeSectionId(sectionId) {
     return validateSectionId(sectionId) ? sectionId : null;
+}
+
+// ================================================
+// CONTAINER POSITION LOCKING
+// ================================================
+
+function lockContainerPosition() {
+    if (!containerState.containerElement || containerState.isLocked) return;
+    
+    // Store original styles for restoration
+    const computedStyles = window.getComputedStyle(containerState.containerElement);
+    containerState.originalContainerStyles = {
+        position: computedStyles.position,
+        top: computedStyles.top,
+        left: computedStyles.left,
+        width: computedStyles.width,
+        height: computedStyles.height,
+        zIndex: computedStyles.zIndex
+    };
+    
+    // Lock container at viewport top
+    containerState.containerElement.style.position = 'fixed';
+    containerState.containerElement.style.top = '0px';
+    containerState.containerElement.style.left = '0px';
+    containerState.containerElement.style.width = '100vw';
+    containerState.containerElement.style.height = '100vh';
+    containerState.containerElement.style.zIndex = '100';
+    
+    containerState.isLocked = true;
+    
+    // Disable page scroll
+    disablePageScroll();
+    
+    console.log('🔒 Container position locked');
+}
+
+function unlockContainerPosition() {
+    if (!containerState.containerElement || !containerState.isLocked) return;
+    
+    // Restore original styles
+    const styles = containerState.originalContainerStyles;
+    containerState.containerElement.style.position = styles.position || '';
+    containerState.containerElement.style.top = styles.top || '';
+    containerState.containerElement.style.left = styles.left || '';
+    containerState.containerElement.style.width = styles.width || '';
+    containerState.containerElement.style.height = styles.height || '';
+    containerState.containerElement.style.zIndex = styles.zIndex || '';
+    
+    containerState.isLocked = false;
+    
+    // Re-enable page scroll
+    enablePageScroll();
+    
+    console.log('🔓 Container position unlocked');
 }
 
 // ================================================
@@ -69,8 +126,8 @@ function initProjectContainer() {
         initCardAnimations();
         initUIComponents();
         
-        // Setup scroll detection
-        setupIntersectionObserver();
+        // Setup container position monitoring
+        setupContainerPositionMonitoring();
         setupEventListeners();
         
         // Set initial card positions for all sections
@@ -94,44 +151,173 @@ function activateContainer() {
     if (containerState.isActive) return;
     
     containerState.isActive = true;
-    containerState.containerElement?.classList.add('container-active');
     
-    // Disable page scroll
-    disablePageScroll();
+    // Lock container position first
+    lockContainerPosition();
     
-    // Enable snap scroll
+    // Enable snap scroll within container
     enableSnapScroll();
     
-    // Trigger initial section if none active
+    // Ensure first section is active and visible
     if (!containerState.currentSection) {
         transitionToSection(null, 'project-1');
+    } else {
+        // Make sure current section is properly visible
+        showCurrentSection();
     }
     
-    console.log('🔒 Container activated');
+    console.log('🔒 Container activated with background coverage');
+}
+
+// Section visibility management
+function showCurrentSection() {
+    if (!containerState.currentSection) return;
+    
+    // Hide all sections first
+    hideAllSections();
+    
+    // Show only current section
+    const currentSectionElement = document.getElementById(containerState.currentSection);
+    if (currentSectionElement) {
+        currentSectionElement.classList.add('active');
+        currentSectionElement.style.display = 'block';
+        currentSectionElement.style.opacity = '1';
+        currentSectionElement.style.pointerEvents = 'auto';
+        currentSectionElement.style.zIndex = '10';
+        currentSectionElement.style.position = 'absolute';
+        currentSectionElement.style.top = '0';
+        currentSectionElement.style.left = '0';
+        currentSectionElement.style.width = '100%';
+        currentSectionElement.style.height = '100%';
+        
+        console.log(`👁️ Showing section: ${containerState.currentSection}`);
+    }
+}
+
+function hideAllSections() {
+    if (!containerState.containerElement) return;
+    
+    const allSections = containerState.containerElement.querySelectorAll('[id^="project-"], #process');
+    allSections.forEach(section => {
+        section.classList.remove('active');
+        section.style.opacity = '0';
+        section.style.pointerEvents = 'none';
+        section.style.zIndex = '1';
+        // Don't set display: none as it might interfere with card positioning
+    });
 }
 
 function deactivateContainer() {
     if (!containerState.isActive) return;
     
+    const exitDirection = containerState.currentSection === 'project-1' ? 'up' : 'down';
+    
     containerState.isActive = false;
-    containerState.containerElement?.classList.remove('container-active');
     
     // Cleanup current section
     if (containerState.currentSection) {
         cleanupSection(containerState.currentSection);
+        hideAllSections();
     }
     
-    // Enable page scroll
-    enablePageScroll();
+    // Store current container position before unlocking
+    const containerRect = containerState.containerElement.getBoundingClientRect();
+    
+    // Unlock container position
+    unlockContainerPosition();
     
     // Disable snap scroll
     disableSnapScroll();
     
-    console.log('🔓 Container deactivated');
+    // Handle scroll positioning based on exit direction
+    if (exitDirection === 'down') {
+        // Exiting down: scroll to just past the container
+        setTimeout(() => {
+            const newRect = containerState.containerElement.getBoundingClientRect();
+            const targetScroll = window.scrollY + newRect.bottom - window.innerHeight + 100;
+            window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        }, 50);
+    } else {
+        // Exiting up: scroll to just before the container
+        setTimeout(() => {
+            const newRect = containerState.containerElement.getBoundingClientRect();
+            const targetScroll = window.scrollY + newRect.top - 100;
+            window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+        }, 50);
+    }
+    
+    // Reset state
+    containerState.currentSection = null;
+    containerState.isTransitioning = false;
+    
+    // Reset all card indices
+    Object.keys(sectionCardIndices).forEach(sectionId => {
+        sectionCardIndices[sectionId] = 0;
+    });
+    
+    console.log(`🔓 Container deactivated with ${exitDirection} exit`);
 }
 
 // ================================================
-// SNAP SCROLL BETWEEN SECTIONS
+// CONTAINER POSITION MONITORING
+// ================================================
+
+function setupContainerPositionMonitoring() {
+    let isExiting = false;
+    let exitDirection = null;
+    
+    function handleContainerPositionCheck() {
+        if (!containerState.containerElement) return;
+        
+        const rect = containerState.containerElement.getBoundingClientRect();
+        
+        // If we're exiting, don't immediately re-activate
+        if (isExiting) {
+            if (exitDirection === 'down') {
+                // Only re-activate if user scrolls back up significantly
+                if (rect.top > 100) {
+                    isExiting = false;
+                    exitDirection = null;
+                }
+                return;
+            } else if (exitDirection === 'up') {
+                // Only re-activate if user scrolls down significantly
+                if (rect.top < -100) {
+                    isExiting = false;
+                    exitDirection = null;
+                }
+                return;
+            }
+        }
+        
+        // Activate when container top hits viewport top (not when still exiting)
+        if (rect.top <= 0 && rect.bottom > window.innerHeight * 0.1 && !containerState.isActive && !isExiting) {
+            activateContainer();
+        }
+        // Deactivate when scrolling significantly above container
+        else if (rect.top > 50 && containerState.isActive) {
+            isExiting = true;
+            exitDirection = 'up';
+            deactivateContainer();
+        }
+    }
+    
+    // Store exit state handlers
+    containerState.setExitState = (direction) => {
+        isExiting = true;
+        exitDirection = direction;
+        console.log(`🚪 Container exit state: ${direction}`);
+    };
+    
+    // Monitor scroll for container position
+    window.addEventListener('scroll', handleContainerPositionCheck, { passive: true });
+    containerState.eventListeners.set('containerPosition', handleContainerPositionCheck);
+    
+    console.log('📍 Container position monitoring active');
+}
+
+// ================================================
+// SNAP SCROLL WITHIN CONTAINER
 // ================================================
 
 function enableSnapScroll() {
@@ -140,44 +326,102 @@ function enableSnapScroll() {
     // Remove existing scroll listener
     const existingHandler = containerState.eventListeners.get('containerScroll');
     if (existingHandler) {
-        containerState.containerElement.removeEventListener('wheel', existingHandler);
+        window.removeEventListener('wheel', existingHandler);
     }
     
-    // Add throttled scroll handler
-    const scrollHandler = debounceScrollEvents(handleContainerScroll, CONFIG.DEBOUNCE_DELAY);
-    containerState.containerElement.addEventListener('wheel', scrollHandler, { passive: false });
+    // Add immediate snap scroll handler
+    const scrollHandler = handleContainerScroll;
+    window.addEventListener('wheel', scrollHandler, { passive: false });
     containerState.eventListeners.set('containerScroll', scrollHandler);
+    
+    console.log('⚡ Snap scroll enabled');
 }
 
 function disableSnapScroll() {
     const scrollHandler = containerState.eventListeners.get('containerScroll');
-    if (scrollHandler && containerState.containerElement) {
-        containerState.containerElement.removeEventListener('wheel', scrollHandler);
+    if (scrollHandler) {
+        window.removeEventListener('wheel', scrollHandler);
         containerState.eventListeners.delete('containerScroll');
     }
+    
+    console.log('🛑 Snap scroll disabled');
 }
 
 function handleContainerScroll(event) {
-    if (!containerState.isActive || containerState.isTransitioning) {
+    // Only handle scroll when container is active and locked
+    if (!containerState.isActive || !containerState.isLocked) {
         return;
     }
     
+    // Prevent default scroll behavior
     event.preventDefault();
     
-    // Accumulate scroll delta to prevent micro-movements
-    containerState.scrollAccumulator += event.deltaY;
-    
-    // Only trigger snap when threshold is reached
-    if (Math.abs(containerState.scrollAccumulator) < CONFIG.SCROLL_THRESHOLD) {
+    // Prevent rapid-fire snapping
+    if (containerState.isTransitioning) {
         return;
     }
     
-    const direction = containerState.scrollAccumulator > 0 ? 'down' : 'up';
-    containerState.scrollAccumulator = 0; // Reset accumulator
+    // Reduce minimum time for more responsive feel
+    const timeSinceLastSnap = Date.now() - containerState.lastSnapTime;
+    if (timeSinceLastSnap < 300) { // Reduced from 800ms
+        return;
+    }
     
+    const direction = event.deltaY > 0 ? 'down' : 'up';
+    
+    console.log(`🖱️ Container scroll: ${direction} in section ${containerState.currentSection}`);
+    
+    // Handle exit conditions FIRST
+    if (shouldExitContainer(direction)) {
+        deactivateContainer();
+        return;
+    }
+    
+    // Handle process section special behavior
+    if (containerState.currentSection === 'process') {
+        handleProcessSectionScroll(direction);
+        return;
+    }
+    
+    // Only snap to next section if no cards to animate
     const nextSection = getNextSection(direction);
-    if (nextSection && nextSection !== containerState.currentSection) {
+    if (nextSection) {
         snapToSection(nextSection, direction);
+    }
+}
+
+function shouldExitContainer(direction) {
+    // Exit up from first section
+    if (direction === 'up' && containerState.currentSection === 'project-1') {
+        containerState.setExitState('up');
+        return true;
+    }
+    
+    // Exit down from last section (process)
+    if (direction === 'down' && containerState.currentSection === 'process') {
+        containerState.setExitState('down');
+        return true;
+    }
+    
+    return false;
+}
+
+function handleProcessSectionScroll(direction) {
+    // TODO: Implement process section card animation logic
+    // This should handle:
+    // - Check if first card is at initial position
+    // - If yes: scroll up = container snap, scroll down = card animation
+    // - If cards are animating: scroll controls card animation progress
+    // - If last card at final position: scroll down = exit container
+    
+    console.log(`🔄 Process section scroll: ${direction}`);
+    
+    // Temporary: treat as normal section for now
+    if (direction === 'up') {
+        const prevSection = getNextSection('up');
+        if (prevSection) {
+            snapToSection(prevSection, 'up');
+        }
     }
 }
 
@@ -206,6 +450,7 @@ function snapToSection(sectionId, direction = null) {
         return;
     }
     
+    containerState.lastSnapTime = Date.now();
     console.log(`📍 Snapping to section: ${validSectionId} (${direction || 'direct'})`);
     transitionToSection(containerState.currentSection, validSectionId);
 }
@@ -215,13 +460,38 @@ function snapToSection(sectionId, direction = null) {
 // ================================================
 
 function disablePageScroll() {
+    // Prevent scrolling on multiple levels
     document.body.style.overflow = 'hidden';
+    document.body.style.height = '100vh';
     document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.height = '100vh';
+    
+    // Prevent touch scrolling on mobile
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+    document.addEventListener('wheel', preventScroll, { passive: false });
 }
 
 function enablePageScroll() {
+    // Restore scrolling
     document.body.style.overflow = '';
+    document.body.style.height = '';
     document.documentElement.style.overflow = '';
+    document.documentElement.style.height = '';
+    
+    // Remove touch scroll prevention
+    document.removeEventListener('touchmove', preventScroll);
+    document.removeEventListener('wheel', preventScroll);
+}
+
+function preventScroll(event) {
+    // Only prevent if container is active - let container handle its own scroll
+    if (containerState.isActive && containerState.isLocked) {
+        // Let container scroll handler deal with it
+        return;
+    } else {
+        // Prevent all other scrolling
+        event.preventDefault();
+    }
 }
 
 // ================================================
@@ -244,17 +514,19 @@ function transitionToSection(fromSection, toSection) {
         cleanupSection(fromSection);
     }
     
+    // IMPORTANT: Hide all sections first, then show new one
+    hideAllSections();
+    
     // Initialize new section
     initializeSection(validToSection);
     
     // Update state
     containerState.currentSection = validToSection;
     updateGlobalState('currentSection', validToSection);
-    
     // Allow new transitions after animation completes
     setTimeout(() => {
         containerState.isTransitioning = false;
-    }, CONFIG.ANIMATION_DURATION);
+    }, CONFIG.ANIMATION_DURATION || 800);
 }
 
 function cleanupSection(sectionId) {
@@ -293,8 +565,8 @@ function initializeSection(sectionId) {
         
         // Trigger initial preview
         const previewPercentage = containerState.device === 'mobile' 
-            ? CONFIG.PREVIEW_MOBILE 
-            : CONFIG.PREVIEW_DESKTOP;
+            ? (CONFIG.PREVIEW_MOBILE || 15)
+            : (CONFIG.PREVIEW_DESKTOP || 15);
         
         triggerInitialPreview(validSectionId, previewPercentage);
         
@@ -302,39 +574,11 @@ function initializeSection(sectionId) {
         setTimeout(() => {
             showTooltip(validSectionId);
             showNavigation(validSectionId);
-        }, CONFIG.ANIMATION_DURATION * 0.5);
+        }, (CONFIG.ANIMATION_DURATION || 800) * 0.5);
         
         console.log(`🎬 Initialized section: ${validSectionId}`);
     } catch (error) {
         console.error(`Failed to initialize section ${validSectionId}:`, error);
-    }
-}
-
-// ================================================
-// INTERSECTION OBSERVER
-// ================================================
-
-function setupIntersectionObserver() {
-    // Observer for container activation
-    const containerObserver = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    activateContainer();
-                } else {
-                    deactivateContainer();
-                }
-            });
-        },
-        { 
-            threshold: 0.1,
-            rootMargin: '-10px 0px -10px 0px'
-        }
-    );
-    
-    if (containerState.containerElement) {
-        containerObserver.observe(containerState.containerElement);
-        containerState.observers.set('container', containerObserver);
     }
 }
 
@@ -344,7 +588,7 @@ function setupIntersectionObserver() {
 
 function setupEventListeners() {
     // Window events with cleanup tracking
-    const resizeHandler = debounceScrollEvents(handleMasterResize, 250);
+    const resizeHandler = debounceScrollEvents ? debounceScrollEvents(handleMasterResize, 250) : handleMasterResize;
     const keyHandler = handleMasterKeyboard;
     
     window.addEventListener('resize', resizeHandler);
@@ -384,11 +628,13 @@ function handleMasterKeyboard(event) {
             event.preventDefault();
             const prevSection = getNextSection('up');
             if (prevSection) snapToSection(prevSection, 'up');
+            else if (containerState.currentSection === 'project-1') deactivateContainer();
             break;
         case 'ArrowDown':
             event.preventDefault();
             const nextSection = getNextSection('down');
             if (nextSection) snapToSection(nextSection, 'down');
+            else if (containerState.currentSection === 'process') deactivateContainer();
             break;
         case 'Escape':
             deactivateContainer();
@@ -449,6 +695,10 @@ function handleStateChange(newState, oldState) {
     if (newState.isActive !== oldState.isActive) {
         console.log(`📊 Container active: ${newState.isActive}`);
     }
+    
+    if (newState.isLocked !== oldState.isLocked) {
+        console.log(`🔐 Container locked: ${newState.isLocked}`);
+    }
 }
 
 // ================================================
@@ -464,8 +714,10 @@ function destroy() {
     
     // Remove event listeners
     containerState.eventListeners.forEach((handler, key) => {
-        if (key === 'containerScroll' && containerState.containerElement) {
-            containerState.containerElement.removeEventListener('wheel', handler);
+        if (key === 'containerScroll') {
+            window.removeEventListener('wheel', handler);
+        } else if (key === 'containerPosition') {
+            window.removeEventListener('scroll', handler);
         } else if (key === 'resize') {
             window.removeEventListener('resize', handler);
         } else if (key === 'keyboard') {
@@ -483,12 +735,15 @@ function destroy() {
         cleanupSection(containerState.currentSection);
     }
     
-    // Enable page scroll
-    enablePageScroll();
+    // Unlock container if locked
+    if (containerState.isLocked) {
+        unlockContainerPosition();
+    }
     
     // Reset state
     containerState = {
         isActive: false,
+        isLocked: false,
         currentSection: null,
         previousSection: null,
         isScrollLocked: false,
@@ -496,7 +751,9 @@ function destroy() {
         snapDirection: null,
         isTransitioning: false,
         scrollAccumulator: 0,
+        lastSnapTime: 0,
         containerElement: null,
+        originalContainerStyles: {},
         observers: new Map(),
         eventListeners: new Map()
     };
@@ -520,7 +777,7 @@ function init() {
 export {
     init,
     destroy,
-    containerState, // Export getter for immutability
+    containerState,
     activateContainer,
     deactivateContainer,
     snapToSection,

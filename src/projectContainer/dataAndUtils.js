@@ -58,39 +58,194 @@ const CONFIG = {
 const cardPositions = {
     'project-1': {
         desktop: [
-            // Example positions - to be populated with real data
-            { x: 15, y: 20, scale: 0.8, opacity: 1, rotation: -5 },
-            { x: 25, y: 35, scale: 0.9, opacity: 1, rotation: 3 },
-            { x: 45, y: 15, scale: 0.85, opacity: 1, rotation: -2 },
-            { x: 65, y: 40, scale: 0.95, opacity: 1, rotation: 4 },
-            { x: 80, y: 25, scale: 0.88, opacity: 1, rotation: -3 }
-            // ... up to 20 cards total
+            { x: '-20', y: '-20', rotation: -30, scale: 0.7, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.8, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.8, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.8, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.82, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.81, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.78, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.8, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.82, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.79, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.8, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.8, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.82, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.8, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.78, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.8, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.8, opacity: 1 }
         ],
         mobile: [
-            // Mobile positions - more centered and larger
-            { x: 20, y: 25, scale: 0.9, opacity: 1, rotation: -3 },
-            { x: 30, y: 40, scale: 0.95, opacity: 1, rotation: 2 },
-            { x: 50, y: 20, scale: 0.92, opacity: 1, rotation: -1 },
-            { x: 70, y: 45, scale: 0.98, opacity: 1, rotation: 3 },
-            { x: 85, y: 30, scale: 0.94, opacity: 1, rotation: -2 }
-            // ... up to 20 cards total
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.65, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.7, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.7, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.65, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.65, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.67, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.55, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.5, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.5, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
         ]
     },
-    'project-2': { desktop: [], mobile: [] },
-    'project-3': { desktop: [], mobile: [] },
-    'project-4': { desktop: [], mobile: [] },
+    'project-2': { 
+        desktop: [
+            // Different layout for project 2 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ], 
+        mobile: [
+            // Different layout for project 2 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ] 
+    },
+    'project-3': { 
+        desktop: [
+            // Tighter spiral layout for project 3
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.55, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.55, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.4, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.4, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.52, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.51, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.43, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.43, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
+        ], 
+        mobile: [
+            // Tighter spiral layout for project 3
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.55, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.55, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.4, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.4, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.52, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.51, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.43, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.43, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
+        ] 
+    },
+    'project-4': { 
+        desktop: [
+            // Different layout for project 4 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ], 
+        mobile: [
+            // Different layout for project 4 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ] 
+    },
     'process': {
         desktop: [
-            { x: 20, y: 25, scale: 0.9, opacity: 1, rotation: -2 },
-            { x: 40, y: 60, scale: 0.95, opacity: 1, rotation: 1 },
-            { x: 65, y: 35, scale: 0.92, opacity: 1, rotation: -1 },
-            { x: 80, y: 70, scale: 0.88, opacity: 1, rotation: 2 }
+            { x: 0, y: -15, scale: 0.9, opacity: 1, rotation: -2 },
+            { x: 0, y: -5, scale: 0.95, opacity: 1, rotation: 1 },
+            { x: 0, y: 5, scale: 0.92, opacity: 1, rotation: -1 },
+            { x: 0, y: 15, scale: 0.88, opacity: 1, rotation: 2 }
         ],
         mobile: [
-            { x: 25, y: 30, scale: 0.95, opacity: 1, rotation: -1 },
-            { x: 50, y: 65, scale: 1.0, opacity: 1, rotation: 0 },
-            { x: 70, y: 40, scale: 0.97, opacity: 1, rotation: 1 },
-            { x: 85, y: 75, scale: 0.93, opacity: 1, rotation: -1 }
+            { x: 0, y: -15, scale: 0.95, opacity: 1, rotation: -1 },
+            { x: 0, y: -5, scale: 1.0, opacity: 1, rotation: 0 },
+            { x: 0, y: 5, scale: 0.97, opacity: 1, rotation: 1 },
+            { x: 0, y: 15, scale: 0.93, opacity: 1, rotation: -1 }
         ]
     }
 };
@@ -142,7 +297,7 @@ const processScrollData = {
 };
 
 // Navigation states
-const navigationStates = {};
+const navigationStates = new Map();
 
 // Global state with validation
 let globalState = {
@@ -340,8 +495,8 @@ function createScrollZones(sectionId) {
         position: absolute;
         top: 0;
         left: 0;
-        width: 50vw;
-        height: 100vh;
+        width: 50;
+        height: 100;
         pointer-events: auto;
         z-index: 5;
     `;
@@ -352,8 +507,8 @@ function createScrollZones(sectionId) {
         position: absolute;
         top: 0;
         right: 0;
-        width: 50vw;
-        height: 100vh;
+        width: 50;
+        height: 100;
         pointer-events: auto;
         z-index: 5;
     `;

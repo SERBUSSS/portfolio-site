@@ -906,7 +906,6 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
             }
         }
             
-            // Your existing card animation code stays the same here...
             if (cardProgress <= 0.6) {
                 // Step 1: Slide in from right to center
                 const slideProgress = cardProgress / 0.6;

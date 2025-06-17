@@ -460,6 +460,9 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
+  }
   .w-\[2\.5rem\] {
     width: 2.5rem;
   }
@@ -2089,7 +2092,7 @@ body.loaded main, body.loaded section:not(#loading-screen) {
   display: block !important;
 }
 .cards-container {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;

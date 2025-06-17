@@ -2,7 +2,7 @@
 // SECTION MANAGERS - Project & Process Sections
 // ================================================
 
-import { handleTwoStepAnimation, getCardState, resetCardPosition, setInitialCardPositions } from './cardAnimations.js'
+import { setInitialCardPositions } from './cardAnimations.js'
 import { updateTooltipContent, positionTooltip, updateButtonStates } from './uiComponents.js';
 import { CONFIG, calculateScrollProgress, isDesktop, isMobile, debounceScrollEvents } from './dataAndUtils.js';
 

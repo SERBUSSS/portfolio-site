@@ -1035,6 +1035,11 @@ function destroyDataAndUtils() {
     debugLog('✅ Data and Utils destroyed');
 }
 
+function getFinalPositions(sectionId) {
+    const device = isDesktop() ? 'desktop' : 'mobile';
+    return cardPositions[sectionId]?.[device] || [];
+}
+
 // ================================================
 // EXPORTS
 // ================================================
@@ -1045,6 +1050,7 @@ export {
     
     // Data structures
     cardPositions,
+    getFinalPositions,
     tooltipContent,
     horizontalScrollData,
     processScrollData,

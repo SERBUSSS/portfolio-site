@@ -31,6 +31,8 @@ let containerState = {
     eventListeners: new Map()
 };
 
+let sectionScrollProgress = {};
+
 // ================================================
 // SECURITY & VALIDATION
 // ================================================
@@ -62,7 +64,9 @@ function lockContainerPosition() {
         left: computedStyles.left,
         width: computedStyles.width,
         height: computedStyles.height,
-        zIndex: computedStyles.zIndex
+        zIndex: computedStyles.zIndex,
+        opacity: computedStyles.opacity,
+        visibility: computedStyles.visibility
     };
     
     // Lock container at viewport top
@@ -72,8 +76,14 @@ function lockContainerPosition() {
     containerState.containerElement.style.width = '100vw';
     containerState.containerElement.style.height = '100vh';
     containerState.containerElement.style.zIndex = '100';
+    containerState.containerElement.style.opacity = '1';
+    containerState.containerElement.style.visibility = 'visible';
     
     containerState.isLocked = true;
+    
+    // Add class for body scroll lock
+    document.body.classList.add('container-scroll-locked');
+    document.documentElement.classList.add('container-scroll-locked');
     
     // Disable page scroll
     disablePageScroll();
@@ -152,14 +162,35 @@ function activateContainer() {
     
     containerState.isActive = true;
     
+    // Add the active class to container for CSS styling
+    if (containerState.containerElement) {
+        containerState.containerElement.classList.add('container-active');
+    }
+    
     // Lock container position first
     lockContainerPosition();
     
     // Enable snap scroll within container
     enableSnapScroll();
     
+    // CRITICAL FIX: Ensure sections are visible when container activates
+    // First, make sure the wrapper and background content are visible
+    const wrapper = containerState.containerElement.querySelector('.wrapper');
+    const backgroundContent = containerState.containerElement.querySelector('.background-content');
+    
+    if (wrapper) {
+        wrapper.style.opacity = '1';
+        wrapper.style.visibility = 'visible';
+    }
+    
+    if (backgroundContent) {
+        backgroundContent.style.opacity = '1';
+        backgroundContent.style.visibility = 'visible';
+    }
+    
     // Ensure first section is active and visible
     if (!containerState.currentSection) {
+        // No section active yet, transition to first one
         transitionToSection(null, 'project-1');
     } else {
         // Make sure current section is properly visible
@@ -199,11 +230,13 @@ function hideAllSections() {
     
     const allSections = containerState.containerElement.querySelectorAll('[id^="project-"], #process');
     allSections.forEach(section => {
-        section.classList.remove('active');
-        section.style.opacity = '0';
-        section.style.pointerEvents = 'none';
-        section.style.zIndex = '1';
-        // Don't set display: none as it might interfere with card positioning
+        // Only hide if it's not the current section being transitioned to
+        if (section.id !== containerState.currentSection) {
+            section.classList.remove('active');
+            section.style.opacity = '0';
+            section.style.pointerEvents = 'none';
+            section.style.zIndex = '1';
+        }
     });
 }
 
@@ -214,46 +247,58 @@ function deactivateContainer() {
     
     containerState.isActive = false;
     
-    // Cleanup current section
+    // Remove active class
+    if (containerState.containerElement) {
+        containerState.containerElement.classList.remove('container-active');
+    }
+
+    // Remove body scroll lock classes
+    document.body.classList.remove('container-scroll-locked');
+    document.documentElement.classList.remove('container-scroll-locked');
+    
+    // Cleanup current section BEFORE unlocking
     if (containerState.currentSection) {
         cleanupSection(containerState.currentSection);
         hideAllSections();
     }
     
-    // Store current container position before unlocking
-    const containerRect = containerState.containerElement.getBoundingClientRect();
-    
-    // Unlock container position
+    // Unlock container position - this restores original positioning
     unlockContainerPosition();
     
     // Disable snap scroll
     disableSnapScroll();
     
-    // Handle scroll positioning based on exit direction
-    if (exitDirection === 'down') {
-        // Exiting down: scroll to just past the container
-        setTimeout(() => {
-            const newRect = containerState.containerElement.getBoundingClientRect();
-            const targetScroll = window.scrollY + newRect.bottom - window.innerHeight + 100;
-            window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-        }, 50);
-    } else {
-        // Exiting up: scroll to just before the container
-        setTimeout(() => {
-            const newRect = containerState.containerElement.getBoundingClientRect();
-            const targetScroll = window.scrollY + newRect.top - 100;
-            window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
-        }, 50);
-    }
-    
     // Reset state
     containerState.currentSection = null;
     containerState.isTransitioning = false;
     
-    // Reset all card indices
-    Object.keys(sectionCardIndices).forEach(sectionId => {
-        sectionCardIndices[sectionId] = 0;
+    // Reset all card animation progress
+    const animationState = {};
+    VALID_SECTIONS.forEach(sectionId => {
+        animationState[sectionId] = { progress: 0 };
     });
+    updateGlobalState('cardAnimationState', animationState);
+    
+    // Handle scroll positioning based on exit direction
+    if (exitDirection === 'down') {
+        // Exiting down: ensure we're scrolled past the container
+        setTimeout(() => {
+            const containerRect = containerState.containerElement.getBoundingClientRect();
+            if (containerRect.top < window.innerHeight * 0.5) {
+                const targetScroll = window.scrollY + containerRect.bottom + 100;
+                window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+            }
+        }, 100);
+    } else {
+        // Exiting up: ensure we're scrolled before the container
+        setTimeout(() => {
+            const containerRect = containerState.containerElement.getBoundingClientRect();
+            if (containerRect.bottom > window.innerHeight * 0.5) {
+                const targetScroll = window.scrollY + containerRect.top - window.innerHeight + 100;
+                window.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
+            }
+        }, 100);
+    }
     
     console.log(`🔓 Container deactivated with ${exitDirection} exit`);
 }
@@ -356,17 +401,7 @@ function handleContainerScroll(event) {
     // Prevent default scroll behavior
     event.preventDefault();
     
-    // Prevent rapid-fire snapping
-    if (containerState.isTransitioning) {
-        return;
-    }
-    
-    // Reduce minimum time for more responsive feel
-    const timeSinceLastSnap = Date.now() - containerState.lastSnapTime;
-    if (timeSinceLastSnap < 300) { // Reduced from 800ms
-        return;
-    }
-    
+    // Get scroll direction
     const direction = event.deltaY > 0 ? 'down' : 'up';
     
     console.log(`🖱️ Container scroll: ${direction} in section ${containerState.currentSection}`);
@@ -379,15 +414,83 @@ function handleContainerScroll(event) {
     
     // Handle process section special behavior
     if (containerState.currentSection === 'process') {
-        handleProcessSectionScroll(direction);
+        handleProcessSectionScroll(direction, event.deltaY);
         return;
     }
     
-    // Only snap to next section if no cards to animate
-    const nextSection = getNextSection(direction);
-    if (nextSection) {
-        snapToSection(nextSection, direction);
+    // For project sections, handle horizontal card scroll
+    if (containerState.currentSection && containerState.currentSection.startsWith('project-')) {
+        handleProjectSectionScroll(direction, event.deltaY);
+        return;
     }
+}
+
+function handleProjectSectionScroll(direction, deltaY) {
+    // Initialize progress for this section if not exists
+    if (!sectionScrollProgress[containerState.currentSection]) {
+        sectionScrollProgress[containerState.currentSection] = 0;
+    }
+    
+    // Get current progress
+    let currentProgress = sectionScrollProgress[containerState.currentSection];
+    
+    // Calculate scroll increment
+    const scrollSensitivity = 0.003; // Adjust for smoother scrolling
+    const progressIncrement = Math.abs(deltaY) * scrollSensitivity;
+    
+    // Update progress based on direction
+    if (direction === 'down') {
+        currentProgress = Math.min(1, currentProgress + progressIncrement);
+    } else {
+        currentProgress = Math.max(0, currentProgress - progressIncrement);
+    }
+    
+    // Check if we should transition to next/previous section
+    if (currentProgress >= 1 && direction === 'down') {
+        // All cards animated, move to next section
+        const nextSection = getNextSection('down');
+        if (nextSection) {
+            // Reset current section progress
+            sectionScrollProgress[containerState.currentSection] = 0;
+            // Set next section to start
+            sectionScrollProgress[nextSection] = 0;
+            snapToSection(nextSection, 'down');
+        }
+        return;
+    } else if (currentProgress <= 0 && direction === 'up') {
+        // At beginning, move to previous section
+        const prevSection = getNextSection('up');
+        if (prevSection) {
+            // Set previous section to fully animated state
+            sectionScrollProgress[prevSection] = 1;
+            // Reset current section
+            sectionScrollProgress[containerState.currentSection] = 0;
+            snapToSection(prevSection, 'up');
+        } else if (containerState.currentSection === 'project-1') {
+            // Exit container when scrolling up from first section
+            deactivateContainer();
+        }
+        return;
+    }
+    
+    // Update progress
+    sectionScrollProgress[containerState.currentSection] = currentProgress;
+    
+    // Trigger the animation update
+    const event = new CustomEvent('updateCardAnimation', {
+        detail: {
+            sectionId: containerState.currentSection,
+            progress: currentProgress
+        }
+    });
+    document.dispatchEvent(event);
+}
+
+// Add helper function to update animation progress
+function updateCardAnimationProgress(sectionId, progress) {
+    const animationState = getGlobalState('cardAnimationState') || {};
+    animationState[sectionId] = { progress: progress };
+    updateGlobalState('cardAnimationState', animationState);
 }
 
 function shouldExitContainer(direction) {
@@ -514,15 +617,31 @@ function transitionToSection(fromSection, toSection) {
         cleanupSection(fromSection);
     }
     
-    // IMPORTANT: Hide all sections first, then show new one
+    // Update state BEFORE initializing new section
+    containerState.currentSection = validToSection;
+
+    // Set appropriate progress for the new section
+    if (fromSection && validToSection) {
+        const fromIndex = SECTION_ORDER.indexOf(fromSection);
+        const toIndex = SECTION_ORDER.indexOf(validToSection);
+        
+        if (toIndex > fromIndex) {
+            // Moving forward - start new section from beginning
+            sectionScrollProgress[validToSection] = 0;
+        } else {
+            // Moving backward - start new section from end
+            sectionScrollProgress[validToSection] = 1;
+        }
+    }
+    
+    updateGlobalState('currentSection', validToSection);
+    
+    // Hide all sections
     hideAllSections();
     
-    // Initialize new section
+    // Initialize and show new section immediately
     initializeSection(validToSection);
     
-    // Update state
-    containerState.currentSection = validToSection;
-    updateGlobalState('currentSection', validToSection);
     // Allow new transitions after animation completes
     setTimeout(() => {
         containerState.isTransitioning = false;
@@ -556,7 +675,26 @@ function initializeSection(sectionId) {
     if (!validSectionId) return;
     
     try {
-        // Activate section based on type
+        // First, ensure the section element exists and make it visible
+        const sectionElement = document.getElementById(validSectionId);
+        if (!sectionElement) {
+            console.error(`Section element not found: ${validSectionId}`);
+            return;
+        }
+        
+        // Make the section visible IMMEDIATELY
+        sectionElement.classList.add('active');
+        sectionElement.style.display = 'block';
+        sectionElement.style.opacity = '1';
+        sectionElement.style.pointerEvents = 'auto';
+        sectionElement.style.zIndex = '10';
+        sectionElement.style.position = 'absolute';
+        sectionElement.style.top = '0';
+        sectionElement.style.left = '0';
+        sectionElement.style.width = '100%';
+        sectionElement.style.height = '100%';
+        
+        // Then activate section managers based on type
         if (validSectionId.startsWith('project-')) {
             activateProjectSection(validSectionId);
         } else if (validSectionId === 'process') {
@@ -576,7 +714,7 @@ function initializeSection(sectionId) {
             showNavigation(validSectionId);
         }, (CONFIG.ANIMATION_DURATION || 800) * 0.5);
         
-        console.log(`🎬 Initialized section: ${validSectionId}`);
+        console.log(`🎬 Initialized section: ${validSectionId} - section is now visible`);
     } catch (error) {
         console.error(`Failed to initialize section ${validSectionId}:`, error);
     }

@@ -372,54 +372,28 @@ function handleHorizontalZoneScroll(event, sectionId) {
     const state = projectSectionStates[sectionId];
     if (!state || !state.isActive) return;
     
-    const direction = event.deltaY > 0 ? 'forward' : 'backward';
-    const currentCardIndex = state.currentCardIndex || 0;
-    const isInCenterStep = state.isInCenterStep || false;
+    // Use consistent scroll sensitivity
+    const scrollSensitivity = 0.002;
+    const scrollDelta = event.deltaY * scrollSensitivity;
     
-    console.log(`🎯 Zone scroll: ${direction}, Card: ${currentCardIndex}, InCenter: ${isInCenterStep}`);
+    // Update progress smoothly
+    state.scrollProgress = Math.max(0, Math.min(1, (state.scrollProgress || 0) + scrollDelta));
     
-    let timelineTime = 0; // Specific time in timeline to seek to
-    
-    if (direction === 'forward') {
-        if (!isInCenterStep) {
-            // Move current card to center
-            state.isInCenterStep = true;
-            timelineTime = currentCardIndex * 2 + 1; // End of step 1 for current card
-            
-        } else {
-            // Move current card to final, advance to next card
-            const nextCardIndex = Math.min(currentCardIndex + 1, CARDS_PER_PROJECT - 1);
-            state.currentCardIndex = nextCardIndex;
-            state.isInCenterStep = false;
-            timelineTime = currentCardIndex * 2 + 2; // End of step 2 for current card
+    // Dispatch the progress update event
+    document.dispatchEvent(new CustomEvent('updateCardAnimation', {
+        detail: {
+            sectionId: sectionId,
+            progress: state.scrollProgress
         }
-    } else {
-        if (isInCenterStep) {
-            // Go back to initial position of current card
-            state.isInCenterStep = false;
-            timelineTime = currentCardIndex * 2; // Start of current card
-            
-        } else {
-            // Go to previous card's center
-            const prevCardIndex = Math.max(currentCardIndex - 1, 0);
-            if (prevCardIndex !== currentCardIndex) {
-                state.currentCardIndex = prevCardIndex;
-                state.isInCenterStep = true;
-                timelineTime = prevCardIndex * 2 + 1; // Center of previous card
-            }
-        }
-    }
+    }));
     
-    // Get the timeline and seek to specific time
-    const timeline = activeTimelines.get(sectionId);
-    if (timeline) {
-        timeline.seek(timelineTime);
-        console.log(`⏰ Seeked to time: ${timelineTime}s / ${timeline.duration()}s`);
+    // Update UI components
+    const currentCardIndex = Math.floor(state.scrollProgress * CARDS_PER_PROJECT);
+    if (currentCardIndex !== state.currentCardIndex) {
+        state.currentCardIndex = currentCardIndex;
+        updateTooltipContent(sectionId, currentCardIndex);
+        updateButtonStates(sectionId, currentCardIndex, CARDS_PER_PROJECT);
     }
-    
-    // Update UI
-    updateTooltipContent(sectionId, state.currentCardIndex);
-    updateButtonStates(sectionId, state.currentCardIndex, CARDS_PER_PROJECT);
 }
 
 // ================================================
@@ -430,18 +404,11 @@ function handleProjectCardScroll(scrollAmount, sectionId, direction) {
     const state = projectSectionStates[sectionId];
     if (!state || !state.isActive) return;
     
-    // Calculate new scroll progress
     const scrollDelta = direction === 'forward' ? scrollAmount : -scrollAmount;
     const newProgress = Math.max(0, Math.min(1, state.scrollProgress + (scrollDelta / state.maxScroll)));
     
-    // Check if we should snap to complete animation steps
-    if (isDesktop()) {
-        const snappedProgress = snapToAnimationStep(newProgress, state.currentCardIndex, CARDS_PER_PROJECT);
-        updateProjectCardAnimations(sectionId, snappedProgress);
-    } else {
-        // Mobile: smooth progress
-        updateProjectCardAnimations(sectionId, newProgress);
-    }
+    // Remove snap logic - just use smooth progress
+    updateProjectCardAnimations(sectionId, newProgress);
     
     state.scrollProgress = newProgress;
     

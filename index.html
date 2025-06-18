@@ -10,6 +10,7 @@
         <link rel="icon" type="image/x-icon" href="src/icons/Logo Mark.svg">
         <link rel="stylesheet" href="src/output.css">
         <link rel="stylesheet" href="src/cardScroll.css">
+        <link rel="stylesheet" href="src/projects-animation-styles.css">
         <!-- <link rel="stylesheet" href="src/formStyles.css"> -->
     </head>
     <body class="bg-[#070B0D] loading">
@@ -236,8 +237,8 @@
                     </div>
                 </div>
 
-                <div class="cards-container" data-section="project-1">
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
+                <div class="cards-container" data-section="project-1" data-total-cards="16">
+                    <div role="listitem" data-card-index="0" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -277,7 +278,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="1" class="item card shiny-border absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -306,7 +307,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="2" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -336,7 +337,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="3" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -366,7 +367,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] w-[70vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="4" class="item card absolute max-w-[90vw] w-[70vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -396,7 +397,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="5" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -426,7 +427,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="6" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -456,7 +457,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="7" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -486,7 +487,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="8" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -516,7 +517,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="9" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -546,7 +547,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
+                    <div role="listitem" data-card-index="10" class="item card absolute max-w-[90vw] h-auto rounded-xl md:w-[90%]">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -576,7 +577,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="11" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -606,7 +607,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="12" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -636,7 +637,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="13" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -666,7 +667,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="14" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -696,7 +697,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
+                    <div role="listitem" data-card-index="15" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -731,12 +732,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="scroll-zones-container" data-section="project-1" style="display: none;">
-                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
-                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
-                </div>
-                
             </section>
             
             <!-- Project 2 - Unified Section -->
@@ -805,8 +800,8 @@
                     </div>
                 </div>
 
-                <div class="cards-container" data-section="project-2">
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
+                <div class="cards-container" data-section="project-2" data-total-cards="19">
+                    <div role="listitem" data-card-index="0" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -846,7 +841,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="1" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -876,7 +871,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="2" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -906,7 +901,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="3" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -936,7 +931,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="4" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -966,7 +961,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="5" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -996,7 +991,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="6" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1026,7 +1021,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="7" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1056,7 +1051,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="8" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1086,7 +1081,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="9" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1116,7 +1111,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="10" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1146,7 +1141,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="11" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1176,7 +1171,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="12" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1206,7 +1201,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="13" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1236,7 +1231,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="14" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1266,7 +1261,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="15" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1296,7 +1291,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="16" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1326,7 +1321,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="17" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1356,7 +1351,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
+                    <div role="listitem" data-card-index="18" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -1391,12 +1386,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="scroll-zones-container" data-section="project-2" style="display: none;">
-                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
-                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
-                </div>
-
             </section>    
 
             <!-- Project 3 - Unified Section -->
@@ -1482,8 +1471,8 @@
                     </div>
                 </div>
 
-                <div class="cards-container" data-section="project-3">
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
+                <div class="cards-container" data-section="project-3" data-total-cards="17">
+                    <div role="listitem" data-card-index="0" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -1523,7 +1512,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="1" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1553,7 +1542,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="2" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1583,7 +1572,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="3" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1613,7 +1602,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl">
+                    <div role="listitem" data-card-index="4" class="item card absolute w-[90vw] h-auto rounded-xl">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1643,7 +1632,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="5" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1673,7 +1662,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="6" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1703,7 +1692,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="7" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1733,7 +1722,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="8" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1763,7 +1752,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="9" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1793,7 +1782,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="10" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1823,7 +1812,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="11" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1853,7 +1842,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="12" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1883,7 +1872,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="13" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1913,7 +1902,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="14" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1943,7 +1932,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="15" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -1973,7 +1962,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
+                    <div role="listitem" data-card-index="16" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -2008,12 +1997,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="scroll-zones-container" data-section="project-3" style="display: none;">
-                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
-                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
-                </div>
-
             </section> 
 
             <!-- Project 4 - Unified Section -->
@@ -2082,8 +2065,8 @@
                     </div>
                 </div>
 
-                <div class="cards-container" data-section="project-4">
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
+                <div class="cards-container" data-section="project-4" data-total-cards="20">
+                    <div role="listitem" data-card-index="0" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -2123,7 +2106,7 @@
                             </div>
                         </div>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="1" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2153,7 +2136,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="2" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2183,7 +2166,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="3" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2213,7 +2196,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl">
+                    <div role="listitem" data-card-index="4" class="item card absolute w-[90vw] h-auto rounded-xl">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2243,7 +2226,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="5" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2273,7 +2256,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="6" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2303,7 +2286,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="7" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2333,7 +2316,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="8" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2363,7 +2346,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="9" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2393,7 +2376,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="10" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2423,7 +2406,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="11" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2453,7 +2436,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="12" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2483,7 +2466,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="13" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2513,7 +2496,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="14" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2543,7 +2526,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="15" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2573,7 +2556,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="16" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2603,7 +2586,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="17" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2633,7 +2616,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
+                    <div role="listitem" data-card-index="18" class="item card absolute w-[90vw] h-auto rounded-xl md:w-1/2">
                         <picture>
                             <source 
                                 media="(min-width: 768px)"
@@ -2663,7 +2646,7 @@
                                 loading="lazy">
                         </picture>
                     </div>
-                    <div role="listitem" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
+                    <div role="listitem" data-card-index="19" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-70!">
                         <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
                             <div class="self-stretch flex flex-col justify-start items-start gap-3.5">
                                 <div class="self-stretch flex flex-col justify-start items-start gap-2">
@@ -2698,12 +2681,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="scroll-zones-container" data-section="project-4" style="display: none;">
-                    <div class="scroll-zone scroll-zone-left" data-zone="left"></div>
-                    <div class="scroll-zone scroll-zone-right" data-zone="right"></div>
-                </div>
-            
             </section> 
 
             <!-- Process - Unified Section -->
@@ -2862,7 +2839,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s1-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90 md:w-1 md:h-full">
+                    <div id="s1-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90! md:w-[2px] md:translate-y-[20px]! md:h-full">
                         &nbsp;
                     </div>
                     <div id="s2-branding" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-4">
@@ -2900,7 +2877,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s2-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90 md:w-1 md:h-full">
+                    <div id="s2-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90! md:w-[2px] md:translate-y-[20px]! md:h-full">
                         &nbsp;
                     </div>
                     <div id="s3-SMM" class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-4">
@@ -2939,7 +2916,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="s3-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90 md:w-1 md:h-full">
+                    <div id="s3-divider" class="w-full h-[2px] bg-[#969696] self-stretch inline-flex justify-center items-center md:rotate-90! md:w-[2px] md:translate-y-[20px]! md:h-full">
                         &nbsp;
                     </div>
                 </div>
@@ -4437,42 +4414,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
-        <script type="module">
-            // Import and initialize the project container system
-            import('./src/projectContainer/projectContainer.js')
-                .then(module => {
-                    // Initialization is handled automatically by the module
-                    console.log('Project Container system loaded');
-                })
-                .catch(error => {
-                    console.error('Failed to load Project Container system:', error);
-                });
-        </script>
-
         <!-- <script src="/src/lazyLoader.js"></script> -->
 
         <script type="module" src="src/loadingScreen.js"></script>
 
         <script type="module" src="src/reactBootstrap.jsx"></script>
 
-        <!-- <script type="module" src="src/viewportAnimations.jsx"></script> -->
-
         <!-- <script type="module" src="src/simpleAnimations.js"></script> -->
 
         <!-- <script type="module" src="src/shiny-border-observer.js"></script> -->
-        <!-- <script type="module" src="src/cardScrollType1.js" defer></script>
-        <script type="module" src="src/cardScrollType2.js" defer></script> -->
+        <script type="module" src="src/projects-controller.js" defer></script>
         <script type="module" src="src/headerAnimation.js" defer></script>
         <script type="module" src="src/navigationMenu.js" defer></script>
         <script type="module" src="src/revealScroll.js" defer></script>
         <script type="module" src="src/accordionScroll.js" defer></script>
         <script type="module" src="src/formController.js" defer></script>
         <script type="module" src="/lazyLoading.js" defer></script>
-
-        <!-- <script src="src/formFunctionality.js" defer></script> 
-        <script src="src/formAnimation.js" defer></script>
-        <script src="src/formValidation.js" defer></script>
-        <script src="src/formMain.js" defer></script>
-        <script src="src/formIntegration.js" defer></script> -->
     </body>
 </html>

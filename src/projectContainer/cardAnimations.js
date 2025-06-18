@@ -126,32 +126,43 @@ function createHorizontalTimeline(sectionId) {
     
     // Each card gets exactly 2 seconds: 1 for center, 1 for final
     cards.forEach((card, index) => {
-        const finalPos = finalPositions[index] || finalPositions[0];
-        const startTime = index * 2; // Card 0: 0-2s, Card 1: 2-4s, etc.
+        const startTime = index / totalCards;
+        const duration = 1 / totalCards;
         
-        // Step 1: Initial to center (0 to 1 second for this card)
-        tl.to(card, {
-            x: 50 * vw,
-            y: 50 * vh,
-            xPercent: -50,
-            yPercent: -50,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.inOut"
-        }, startTime);
+        // Step 1: Initial to center (first half of card's duration)
+        timeline.fromTo(card,
+            {
+                x: initialPos.x,
+                y: initialPos.y,
+                scale: initialPos.scale || 0.8,
+                opacity: 0,
+                rotation: initialPos.rotation || 0
+            },
+            {
+                x: centerPos.x,
+                y: centerPos.y,
+                scale: centerPos.scale || 1,
+                opacity: 1,
+                rotation: centerPos.rotation || 0,
+                duration: duration * 0.5,
+                ease: "power2.inOut"
+            },
+            startTime
+        );
         
-        // Step 2: Center to final (1 to 2 seconds for this card)
-        tl.to(card, {
-            x: finalPos.x * vw,
-            y: finalPos.y * vh,
-            xPercent: -50,
-            yPercent: -50,
-            scale: finalPos.scale || 1,
-            opacity: finalPos.opacity || 1,
-            rotation: finalPos.rotation || 0,
-            duration: 1,
-            ease: "power2.inOut"
-        }, startTime + 1);
+        // Step 2: Center to final (second half of card's duration)
+        timeline.to(card,
+            {
+                x: finalPos.x,
+                y: finalPos.y,
+                scale: finalPos.scale || 1,
+                opacity: finalPos.opacity || 1,
+                rotation: finalPos.rotation || 0,
+                duration: duration * 0.5,
+                ease: "power2.inOut"
+            },
+            startTime + (duration * 0.5)
+        );
     });
     
     console.log(`🎬 Timeline created: ${cards.length} cards, duration: ${tl.duration()}s`);
@@ -245,23 +256,16 @@ function initializeTimelineForSection(sectionId) {
 function updateCardAnimation(sectionId, progress) {
     if (!gsapAvailable) return;
     
-    console.log(`🎬 updateCardAnimation: ${sectionId}, progress: ${progress.toFixed(3)}`);
-    
-    let timeline = activeTimelines.get(sectionId);
-    
-    // Initialize timeline if it doesn't exist
+    const timeline = activeTimelines.get(sectionId);
     if (!timeline) {
         timeline = initializeTimelineForSection(sectionId);
         if (!timeline) return;
     }
     
-    // Convert progress (0-1) to timeline progress (0-duration)
-    const timelineProgress = progress * timeline.duration();
+    // Instead of seeking directly, use progress() for smooth animation
+    timeline.progress(progress);
     
-    // Seek to the specific progress point
-    timeline.seek(timelineProgress);
-    
-    console.log(`🎯 Updated ${sectionId} timeline to progress: ${timelineProgress.toFixed(2)}/${timeline.duration().toFixed(2)}`);
+    console.log(`🎯 Updated ${sectionId} to progress: ${(progress * 100).toFixed(1)}%`);
 }
 
 // ================================================

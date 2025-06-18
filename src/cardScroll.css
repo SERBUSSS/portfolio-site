@@ -56,16 +56,6 @@ body {
     overflow: visible;
 }
 
-/* Add smooth transitions for better UX */
-.item {
-    position: absolute;
-    filter: drop-shadow(0px 6px 5px rgba(149, 157, 165, 0.2));
-    overflow: hidden;
-    will-change: transform, opacity;
-    transition: box-shadow 0.3s ease;
-    pointer-events: auto;
-}
-
 /* Mobile specific adjustments */
 @media (max-width: 768px) {
     .section[id^="project-"] {
@@ -159,47 +149,8 @@ body {
     }
 }
 
-/* Invisible scroll zones - desktop only */
-@media (min-width: 768px) {
-    .scroll-zones-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 10;
-    }
-    
-    .scroll-zones-container.active {
-        pointer-events: auto;
-    }
-    
-    .scroll-zone {
-        position: absolute;
-        top: 0;
-        height: 100%;
-        pointer-events: auto;
-    }
-    
-    .scroll-zone-left {
-        left: 0;
-        width: 50%;
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/%3E%3C/svg%3E"), auto;
-    }
-    
-    .scroll-zone-right {
-        right: 0;
-        width: 50%;
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z'/%3E%3C/svg%3E"), auto;
-    }
-}
-
 /* Projects container with snap scroll */
 .projects-container {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    min-height: 500vh;
     height: auto;
     position: relative;
     background: transparent;
@@ -221,110 +172,4 @@ body {
 .wrapper {
     position: relative;
     z-index: 2;
-}
-
-/* ================================================ */
-/* CONTAINER BACKGROUND FIX */
-/* ================================================ */
-
-/* Ensure container sections are properly stacked when locked */
-.projects-container.container-active {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 100 !important;
-    background: #070B0D !important;
-    overflow: hidden !important;
-}
-
-/* All sections should be absolutely positioned within locked container */
-.projects-container.container-active > * {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Show only active section */
-.projects-container.container-active [id^="project-"].active,
-.projects-container.container-active #process.active {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    z-index: 10 !important;
-}
-
-/* Ensure cards containers are properly positioned */
-.projects-container.container-active .cards-container {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: visible !important;
-    z-index: 15 !important;
-}
-
-/* Ensure wrapper content is properly layered */
-.projects-container.container-active .wrapper {
-    position: relative !important;
-    z-index: 3 !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Fix tooltips and navigation in locked container */
-.projects-container.container-active .project-tooltip {
-    position: absolute !important;
-    z-index: 20 !important;
-}
-
-.projects-container.container-active .project-navigation {
-    position: absolute !important;
-    z-index: 25 !important;
-}
-
-/* Ensure proper section transitions */
-.projects-container.container-active [id^="project-"],
-.projects-container.container-active #process {
-    transform: translateZ(0) !important; /* Force GPU acceleration */
-    backface-visibility: hidden !important;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .projects-container.container-active {
-        height: 100vh !important;
-        height: 100dvh !important; /* Dynamic viewport height */
-    }
-    
-    .projects-container.container-active .project-navigation {
-        bottom: 2rem !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-    }
-}
-
-/* Desktop adjustments */
-@media (min-width: 769px) {
-    .projects-container.container-active .project-navigation {
-        top: 50% !important;
-        right: 2rem !important;
-        transform: translateY(-50%) !important;
-    }
-}
-
-/* Debug helper - remove in production */
-.projects-container.container-active [id^="project-"].active {
-    border: 2px solid rgba(255, 0, 0, 0.3); /* Red border for active section */
-}
-
-/* Prevent body scroll when container is locked */
-body.container-scroll-locked,
-html.container-scroll-locked {
-    overflow: hidden !important;
-    height: 100vh !important;
-    touch-action: none !important; /* Prevent mobile scroll */
 }

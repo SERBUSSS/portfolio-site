@@ -366,20 +366,19 @@ function detectDevice() {
     
     if (width < CONFIG.BREAKPOINTS.tablet) {
         device = 'mobile';
-    } else if (width < CONFIG.BREAKPOINTS.desktop) {
+    } else if (width < 900) {  // CHANGE THIS: Lower threshold for desktop
         device = 'tablet';
     } else {
         device = 'desktop';
     }
     
-    // Override for touch devices on larger screens
-    if (isTouchDevice && width >= CONFIG.BREAKPOINTS.tablet && width < CONFIG.BREAKPOINTS.desktop) {
-        device = 'tablet';
-    }
+    // FORCE DESKTOP FOR TESTING
+    device = 'desktop';
     
     cachedDevice = device;
     lastDeviceCheck = now;
     
+    console.log(`📏 Viewport: ${width}px, Device: ${device}`);
     return device;
 }
 

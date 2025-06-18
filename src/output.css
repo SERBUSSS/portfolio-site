@@ -460,9 +460,6 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
-  .w-96 {
-    width: calc(var(--spacing) * 96);
-  }
   .w-\[2\.5rem\] {
     width: 2.5rem;
   }

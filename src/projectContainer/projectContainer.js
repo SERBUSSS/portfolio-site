@@ -158,9 +158,13 @@ function initProjectContainer() {
 }
 
 function activateContainer() {
+    // Store device info in container state for zone handlers to check
+    containerState.device = detectDevice();
+
     if (containerState.isActive) return;
     
     containerState.isActive = true;
+    containerState.device = detectDevice();
     
     // Add the active class to container for CSS styling
     if (containerState.containerElement) {
@@ -398,6 +402,13 @@ function handleContainerScroll(event) {
         return;
     }
     
+    // Let zone handlers manage desktop project section scroll
+    if (containerState.device === 'desktop' && 
+        containerState.currentSection && 
+        containerState.currentSection.startsWith('project-')) {
+        return; // Don't handle here, let zones handle it
+    }
+    
     // Prevent default scroll behavior
     event.preventDefault();
     
@@ -476,14 +487,16 @@ function handleProjectSectionScroll(direction, deltaY) {
     // Update progress
     sectionScrollProgress[containerState.currentSection] = currentProgress;
     
-    // Trigger the animation update
-    const event = new CustomEvent('updateCardAnimation', {
+    // *** REPLACE THE EXISTING EVENT DISPATCH WITH THIS: ***
+    document.dispatchEvent(new CustomEvent('updateCardAnimation', {
         detail: {
             sectionId: containerState.currentSection,
-            progress: currentProgress
+            progress: currentProgress,
+            direction: direction  // Add direction for better animation control
         }
-    });
-    document.dispatchEvent(event);
+    }));
+    
+    console.log(`🎯 Progress update: ${containerState.currentSection} at ${(currentProgress * 100).toFixed(1)}%`);
 }
 
 // Add helper function to update animation progress
@@ -509,23 +522,55 @@ function shouldExitContainer(direction) {
     return false;
 }
 
-function handleProcessSectionScroll(direction) {
-    // TODO: Implement process section card animation logic
-    // This should handle:
-    // - Check if first card is at initial position
-    // - If yes: scroll up = container snap, scroll down = card animation
-    // - If cards are animating: scroll controls card animation progress
-    // - If last card at final position: scroll down = exit container
+function handleProcessSectionScroll(direction, deltaY) {
+    // Initialize progress for process section if not exists
+    if (!sectionScrollProgress['process']) {
+        sectionScrollProgress['process'] = 0;
+    }
     
-    console.log(`🔄 Process section scroll: ${direction}`);
+    // Get current progress
+    let currentProgress = sectionScrollProgress['process'];
     
-    // Temporary: treat as normal section for now
-    if (direction === 'up') {
+    // Calculate scroll increment (same as project sections)
+    const scrollSensitivity = 0.003;
+    const progressIncrement = Math.abs(deltaY) * scrollSensitivity;
+    
+    // Update progress based on direction
+    if (direction === 'down') {
+        currentProgress = Math.min(1, currentProgress + progressIncrement);
+    } else {
+        currentProgress = Math.max(0, currentProgress - progressIncrement);
+    }
+    
+    // Check if we should transition or exit
+    if (currentProgress >= 1 && direction === 'down') {
+        // Process section completed, exit container
+        deactivateContainer();
+        return;
+    } else if (currentProgress <= 0 && direction === 'up') {
+        // At beginning, move to previous section
         const prevSection = getNextSection('up');
         if (prevSection) {
+            sectionScrollProgress[prevSection] = 1;
+            sectionScrollProgress['process'] = 0;
             snapToSection(prevSection, 'up');
         }
+        return;
     }
+    
+    // Update progress
+    sectionScrollProgress['process'] = currentProgress;
+    
+    // *** ADD THIS: Dispatch progress update event ***
+    document.dispatchEvent(new CustomEvent('updateCardAnimation', {
+        detail: {
+            sectionId: 'process',
+            progress: currentProgress,
+            direction: direction
+        }
+    }));
+    
+    console.log(`🔄 Process section progress: ${(currentProgress * 100).toFixed(1)}%`);
 }
 
 function getNextSection(direction) {
@@ -612,8 +657,11 @@ function transitionToSection(fromSection, toSection) {
     
     console.log(`🔄 Transitioning: ${fromSection || 'none'} → ${validToSection}`);
     
-    // Cleanup previous section
+    // *** ADD THIS: Dispatch section deactivation event ***
     if (fromSection) {
+        document.dispatchEvent(new CustomEvent('sectionChange', {
+            detail: { sectionId: fromSection, isActive: false }
+        }));
         cleanupSection(fromSection);
     }
     
@@ -641,6 +689,11 @@ function transitionToSection(fromSection, toSection) {
     
     // Initialize and show new section immediately
     initializeSection(validToSection);
+    
+    // *** ADD THIS: Dispatch section activation event ***
+    document.dispatchEvent(new CustomEvent('sectionChange', {
+        detail: { sectionId: validToSection, isActive: true }
+    }));
     
     // Allow new transitions after animation completes
     setTimeout(() => {
@@ -738,6 +791,19 @@ function setupEventListeners() {
     // Custom events
     document.addEventListener('sectionActivated', handleSectionActivation);
     document.addEventListener('sectionDeactivated', handleSectionDeactivation);
+
+    document.addEventListener('requestSectionChange', (event) => {
+        const { direction } = event.detail;
+        
+        if (direction === 'down') {
+            const nextSection = getNextSection('down');
+            if (nextSection) snapToSection(nextSection, 'down');
+        } else if (direction === 'up') {
+            const prevSection = getNextSection('up');
+            if (prevSection) snapToSection(prevSection, 'up');
+            else if (containerState.currentSection === 'project-1') deactivateContainer();
+        }
+    });
     
     console.log('🎧 Event listeners setup complete');
 }

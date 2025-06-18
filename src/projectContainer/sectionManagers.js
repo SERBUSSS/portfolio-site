@@ -2,7 +2,7 @@
 // SECTION MANAGERS - Project & Process Sections
 // ================================================
 
-import { setInitialCardPositions } from './cardAnimations.js'
+import { setInitialCardPositions, activeTimelines } from './cardAnimations.js'
 import { updateTooltipContent, positionTooltip, updateButtonStates } from './uiComponents.js';
 import { CONFIG, calculateScrollProgress, isDesktop, isMobile, debounceScrollEvents } from './dataAndUtils.js';
 
@@ -86,6 +86,7 @@ function initProjectSections() {
         projectSectionStates[sectionId] = {
             isActive: false,
             currentCardIndex: 0,
+            isInCenterStep: false,
             scrollProgress: 0,
             maxScroll: CARDS_PER_PROJECT * 100, // Each card = 100 scroll units
             cards: Array.from(cards),
@@ -108,9 +109,12 @@ function activateProjectSection(sectionId) {
     
     try {
         state.isActive = true;
+        state.currentCardIndex = 0;
+        state.isInCenterStep = false;
         
         // Setup based on device
         if (isDesktop()) {
+            console.log(`🔧 About to create zones for ${sectionId}`);
             createProjectScrollZones(sectionId);
         } else {
             enableMobileProjectScroll(sectionId);
@@ -276,6 +280,7 @@ function setupZoneEventHandlers(sectionId, leftZone, rightZone) {
 }
 
 function activateLeftZone(sectionId) {
+    console.log(`🟢 MOUSE ENTERED LEFT ZONE: ${sectionId}`);
     if (currentActiveZone === 'left') return;
     
     currentActiveZone = 'left';
@@ -292,6 +297,7 @@ function activateLeftZone(sectionId) {
 }
 
 function activateRightZone(sectionId) {
+    console.log(`🔵 MOUSE ENTERED RIGHT ZONE: ${sectionId}`);
     if (currentActiveZone === 'right') return;
     
     currentActiveZone = 'right';
@@ -367,9 +373,53 @@ function handleHorizontalZoneScroll(event, sectionId) {
     if (!state || !state.isActive) return;
     
     const direction = event.deltaY > 0 ? 'forward' : 'backward';
-    const scrollAmount = Math.abs(event.deltaY);
+    const currentCardIndex = state.currentCardIndex || 0;
+    const isInCenterStep = state.isInCenterStep || false;
     
-    handleProjectCardScroll(scrollAmount, sectionId, direction);
+    console.log(`🎯 Zone scroll: ${direction}, Card: ${currentCardIndex}, InCenter: ${isInCenterStep}`);
+    
+    let timelineTime = 0; // Specific time in timeline to seek to
+    
+    if (direction === 'forward') {
+        if (!isInCenterStep) {
+            // Move current card to center
+            state.isInCenterStep = true;
+            timelineTime = currentCardIndex * 2 + 1; // End of step 1 for current card
+            
+        } else {
+            // Move current card to final, advance to next card
+            const nextCardIndex = Math.min(currentCardIndex + 1, CARDS_PER_PROJECT - 1);
+            state.currentCardIndex = nextCardIndex;
+            state.isInCenterStep = false;
+            timelineTime = currentCardIndex * 2 + 2; // End of step 2 for current card
+        }
+    } else {
+        if (isInCenterStep) {
+            // Go back to initial position of current card
+            state.isInCenterStep = false;
+            timelineTime = currentCardIndex * 2; // Start of current card
+            
+        } else {
+            // Go to previous card's center
+            const prevCardIndex = Math.max(currentCardIndex - 1, 0);
+            if (prevCardIndex !== currentCardIndex) {
+                state.currentCardIndex = prevCardIndex;
+                state.isInCenterStep = true;
+                timelineTime = prevCardIndex * 2 + 1; // Center of previous card
+            }
+        }
+    }
+    
+    // Get the timeline and seek to specific time
+    const timeline = activeTimelines.get(sectionId);
+    if (timeline) {
+        timeline.seek(timelineTime);
+        console.log(`⏰ Seeked to time: ${timelineTime}s / ${timeline.duration()}s`);
+    }
+    
+    // Update UI
+    updateTooltipContent(sectionId, state.currentCardIndex);
+    updateButtonStates(sectionId, state.currentCardIndex, CARDS_PER_PROJECT);
 }
 
 // ================================================

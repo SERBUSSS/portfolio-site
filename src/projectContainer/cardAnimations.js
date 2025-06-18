@@ -1,24 +1,29 @@
 // ================================================
-// CARD ANIMATIONS - GSAP Animation System (UPDATED)
+// CARD ANIMATIONS - TIMELINE-BASED GSAP SYSTEM
 // ================================================
 
 import { cardPositions, CONFIG, isDesktop, isMobile, getFinalPositions } from './dataAndUtils.js';
 
 // ================================================
-// GSAP VALIDATION & SETUP
+// GLOBAL VARIABLES
 // ================================================
 
 let gsapAvailable = false;
+let activeTimelines = new Map(); // Store timelines per section
+let currentSection = null;
+
+// ================================================
+// GSAP VALIDATION & SETUP
+// ================================================
 
 function validateGSAP() {
-    if (typeof gsap === 'undefined') {
-        console.error('❌ GSAP is required but not loaded. Card animations will not work.');
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        console.error('❌ GSAP and ScrollTrigger are required but not loaded.');
         return false;
     }
     
-    // Test basic GSAP functionality
     try {
-        gsap.set({}, { x: 0 });
+        gsap.registerPlugin(ScrollTrigger);
         gsapAvailable = true;
         console.log('✅ GSAP validated and ready');
         return true;
@@ -29,7 +34,7 @@ function validateGSAP() {
 }
 
 // ================================================
-// CARD MANAGEMENT
+// UTILITY FUNCTIONS
 // ================================================
 
 function getCardsForSection(sectionId) {
@@ -39,267 +44,34 @@ function getCardsForSection(sectionId) {
         return [];
     }
     
-    const cards = Array.from(section.querySelectorAll('.item.card, .project-card, .process-card'));
-    return cards;
+    return Array.from(section.querySelectorAll('.item.card, .project-card, .process-card'));
 }
 
-// ================================================
-// CARD VISIBILITY OPACITY
-// ================================================
-
-function getCardVisibilityOpacity(cardIndex, totalProgress, totalCards) {
-    const MAX_VISIBLE = 10;
-    const progressPerCard = 0.9 / totalCards;
-    const currentCard = Math.floor(totalProgress / progressPerCard);
+function getFinalPositionsForSection(sectionId) {
+    // getFinalPositions already returns the correct device array
+    const positions = getFinalPositions(sectionId);
     
-    // Calculate how many cards are currently visible
-    const visibleCount = currentCard + 1;
-    
-    if (visibleCount <= MAX_VISIBLE) {
-        return 1; // All cards visible if under limit
+    if (positions && Array.isArray(positions) && positions.length > 0) {
+        return positions;
     }
     
-    // Start fading earlier cards when we exceed MAX_VISIBLE
-    const firstVisibleCard = visibleCount - MAX_VISIBLE;
-    
-    if (cardIndex < firstVisibleCard) {
-        return 0; // Completely hidden
-    } else if (cardIndex === firstVisibleCard) {
-        // Fade out the oldest visible card
-        return 0.3;
-    }
-    
-    return 1; // Fully visible
+    // Fallback positions if no data exists
+    console.warn(`No positions found for ${sectionId}, using fallback`);
+    return Array.from({ length: 20 }, (_, i) => ({
+        x: 20 + (i % 5) * 15,
+        y: 20 + Math.floor(i / 5) * 20,
+        scale: 0.8,
+        opacity: 1,
+        rotation: 0
+    }));
 }
 
 // ================================================
-// MAIN ANIMATION FUNCTION
-// ================================================
-
-function updateCardAnimation(sectionId, progress) {
-    if (!gsapAvailable) return;
-    
-    const cards = getCardsForSection(sectionId);
-    if (cards.length === 0) return;
-    
-    // Determine if this is a project section or process section
-    if (sectionId === 'process') {
-        updateVerticalAnimation(sectionId, progress, cards);
-    } else if (sectionId.startsWith('project-')) {
-        updateHorizontalAnimation(sectionId, progress, cards);
-    }
-}
-
-// ================================================
-// HORIZONTAL ANIMATION (PROJECT SECTIONS)
-// ================================================
-
-function updateHorizontalAnimation(sectionId, progress, cards) {
-    console.log(`🎬 Horizontal animation: ${sectionId}, progress: ${progress.toFixed(2)}`);
-    
-    const totalCards = cards.length;
-    const progressPerCard = 0.9 / totalCards; // 90% for all cards, 10% buffer
-    
-    // Get viewport dimensions
-    const vw = window.innerWidth / 100;
-    const vh = window.innerHeight / 100;
-    
-    cards.forEach((card, index) => {
-        const cardStartProgress = index * progressPerCard;
-        const cardEndProgress = (index + 1) * progressPerCard;
-        const isLastCard = index === cards.length - 1;
-        
-        if (progress >= cardStartProgress) {
-            // Calculate this card's individual progress (0-1)
-            const cardProgress = Math.min(1, (progress - cardStartProgress) / progressPerCard);
-            
-            if (cardProgress <= 0.6) {
-                // Step 1: Slide in from right to center (0-60% of card progress)
-                const slideProgress = cardProgress / 0.6;
-                const startX = 110 * vw; // Start off-screen right
-                const centerX = 50 * vw; // Center of screen
-                const currentX = startX + (centerX - startX) * slideProgress;
-                
-                const visibilityOpacity = getCardVisibilityOpacity(index, progress, totalCards);
-                
-                gsap.set(card, {
-                    x: currentX,
-                    y: 45 * vh, // Slightly above center
-                    xPercent: -50,
-                    yPercent: -50,
-                    scale: 1,
-                    opacity: slideProgress * visibilityOpacity,
-                    rotation: 0,
-                    force3D: true
-                });
-            } else {
-                // Step 2: Move from center to final position (60-100% of card progress)
-                const finalProgress = (cardProgress - 0.6) / 0.4;
-                
-                // Get final positions
-                const projectFinalPositions = getFinalPositions(sectionId);
-                let finalPos;
-                
-                if (isLastCard) {
-                    // Last card goes back to center
-                    finalPos = { x: 50, y: 50, rotation: 0, scale: 0.8, opacity: 1 };
-                } else {
-                    finalPos = projectFinalPositions[index % projectFinalPositions.length];
-                }
-                
-                // Interpolate from center to final position
-                const centerX = 50 * vw;
-                const centerY = 45 * vh;
-                const finalX = parseFloat(finalPos.x) * vw;
-                const finalY = parseFloat(finalPos.y) * vh;
-                
-                const currentX = centerX + (finalX - centerX) * finalProgress;
-                const currentY = centerY + (finalY - centerY) * finalProgress;
-                const currentScale = 1 + (finalPos.scale - 1) * finalProgress;
-                const currentRotation = 0 + (finalPos.rotation - 0) * finalProgress;
-                
-                const visibilityOpacity = getCardVisibilityOpacity(index, progress, totalCards);
-                
-                gsap.set(card, {
-                    x: currentX,
-                    y: currentY,
-                    xPercent: -50,
-                    yPercent: -50,
-                    scale: currentScale,
-                    opacity: finalPos.opacity * visibilityOpacity,
-                    rotation: currentRotation,
-                    force3D: true
-                });
-            }
-        } else {
-            // Card hasn't started animating yet - keep it off-screen
-            gsap.set(card, {
-                x: 110 * vw,
-                y: 45 * vh,
-                xPercent: -50,
-                yPercent: -50,
-                scale: 1,
-                opacity: 0,
-                rotation: 0,
-                force3D: true
-            });
-        }
-    });
-}
-
-// ================================================
-// VERTICAL ANIMATION (PROCESS SECTION)
-// ================================================
-
-function updateVerticalAnimation(sectionId, progress, cards) {
-    console.log(`🎬 Vertical animation: ${sectionId}, progress: ${progress.toFixed(2)}`);
-    
-    const totalCards = cards.length;
-    const progressPerCard = 0.9 / totalCards;
-    
-    // Get viewport dimensions
-    const vw = window.innerWidth / 100;
-    const vh = window.innerHeight / 100;
-    
-    cards.forEach((card, index) => {
-        const cardStartProgress = index * progressPerCard;
-        
-        if (progress >= cardStartProgress) {
-            const cardProgress = Math.min(1, (progress - cardStartProgress) / progressPerCard);
-            
-            if (cardProgress <= 0.5) {
-                // Step 1: Slide up from bottom to center
-                const slideProgress = cardProgress / 0.5;
-                const startY = 110 * vh; // Start below viewport
-                const centerY = 50 * vh;
-                const currentY = startY + (centerY - startY) * slideProgress;
-                
-                gsap.set(card, {
-                    x: 50 * vw,
-                    y: currentY,
-                    xPercent: -50,
-                    yPercent: -50,
-                    scale: 1,
-                    opacity: slideProgress,
-                    rotation: 0,
-                    force3D: true
-                });
-            } else {
-                // Step 2: Move from center to final position
-                const finalProgress = (cardProgress - 0.5) / 0.5;
-                
-                // Get final positions for process cards
-                const processFinalPositions = getFinalPositions('process');
-                const finalPos = processFinalPositions[index % processFinalPositions.length];
-                
-                const centerX = 50 * vw;
-                const centerY = 50 * vh;
-                const finalX = parseFloat(finalPos.x) * vw;
-                const finalY = parseFloat(finalPos.y) * vh;
-                
-                const currentX = centerX + (finalX - centerX) * finalProgress;
-                const currentY = centerY + (finalY - centerY) * finalProgress;
-                const currentScale = 1 + (finalPos.scale - 1) * finalProgress;
-                const currentRotation = 0 + (finalPos.rotation - 0) * finalProgress;
-                
-                gsap.set(card, {
-                    x: currentX,
-                    y: currentY,
-                    xPercent: -50,
-                    yPercent: -50,
-                    scale: currentScale,
-                    opacity: finalPos.opacity,
-                    rotation: currentRotation,
-                    force3D: true
-                });
-            }
-        } else {
-            // Card hasn't started animating yet
-            gsap.set(card, {
-                x: 50 * vw,
-                y: 110 * vh,
-                xPercent: -50,
-                yPercent: -50,
-                scale: 1,
-                opacity: 0,
-                rotation: 0,
-                force3D: true
-            });
-        }
-    });
-}
-
-// ================================================
-// PREVIEW SYSTEM
-// ================================================
-
-function triggerInitialPreview(sectionId, previewPercentage = null) {
-    if (!gsapAvailable) return;
-    
-    const cards = getCardsForSection(sectionId);
-    if (cards.length === 0) return;
-    
-    // Determine preview percentage
-    const preview = previewPercentage || (isMobile() ? CONFIG.PREVIEW_MOBILE : CONFIG.PREVIEW_DESKTOP);
-    
-    console.log(`🎬 Triggering ${preview * 100}% preview for ${sectionId}`);
-    
-    // Animate with preview progress
-    setTimeout(() => {
-        updateCardAnimation(sectionId, preview);
-    }, 100);
-}
-
-// ================================================
-// INITIAL POSITIONING
+// INITIAL CARD POSITIONING
 // ================================================
 
 function setInitialCardPositions(sectionId) {
-    if (!gsapAvailable) return;
-    
     const cards = getCardsForSection(sectionId);
-    if (cards.length === 0) return;
-    
     const vw = window.innerWidth / 100;
     const vh = window.innerHeight / 100;
     
@@ -308,7 +80,7 @@ function setInitialCardPositions(sectionId) {
             // Process cards start below viewport
             gsap.set(card, {
                 x: 50 * vw,
-                y: 110 * vh,
+                y: 120 * vh,
                 xPercent: -50,
                 yPercent: -50,
                 scale: 1,
@@ -319,8 +91,8 @@ function setInitialCardPositions(sectionId) {
         } else {
             // Project cards start to the right
             gsap.set(card, {
-                x: 110 * vw,
-                y: 45 * vh,
+                x: 120 * vw,
+                y: 50 * vh,
                 xPercent: -50,
                 yPercent: -50,
                 scale: 1,
@@ -335,24 +107,257 @@ function setInitialCardPositions(sectionId) {
 }
 
 // ================================================
+// TIMELINE CREATION - HORIZONTAL (PROJECT SECTIONS)
+// ================================================
+
+function createHorizontalTimeline(sectionId) {
+    const cards = getCardsForSection(sectionId);
+    if (cards.length === 0) return null;
+    
+    const finalPositions = getFinalPositionsForSection(sectionId);
+    const vw = window.innerWidth / 100;
+    const vh = window.innerHeight / 100;
+    
+    // Create main timeline with precise timing
+    const tl = gsap.timeline({
+        paused: true,
+        defaults: { ease: "power2.inOut" }
+    });
+    
+    // Each card gets exactly 2 seconds: 1 for center, 1 for final
+    cards.forEach((card, index) => {
+        const finalPos = finalPositions[index] || finalPositions[0];
+        const startTime = index * 2; // Card 0: 0-2s, Card 1: 2-4s, etc.
+        
+        // Step 1: Initial to center (0 to 1 second for this card)
+        tl.to(card, {
+            x: 50 * vw,
+            y: 50 * vh,
+            xPercent: -50,
+            yPercent: -50,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.inOut"
+        }, startTime);
+        
+        // Step 2: Center to final (1 to 2 seconds for this card)
+        tl.to(card, {
+            x: finalPos.x * vw,
+            y: finalPos.y * vh,
+            xPercent: -50,
+            yPercent: -50,
+            scale: finalPos.scale || 1,
+            opacity: finalPos.opacity || 1,
+            rotation: finalPos.rotation || 0,
+            duration: 1,
+            ease: "power2.inOut"
+        }, startTime + 1);
+    });
+    
+    console.log(`🎬 Timeline created: ${cards.length} cards, duration: ${tl.duration()}s`);
+    return tl;
+}
+
+// ================================================
+// TIMELINE CREATION - VERTICAL (PROCESS SECTION)
+// ================================================
+
+function createVerticalTimeline(sectionId) {
+    const cards = getCardsForSection(sectionId);
+    if (cards.length === 0) return null;
+    
+    const finalPositions = getFinalPositionsForSection(sectionId);
+    const vw = window.innerWidth / 100;
+    const vh = window.innerHeight / 100;
+    
+    // Create main timeline
+    const tl = gsap.timeline({
+        paused: true,
+        defaults: { ease: "power2.inOut" }
+    });
+    
+    // Animate each card sequentially
+    cards.forEach((card, index) => {
+        const finalPos = finalPositions[index] || finalPositions[0];
+        
+        // Step 1: Move card from bottom to center
+        tl.to(card, {
+            x: 50 * vw,
+            y: 50 * vh,
+            xPercent: -50,
+            yPercent: -50,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.inOut"
+        }, index * 2);
+        
+        // Step 2: Move card from center to final position
+        tl.to(card, {
+            x: finalPos.x * vw,
+            y: finalPos.y * vh,
+            xPercent: -50,
+            yPercent: -50,
+            scale: finalPos.scale || 1,
+            opacity: finalPos.opacity || 1,
+            rotation: finalPos.rotation || 0,
+            duration: 1,
+            ease: "power2.inOut"
+        }, index * 2 + 1);
+    });
+    
+    return tl;
+}
+
+// ================================================
+// TIMELINE MANAGEMENT
+// ================================================
+
+function initializeTimelineForSection(sectionId) {
+    // Clean up existing timeline
+    if (activeTimelines.has(sectionId)) {
+        activeTimelines.get(sectionId).kill();
+        activeTimelines.delete(sectionId);
+    }
+    
+    // Set initial positions
+    setInitialCardPositions(sectionId);
+    
+    // Create new timeline
+    let timeline;
+    if (sectionId === 'process') {
+        timeline = createVerticalTimeline(sectionId);
+    } else if (sectionId.startsWith('project-')) {
+        timeline = createHorizontalTimeline(sectionId);
+    }
+    
+    if (timeline) {
+        activeTimelines.set(sectionId, timeline);
+        console.log(`🎬 Created timeline for ${sectionId} with duration: ${timeline.duration()}`);
+    }
+    
+    return timeline;
+}
+
+// ================================================
+// PROGRESS UPDATE - THE KEY FUNCTION
+// ================================================
+
+function updateCardAnimation(sectionId, progress) {
+    if (!gsapAvailable) return;
+    
+    console.log(`🎬 updateCardAnimation: ${sectionId}, progress: ${progress.toFixed(3)}`);
+    
+    let timeline = activeTimelines.get(sectionId);
+    
+    // Initialize timeline if it doesn't exist
+    if (!timeline) {
+        timeline = initializeTimelineForSection(sectionId);
+        if (!timeline) return;
+    }
+    
+    // Convert progress (0-1) to timeline progress (0-duration)
+    const timelineProgress = progress * timeline.duration();
+    
+    // Seek to the specific progress point
+    timeline.seek(timelineProgress);
+    
+    console.log(`🎯 Updated ${sectionId} timeline to progress: ${timelineProgress.toFixed(2)}/${timeline.duration().toFixed(2)}`);
+}
+
+// ================================================
+// SECTION ACTIVATION/DEACTIVATION
+// ================================================
+
+function activateSection(sectionId) {
+    if (currentSection === sectionId) return;
+    
+    console.log(`🎯 Activating section: ${sectionId}`);
+    
+    // Deactivate previous section
+    if (currentSection && activeTimelines.has(currentSection)) {
+        const prevTimeline = activeTimelines.get(currentSection);
+        // Optional: animate out or reset previous section
+    }
+    
+    currentSection = sectionId;
+    
+    // Initialize timeline for new section
+    if (!activeTimelines.has(sectionId)) {
+        initializeTimelineForSection(sectionId);
+    }
+    
+    // Trigger initial preview (15% or 30% progress)
+    const previewProgress = isMobile() ? 0.15 : 0.30;
+    setTimeout(() => {
+        updateCardAnimation(sectionId, previewProgress);
+    }, 300);
+}
+
+function deactivateSection(sectionId) {
+    console.log(`🛑 Deactivating section: ${sectionId}`);
+    
+    const timeline = activeTimelines.get(sectionId);
+    if (timeline) {
+        // Reset to beginning
+        timeline.seek(0);
+    }
+    
+    if (currentSection === sectionId) {
+        currentSection = null;
+    }
+}
+
+// ================================================
+// EVENT HANDLERS
+// ================================================
+
+function handleSectionChange(event) {
+    const { sectionId, isActive } = event.detail;
+    
+    if (isActive) {
+        activateSection(sectionId);
+    } else {
+        deactivateSection(sectionId);
+    }
+}
+
+function handleProgressUpdate(event) {
+    const { sectionId, progress } = event.detail;
+    updateCardAnimation(sectionId, progress);
+}
+
+// ================================================
+// RESIZE HANDLER
+// ================================================
+
+function handleResize() {
+    console.log('📱 Handling resize - recreating timelines');
+    
+    // Recreate all active timelines with new dimensions
+    const activeSections = Array.from(activeTimelines.keys());
+    activeSections.forEach(sectionId => {
+        initializeTimelineForSection(sectionId);
+    });
+}
+
+// ================================================
 // INITIALIZATION
 // ================================================
 
 function initCardAnimations() {
-    console.log('🚀 Initializing Card Animations...');
+    console.log('🚀 Initializing Timeline-Based Card Animations...');
     
     if (!validateGSAP()) {
         return false;
     }
     
     try {
-        // Set up event listener for scroll updates
-        document.addEventListener('updateCardAnimation', (event) => {
-            const { sectionId, progress } = event.detail;
-            updateCardAnimation(sectionId, progress);
-        });
+        // Set up event listeners
+        document.addEventListener('sectionChange', handleSectionChange);
+        document.addEventListener('updateCardAnimation', handleProgressUpdate);
+        window.addEventListener('resize', handleResize);
         
-        // Optimize all cards
+        // Optimize all cards for animation
         const allCards = document.querySelectorAll('.item.card, .project-card, .process-card');
         allCards.forEach(card => {
             card.style.willChange = 'transform, opacity';
@@ -361,7 +366,7 @@ function initCardAnimations() {
         });
         
         console.log(`🎨 Optimized ${allCards.length} cards for animation`);
-        console.log('✅ Card Animations initialized successfully');
+        console.log('✅ Timeline-Based Card Animations initialized successfully');
         return true;
         
     } catch (error) {
@@ -371,16 +376,39 @@ function initCardAnimations() {
 }
 
 // ================================================
+// CLEANUP
+// ================================================
+
+function cleanupCardAnimations() {
+    // Kill all active timelines
+    activeTimelines.forEach(timeline => timeline.kill());
+    activeTimelines.clear();
+    
+    // Remove event listeners
+    document.removeEventListener('sectionChange', handleSectionChange);
+    document.removeEventListener('updateCardAnimation', handleProgressUpdate);
+    window.removeEventListener('resize', handleResize);
+    
+    console.log('🧹 Card animations cleaned up');
+}
+
+function triggerInitialPreview(sectionId, percentage) {
+    const progress = percentage / 100;
+    updateCardAnimation(sectionId, progress);
+}
+
+// ================================================
 // EXPORTS
 // ================================================
 
 export {
     initCardAnimations,
+    cleanupCardAnimations,
     updateCardAnimation,
-    updateHorizontalAnimation,
-    updateVerticalAnimation,
-    triggerInitialPreview,
+    activateSection,
+    deactivateSection,
     setInitialCardPositions,
     getCardsForSection,
-    getCardVisibilityOpacity
+    triggerInitialPreview,
+    activeTimelines
 };

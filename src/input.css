@@ -437,8 +437,6 @@ body.loaded section:not(#loading-screen) {
 .card {
   scroll-snap-align: center;
   flex-shrink: 0;
-  width: 100vw;
-  height: 100vh;
   pointer-events: none;
   position: absolute;
   top: 0;

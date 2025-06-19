@@ -1,8 +1,7 @@
 /* ======= containerScroll.js ======= */
 // logic/containerScroll.js
-
+let wrapper;
 let containerPinned = false;
-const container = document.querySelector('.projects-container');
 
 function lockBodyScroll() {
   document.body.style.overflow = 'hidden';
@@ -13,21 +12,21 @@ function unlockBodyScroll() {
 }
 
 function pinContainer() {
-  container.style.position = 'fixed';
-  container.style.top = '0';
+  wrapper.style.position = 'fixed';
+  wrapper.style.top = '0';
   lockBodyScroll();
   containerPinned = true;
 }
 
 function unpinContainer() {
-  container.style.position = 'relative';
+  wrapper.style.position = 'relative';
   unlockBodyScroll();
   containerPinned = false;
 }
 
 function checkContainerLock(scrollY) {
-  const top = container.offsetTop;
-  const height = container.offsetHeight;
+  const top = wrapper.offsetTop;
+  const height = wrapper.offsetHeight;
   const bottom = top + height;
 
   if (!containerPinned && scrollY >= top && scrollY < bottom) {
@@ -37,8 +36,12 @@ function checkContainerLock(scrollY) {
   }
 }
 
-window.addEventListener('scroll', () => {
-  checkContainerLock(window.scrollY);
+document.addEventListener('DOMContentLoaded', () => {
+  wrapper = document.querySelector('.project-wrapper');
+  if (!wrapper) return;
+  window.addEventListener('scroll', () => {
+    checkContainerLock(window.scrollY);
+  });
 });
 
 export { pinContainer, unpinContainer, containerPinned };

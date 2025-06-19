@@ -251,7 +251,6 @@
                         </div>
                     </div>
 
-
                     <div class="cards-container" data-section="project-1" data-total-cards="16">
                         <div role="listitem" data-card-index="0" class="item card shiny-border absolute w-[90vw] rounded-sm overflow-hidden md:w-[700px] md:scale-60! lg:scale-80!">
                             <div class="self-stretch px-4 pt-4 pb-6 bg-[#191a1b] rounded-sm inline-flex flex-col justify-center items-start gap-4 overflow-hidden md:px-8 md:pt-8 md:pb-10 md:gap-6">
@@ -2738,6 +2737,13 @@
                         </div>
                     </div>
 
+                    <div class="fade-reveal-element w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw]">
+                        <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
+                            <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
+                        </div>
+                        <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
+                    </div>
+
                     <div class="process-cards-container" data-section="process">
                         <div role="listitem" class="item card absolute w-[90vw] max-w-[90vw] h-96 p-6 bg-[#262728]/95 rounded outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-start gap-2 overflow-hidden md:w-[40vw]">
                             <div class="self-stretch flex-1 flex flex-col justify-between items-center">
@@ -2825,13 +2831,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="fade-reveal-element w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw]">
-                        <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
-                            <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
-                        </div>
-                        <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
-                    </div> 
                 </section>
 
             </div>
@@ -4462,10 +4461,7 @@
 
         <!-- <script type="module" src="src/simpleAnimations.js"></script> -->
 
-        <script type="module">
-            import './src/logic/containerScroll.js';
-            import './src/logic/sectionScrollLogic.js';
-        </script>
+        <script type="module" src="src/logic/containerScroll.js" defer></script>
 
         <!-- <script type="module" src="src/shiny-border-observer.js"></script> -->
         <script type="module" src="src/headerAnimation.js" defer></script>

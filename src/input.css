@@ -109,13 +109,6 @@
 
 /* Custom styles */
 
-@layer utilities {
-    .card {
-      transform-origin: center;
-      transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-}
-
 .lazy-loading {
     background: #f0f0f0;
     min-height: 200px;
@@ -413,4 +406,62 @@ body.loaded section:not(#loading-screen) {
 .faq-open .open-q {
     opacity: 1;
     display: block !important; /* Override the hidden class */
+}
+
+.projects-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  scroll-snap-type: y mandatory;
+}
+
+.project-section {
+  width: 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+}
+
+/* Card-level scroll snap CSS (mobile only) */
+.card-wrapper {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.card-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.card {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+@layer utilities {
+    .card {
+      transform-origin: center;
+      transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+}
+
+#process .card {
+    transition: none;
+    will-change: transform;
+    scroll-snap-align: start;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    background: #1e1e1e;
 }

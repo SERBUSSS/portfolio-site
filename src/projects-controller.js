@@ -1,5 +1,300 @@
 // Projects Animation Controller - Phase 1: Foundation Setup
 
+const cardPositions = {
+    'project-1': {
+        desktop: [
+            { x: '-20', y: '-20', rotation: -30, scale: 0.7, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.8, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.8, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.8, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.82, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.81, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.78, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.8, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.82, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.79, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.8, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.8, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.82, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.8, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.78, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.8, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.8, opacity: 1 }
+        ],
+        mobile: [
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.65, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.7, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.7, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.65, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.65, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.67, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.55, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.5, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.5, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
+        ]
+    },
+    'project-2': { 
+        desktop: [
+            // Different layout for project 2 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ], 
+        mobile: [
+            // Different layout for project 2 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ] 
+    },
+    'project-3': { 
+        desktop: [
+            // Tighter spiral layout for project 3
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.55, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.55, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.4, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.4, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.52, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.51, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.43, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.43, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
+        ], 
+        mobile: [
+            // Tighter spiral layout for project 3
+            { x: '-20', y: '-20', rotation: -30, scale: 0.45, opacity: 1 },
+            { x: '0', y: '-25', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '20', y: '-20', rotation: 30, scale: 0.45, opacity: 1 },
+            { x: '25', y: '0', rotation: 25, scale: 0.55, opacity: 1 },
+            { x: '20', y: '20', rotation: 20, scale: 0.5, opacity: 1 },
+            { x: '0', y: '25', rotation: 0, scale: 0.55, opacity: 1 },
+            { x: '-20', y: '20', rotation: -20, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '0', rotation: -25, scale: 0.55, opacity: 1 },
+            { x: '-10', y: '-10', rotation: -35, scale: 0.4, opacity: 1 },
+            { x: '10', y: '-10', rotation: 35, scale: 0.4, opacity: 1 },
+            { x: '15', y: '5', rotation: 22, scale: 0.52, opacity: 1 },
+            { x: '5', y: '15', rotation: 10, scale: 0.51, opacity: 1 },
+            { x: '-5', y: '15', rotation: -10, scale: 0.51, opacity: 1 },
+            { x: '-15', y: '5', rotation: -22, scale: 0.52, opacity: 1 },
+            { x: '-5', y: '-15', rotation: -28, scale: 0.43, opacity: 1 },
+            { x: '5', y: '-15', rotation: 28, scale: 0.43, opacity: 1 },
+            { x: '0', y: '10', rotation: 0, scale: 0.53, opacity: 1 }
+        ] 
+    },
+    'project-4': { 
+        desktop: [
+            // Different layout for project 4 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ], 
+        mobile: [
+            // Different layout for project 4 - maybe more circular
+            { x: '-25', y: '-25', rotation: -20, scale: 0.4, opacity: 1 },
+            { x: '0', y: '-30', rotation: 0, scale: 0.45, opacity: 1 },
+            { x: '25', y: '-25', rotation: 20, scale: 0.4, opacity: 1 },
+            { x: '30', y: '0', rotation: 15, scale: 0.5, opacity: 1 },
+            { x: '25', y: '25', rotation: 10, scale: 0.45, opacity: 1 },
+            { x: '0', y: '30', rotation: 0, scale: 0.5, opacity: 1 },
+            { x: '-25', y: '25', rotation: -10, scale: 0.45, opacity: 1 },
+            { x: '-30', y: '0', rotation: -15, scale: 0.5, opacity: 1 },
+            // Add more positions as needed for project 2
+            { x: '-15', y: '-15', rotation: -25, scale: 0.4, opacity: 1 },
+            { x: '15', y: '-15', rotation: 25, scale: 0.4, opacity: 1 },
+            { x: '20', y: '10', rotation: 12, scale: 0.48, opacity: 1 },
+            { x: '10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-10', y: '20', rotation: 0, scale: 0.47, opacity: 1 },
+            { x: '-20', y: '10', rotation: -12, scale: 0.48, opacity: 1 },
+            { x: '-15', y: '-5', rotation: -18, scale: 0.46, opacity: 1 },
+            { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
+            { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
+            { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+        ] 
+    },
+    'process': {
+        desktop: [
+            { x: 0, y: -15, scale: 0.9, opacity: 1, rotation: -2 },
+            { x: 0, y: -5, scale: 0.95, opacity: 1, rotation: 1 },
+            { x: 0, y: 5, scale: 0.92, opacity: 1, rotation: -1 },
+            { x: 0, y: 15, scale: 0.88, opacity: 1, rotation: 2 }
+        ],
+        mobile: [
+            { x: 0, y: -15, scale: 0.95, opacity: 1, rotation: -1 },
+            { x: 0, y: -5, scale: 1.0, opacity: 1, rotation: 0 },
+            { x: 0, y: 5, scale: 0.97, opacity: 1, rotation: 1 },
+            { x: 0, y: 15, scale: 0.93, opacity: 1, rotation: -1 }
+        ]
+    }
+};
+
+const TOOLTIP_DATA = {
+  "project-1": [
+    { name: "Si Punct Media", description: "Card 1 desc..." },
+    { name: "Another Project", description: "Card 2 desc..." }
+  ],
+  // etc.
+};
+
+const tooltipContent = {
+  'project-1': {
+    projectName: 'Si Punct Media',
+    cards: [
+      null, // Index 0 - no tooltip (brief card)
+      'Brand logo and identity design',
+      'Brand color palette showcase',
+      'Typography selection',
+      'Social media toolkit landing page, hero section design',
+      'Product introduction and benefits overview',
+      'Detailed breakdown of toolkit contents and services',
+      'Bonus materials and brand customization documents',
+      'Success guide for client acquisition strategies',
+      'Pricing and package details presentation',
+      'Lead magnet and email capture system',
+      'Client proposal document cover page design',
+      'Client proposal document pricing pages design',
+      'Client proposal document customer reviews design',
+      '8-Step checklist for a successful discovery call'
+    ]
+  },
+  'project-2': {
+    projectName: 'EnergNature',
+    cards: [
+      null, // Index 0 - no tooltip
+      'Brand logomark',
+      'Brand logo and identity design',
+      'Typography selection',
+      'Product page low-fidelity design, key sections (desktop - 1)',
+      'Product page low-fidelity design, key sections (desktop - 2)',
+      'Product page low-fidelity design, key sections (desktop - 3)',
+      'Product page low-fidelity design, key sections (desktop - 4)',
+      'Product page high-fidelity design, key sections (desktop - 1)',
+      'Product page high-fidelity design, key sections (desktop - 2)',
+      'Product page high-fidelity design, key sections (desktop - 3)',
+      'Product page high-fidelity design, key sections (desktop - 4)',
+      'Product page high-fidelity design, key sections (desktop - 5)',
+      'Product page high-fidelity design, key sections (desktop - 6)',
+      'Product page high-fidelity design, key sections (mobile - 1)',
+      'Product page high-fidelity design, key sections (mobile - 2)',
+      'Product page high-fidelity design, key sections (mobile - 3)',
+      'Product page high-fidelity design, key sections (mobile - 4)',
+      'Enhanced product creative to boost cart value'
+    ]
+  },
+  'project-3': {
+    projectName: 'A&D Performance',
+    cards: [
+      null, // Index 0 - no tooltip
+      'Header Navigation Menu Enhancement',
+      'Shopping Cart Interface Redesign',
+      'Checkout Process Optimization',
+      'Homepage One-Time Offer Integration',
+      'Turkesterone Product Page Redesign',
+      'Subscription-Optimized Product Page Layout',
+      'Purchase Interface for Subscription Conversion',
+      'Height Enhancement Marketing Campaign (1)',
+      'Height Enhancement Marketing Campaign (2)',
+      'Height Enhancement Marketing Campaign (3)', 
+      'Height Enhancement Marketing Campaign (4)',
+      'Strength Enhancement Marketing Campaign (1)',
+      'Strength Enhancement Marketing Campaign (2)',
+      'Strength Enhancement Marketing Campaign (3)',
+      'Strength Enhancement Marketing Campaign (4)'
+    ]
+  },
+  'project-4': {
+    projectName: 'Casamare',
+    cards: [
+      null, // Index 0 - no tooltip
+      'Brand logo design',
+      'Typography system and font selection',
+      'Brand color palette showcase',
+      'New user registration flow wireframe concept',
+      'Email signup process wireframe design',
+      'Account creation workflow wireframe structure',
+      'Homepage layout wireframe (1)',
+      'Homepage layout wireframe (2)',
+      'Product page wireframe structure and flow',
+      'New user registration high-fidelity interface',
+      'Email signup process high-fidelity design',
+      'Account creation workflow high-fidelity interface',
+      'Homepage high-fidelity design (1)',
+      'Homepage high-fidelity design (2)',
+      'Product page high-fidelity design and layout',
+      'Shopping cart interface high-fidelity design',
+      'Checkout process steps 1-2: contact and shipping information',
+      'Checkout process step 3: payment and billing interface'
+    ]
+  }
+};
+
 class ProjectsController {
   constructor() {
     // Core properties
@@ -59,6 +354,19 @@ class ProjectsController {
       sections: this.sections.length,
       cards: this.sectionCards,
       device: this.deviceType
+    });
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const direction = e.currentTarget.dataset.direction;
+        const container = e.currentTarget.closest('.project-tooltip-container');
+        const sectionId = container?.dataset.projectId;
+        const section = document.getElementById(sectionId);
+        
+        if (section && direction) {
+          controller.animateNextCard(section, direction);
+        }
+      });
     });
   }
   
@@ -195,6 +503,8 @@ class ProjectsController {
     
     // Disable internal scrolling
     this.disableInternalScroll();
+
+    this.fadeTooltip(this.getCurrentSection().id, false);
   }
   
   calculateUnlockPosition() {
@@ -288,17 +598,23 @@ class ProjectsController {
     })
     
     // Route to appropriate handler
-    if (activeSection.classList.contains('project-section')) {
-      // Project sections: horizontal progression
-      if (direction === 'horizontal') {
-        this.handleHorizontalScroll(delta, activeSection)
-      } else {
-        // Vertical scroll in project section = section navigation
-        this.handleVerticalSectionScroll(delta)
+    if (this.scrollMode === 'section') {
+      this.handleVerticalSectionScroll(delta);
+    } else if (this.scrollMode === 'cards') {
+      this.handleHorizontalScroll(delta, activeSection);
+    }
+
+    if (this.isProcessSection(activeSection)) {
+      const firstCardState = this.cardStates['process'][0];
+      if (firstCardState.progress > 0 && direction === 'vertical') {
+        // Lock to process scroll
+        this.handleVerticalScroll(delta, activeSection);
+        return;
       }
-    } else if (activeSection.classList.contains('scroll-section-2')) {
-      // Process section: always vertical progression
-      this.handleVerticalScroll(delta, activeSection)
+      if (firstCardState.progress === 0 && delta < 0) {
+        this.unlockContainer();
+        return;
+      }
     }
   }
 
@@ -397,7 +713,29 @@ class ProjectsController {
   }
 
   navigateSection(direction) {
-    console.log('[navigateSection] TODO: Implement section navigation', { direction })
+    const oldSection = this.getCurrentSection();
+    const oldSectionId = oldSection.id;
+
+    // Determine next section index
+    const nextIndex = direction === 'next'
+      ? Math.min(this.currentSectionIndex + 1, this.sections.length - 1)
+      : Math.max(this.currentSectionIndex - 1, 0);
+
+    const newSection = this.sections[nextIndex];
+    const newSectionId = newSection.id;
+
+    if (oldSectionId !== newSectionId) {
+      // Mark active section
+      oldSection.classList.remove('active-section');
+      newSection.classList.add('active-section');
+      this.currentSectionIndex = nextIndex;
+
+      // 🔥 Fade tooltips
+      this.fadeTooltip(oldSectionId, false);  // hide old
+      if (newSection.classList.contains('project-section')) {
+        this.fadeTooltip(newSectionId, true); // show new
+      }
+    }
   }
 
   getActiveSection() {
@@ -415,6 +753,47 @@ class ProjectsController {
       this.dragHandler.destroy()
     }
     this.container.removeEventListener('wheel', this.handleWheel)
+  }
+
+  setScrollMode(mode) {
+    this.scrollMode = mode; // 'section' or 'cards'
+  }
+
+  updateTooltip(sectionId, cardIndex) {
+    const container = document.querySelector(`[data-project-id="${sectionId}"]`);
+    if (!container) return;
+
+    const nameEl = container.querySelector('.tooltip-name');
+    const descEl = container.querySelector('.tooltip-description');
+    const sectionData = tooltipContent[sectionId];
+
+    if (!sectionData) return;
+
+    // Always show project name
+    if (nameEl) nameEl.textContent = sectionData.projectName || '';
+
+    // Show card description if available
+    const description = sectionData.cards?.[cardIndex];
+    if (descEl) {
+      if (description) {
+        descEl.textContent = description;
+        descEl.style.display = '';
+      } else {
+        descEl.textContent = '';
+        descEl.style.display = 'none'; // Hide if null
+      }
+    }
+  }
+
+  fadeTooltip(sectionId, show) {
+    const container = document.querySelector(`[data-project-id="${sectionId}"]`);
+    if (!container) return;
+
+    gsap.to(container, {
+      autoAlpha: show ? 1 : 0,
+      display: show ? 'flex' : 'none',
+      duration: 0.3
+    });
   }
 }
 
@@ -540,6 +919,11 @@ class CardAnimator {
       // Fallback animation
       this.animateWithRAF(card, state, startProgress, targetProgress, sectionId, cardIndex);
     }
+
+    const previewProgress = this.controller.deviceType === 'mobile' ? 0.15 : 0.3;
+    if (cardIndex === 0 && direction === 'next' && startProgress === 0) {
+      targetProgress = previewProgress;
+    }
   }
 
   animateWithGSAP(card, state, startProgress, targetProgress, sectionId, cardIndex) {
@@ -579,6 +963,8 @@ class CardAnimator {
         if (sectionId === 'process' && this.isLastProcessCard(cardIndex)) {
           this.controller.unlockContainer();
         }
+
+        this.controller.updateTooltip(sectionId, cardIndex);
       }
     });
   }
@@ -658,14 +1044,14 @@ class CardAnimator {
   }
 
   getFinalTransform(card, sectionId) {
-    // Placeholder - will use cardPositions data
-    // For now, return a random spread position
-    const x = (Math.random() - 0.5) * 40;
-    const y = (Math.random() - 0.5) * 40;
-    const rotation = (Math.random() - 0.5) * 20;
-    const scale = 0.8 + Math.random() * 0.4;
-    
-    return `translateX(${x}vw) translateY(${y}vh) rotate(${rotation}deg) scale(${scale})`;
+    const index = parseInt(card.dataset.cardIndex);
+    const device = this.controller.deviceType;
+    const pos = cardPositions[sectionId]?.[device]?.[index];
+    if (!pos) return '';
+
+    const { x, y, scale, opacity, rotation } = pos;
+    card.style.opacity = opacity;
+    return `translate(${x}vw, ${y}vh) scale(${scale}) rotate(${rotation}deg)`;
   }
 
   isLastProcessCard(cardIndex) {
@@ -677,6 +1063,13 @@ class CardAnimator {
     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   }
 }
+
+document.querySelector('.left-zone').addEventListener('mouseenter', () => {
+  controller.setScrollMode('section');
+});
+document.querySelector('.right-zone').addEventListener('mouseenter', () => {
+  controller.setScrollMode('cards');
+});
 
 // Initialize when DOM is ready and GSAP is loaded
 if (document.readyState === 'loading') {
@@ -694,4 +1087,17 @@ function initController() {
       window.projectsController = new ProjectsController();
     });
   }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const direction = e.currentTarget.dataset.direction;
+      const tooltipContainer = e.currentTarget.closest('.project-tooltip-container');
+      const sectionId = tooltipContainer?.dataset.projectId;
+      const sectionEl = document.getElementById(sectionId);
+      
+      if (sectionEl && direction) {
+        controller.animateNextCard(sectionEl, direction);
+      }
+    });
+  });
 }

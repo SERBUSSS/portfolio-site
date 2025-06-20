@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                console.log('Loading image:', img.dataset.src); // Debug log
+                // console.log('Loading image:', img.dataset.src); // Debug log
                 
                 // Handle picture sources first
                 const picture = img.closest('picture');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Find and observe all lazy images
     const lazyImages = document.querySelectorAll('img[data-src]');
-    console.log('Found lazy images:', lazyImages.length); // Debug log
+    // console.log('Found lazy images:', lazyImages.length); // Debug log
     
     lazyImages.forEach(img => {
         imageObserver.observe(img);

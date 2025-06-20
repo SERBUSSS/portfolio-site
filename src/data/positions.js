@@ -151,7 +151,8 @@ const cardPositions = {
             { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
             { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
             { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
-            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 },
+            { x: '-15', y: '-10', rotation: -8, scale: 0.42, opacity: 1 }
         ], 
         mobile: [
             // Different layout for project 4 - maybe more circular
@@ -174,7 +175,8 @@ const cardPositions = {
             { x: '15', y: '-5', rotation: 18, scale: 0.46, opacity: 1 },
             { x: '0', y: '15', rotation: 0, scale: 0.49, opacity: 1 },
             { x: '8', y: '-20', rotation: 8, scale: 0.42, opacity: 1 },
-            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 }
+            { x: '-8', y: '-20', rotation: -8, scale: 0.42, opacity: 1 },
+            { x: '-15', y: '-10', rotation: -8, scale: 0.42, opacity: 1 }
         ] 
     },
     'process': {

@@ -4,10 +4,13 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
+console.log('🔧 containerScroll.js loaded');
+
 /* ======= containerScroll.js ======= */
 // logic/containerScroll.js
 let wrapper;
 let containerPinned = false;
+console.log('Initial containerPinned =', containerPinned);
 let wrapperPlaceholder = null;
 
 // animations/cardAnimator.js
@@ -32,16 +35,30 @@ let projectId = null;
 const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
 
-const handleRightZoneScroll = (e) => {
-  e.preventDefault(); // stop page from scrolling
+function handleRightZoneScroll(e) {
+  console.log('👉 handleRightZoneScroll fired:', 
+              'deltaY =', e.deltaY, 
+              'containerPinned =', containerPinned);
+  if (!containerPinned) {
+    console.log('   ↪️  Ignoring because not pinned');
+    return;
+  }
+  e.preventDefault();
+  // your existing logic:
   onDesktopHorizontalScroll(e);
-  console.log('[RIGHT ZONE] Scroll Triggered');
-};
+}
 
-const handleLeftZoneScroll = (e) => {
-  e.preventDefault(); // stop page from scrolling
+function handleLeftZoneScroll(e) {
+  console.log('👈 handleLeftZoneScroll fired:', 
+              'deltaY =', e.deltaY, 
+              'containerPinned =', containerPinned);
+  if (!containerPinned) {
+    console.log('   ↪️  Ignoring because not pinned');
+    return;
+  }
+  e.preventDefault();
   handleSectionSnap(e);
-};
+}
 
 function blockScroll(e) {
   if (containerPinned && !e.target.closest('.scroll-zone-left, .scroll-zone-right')) {
@@ -54,74 +71,64 @@ function isMobile() {
 }
 
 function pinContainer() {
-  if (containerPinned) return;
-  document.querySelector('.projects-container').style.overflowY = 'scroll';
-
-  window.addEventListener('wheel', blockScroll, { passive: false });
-
-  console.log('📌 Container pinned');
-  wrapper.style.position = 'fixed';
-  wrapper.style.top = '0';
-  wrapper.style.left = '0';
-  wrapper.style.width = '100%';
-  document.body.style.overflow = 'hidden';
+  console.log('📌 pinContainer() called');
   containerPinned = true;
+  console.log('   → containerPinned =', containerPinned);
 
-  // Insert placeholder to preserve scroll space
-  wrapperPlaceholder = document.createElement('div');
-  wrapperPlaceholder.style.height = `${wrapper.offsetHeight}px`;
-  wrapper.parentNode.insertBefore(wrapperPlaceholder, wrapper);
-
+  // placeholder logic
+  console.log('   → inserting placeholder (height:', wrapper.clientHeight, 'px)');
+  
+  // before binding zones, log them
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
+  console.log('   → leftZone element:', leftZone);
+  console.log('   → rightZone element:', rightZone);
 
   if (leftZone) {
     leftZone.style.pointerEvents = 'auto';
-    leftZone.addEventListener('wheel', handleSectionSnap, { passive: false });
+    console.log('   → leftZone.pointerEvents =', leftZone.style.pointerEvents);
+    leftZone.addEventListener('wheel', handleLeftZoneScroll, { passive: false });
+    console.log('   → bound handleLeftZoneScroll to leftZone');
   }
-
-  if (rightZone && !isMobile()) {
+  if (rightZone) {
     rightZone.style.pointerEvents = 'auto';
+    console.log('   → rightZone.pointerEvents =', rightZone.style.pointerEvents);
     rightZone.addEventListener('wheel', handleRightZoneScroll, { passive: false });
-    console.log('🟢 Bound rightZone scroll');
+    console.log('   → bound handleRightZoneScroll to rightZone');
   }
 }
 
 function unpinContainer() {
-  document.querySelector('.projects-container').style.overflowY = 'hidden';
-
-  window.removeEventListener('wheel', blockScroll);
-
-  if (wrapperPlaceholder) {
-    wrapperPlaceholder.remove();
-    wrapperPlaceholder = null;
-  }
-
-  console.log('🔓 Container unpinned');
-  wrapper.style.position = 'relative';
-  document.body.style.overflow = '';
+  console.log('🔓 unpinContainer() called');
   containerPinned = false;
+  console.log('   → containerPinned =', containerPinned);
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
-
   if (leftZone) {
-    leftZone.removeEventListener('wheel', handleSectionSnap);
+    leftZone.removeEventListener('wheel', handleLeftZoneScroll);
     leftZone.style.pointerEvents = 'none';
+    console.log('   → unbound leftZone, pointerEvents =', leftZone.style.pointerEvents);
   }
-
-  if (rightZone && !isMobile()) {
+  if (rightZone) {
     rightZone.removeEventListener('wheel', handleRightZoneScroll);
     rightZone.style.pointerEvents = 'none';
-    console.log('🔴 Unbound rightZone scroll');
+    console.log('   → unbound rightZone, pointerEvents =', rightZone.style.pointerEvents);
   }
+
+  // placeholder removal
+  console.log('   → removing placeholder');
 }
 
 function checkContainerLock() {
   const rect = wrapper.getBoundingClientRect();
+  console.log('🔍 checkContainerLock: rect.top =', rect.top.toFixed(2), 'containerPinned =', containerPinned);
+
   if (!containerPinned && rect.top <= 0) {
+    console.log('➡️  Should PIN container now');
     pinContainer();
   } else if (containerPinned && rect.top > 0) {
+    console.log('⬅️  Should UNPIN container now');
     unpinContainer();
   }
 }
@@ -202,14 +209,6 @@ function handleSectionSnap(event) {
     scrollToSection(currentSectionIndex + 1);
   } else if (delta < 0 && currentSectionIndex > 0) {
     scrollToSection(currentSectionIndex - 1);
-  }
-}
-
-function initSectionSnapZones() {
-  const leftZone = document.querySelector('.scroll-zone-left');
-
-  if (leftZone) {
-    leftZone.addEventListener('wheel', handleSectionSnap);
   }
 }
 
@@ -339,7 +338,7 @@ function animateCard(cardEl, fromPos, toCenter, toFinal, progress) {
 
   tl.progress(progress);
 
-  console.log(`[animateCard] progress=${progress}, from=`, fromPos, 'final=', toFinal);
+  // console.log(`[animateCard] progress=${progress}, from=`, fromPos, 'final=', toFinal);
 }
 
 function updateCardProgress(cardEl, projectId, index, scrollValue) {
@@ -380,7 +379,7 @@ function setActiveProject(projectId) {
 }
 
 function onDesktopHorizontalScroll(event) {
-  console.log('[onDesktopHorizontalScroll]', { containerPinned, cardsLength: cards.length, activeProjectId });
+  // console.log('[onDesktopHorizontalScroll]', { containerPinned, cardsLength: cards.length, activeProjectId });
   if (!containerPinned) return;
 
   // Use horizontal delta if significant, otherwise vertical
@@ -394,15 +393,15 @@ function onDesktopHorizontalScroll(event) {
 
   cards.forEach((card, index) => {
     const progress = Math.max(0, Math.min(1, cardScrollValue - index));
-    console.log('[ScrollZone] Cards:', cards.length, 'Project:', activeProjectId);
+    // console.log('[ScrollZone] Cards:', cards.length, 'Project:', activeProjectId);
     updateCardProgress(card, activeProjectId, index, progress);
     if (!cards.length) {
-      console.warn('[onDesktopHorizontalScroll] No cards found for project:', activeProjectId);
+      // console.warn('[onDesktopHorizontalScroll] No cards found for project:', activeProjectId);
       return;
     }
   });
 
-  console.log('[onDesktopHorizontalScroll] Fired with delta', event.deltaY);
+  // console.log('[onDesktopHorizontalScroll] Fired with delta', event.deltaY);
 }
 
 function onMobileHorizontalScroll() {
@@ -427,10 +426,18 @@ function initCardScrollHandlers() {
   }
 }
 
+['.scroll-zone-left', '.scroll-zone-right'].forEach(sel => {
+  const el = document.querySelector(sel);
+  if (el) {
+    el.addEventListener('wheel', e => {
+      console.log(`🌐 wheel event on ${sel}`, 'deltaY =', e.deltaY);
+    }, { passive: true });
+  }
+});
+
 document.addEventListener('DOMContentLoaded', initCardScrollHandlers);
 
 document.addEventListener('DOMContentLoaded', () => {
-  initSectionSnapZones();
   initSectionObserver();
   initProcessScroll();
 });
@@ -439,9 +446,13 @@ document.addEventListener('DOMContentLoaded', initNavButtons);
 
 document.addEventListener('DOMContentLoaded', () => {
   wrapper = document.querySelector('.projects-wrapper');
-  console.log('📦 wrapper found:', wrapper);
   if (!wrapper) return;
+  // existing scroll listener:
   window.addEventListener('scroll', () => {
-    checkContainerLock(window.scrollY);
+    checkContainerLock();
   });
+  // watch all pointer-driven scroll events so pinContainer() can run immediately
+  window.addEventListener('scroll',  checkContainerLock);
+  window.addEventListener('wheel',   checkContainerLock, { passive: true });
+  window.addEventListener('touchmove', checkContainerLock, { passive: true });
 });

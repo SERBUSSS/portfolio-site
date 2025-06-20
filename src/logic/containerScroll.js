@@ -1,5 +1,5 @@
 import { tooltipContent } from '../data/tooltipContent.js';
-import { positions } from '../data/positions.js';
+import { cardPositions } from '../data/positions.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 // logic/containerScroll.js
 let wrapper;
 let containerPinned = false;
+let wrapperPlaceholder = null;
 
 // animations/cardAnimator.js
 let currentCardIndex = 0;
@@ -31,64 +32,96 @@ let projectId = null;
 const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
 
+const handleRightZoneScroll = (e) => {
+  e.preventDefault(); // stop page from scrolling
+  onDesktopHorizontalScroll(e);
+  console.log('[RIGHT ZONE] Scroll Triggered');
+};
+
+const handleLeftZoneScroll = (e) => {
+  e.preventDefault(); // stop page from scrolling
+  handleSectionSnap(e);
+};
+
+function blockScroll(e) {
+  if (containerPinned && !e.target.closest('.scroll-zone-left, .scroll-zone-right')) {
+    e.preventDefault();
+  }
+}
+
 function isMobile() {
   return window.innerWidth <= 768;
 }
 
-function lockBodyScroll() {
-  document.body.style.overflow = 'hidden';
-}
-
-function unlockBodyScroll() {
-  document.body.style.overflow = '';
-}
-
 function pinContainer() {
+  if (containerPinned) return;
+  document.querySelector('.projects-container').style.overflowY = 'scroll';
+
+  window.addEventListener('wheel', blockScroll, { passive: false });
+
   console.log('📌 Container pinned');
   wrapper.style.position = 'fixed';
   wrapper.style.top = '0';
-  lockBodyScroll();
+  wrapper.style.left = '0';
+  wrapper.style.width = '100%';
+  document.body.style.overflow = 'hidden';
   containerPinned = true;
 
-  // scroll zones only activate here
-  document.querySelectorAll('.scroll-zone').forEach(zone => {
-    zone.style.pointerEvents = 'auto';
-  });
+  // Insert placeholder to preserve scroll space
+  wrapperPlaceholder = document.createElement('div');
+  wrapperPlaceholder.style.height = `${wrapper.offsetHeight}px`;
+  wrapper.parentNode.insertBefore(wrapperPlaceholder, wrapper);
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
 
-  if (leftZone) leftZone.addEventListener('wheel', handleSectionSnap);
+  if (leftZone) {
+    leftZone.style.pointerEvents = 'auto';
+    leftZone.addEventListener('wheel', handleSectionSnap, { passive: false });
+  }
+
   if (rightZone && !isMobile()) {
-    console.log('🟢 Binding horizontal scroll to right zone');
-    rightZone.addEventListener('wheel', onDesktopHorizontalScroll);
-    console.log('🔁 rightZone =', rightZone);
+    rightZone.style.pointerEvents = 'auto';
+    rightZone.addEventListener('wheel', handleRightZoneScroll, { passive: false });
+    console.log('🟢 Bound rightZone scroll');
   }
 }
 
 function unpinContainer() {
+  document.querySelector('.projects-container').style.overflowY = 'hidden';
+
+  window.removeEventListener('wheel', blockScroll);
+
+  if (wrapperPlaceholder) {
+    wrapperPlaceholder.remove();
+    wrapperPlaceholder = null;
+  }
+
+  console.log('🔓 Container unpinned');
   wrapper.style.position = 'relative';
-  unlockBodyScroll();
+  document.body.style.overflow = '';
   containerPinned = false;
-  // Deactivate scroll zones
-  document.querySelectorAll('.scroll-zone').forEach(zone => {
-    zone.style.pointerEvents = 'none';
-  });
-  // Detach horizontal scroll events
+
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
-  if (leftZone) leftZone.removeEventListener('wheel', onDesktopHorizontalScroll);
-  if (rightZone) rightZone.removeEventListener('wheel', onDesktopHorizontalScroll);
+
+  if (leftZone) {
+    leftZone.removeEventListener('wheel', handleSectionSnap);
+    leftZone.style.pointerEvents = 'none';
+  }
+
+  if (rightZone && !isMobile()) {
+    rightZone.removeEventListener('wheel', handleRightZoneScroll);
+    rightZone.style.pointerEvents = 'none';
+    console.log('🔴 Unbound rightZone scroll');
+  }
 }
 
-function checkContainerLock(scrollY) {
-  const top = wrapper.offsetTop;
-  const height = wrapper.offsetHeight;
-  const bottom = top + height;
-
-  if (!containerPinned && scrollY >= top && scrollY < bottom) {
+function checkContainerLock() {
+  const rect = wrapper.getBoundingClientRect();
+  if (!containerPinned && rect.top <= 0) {
     pinContainer();
-  } else if (containerPinned && (scrollY < top || scrollY >= bottom)) {
+  } else if (containerPinned && rect.top > 0) {
     unpinContainer();
   }
 }
@@ -198,10 +231,13 @@ function initSectionObserver() {
 
         const cards = section.querySelectorAll('.card');
         const initialProgress = isMobile() ? 0.15 : 0.3;
-        goToCard(0);
+        cards.forEach((card, index) => {
+          const progress = Math.max(0, Math.min(1, 0.2 - index));
+          updateCardProgress(card, projectId, index, progress);
+        });
         setTimeout(() => {
           cards.forEach((card, index) => {
-            const progress = Math.max(0, Math.min(1, initialProgress - index));
+            updateCardProgress(card, projectId, index, 0); // keep all at 0% progress initially
             card.style.pointerEvents = 'none';
           });
         }, 50);
@@ -268,25 +304,24 @@ function initProcessScroll() {
 // animations/cardAnimator.js
 function getCardConfig(projectId, index) {
   const device = isMobile() ? 'mobile' : 'desktop';
-  return positions[projectId]?.[index]?.[device];
+  return positions[projectId]?.[device]?.[index];
 }
 
 function animateCard(cardEl, fromPos, toCenter, toFinal, progress) {
   const tl = gsap.timeline({ paused: true });
 
-  // Convert final x/y to string with vw/vh if needed
-  const unit = 'vw';
-  const parse = (v) => (typeof v === 'number' ? `${v}${unit}` : v);
+  const parseX = (v) => `${parseFloat(v)}vw`;
+  const parseY = (v) => `${parseFloat(v)}vh`;
 
   tl.fromTo(cardEl, {
-    x: parse(fromPos.x),
-    y: parse(fromPos.y),
+    x: parseX(fromPos.x),
+    y: parseY(fromPos.y),
     scale: fromPos.scale,
     opacity: fromPos.opacity,
     rotation: fromPos.rotation,
   }, {
-    x: parse(toCenter.x),
-    y: parse(toCenter.y),
+    x: parseX(toCenter.x),
+    y: parseY(toCenter.y),
     scale: toCenter.scale,
     opacity: toCenter.opacity,
     rotation: toCenter.rotation,
@@ -294,8 +329,8 @@ function animateCard(cardEl, fromPos, toCenter, toFinal, progress) {
   });
 
   tl.to(cardEl, {
-    x: parse(toFinal.x),
-    y: parse(toFinal.y),
+    x: parseX(toFinal.x),
+    y: parseY(toFinal.y),
     scale: toFinal.scale,
     opacity: toFinal.opacity,
     rotation: toFinal.rotation,
@@ -309,9 +344,12 @@ function animateCard(cardEl, fromPos, toCenter, toFinal, progress) {
 
 function updateCardProgress(cardEl, projectId, index, scrollValue) {
   const device = isMobile() ? 'mobile' : 'desktop';
-  const final = positions[projectId]?.[device]?.[index];
+  const final = cardPositions[projectId]?.[device]?.[index];
 
-  if (!final) return;
+  if (!final) {
+    console.warn('Missing final card position', { projectId, device, index });
+    return;
+  }
 
   // infer initial and center positions
   const isProcess = projectId === 'process';
@@ -345,15 +383,18 @@ function onDesktopHorizontalScroll(event) {
   console.log('[onDesktopHorizontalScroll]', { containerPinned, cardsLength: cards.length, activeProjectId });
   if (!containerPinned) return;
 
-  const direction = Math.sign(event.deltaY);
+  // Use horizontal delta if significant, otherwise vertical
+  let delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+  const direction = Math.sign(delta);
   if (!cards.length || !activeProjectId) return;
 
-  cardScrollValue += direction * 0.1; // tune this value
-  cardScrollValue = Math.max(0, Math.min(cardScrollValue, cards.length));
+  cardScrollValue += direction * 0.05; // tune this value
+  const maxProgress = cards.length - 1;
+  cardScrollValue = Math.max(0, Math.min(cardScrollValue, maxProgress));
 
   cards.forEach((card, index) => {
     const progress = Math.max(0, Math.min(1, cardScrollValue - index));
-    console.log('➡️ Scrolling cards: cardScrollValue =', cardScrollValue);
+    console.log('[ScrollZone] Cards:', cards.length, 'Project:', activeProjectId);
     updateCardProgress(card, activeProjectId, index, progress);
     if (!cards.length) {
       console.warn('[onDesktopHorizontalScroll] No cards found for project:', activeProjectId);

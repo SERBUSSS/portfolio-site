@@ -193,47 +193,4 @@ const cardPositions = {
     }
 };
 
-function mapCardPositions(cardPositions) {
-  const result = {};
-
-  for (const projectId in cardPositions) {
-    const layouts = cardPositions[projectId];
-    result[projectId] = {};
-
-    ['desktop', 'mobile'].forEach(device => {
-      const cards = layouts[device];
-      cards.forEach((final, index) => {
-        if (!result[projectId][index]) result[projectId][index] = {};
-
-        result[projectId][index][device] = {
-          initial: {
-            x: '100vw',
-            y: '0vh',
-            scale: 0.6,
-            opacity: 0,
-            rotation: 0
-          },
-          center: {
-            x: '0vw',
-            y: '0vh',
-            scale: 1,
-            opacity: 1,
-            rotation: 0
-          },
-          final: {
-            x: `${final.x}vw`,
-            y: `${final.y}vh`,
-            scale: final.scale,
-            opacity: final.opacity,
-            rotation: final.rotation
-          }
-        };
-      });
-    });
-  }
-
-  return result;
-}
-
-const positions = mapCardPositions(cardPositions);
-export { positions };
+export { cardPositions };

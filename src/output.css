@@ -2098,10 +2098,18 @@ body.loaded main, body.loaded section:not(#loading-screen) {
   opacity: 1;
   display: block !important;
 }
+.projects-wrapper {
+  display: block;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 .projects-container {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  overflow-y: scroll;
   scroll-snap-type: y mandatory;
   position: relative;
   transition: none;
@@ -2114,6 +2122,7 @@ body.loaded main, body.loaded section:not(#loading-screen) {
   bottom: 0;
   z-index: 1000;
   overflow: hidden;
+  overflow-y: scroll;
 }
 .project-section {
   position: relative;
@@ -2173,6 +2182,9 @@ body.loaded main, body.loaded section:not(#loading-screen) {
 .cards-container {
   position: relative;
   z-index: 1;
+}
+.scroll-zone-left, .scroll-zone-right {
+  pointer-events: none;
 }
 @property --tw-translate-x {
   syntax: "*";

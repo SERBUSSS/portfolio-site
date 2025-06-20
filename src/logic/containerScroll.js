@@ -44,6 +44,7 @@ function unlockBodyScroll() {
 }
 
 function pinContainer() {
+  console.log('📌 Container pinned');
   wrapper.style.position = 'fixed';
   wrapper.style.top = '0';
   lockBodyScroll();
@@ -59,7 +60,9 @@ function pinContainer() {
 
   if (leftZone) leftZone.addEventListener('wheel', handleSectionSnap);
   if (rightZone && !isMobile()) {
+    console.log('🟢 Binding horizontal scroll to right zone');
     rightZone.addEventListener('wheel', onDesktopHorizontalScroll);
+    console.log('🔁 rightZone =', rightZone);
   }
 }
 
@@ -72,8 +75,8 @@ function unpinContainer() {
     zone.style.pointerEvents = 'none';
   });
   // Detach horizontal scroll events
-  const leftZone = document.querySelector('.scroll-zone.left-zone');
-  const rightZone = document.querySelector('.scroll-zone.right-zone');
+  const leftZone = document.querySelector('.scroll-zone-left');
+  const rightZone = document.querySelector('.scroll-zone-right');
   if (leftZone) leftZone.removeEventListener('wheel', onDesktopHorizontalScroll);
   if (rightZone) rightZone.removeEventListener('wheel', onDesktopHorizontalScroll);
 }
@@ -357,6 +360,8 @@ function onDesktopHorizontalScroll(event) {
       return;
     }
   });
+
+  console.log('[onDesktopHorizontalScroll] Fired with delta', event.deltaY);
 }
 
 function onMobileHorizontalScroll() {
@@ -392,7 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', initNavButtons);
 
 document.addEventListener('DOMContentLoaded', () => {
-  wrapper = document.querySelector('.project-wrapper');
+  wrapper = document.querySelector('.projects-wrapper');
+  console.log('📦 wrapper found:', wrapper);
   if (!wrapper) return;
   window.addEventListener('scroll', () => {
     checkContainerLock(window.scrollY);

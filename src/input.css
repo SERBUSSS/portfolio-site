@@ -413,9 +413,23 @@ body.loaded section:not(#loading-screen) {
   height: 100vh;
   overflow: hidden;
   scroll-snap-type: y mandatory;
+  position: relative;
+  transition: none;
+}
+
+.projects-container.locked {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  overflow: hidden;
 }
 
 .project-section {
+  position: relative;
+  overflow: hidden;
   width: 100vw;
   height: 100vh;
   scroll-snap-align: start;
@@ -442,6 +456,8 @@ body.loaded section:not(#loading-screen) {
   top: 0;
   left: 0;
   will-change: transform;
+  backface-visibility: hidden; /* Prevent flickering */
+  -webkit-backface-visibility: hidden;
 }
 
 @layer utilities {

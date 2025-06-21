@@ -460,13 +460,13 @@ body.loaded section:not(#loading-screen) {
 
 .card {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.5);
-  transform-origin: center;
+  transform-origin: center center;
+  top:0;
+  left:0;
   opacity: 0;
   pointer-events: none;
   backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 @layer utilities {
@@ -500,12 +500,14 @@ body.loaded section:not(#loading-screen) {
   z-index: 0;
 }
 
-.cards-container {
-  position: relative;
-  z-index: 1;
-}
-
 .scroll-zone-left, .scroll-zone-right { 
   pointer-events: none; 
+}
+
+.cards-animation-wrapper {
+  width: 100vw;
+  height: 100vh; 
+  overflow: hidden;
+  pointer-events: none;
 }
 

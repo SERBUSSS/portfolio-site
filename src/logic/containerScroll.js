@@ -1,3 +1,10 @@
+/**
+ * Animates the cards horizontally based on scroll progress.
+ * @param {string} sectionId - The ID of the project section.
+ * @param {number} progress - The scroll progress (0 to 1).
+ * @param {HTMLElement[]} cards - The card elements in this section.
+ */
+
 import { tooltipContent } from '../data/tooltipContent.js';
 import { cardPositions } from '../data/positions.js';
 import gsap from 'gsap';
@@ -11,13 +18,14 @@ console.log('🔧 containerScroll.js loaded');
 let wrapper;
 let containerPinned = false;
 console.log('Initial containerPinned =', containerPinned);
-let wrapperPlaceholder = null;
 
 // animations/cardAnimator.js
-let currentCardIndex = 0;
 let cardScrollValue = 0;
 let activeProjectId = null;
 let cards = [];
+window.horizontalScrollData = window.horizontalScrollData || {};
+const horizontalScrollData = window.horizontalScrollData;
+const SCROLL_SENSITIVITY = 60;
 
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
@@ -36,16 +44,14 @@ const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
 
 function handleRightZoneScroll(e) {
-  /* console.log('👉 handleRightZoneScroll fired:', 
-              'deltaY =', e.deltaY, 
-              'containerPinned =', containerPinned); */
-  if (!containerPinned) {
-    //console.log('   ↪️  Ignoring because not pinned');
-    return;
-  }
+  // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
+  if (!containerPinned) return;
   e.preventDefault();
-  // your existing logic:
-  onDesktopHorizontalScroll(e);
+
+  // Use the current active project section ID
+  if (activeProjectId) {
+    onDesktopHorizontalScroll(activeProjectId, e);
+  }
 }
 
 function handleLeftZoneScroll(e) {
@@ -58,12 +64,6 @@ function handleLeftZoneScroll(e) {
   }
   e.preventDefault();
   handleSectionSnap(e);
-}
-
-function blockScroll(e) {
-  if (containerPinned && !e.target.closest('.scroll-zone-left, .scroll-zone-right')) {
-    e.preventDefault();
-  }
 }
 
 function isMobile() {
@@ -163,6 +163,30 @@ function setNavContext(activeId) {
   currentCard = 0;
   updateTooltip(projectId, currentCard);
   setActiveProject(projectId);
+
+  cards.forEach((card) => {
+    gsap.set(card, {
+      x: '100vw',
+      y: '50vh',
+      scale: 0.9,
+      opacity: 0,
+      zIndex: 1,
+      pointerEvents: 'none'
+    });
+  });
+
+  if (!horizontalScrollData[projectId]) {
+    horizontalScrollData[projectId] = {
+      isActive: true,
+      scrollX: 0,
+      maxScroll: 1000 // Adjust this value as needed!
+    };
+  } else {
+    horizontalScrollData[projectId].isActive = true;
+  }
+  Object.keys(horizontalScrollData).forEach(id => {
+    if (id !== projectId) horizontalScrollData[id].isActive = false;
+  });
 }
 
 function goToCard(index) {
@@ -268,27 +292,18 @@ function animateProcessCards() {
   });
 }
 
-function handleProcessScroll(event) {
-  const delta = Math.sign(event.deltaY);
-  const maxScroll = processCards.length;
+function handleProcessScroll(sectionId, e) {
+  if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
 
-  processScrollValue += delta * 0.1;
-  processScrollValue = Math.max(0, Math.min(maxScroll, processScrollValue));
+  e.preventDefault();
 
-  animateProcessCards();
+  const delta = e.deltaY;
+  horizontalScrollData[sectionId].scrollX += delta / SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
 
-  const isLastCardFullyIn = processScrollValue >= processCards.length;
-  const isFirstCardAtStart = processScrollValue <= 0;
-
-  if (isLastCardFullyIn) {
-    document.body.style.overflow = '';
-  } else {
-    document.body.style.overflow = 'hidden';
-  }
-
-  if (isFirstCardAtStart && delta < 0) {
-    document.body.style.overflow = '';
-  }
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+  updateHorizontalAnimation(sectionId, progress, cards);
 }
 
 function initProcessScroll() {
@@ -308,70 +323,88 @@ function getCardConfig(projectId, index) {
   return positions[projectId]?.[device]?.[index];
 }
 
-function animateCard(cardEl, fromPos, toCenter, toFinal, progress) {
-  const tl = gsap.timeline({ paused: true });
+function updateHorizontalAnimation(sectionId, progress, cards) {
+    const isMobile = window.innerWidth <= 768;
+    const deviceKey = isMobile ? 'mobile' : 'desktop';
+    const projectPositions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
 
-  const parseX = (v) => `${parseFloat(v)}vw`;
-  const parseY = (v) => `${parseFloat(v)}vh`;
+    const totalCards = cards.length;
+    const positionsCount = projectPositions.length;
+    const progressPerCard = 0.9 / totalCards;
+    const vw = window.innerWidth / 100;
+    const vh = window.innerHeight / 100;
 
-  tl.fromTo(cardEl, {
-    x: parseX(fromPos.x),
-    y: parseY(fromPos.y),
-    scale: fromPos.scale,
-    opacity: fromPos.opacity,
-    rotation: fromPos.rotation,
-  }, {
-    x: parseX(toCenter.x),
-    y: parseY(toCenter.y),
-    scale: toCenter.scale,
-    opacity: toCenter.opacity,
-    rotation: toCenter.rotation,
-    duration: 0.5,
-  });
+    // Calculate the screen center ONCE
+    const screenCenterX = window.innerWidth / 2;
+    const screenCenterY = window.innerHeight / 2;
 
-  tl.to(cardEl, {
-    x: parseX(toFinal.x),
-    y: parseY(toFinal.y),
-    scale: toFinal.scale,
-    opacity: toFinal.opacity,
-    rotation: toFinal.rotation,
-    duration: 0.5,
-  });
+    cards.forEach((card, index) => {
+        const cardStartProgress = index * progressPerCard;
+        const posIndex = Math.min(index, positionsCount - 1);
+        const finalPos = projectPositions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
 
-  tl.progress(progress);
+        const finalX = parseFloat(finalPos.x) * vw;
+        const finalY = parseFloat(finalPos.y) * vh;
+        const finalScale = parseFloat(finalPos.scale);
+        const finalOpacity = parseFloat(finalPos.opacity);
+        const finalRotation = parseFloat(finalPos.rotation);
 
-  // console.log(`[animateCard] progress=${progress}, from=`, fromPos, 'final=', toFinal);
+        // Calculate progress for this card
+        const cardProgress = Math.max(0, Math.min(1, (progress - cardStartProgress) / progressPerCard));
+
+        if (cardProgress === 0) {
+            // Before animation
+            gsap.set(card, {
+                x: window.innerWidth - card.offsetWidth / 2,
+                y: screenCenterY - card.offsetHeight / 2,
+                scale: 1,
+                opacity: 0,
+                rotation: 0,
+                force3D: true,
+            });
+        } else if (cardProgress <= 0.6) {
+            // PHASE 1: Slide from right to center of screen (not up/down)
+            const slide = cardProgress / 0.6;
+            const startX = window.innerWidth + card.offsetWidth / 2;
+            const endX = screenCenterX;
+            const currentX = startX + (endX - startX) * slide;
+            gsap.set(card, {
+                x: currentX - card.offsetWidth / 2,
+                y: screenCenterY - card.offsetHeight / 2,
+                scale: 1,
+                opacity: slide,
+                rotation: 0,
+                force3D: true,
+            });
+        } else {
+            // PHASE 2: From center to final position (offset from center)
+            const lerp = (cardProgress - 0.6) / 0.4;
+            const targetX = screenCenterX + finalX;
+            const targetY = screenCenterY + finalY;
+            const currentX = screenCenterX + (targetX - screenCenterX) * lerp - card.offsetWidth / 2;
+            const currentY = screenCenterY + (targetY - screenCenterY) * lerp - card.offsetHeight / 2;
+            const currentScale = 1 + (finalScale - 1) * lerp;
+            const currentOpacity = 1 + (finalOpacity - 1) * lerp;
+            const currentRotation = 0 + (finalRotation - 0) * lerp;
+
+            gsap.set(card, {
+                x: currentX,
+                y: currentY,
+                scale: currentScale,
+                opacity: currentOpacity,
+                rotation: currentRotation,
+                force3D: true,
+            });
+        }
+    });
 }
 
-function updateCardProgress(cardEl, projectId, index, scrollValue) {
-  const device = isMobile() ? 'mobile' : 'desktop';
-  const final = cardPositions[projectId]?.[device]?.[index];
-
-  if (!final) {
-    console.warn('Missing final card position', { projectId, device, index });
-    return;
-  }
-
-  // infer initial and center positions
-  const isProcess = projectId === 'process';
-
-  const from = {
-    x: isProcess ? 0 : '110vw',
-    y: isProcess ? '110vh' : 0,
-    scale: 0.5,
-    opacity: 0,
-    rotation: 0
-  };
-
-  const center = {
-    x: 0,
-    y: 0,
-    scale: 1,
-    opacity: 1,
-    rotation: 0
-  };
-
-  animateCard(cardEl, from, center, final, scrollValue);
+function updateCardProgress(sectionId, scrollValue) {
+  if (!horizontalScrollData[sectionId]) return;
+  horizontalScrollData[sectionId].scrollX = scrollValue;
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+  updateHorizontalAnimation(sectionId, progress, cards);
 }
 
 function setActiveProject(projectId) {
@@ -380,30 +413,26 @@ function setActiveProject(projectId) {
   cardScrollValue = 0;
 }
 
-function onDesktopHorizontalScroll(event) {
-  // console.log('[onDesktopHorizontalScroll]', { containerPinned, cardsLength: cards.length, activeProjectId });
-  if (!containerPinned) return;
+function onDesktopHorizontalScroll(sectionId, e) {
+  if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
 
-  // Use horizontal delta if significant, otherwise vertical
-  let delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-  const direction = Math.sign(delta);
-  if (!cards.length || !activeProjectId) return;
+  e.preventDefault();
 
-  cardScrollValue += direction * 0.05; // tune this value
-  const maxProgress = cards.length - 1;
-  cardScrollValue = Math.max(0, Math.min(cardScrollValue, maxProgress));
+  const delta = e.deltaX || e.deltaY;
+  horizontalScrollData[sectionId].scrollX += delta / SCROLL_SENSITIVITY;
 
-  cards.forEach((card, index) => {
-    const progress = Math.max(0, Math.min(1, cardScrollValue - index));
-    // console.log('[ScrollZone] Cards:', cards.length, 'Project:', activeProjectId);
-    updateCardProgress(card, activeProjectId, index, progress);
-    if (!cards.length) {
-      // console.warn('[onDesktopHorizontalScroll] No cards found for project:', activeProjectId);
-      return;
-    }
-  });
+  // Clamp
+  horizontalScrollData[sectionId].scrollX = Math.max(
+    0, 
+    Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll)
+  );
 
-  // console.log('[onDesktopHorizontalScroll] Fired with delta', event.deltaY);
+  // Calculate progress
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+
+  // Animate
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+  updateHorizontalAnimation(sectionId, progress, cards);
 }
 
 function onMobileHorizontalScroll() {

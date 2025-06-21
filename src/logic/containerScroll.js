@@ -36,11 +36,11 @@ const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
 
 function handleRightZoneScroll(e) {
-  console.log('👉 handleRightZoneScroll fired:', 
+  /* console.log('👉 handleRightZoneScroll fired:', 
               'deltaY =', e.deltaY, 
-              'containerPinned =', containerPinned);
+              'containerPinned =', containerPinned); */
   if (!containerPinned) {
-    console.log('   ↪️  Ignoring because not pinned');
+    //console.log('   ↪️  Ignoring because not pinned');
     return;
   }
   e.preventDefault();
@@ -49,11 +49,11 @@ function handleRightZoneScroll(e) {
 }
 
 function handleLeftZoneScroll(e) {
-  console.log('👈 handleLeftZoneScroll fired:', 
+  /*console.log('👈 handleLeftZoneScroll fired:', 
               'deltaY =', e.deltaY, 
-              'containerPinned =', containerPinned);
+              'containerPinned =', containerPinned);*/
   if (!containerPinned) {
-    console.log('   ↪️  Ignoring because not pinned');
+    // console.log('   ↪️  Ignoring because not pinned');
     return;
   }
   e.preventDefault();
@@ -122,7 +122,7 @@ function unpinContainer() {
 
 function checkContainerLock() {
   const rect = wrapper.getBoundingClientRect();
-  console.log('🔍 checkContainerLock: rect.top =', rect.top.toFixed(2), 'containerPinned =', containerPinned);
+  // console.log('🔍 checkContainerLock: rect.top =', rect.top.toFixed(2), 'containerPinned =', containerPinned);
 
   if (!containerPinned && rect.top <= 0) {
     console.log('➡️  Should PIN container now');
@@ -222,6 +222,8 @@ function initSectionObserver() {
       const section = entry.target;
       const projectId = section.getAttribute('id');
       const tooltipContainer = document.querySelector(`#tooltip-${projectId}`);
+
+      if (!containerPinned) return;
 
       if (entry.isIntersecting) {
         if (tooltipContainer) tooltipContainer.classList.remove('hidden');
@@ -430,7 +432,7 @@ function initCardScrollHandlers() {
   const el = document.querySelector(sel);
   if (el) {
     el.addEventListener('wheel', e => {
-      console.log(`🌐 wheel event on ${sel}`, 'deltaY =', e.deltaY);
+      //console.log(`🌐 wheel event on ${sel}`, 'deltaY =', e.deltaY);
     }, { passive: true });
   }
 });

@@ -25,7 +25,8 @@ let activeProjectId = null;
 let cards = [];
 window.horizontalScrollData = window.horizontalScrollData || {};
 const horizontalScrollData = window.horizontalScrollData;
-const SCROLL_SENSITIVITY = 60;
+const PROJECTS_SCROLL_SENSITIVITY = 100;
+const PROCESS_SCROLL_SENSITIVITY = 10;
 
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
@@ -64,6 +65,31 @@ function handleLeftZoneScroll(e) {
   }
   e.preventDefault();
   handleSectionSnap(e);
+}
+
+function initScrollZones() {
+  const leftZone = document.querySelector('.scroll-zone-left');
+  const rightZone = document.querySelector('.scroll-zone-right');
+  if (leftZone) {
+    leftZone.addEventListener('wheel', handleLeftZoneScroll, { passive: false });
+  }
+  if (rightZone) {
+    rightZone.addEventListener('wheel', e => {
+      // Use process handler ONLY if process section is active
+      if (activeProjectId === 'process') {
+        handleProcessScroll('process', e);
+      } else {
+        onDesktopHorizontalScroll(activeProjectId, e);
+      }
+    }, { passive: false });
+  }
+  // Dedicated process section scroll (if user scrolls directly over it)
+  if (processSection) {
+    processSection.addEventListener('wheel', e => {
+      if (isTouch) return;
+      handleProcessScroll('process', e);
+    }, { passive: false });
+  }
 }
 
 function isMobile() {
@@ -281,29 +307,94 @@ function initSectionObserver() {
 function setupProcessCards() {
   const container = processSection?.querySelector('.process-cards-container');
   if (!container) return;
-  processCards = Array.from(container.querySelectorAll('.card'));
+  processCards = Array.from(container.querySelectorAll('.process-card'));
   processScrollValue = 0;
 }
 
-function animateProcessCards() {
-  processCards.forEach((card, index) => {
-    const progress = Math.max(0, Math.min(1, processScrollValue - index));
-    updateCardProgress(card, 'process', index, progress);
-  });
+function animateProcessCards(sectionId, progress, cards) {
+    const isMobileDevice = window.innerWidth <= 768;
+    const deviceKey = isMobileDevice ? 'mobile' : 'desktop';
+    const positions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
+
+    const totalCards = cards.length;
+    const positionsCount = positions.length;
+    const progressPerCard = 0.9 / totalCards;
+
+    const vw = window.innerWidth / 100;
+    const vh = window.innerHeight / 100;
+    const screenCenterX = window.innerWidth / 2;
+    const screenCenterY = window.innerHeight / 2;
+
+    cards.forEach((card, index) => {
+        const cardStart = index * progressPerCard;
+        const cardProgress = Math.min(1, Math.max(0, (progress - cardStart) / progressPerCard));
+        const posIndex = Math.min(index, positionsCount - 1);
+        const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
+
+        const finalX = parseFloat(finalPos.x) * vw;
+        const finalY = parseFloat(finalPos.y) * vh;
+        const finalScale = parseFloat(finalPos.scale);
+        const finalOpacity = parseFloat(finalPos.opacity);
+        const finalRotation = parseFloat(finalPos.rotation);
+
+        if (cardProgress === 0) {
+            // Start below viewport
+            gsap.set(card, {
+                x: screenCenterX - card.offsetWidth / 2,
+                y: window.innerHeight + card.offsetHeight / 2,
+                scale: 1,
+                opacity: 0,
+                rotation: 0,
+                force3D: true
+            });
+        } else if (cardProgress <= 0.6) {
+            // Phase 1: slide from below to center
+            const t = cardProgress / 0.6;
+            const startY = window.innerHeight + card.offsetHeight / 2;
+            const endY = screenCenterY;
+            const currentY = startY + (endY - startY) * t;
+            gsap.set(card, {
+                x: screenCenterX - card.offsetWidth / 2,
+                y: currentY - card.offsetHeight / 2,
+                scale: 1,
+                opacity: t,
+                rotation: 0,
+                force3D: true
+            });
+        } else {
+            // Phase 2: center to final position (from data)
+            const t = (cardProgress - 0.6) / 0.4;
+            const startX = screenCenterX - card.offsetWidth / 2;
+            const startY = screenCenterY - card.offsetHeight / 2;
+            const endX = screenCenterX + finalX - card.offsetWidth / 2;
+            const endY = screenCenterY + finalY - card.offsetHeight / 2;
+            const currentX = startX + (endX - startX) * t;
+            const currentY = startY + (endY - startY) * t;
+            const currentScale = 1 + (finalScale - 1) * t;
+            const currentOpacity = 1 + (finalOpacity - 1) * t;
+            const currentRotation = 0 + (finalRotation - 0) * t;
+
+            gsap.set(card, {
+                x: currentX,
+                y: currentY,
+                scale: currentScale,
+                opacity: currentOpacity,
+                rotation: currentRotation,
+                force3D: true
+            });
+        }
+    });
 }
 
 function handleProcessScroll(sectionId, e) {
   if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
-
   e.preventDefault();
-
   const delta = e.deltaY;
-  horizontalScrollData[sectionId].scrollX += delta / SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
   horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
-
   const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
-  updateHorizontalAnimation(sectionId, progress, cards);
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
+  animateProcessCards(sectionId, progress, cards);
 }
 
 function initProcessScroll() {
@@ -313,8 +404,18 @@ function initProcessScroll() {
   processSection.addEventListener('wheel', (e) => {
     if (isTouch) return;
     e.preventDefault();
-    handleProcessScroll(e);
+    handleProcessScroll('process', e);
   });
+
+  if (!horizontalScrollData['process']) {
+    horizontalScrollData['process'] = {
+      isActive: true,
+      scrollX: 0,
+      maxScroll: 1000 // or whatever feels right for your process card count!
+    };
+  } else {
+    horizontalScrollData['process'].isActive = true;
+  }
 }
 
 // animations/cardAnimator.js
@@ -324,6 +425,9 @@ function getCardConfig(projectId, index) {
 }
 
 function updateHorizontalAnimation(sectionId, progress, cards) {
+    console.log('🔵 updateHorizontalAnimation running', sectionId, cards.length);
+    if (sectionId === 'process') return;
+
     const isMobile = window.innerWidth <= 768;
     const deviceKey = isMobile ? 'mobile' : 'desktop';
     const projectPositions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
@@ -402,9 +506,16 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
 function updateCardProgress(sectionId, scrollValue) {
   if (!horizontalScrollData[sectionId]) return;
   horizontalScrollData[sectionId].scrollX = scrollValue;
-  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
-  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-  updateHorizontalAnimation(sectionId, progress, cards);
+  let cards;
+  let progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+
+  if (sectionId === 'process') {
+    cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
+    animateProcessCards(sectionId, progress, cards);
+  } else {
+    cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+    updateHorizontalAnimation(sectionId, progress, cards);
+  }
 }
 
 function setActiveProject(projectId) {
@@ -414,23 +525,15 @@ function setActiveProject(projectId) {
 }
 
 function onDesktopHorizontalScroll(sectionId, e) {
+  // Never handle process section here!
   if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
+  if (sectionId === 'process') return;
 
   e.preventDefault();
-
   const delta = e.deltaX || e.deltaY;
-  horizontalScrollData[sectionId].scrollX += delta / SCROLL_SENSITIVITY;
-
-  // Clamp
-  horizontalScrollData[sectionId].scrollX = Math.max(
-    0, 
-    Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll)
-  );
-
-  // Calculate progress
+  horizontalScrollData[sectionId].scrollX += delta / PROJECTS_SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
   const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-
-  // Animate
   const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
   updateHorizontalAnimation(sectionId, progress, cards);
 }
@@ -474,6 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', initNavButtons);
+document.addEventListener('DOMContentLoaded', initScrollZones);
 
 document.addEventListener('DOMContentLoaded', () => {
   wrapper = document.querySelector('.projects-wrapper');

@@ -35,6 +35,10 @@ let processScrollValue = 0;
 let processCards = [];
 const processSection = document.querySelector('#process');
 const isTouch = 'ontouchstart' in window;
+let zonesBound = false;
+let wrapperOffsetTop = null;
+let canRepin = true;
+let pinnedScrollHandler = null;
 
 // logic/navControl.js
 let currentCard = 0;
@@ -97,9 +101,14 @@ function isMobile() {
 }
 
 function pinContainer() {
-  console.log('📌 pinContainer() called');
+  if (containerPinned || !canRepin) {
+    console.log('[Pin] Already pinned or canRepin false. Not pinning.');
+    return;
+  }
   containerPinned = true;
-  console.log('   → containerPinned =', containerPinned);
+  wrapperOffsetTop = wrapper.offsetTop;
+  canRepin = false;
+  console.log('[Pin] Pinning container. wrapperOffsetTop:', wrapperOffsetTop);
 
   // placeholder logic
   console.log('   → inserting placeholder (height:', wrapper.clientHeight, 'px)');
@@ -112,50 +121,92 @@ function pinContainer() {
 
   if (leftZone) {
     leftZone.style.pointerEvents = 'auto';
-    console.log('   → leftZone.pointerEvents =', leftZone.style.pointerEvents);
+    // Remove first to prevent double bind
+    leftZone.removeEventListener('wheel', handleLeftZoneScroll);
     leftZone.addEventListener('wheel', handleLeftZoneScroll, { passive: false });
-    console.log('   → bound handleLeftZoneScroll to leftZone');
   }
   if (rightZone) {
     rightZone.style.pointerEvents = 'auto';
-    console.log('   → rightZone.pointerEvents =', rightZone.style.pointerEvents);
+    rightZone.removeEventListener('wheel', handleRightZoneScroll);
     rightZone.addEventListener('wheel', handleRightZoneScroll, { passive: false });
-    console.log('   → bound handleRightZoneScroll to rightZone');
+  }
+
+  if (wrapper && !pinnedScrollHandler) {
+    pinnedScrollHandler = function(e) {
+      // Only if at top and user tries to scroll UP
+      if (wrapper.scrollTop === 0 && e.deltaY < 0) {
+        console.log('[Pin] User scrolled up at top, unpinning!');
+        unpinContainer();
+      }
+    };
+    wrapper.addEventListener('wheel', pinnedScrollHandler, { passive: false });
   }
 }
 
 function unpinContainer() {
-  console.log('🔓 unpinContainer() called');
+  if (!containerPinned) {
+    console.log('[Unpin] Not pinned, ignoring.');
+    return;
+  }
   containerPinned = false;
-  console.log('   → containerPinned =', containerPinned);
+  wrapperOffsetTop = null;
+  canRepin = false;
+  console.log('[Unpin] Unpinning container.');
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
   if (leftZone) {
     leftZone.removeEventListener('wheel', handleLeftZoneScroll);
     leftZone.style.pointerEvents = 'none';
-    console.log('   → unbound leftZone, pointerEvents =', leftZone.style.pointerEvents);
   }
   if (rightZone) {
     rightZone.removeEventListener('wheel', handleRightZoneScroll);
     rightZone.style.pointerEvents = 'none';
-    console.log('   → unbound rightZone, pointerEvents =', rightZone.style.pointerEvents);
+  }
+
+  if (wrapper && pinnedScrollHandler) {
+    wrapper.removeEventListener('wheel', pinnedScrollHandler);
+    pinnedScrollHandler = null;
   }
 
   // placeholder removal
   console.log('   → removing placeholder');
 }
 
+// --- Helper to smoothly scroll page so wrapper's top aligns with viewport top ---
+function alignWrapperToViewportTop(wrapper, topSlackPx) {
+  const rect = wrapper.getBoundingClientRect();
+  // If wrapper top is not exactly at 0, scroll page so it is
+  if (Math.abs(rect.top) > 1) {
+    // Get current scroll position
+    const currentScroll = window.scrollY || document.documentElement.scrollTop;
+    // How much to scroll to bring wrapper top to viewport top (0)
+    const scrollOffset = rect.top;
+    // Only scroll if we’re not already locked
+    window.scrollTo({
+      top: currentScroll + scrollOffset,
+      behavior: 'smooth'
+    });
+    // You can use gsap.to(window, { scrollTo: ... }) if using GSAP scrollTo plugin
+  }
+}
+
 function checkContainerLock() {
   const rect = wrapper.getBoundingClientRect();
-  // console.log('🔍 checkContainerLock: rect.top =', rect.top.toFixed(2), 'containerPinned =', containerPinned);
+  const topSlack = 0.15 * window.innerHeight;
 
-  if (!containerPinned && rect.top <= 0) {
-    console.log('➡️  Should PIN container now');
+  console.log('[Check Lock] rect.top:', rect.top, 'Pinned:', containerPinned, 'canRepin:', canRepin);
+
+  if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
+    canRepin = true;
+    console.log('[Check Lock] OUTSIDE slack, not pinned. Setting canRepin = true');
+  }
+
+  if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
+    console.log('[Check Lock] PINNING. rect.top in slack zone and canRepin');
     pinContainer();
-  } else if (containerPinned && rect.top > 0) {
-    console.log('⬅️  Should UNPIN container now');
-    unpinContainer();
+    alignWrapperToViewportTop(wrapper, topSlack);
+    return;
   }
 }
 
@@ -564,7 +615,7 @@ function initCardScrollHandlers() {
   const el = document.querySelector(sel);
   if (el) {
     el.addEventListener('wheel', e => {
-      //console.log(`🌐 wheel event on ${sel}`, 'deltaY =', e.deltaY);
+      //console.log(🌐 wheel event on ${sel}, 'deltaY =', e.deltaY);
     }, { passive: true });
   }
 });

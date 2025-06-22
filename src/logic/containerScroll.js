@@ -39,6 +39,7 @@ let zonesBound = false;
 let wrapperOffsetTop = null;
 let canRepin = true;
 let pinnedScrollHandler = null;
+const SLACK_PX = 0.15 * window.innerHeight;
 
 // logic/navControl.js
 let currentCard = 0;
@@ -47,6 +48,20 @@ let projectId = null;
 // logic/tooltipManager.js
 const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
+
+// --- Persistence helpers for process scroll progress ---
+function saveProcessScrollState(scrollX) {
+  window.processScrollState = scrollX;
+  sessionStorage.setItem('processScrollX', scrollX);
+}
+
+function restoreProcessScrollState() {
+  if (window.processScrollState !== undefined) {
+    return window.processScrollState;
+  }
+  const stored = sessionStorage.getItem('processScrollX');
+  return stored !== null ? Number(stored) : 0;
+}
 
 function handleRightZoneScroll(e) {
   // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
@@ -60,14 +75,27 @@ function handleRightZoneScroll(e) {
 }
 
 function handleLeftZoneScroll(e) {
-  /*console.log('👈 handleLeftZoneScroll fired:', 
-              'deltaY =', e.deltaY, 
-              'containerPinned =', containerPinned);*/
-  if (!containerPinned) {
-    // console.log('   ↪️  Ignoring because not pinned');
-    return;
-  }
+  if (!containerPinned) return;
   e.preventDefault();
+
+  // BOTTOM EXIT: Only for process section, at 100% progress, scroll down
+  if (
+    activeProjectId === 'process' &&
+    isProcessScrollAtEnd() &&
+    e.deltaY > 0
+  ) {
+    // Only unpin if wrapper is in bottom slack zone
+    const rect = wrapper.getBoundingClientRect();
+    if (
+      rect.bottom >= window.innerHeight - SLACK_PX &&
+      rect.bottom <= window.innerHeight + SLACK_PX
+    ) {
+      unpinContainer();
+      return;
+    }
+  }
+
+  // Top exit: already handled by pinnedScrollHandler on wheel up at top
   handleSectionSnap(e);
 }
 
@@ -109,6 +137,7 @@ function pinContainer() {
   wrapperOffsetTop = wrapper.offsetTop;
   canRepin = false;
   console.log('[Pin] Pinning container. wrapperOffsetTop:', wrapperOffsetTop);
+  setZonesEnabled(true);
 
   // placeholder logic
   console.log('   → inserting placeholder (height:', wrapper.clientHeight, 'px)');
@@ -152,6 +181,7 @@ function unpinContainer() {
   wrapperOffsetTop = null;
   canRepin = false;
   console.log('[Unpin] Unpinning container.');
+  setZonesEnabled(false);
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
@@ -193,19 +223,40 @@ function alignWrapperToViewportTop(wrapper, topSlackPx) {
 
 function checkContainerLock() {
   const rect = wrapper.getBoundingClientRect();
-  const topSlack = 0.15 * window.innerHeight;
+  const topSlack = SLACK_PX;
+  const bottomSlack = SLACK_PX;
 
-  console.log('[Check Lock] rect.top:', rect.top, 'Pinned:', containerPinned, 'canRepin:', canRepin);
-
+  // Top logic (existing)
   if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
     canRepin = true;
-    console.log('[Check Lock] OUTSIDE slack, not pinned. Setting canRepin = true');
+    //console.log('[Check Lock] OUTSIDE slack, not pinned. Setting canRepin = true');
   }
-
   if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
-    console.log('[Check Lock] PINNING. rect.top in slack zone and canRepin');
+    //console.log('[Check Lock] PINNING from TOP.');
     pinContainer();
     alignWrapperToViewportTop(wrapper, topSlack);
+    return;
+  }
+
+  // --- Bottom enter: ---
+  if (!containerPinned && canRepin && isWrapperBottomInSlack()) {
+    //console.log('[Check Lock] PINNING from BOTTOM. rect.bottom in slack zone.');
+    pinContainer();
+    // On bottom pin, set process scroll to END
+    if (horizontalScrollData['process']) {
+      horizontalScrollData['process'].scrollX = horizontalScrollData['process'].maxScroll;
+      saveProcessScrollState(horizontalScrollData['process'].scrollX);
+      const cards = Array.from(document.querySelectorAll('#process .process-card'));
+      animateProcessCards('process', 1, cards);
+    }
+    // Scroll wrapper bottom to viewport bottom
+    const scrollOffset = rect.bottom - window.innerHeight;
+    if (Math.abs(scrollOffset) > 1) {
+      window.scrollTo({
+        top: (window.scrollY || document.documentElement.scrollTop) + scrollOffset,
+        behavior: 'smooth'
+      });
+    }
     return;
   }
 }
@@ -314,9 +365,7 @@ function handleSectionSnap(event) {
 }
 
 function initSectionObserver() {
-  const observerOptions = {
-    threshold: 0.6,
-  };
+  const observerOptions = { threshold: 0.6 };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -331,18 +380,25 @@ function initSectionObserver() {
         initTooltip(projectId);
         setNavContext(projectId);
 
-        const cards = section.querySelectorAll('.card');
-        const initialProgress = isMobile() ? 0.15 : 0.3;
-        cards.forEach((card, index) => {
-          const progress = Math.max(0, Math.min(1, 0.2 - index));
-          updateCardProgress(card, projectId, index, progress);
-        });
-        setTimeout(() => {
+        // Only for process: restore last progress, show visible cards
+        if (projectId === 'process') {
+          const scrollX = restoreProcessScrollState();
+          updateCardProgress('process', scrollX);
+        } else {
+          // All other sections: as before
+          const cards = section.querySelectorAll('.card');
+          const initialProgress = isMobile() ? 0.15 : 0.3;
           cards.forEach((card, index) => {
-            updateCardProgress(card, projectId, index, 0); // keep all at 0% progress initially
-            card.style.pointerEvents = 'none';
+            const progress = Math.max(0, Math.min(1, 0.2 - index));
+            updateCardProgress(card, projectId, index, progress);
           });
-        }, 50);
+          setTimeout(() => {
+            cards.forEach((card, index) => {
+              updateCardProgress(card, projectId, index, 0); // keep all at 0% progress initially
+              card.style.pointerEvents = 'none';
+            });
+          }, 50);
+        }
       } else {
         if (tooltipContainer) tooltipContainer.classList.add('hidden');
         hideTooltip();
@@ -441,22 +497,56 @@ function handleProcessScroll(sectionId, e) {
   if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
   e.preventDefault();
   const delta = e.deltaY;
+
+  // If at END and scrolling further down, unpin (bottom exit)
+  if (
+    sectionId === 'process' &&
+    containerPinned &&
+    isProcessScrollAtEnd() &&
+    delta > 0 // scrolling down
+  ) {
+    // Only unpin if not already at bottom slack zone (prevents infinite unpin/re-pin)
+    const rect = wrapper.getBoundingClientRect();
+    if (rect.bottom < window.innerHeight - SLACK_PX) {
+      unpinContainer();
+      return;
+    }
+  }
+
   horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
   horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
+  saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
   const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
   const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
   animateProcessCards(sectionId, progress, cards);
+  if (
+    isMobile() &&
+    sectionId === 'process' &&
+    containerPinned &&
+    isProcessScrollAtEnd() &&
+    e.deltaY > 0
+  ) {
+    const rect = wrapper.getBoundingClientRect();
+    if (
+      rect.bottom >= window.innerHeight - SLACK_PX &&
+      rect.bottom <= window.innerHeight + SLACK_PX
+    ) {
+      unpinContainer();
+      return;
+    }
+  }
+}
+
+function setZonesEnabled(enabled) {
+  const leftZone = document.querySelector('.scroll-zone-left');
+  const rightZone = document.querySelector('.scroll-zone-right');
+  if (leftZone) leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
+  if (rightZone) rightZone.style.pointerEvents = enabled ? 'auto' : 'none';
 }
 
 function initProcessScroll() {
   setupProcessCards();
   if (!processSection) return;
-
-  processSection.addEventListener('wheel', (e) => {
-    if (isTouch) return;
-    e.preventDefault();
-    handleProcessScroll('process', e);
-  });
 
   if (!horizontalScrollData['process']) {
     horizontalScrollData['process'] = {
@@ -467,6 +557,38 @@ function initProcessScroll() {
   } else {
     horizontalScrollData['process'].isActive = true;
   }
+
+  // --- Restore process scroll state ---
+  const restored = restoreProcessScrollState();
+  horizontalScrollData['process'].scrollX = restored;
+  const cards = Array.from(document.querySelectorAll('#process .process-card'));
+  const progress = restored / horizontalScrollData['process'].maxScroll;
+  animateProcessCards('process', progress, cards);
+
+  // Listen for scroll
+  processSection.addEventListener('wheel', (e) => {
+    if (isTouch) return;
+    e.preventDefault();
+    handleProcessScroll('process', e);
+  });
+}
+
+// --- Helper: get if we're near the bottom of the wrapper (for bottom enter) ---
+function isWrapperBottomInSlack() {
+  const rect = wrapper.getBoundingClientRect();
+  const slackZone = SLACK_PX;
+  return (
+    !containerPinned &&
+    rect.bottom >= window.innerHeight - slackZone &&
+    rect.bottom <= window.innerHeight + slackZone
+  );
+}
+
+// --- Helper: get if we're at the bottom of process scroll (for exit) ---
+function isProcessScrollAtEnd() {
+  if (!horizontalScrollData['process']) return false;
+  // allow some floating point slack
+  return horizontalScrollData['process'].scrollX >= horizontalScrollData['process'].maxScroll - 1;
 }
 
 // animations/cardAnimator.js
@@ -641,4 +763,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll',  checkContainerLock);
   window.addEventListener('wheel',   checkContainerLock, { passive: true });
   window.addEventListener('touchmove', checkContainerLock, { passive: true });
+});
+
+window.addEventListener('beforeunload', () => {
+  delete window.processScrollState;
+  sessionStorage.removeItem('processScrollX');
 });

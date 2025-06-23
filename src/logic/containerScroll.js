@@ -30,6 +30,7 @@ const PROCESS_SCROLL_SENSITIVITY = 10;
 
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
+const projectsContainer = document.querySelector('.projects-container');
 let currentSectionIndex = 0;
 let processScrollValue = 0;
 let processCards = [];
@@ -40,6 +41,8 @@ let wrapperOffsetTop = null;
 let canRepin = true;
 let pinnedScrollHandler = null;
 const SLACK_PX = 0.15 * window.innerHeight;
+let lastBodyScroll = 0;
+let hasUserInitiatedScroll = false;
 
 // logic/navControl.js
 let currentCard = 0;
@@ -65,8 +68,11 @@ function restoreProcessScrollState() {
 
 function handleRightZoneScroll(e) {
   // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
-  if (!containerPinned) return;
-  e.preventDefault();
+  if (!containerPinned) {
+    e.preventDefault();
+    return
+  };
+  
 
   // Use the current active project section ID
   if (activeProjectId) {
@@ -74,9 +80,18 @@ function handleRightZoneScroll(e) {
   }
 }
 
+function setProjectsContainerScrollable(enabled) {
+  const projectsContainer = document.querySelector('.projects-container');
+  if (!projectsContainer) return;
+  projectsContainer.style.overflowY = enabled ? 'auto' : 'hidden';
+  projectsContainer.style.touchAction = enabled ? 'auto' : 'none'; // for mobile
+}
+
 function handleLeftZoneScroll(e) {
-  if (!containerPinned) return;
-  e.preventDefault();
+  if (!containerPinned) {
+    e.preventDefault();
+    return;
+  }
 
   // BOTTOM EXIT: Only for process section, at 100% progress, scroll down
   if (
@@ -122,11 +137,31 @@ function initScrollZones() {
       handleProcessScroll('process', e);
     }, { passive: false });
   }
+
+  setZonesEnabled(false);
 }
 
 function isMobile() {
   return window.innerWidth <= 768;
 }
+
+function setPageScrollLocked(locked) {
+  if (locked) {
+    lastBodyScroll = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${lastBodyScroll}px`;
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, lastBodyScroll);
+  }
+}
+
+function enableUserScrollFlag() { hasUserInitiatedScroll = true; }
 
 function pinContainer() {
   if (containerPinned || !canRepin) {
@@ -138,6 +173,8 @@ function pinContainer() {
   canRepin = false;
   console.log('[Pin] Pinning container. wrapperOffsetTop:', wrapperOffsetTop);
   setZonesEnabled(true);
+  setProjectsContainerScrollable(true);
+  setPageScrollLocked(true);
 
   // placeholder logic
   console.log('   → inserting placeholder (height:', wrapper.clientHeight, 'px)');
@@ -182,6 +219,8 @@ function unpinContainer() {
   canRepin = false;
   console.log('[Unpin] Unpinning container.');
   setZonesEnabled(false);
+  setProjectsContainerScrollable(false);
+  setPageScrollLocked(false);
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
@@ -222,34 +261,29 @@ function alignWrapperToViewportTop(wrapper, topSlackPx) {
 }
 
 function checkContainerLock() {
+  if (!hasUserInitiatedScroll) return;
   const rect = wrapper.getBoundingClientRect();
   const topSlack = SLACK_PX;
   const bottomSlack = SLACK_PX;
 
-  // Top logic (existing)
-  if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
-    canRepin = true;
-    //console.log('[Check Lock] OUTSIDE slack, not pinned. Setting canRepin = true');
-  }
+  // Top pin
   if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
-    //console.log('[Check Lock] PINNING from TOP.');
-    pinContainer();
+    // 1. Align wrapper's top to viewport top (smooth scroll)
     alignWrapperToViewportTop(wrapper, topSlack);
+    // 2. Wait for scroll to finish, then pin and lock body scroll
+    setTimeout(() => {
+      // Confirm we are still in the zone after the scroll
+      const afterRect = wrapper.getBoundingClientRect();
+      if (afterRect.top >= -topSlack && afterRect.top <= topSlack) {
+        pinContainer();
+      }
+    }, 350); // adjust duration to match smooth scroll
     return;
   }
 
-  // --- Bottom enter: ---
+  // Bottom pin
   if (!containerPinned && canRepin && isWrapperBottomInSlack()) {
-    //console.log('[Check Lock] PINNING from BOTTOM. rect.bottom in slack zone.');
-    pinContainer();
-    // On bottom pin, set process scroll to END
-    if (horizontalScrollData['process']) {
-      horizontalScrollData['process'].scrollX = horizontalScrollData['process'].maxScroll;
-      saveProcessScrollState(horizontalScrollData['process'].scrollX);
-      const cards = Array.from(document.querySelectorAll('#process .process-card'));
-      animateProcessCards('process', 1, cards);
-    }
-    // Scroll wrapper bottom to viewport bottom
+    // 1. Align wrapper's bottom to viewport bottom (smooth scroll)
     const scrollOffset = rect.bottom - window.innerHeight;
     if (Math.abs(scrollOffset) > 1) {
       window.scrollTo({
@@ -257,7 +291,22 @@ function checkContainerLock() {
         behavior: 'smooth'
       });
     }
+    // 2. Wait for scroll to finish, then pin and lock body scroll
+    setTimeout(() => {
+      const afterRect = wrapper.getBoundingClientRect();
+      if (
+        afterRect.bottom >= window.innerHeight - bottomSlack &&
+        afterRect.bottom <= window.innerHeight + bottomSlack
+      ) {
+        pinContainer();
+      }
+    }, 350); // adjust as above
     return;
+  }
+
+  // Out of slack: reset canRepin if fully out of zone
+  if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
+    canRepin = true;
   }
 }
 
@@ -540,8 +589,16 @@ function handleProcessScroll(sectionId, e) {
 function setZonesEnabled(enabled) {
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
-  if (leftZone) leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
-  if (rightZone) rightZone.style.pointerEvents = enabled ? 'auto' : 'none';
+  if (leftZone) {
+    leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
+    leftZone.style.opacity = enabled ? '1' : '0.4'; // Optional: for UX clarity
+    leftZone.style.cursor = enabled ? 'pointer' : 'default';
+  }
+  if (rightZone) {
+    rightZone.style.pointerEvents = enabled ? 'auto' : 'none';
+    rightZone.style.opacity = enabled ? '1' : '0.4';
+    rightZone.style.cursor = enabled ? 'pointer' : 'default';
+  }
 }
 
 function initProcessScroll() {
@@ -742,27 +799,36 @@ function initCardScrollHandlers() {
   }
 });
 
-document.addEventListener('DOMContentLoaded', initCardScrollHandlers);
-
 document.addEventListener('DOMContentLoaded', () => {
+  initNavButtons();
+  initScrollZones();
   initSectionObserver();
   initProcessScroll();
+  initCardScrollHandlers();
+  setProjectsContainerScrollable(false);
+  setPageScrollLocked(false);
 });
 
-document.addEventListener('DOMContentLoaded', initNavButtons);
-document.addEventListener('DOMContentLoaded', initScrollZones);
+window.addEventListener('beforeunload', () => {
+  setPageScrollLocked(false);
+  delete window.processScrollState;
+  sessionStorage.removeItem('processScrollX');
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   wrapper = document.querySelector('.projects-wrapper');
   if (!wrapper) return;
-  // existing scroll listener:
-  window.addEventListener('scroll', () => {
-    checkContainerLock();
-  });
-  // watch all pointer-driven scroll events so pinContainer() can run immediately
-  window.addEventListener('scroll',  checkContainerLock);
-  window.addEventListener('wheel',   checkContainerLock, { passive: true });
+  window.addEventListener('scroll', checkContainerLock);
+  window.addEventListener('wheel', checkContainerLock, { passive: true });
   window.addEventListener('touchmove', checkContainerLock, { passive: true });
+  // Set up user-initiated flag
+  document.addEventListener('wheel', enableUserScrollFlag, { passive: true });
+  document.addEventListener('touchmove', enableUserScrollFlag, { passive: true });
+  document.addEventListener('keydown', e => {
+    if (['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(e.key)) {
+      hasUserInitiatedScroll = true;
+    }
+  });
 });
 
 window.addEventListener('beforeunload', () => {

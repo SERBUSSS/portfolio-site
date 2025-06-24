@@ -353,22 +353,11 @@ function setNavContext(activeId) {
   updateTooltip(projectId, currentCard);
   setActiveProject(projectId);
 
-  cards.forEach((card) => {
-    gsap.set(card, {
-      x: '100vw',
-      y: '50vh',
-      scale: 0.9,
-      opacity: 0,
-      zIndex: 1,
-      pointerEvents: 'none'
-    });
-  });
-
   if (!horizontalScrollData[projectId]) {
     horizontalScrollData[projectId] = {
       isActive: true,
       scrollX: 0,
-      maxScroll: 1000 // Adjust this value as needed!
+      maxScroll: 1000
     };
   } else {
     horizontalScrollData[projectId].isActive = true;
@@ -376,6 +365,13 @@ function setNavContext(activeId) {
   Object.keys(horizontalScrollData).forEach(id => {
     if (id !== projectId) horizontalScrollData[id].isActive = false;
   });
+
+  // --- Restore scroll and immediately animate cards on section entry! ---
+  const savedScroll = restoreProjectScrollState(activeId);
+  horizontalScrollData[activeId].scrollX = savedScroll;
+  const progress = savedScroll / horizontalScrollData[activeId].maxScroll;
+  const itemCards = Array.from(document.querySelectorAll(`#${activeId} .item.card`));
+  updateHorizontalAnimation(activeId, progress, itemCards);
 }
 
 function goToCard(index) {
@@ -431,38 +427,36 @@ function initSectionObserver() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const section = entry.target;
-      const projectId = section.getAttribute('id');
-      const tooltipContainer = document.querySelector(`#tooltip-${projectId}`);
+      const sectionId = section.getAttribute('id');
+      const tooltipContainer = document.querySelector(`#tooltip-${sectionId}`);
 
       if (!containerPinned) return;
 
       if (entry.isIntersecting) {
         if (tooltipContainer) tooltipContainer.classList.remove('hidden');
-        initTooltip(projectId);
-        setNavContext(projectId);
+        initTooltip(sectionId);
+        setNavContext(sectionId);
 
-        // Only for process: restore last progress, show visible cards
-        if (projectId === 'process') {
+        if (sectionId === 'process') {
           const scrollX = restoreProcessScrollState();
-          updateCardProgress('process', scrollX);
+          horizontalScrollData['process'].scrollX = scrollX;
+          const cards = Array.from(section.querySelectorAll('.process-card'));
+          const progress = scrollX / horizontalScrollData['process'].maxScroll;
+          animateProcessCards('process', progress, cards);
         } else {
-          // All other sections: as before
-          const cards = section.querySelectorAll('.card');
-          const initialProgress = isMobile() ? 0.15 : 0.3;
-          cards.forEach((card, index) => {
-            const progress = Math.max(0, Math.min(1, 0.2 - index));
-            updateCardProgress(card, projectId, index, progress);
-          });
-          setTimeout(() => {
-            cards.forEach((card, index) => {
-              updateCardProgress(card, projectId, index, 0); // keep all at 0% progress initially
-              card.style.pointerEvents = 'none';
-            });
-          }, 50);
+          const scrollX = restoreProjectScrollState(sectionId);
+          horizontalScrollData[sectionId].scrollX = scrollX;
+          const cards = Array.from(section.querySelectorAll('.item.card'));
+          const progress = scrollX / horizontalScrollData[sectionId].maxScroll;
+          updateHorizontalAnimation(sectionId, progress, cards);
         }
       } else {
         if (tooltipContainer) tooltipContainer.classList.add('hidden');
         hideTooltip();
+        // --- Save the project scroll state on exit! ---
+        if (sectionId !== 'process') {
+          saveProjectScrollState(sectionId, horizontalScrollData[sectionId]?.scrollX || 0);
+        }
       }
     });
   }, observerOptions);
@@ -614,6 +608,80 @@ function setZonesEnabled(enabled) {
     rightZone.style.opacity = enabled ? '1' : '0.4';
     rightZone.style.cursor = enabled ? 'pointer' : 'default';
   }
+}
+
+function saveProjectScrollState(sectionId, scrollX) {
+  if (!window.projectScrollState) window.projectScrollState = {};
+  window.projectScrollState[sectionId] = scrollX;
+  sessionStorage.setItem(`projectScrollX_${sectionId}`, scrollX);
+}
+
+function restoreProjectScrollState(sectionId) {
+  if (window.projectScrollState && window.projectScrollState[sectionId] !== undefined) {
+    return window.projectScrollState[sectionId];
+  }
+  const stored = sessionStorage.getItem(`projectScrollX_${sectionId}`);
+  return stored !== null ? Number(stored) : 0;
+}
+
+// --- Project scroll handler (horizontal, for project1-4) ---
+function handleProjectScroll(sectionId, e) {
+  // Skip if process
+  if (sectionId === 'process') return;
+  if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
+  e.preventDefault();
+
+  // Scroll delta (mousewheel or trackpad)
+  const delta = e.deltaX || e.deltaY; // Use X for horizontal devices, else fallback
+  horizontalScrollData[sectionId].scrollX += delta / PROJECTS_SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
+
+  // Save for refresh/session
+  saveProjectScrollState(sectionId, horizontalScrollData[sectionId].scrollX);
+
+  // Animate cards
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+  updateHorizontalAnimation(sectionId, progress, cards);
+}
+
+// --- Initialize state for all projects (run on DOMContentLoaded) ---
+function initProjectScroll() {
+  document.querySelectorAll('.project-section').forEach(section => {
+    const sectionId = section.getAttribute('id');
+    if (sectionId === 'process') return;
+    // Initialize state
+    if (!horizontalScrollData[sectionId]) {
+      horizontalScrollData[sectionId] = {
+        isActive: true,
+        scrollX: 0,
+        maxScroll: 1000 // Tune as needed!
+      };
+    } else {
+      horizontalScrollData[sectionId].isActive = true;
+    }
+    // Restore scroll state if available
+    const restored = restoreProjectScrollState(sectionId);
+    horizontalScrollData[sectionId].scrollX = restored;
+    // Animate cards to initial/last position
+    const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+    const progress = restored / horizontalScrollData[sectionId].maxScroll;
+    updateHorizontalAnimation(sectionId, progress, cards);
+    // Listen for wheel on right scroll zone ONLY for project sections
+    const rightZone = document.querySelector('.scroll-zone-right');
+    if (rightZone) {
+      // Remove previous listener (prevents stacking)
+      rightZone.removeEventListener('wheel', rightZone._projectScrollHandler);
+      // Handler must use this section's id
+      rightZone._projectScrollHandler = function(e) {
+        // Only if this section is active
+        if (activeProjectId === sectionId) {
+          handleProjectScroll(sectionId, e);
+        }
+      };
+      rightZone.addEventListener('wheel', rightZone._projectScrollHandler, { passive: false });
+    }
+  });
 }
 
 function initProcessScroll() {
@@ -819,6 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollZones();
   initSectionObserver();
   initProcessScroll();
+  initProjectScroll();
   initCardScrollHandlers();
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);

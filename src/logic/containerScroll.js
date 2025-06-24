@@ -43,6 +43,7 @@ let pinnedScrollHandler = null;
 const SLACK_PX = 0.15 * window.innerHeight;
 let lastBodyScroll = 0;
 let hasUserInitiatedScroll = false;
+let isAligningContainer = false;
 
 // logic/navControl.js
 let currentCard = 0;
@@ -134,7 +135,13 @@ function initScrollZones() {
   if (processSection) {
     processSection.addEventListener('wheel', e => {
       if (isTouch) return;
-      handleProcessScroll('process', e);
+      // Only intercept scroll if process section is at the top of viewport (snapped)
+      const rect = processSection.getBoundingClientRect();
+      if (Math.abs(rect.top) <= 2) { // Allow 2px leeway
+        e.preventDefault();
+        handleProcessScroll('process', e);
+      }
+      // Otherwise, let default scroll snap finish first
     }, { passive: false });
   }
 
@@ -262,6 +269,7 @@ function alignWrapperToViewportTop(wrapper, topSlackPx) {
 
 function checkContainerLock() {
   if (!hasUserInitiatedScroll) return;
+  if (isAligningContainer) return;
   const rect = wrapper.getBoundingClientRect();
   const topSlack = SLACK_PX;
   const bottomSlack = SLACK_PX;
@@ -269,6 +277,7 @@ function checkContainerLock() {
   // Top pin
   if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
     // 1. Align wrapper's top to viewport top (smooth scroll)
+    isAligningContainer = true;
     alignWrapperToViewportTop(wrapper, topSlack);
     // 2. Wait for scroll to finish, then pin and lock body scroll
     setTimeout(() => {
@@ -277,6 +286,7 @@ function checkContainerLock() {
       if (afterRect.top >= -topSlack && afterRect.top <= topSlack) {
         pinContainer();
       }
+      isAligningContainer = false;
     }, 350); // adjust duration to match smooth scroll
     return;
   }
@@ -284,6 +294,7 @@ function checkContainerLock() {
   // Bottom pin
   if (!containerPinned && canRepin && isWrapperBottomInSlack()) {
     // 1. Align wrapper's bottom to viewport bottom (smooth scroll)
+    isAligningContainer = true;
     const scrollOffset = rect.bottom - window.innerHeight;
     if (Math.abs(scrollOffset) > 1) {
       window.scrollTo({
@@ -300,6 +311,7 @@ function checkContainerLock() {
       ) {
         pinContainer();
       }
+      isAligningContainer = false;
     }, 350); // adjust as above
     return;
   }
@@ -476,6 +488,9 @@ function animateProcessCards(sectionId, progress, cards) {
     const positionsCount = positions.length;
     const progressPerCard = 0.9 / totalCards;
 
+    const sectionRect = processSection.getBoundingClientRect();
+    const startY = sectionRect.height + cards.offsetHeight / 2;
+
     const vw = window.innerWidth / 100;
     const vh = window.innerHeight / 100;
     const screenCenterX = window.innerWidth / 2;
@@ -497,7 +512,7 @@ function animateProcessCards(sectionId, progress, cards) {
             // Start below viewport
             gsap.set(card, {
                 x: screenCenterX - card.offsetWidth / 2,
-                y: window.innerHeight + card.offsetHeight / 2,
+                y: startY,
                 scale: 1,
                 opacity: 0,
                 rotation: 0,

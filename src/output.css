@@ -2121,6 +2121,7 @@ body.loaded main, body.loaded section:not(#loading-screen) {
   scroll-snap-type: y mandatory;
   position: relative;
   transition: none;
+  -webkit-overflow-scrolling: touch;
 }
 .projects-container.locked {
   position: fixed;

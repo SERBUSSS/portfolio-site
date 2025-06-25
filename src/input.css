@@ -424,6 +424,7 @@ body.loaded section:not(#loading-screen) {
   scroll-snap-type: y mandatory;
   position: relative;
   transition: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .projects-container.locked {
@@ -436,6 +437,16 @@ body.loaded section:not(#loading-screen) {
   overflow: hidden;
   overflow-y: scroll;
 }
+
+/* .projects-wrapper.pinned {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh; /* Crucial! 
+  overflow: hidden;
+  z-index: 100;
+} */
 
 .project-section {
   position: relative;
@@ -510,4 +521,3 @@ body.loaded section:not(#loading-screen) {
   overflow: hidden;
   pointer-events: none;
 }
-

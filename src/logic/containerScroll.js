@@ -44,6 +44,16 @@ const SLACK_PX = 0.15 * window.innerHeight;
 let lastBodyScroll = 0;
 let hasUserInitiatedScroll = false;
 let isAligningContainer = false;
+let lastScrollTop = 0;
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchLastX = 0;
+let touchLastY = 0;
+let touchActive = false;
+let gestureType = null; // 'horizontal' | 'vertical' | null
+const HORIZONTAL_THRESHOLD = 10; // px
+const VERTICAL_THRESHOLD = 10;   // px
 
 // logic/navControl.js
 let currentCard = 0;
@@ -52,6 +62,17 @@ let projectId = null;
 // logic/tooltipManager.js
 const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
+
+// Gesture direction detection
+function getGestureDirection(dx, dy) {
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > HORIZONTAL_THRESHOLD) return 'horizontal';
+  if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > VERTICAL_THRESHOLD) return 'vertical';
+  return null;
+}
+
+console.log('[INFO] isMobile:', isMobile());
+console.log('[INFO] ontouchstart in window:', 'ontouchstart' in window);
+console.log('[INFO] window.innerWidth:', window.innerWidth);
 
 // --- Persistence helpers for process scroll progress ---
 function saveProcessScrollState(scrollX) {
@@ -85,7 +106,7 @@ function setProjectsContainerScrollable(enabled) {
   const projectsContainer = document.querySelector('.projects-container');
   if (!projectsContainer) return;
   projectsContainer.style.overflowY = enabled ? 'auto' : 'hidden';
-  projectsContainer.style.touchAction = enabled ? 'auto' : 'none'; // for mobile
+  projectsContainer.style.touchAction = enabled ? 'auto' : 'auto'; // for mobile
 }
 
 function handleLeftZoneScroll(e) {
@@ -116,6 +137,7 @@ function handleLeftZoneScroll(e) {
 }
 
 function initScrollZones() {
+  if (isMobile()) return;
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
   if (leftZone) {
@@ -134,7 +156,7 @@ function initScrollZones() {
   // Dedicated process section scroll (if user scrolls directly over it)
   if (processSection) {
     processSection.addEventListener('wheel', e => {
-      if (isTouch) return;
+      if (isMobile()) return;
       // Only intercept scroll if process section is at the top of viewport (snapped)
       const rect = processSection.getBoundingClientRect();
       if (Math.abs(rect.top) <= 2) { // Allow 2px leeway
@@ -170,6 +192,20 @@ function setPageScrollLocked(locked) {
 
 function enableUserScrollFlag() { hasUserInitiatedScroll = true; }
 
+function getMostVisibleProjectSection() {
+  let maxVisible = 0;
+  let bestSection = null;
+  document.querySelectorAll('.project-section').forEach(section => {
+    const rect = section.getBoundingClientRect();
+    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    if (visibleHeight > maxVisible && visibleHeight > 0) {
+      maxVisible = visibleHeight;
+      bestSection = section;
+    }
+  });
+  return bestSection ? bestSection.getAttribute('id') : null;
+}
+
 function pinContainer() {
   if (containerPinned || !canRepin) {
     console.log('[Pin] Already pinned or canRepin false. Not pinning.');
@@ -182,6 +218,23 @@ function pinContainer() {
   setZonesEnabled(true);
   setProjectsContainerScrollable(true);
   setPageScrollLocked(true);
+  // if (wrapper) wrapper.classList.add('pinned');
+
+  if (activeProjectId === 'process' && isWrapperBottomInSlack()) {
+    // Always set process cards to max scroll if entering from bottom
+    horizontalScrollData['process'].scrollX = horizontalScrollData['process'].maxScroll;
+    saveProcessScrollState(horizontalScrollData['process'].scrollX);
+    const cards = Array.from(document.querySelectorAll(`#process .process-card`));
+    animateProcessCards('process', 1, cards);
+  }
+
+  const bestSectionId = getMostVisibleProjectSection();
+  if (!activeProjectId && bestSectionId) {
+    setNavContext(bestSectionId);
+    console.log('[PIN] Set activeProjectId to most visible:', bestSectionId);
+  }
+
+  if (isMobile()) return;
 
   // placeholder logic
   console.log('   → inserting placeholder (height:', wrapper.clientHeight, 'px)');
@@ -228,6 +281,18 @@ function unpinContainer() {
   setZonesEnabled(false);
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);
+  // if (wrapper) wrapper.classList.remove('pinned');
+
+  if (activeProjectId === 'process' && isProcessScrollAtEnd()) {
+    const nextSection = wrapper.nextElementSibling;
+    if (nextSection) {
+      setTimeout(() => {
+        nextSection.scrollIntoView({ behavior: 'smooth' });
+      }, 30);
+    }
+  }
+
+  if (isMobile()) return;
 
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
@@ -434,6 +499,7 @@ function initSectionObserver() {
 
       if (entry.isIntersecting) {
         if (tooltipContainer) tooltipContainer.classList.remove('hidden');
+        console.log('[SECTION OBSERVER] Section in view:', sectionId);
         initTooltip(sectionId);
         setNavContext(sectionId);
 
@@ -556,33 +622,12 @@ function handleProcessScroll(sectionId, e) {
   e.preventDefault();
   const delta = e.deltaY;
 
-  // If at END and scrolling further down, unpin (bottom exit)
+  // If at END and scrolling further DOWN, unpin (bottom exit)
   if (
-    sectionId === 'process' &&
     containerPinned &&
-    isProcessScrollAtEnd() &&
-    delta > 0 // scrolling down
-  ) {
-    // Only unpin if not already at bottom slack zone (prevents infinite unpin/re-pin)
-    const rect = wrapper.getBoundingClientRect();
-    if (rect.bottom < window.innerHeight - SLACK_PX) {
-      unpinContainer();
-      return;
-    }
-  }
-
-  horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
-  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
-  saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
-  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-  const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
-  animateProcessCards(sectionId, progress, cards);
-  if (
-    isMobile() &&
     sectionId === 'process' &&
-    containerPinned &&
     isProcessScrollAtEnd() &&
-    e.deltaY > 0
+    delta > 0
   ) {
     const rect = wrapper.getBoundingClientRect();
     if (
@@ -593,14 +638,24 @@ function handleProcessScroll(sectionId, e) {
       return;
     }
   }
+
+  // If at END and scrolling UP, or anywhere before END, always update progress
+  horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
+  saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
+  animateProcessCards(sectionId, progress, cards);
 }
 
 function setZonesEnabled(enabled) {
+  if (isMobile()) return;
+
   const leftZone = document.querySelector('.scroll-zone-left');
   const rightZone = document.querySelector('.scroll-zone-right');
   if (leftZone) {
     leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
-    leftZone.style.opacity = enabled ? '1' : '0.4'; // Optional: for UX clarity
+    leftZone.style.opacity = enabled ? '1' : '0.4';
     leftZone.style.cursor = enabled ? 'pointer' : 'default';
   }
   if (rightZone) {
@@ -707,7 +762,7 @@ function initProcessScroll() {
 
   // Listen for scroll
   processSection.addEventListener('wheel', (e) => {
-    if (isTouch) return;
+    if (isMobile()) return;
     e.preventDefault();
     handleProcessScroll('process', e);
   });
@@ -832,6 +887,7 @@ function updateCardProgress(sectionId, scrollValue) {
 }
 
 function setActiveProject(projectId) {
+  console.log('[ACTIVE PROJECT] Set:', projectId);
   activeProjectId = projectId;
   cards = Array.from(document.querySelectorAll(`#${projectId} .card`));
   cardScrollValue = 0;
@@ -873,6 +929,196 @@ function initCardScrollHandlers() {
   }
 }
 
+function setupGestureHandlers() {
+  const container = document.querySelector('.projects-container');
+  if (!container) return;
+
+  // State for mouse/touch
+  let isDragging = false;
+  let gesturePointer = null; // 'mouse' | 'touch'
+  let dragStartX = 0, dragStartY = 0, lastX = 0, lastY = 0;
+  let gestureTypeLocal = null;
+
+  // Unify gesture detection
+  function detectGesture(dx, dy) {
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > HORIZONTAL_THRESHOLD) return 'horizontal';
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > VERTICAL_THRESHOLD) return 'vertical';
+    return null;
+  }
+
+  // Mouse down
+  container.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    isDragging = true;
+    gesturePointer = 'mouse';
+    dragStartX = lastX = e.clientX;
+    dragStartY = lastY = e.clientY;
+    gestureTypeLocal = null;
+    document.body.style.userSelect = 'none';
+  });
+
+  window.addEventListener('mousemove', function(e) {
+    if (!isDragging || gesturePointer !== 'mouse') return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
+
+
+    if (!containerPinned) return;
+
+    // --- PROJECTS ---
+    if (activeProjectId && activeProjectId !== 'process') {
+      if (gestureTypeLocal === 'horizontal') {
+        e.preventDefault?.();
+        let scrollDelta = e.clientX - lastX;
+        horizontalScrollData[activeProjectId].scrollX -= scrollDelta;
+        horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
+        saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
+        const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
+        const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
+        updateHorizontalAnimation(activeProjectId, progress, cards);
+      }
+    }
+
+    // --- PROCESS ---
+    if (activeProjectId === 'process') {
+      if (gestureTypeLocal === 'vertical') {
+        const cards = Array.from(document.querySelectorAll(`#process .process-card`));
+        const maxScroll = horizontalScrollData['process'].maxScroll;
+        const prevScrollX = horizontalScrollData['process'].scrollX;
+        let scrollDelta = e.clientY - lastY;
+
+        // UNPIN ONLY IF: At max, and dragging down
+        if (
+          prevScrollX >= maxScroll - 1 &&
+          scrollDelta > 0
+        ) {
+          const rect = wrapper.getBoundingClientRect();
+          if (
+            rect.bottom >= window.innerHeight - SLACK_PX &&
+            rect.bottom <= window.innerHeight + SLACK_PX
+          ) {
+            unpinContainer();
+            lastX = e.clientX;
+            lastY = e.clientY;
+            return;
+          }
+        }
+
+        // Always allow reverse (up) or less than max
+        let scrollX = prevScrollX - scrollDelta;
+        scrollX = Math.max(0, Math.min(maxScroll, scrollX));
+        if (scrollX !== prevScrollX) {
+          e.preventDefault?.();
+          horizontalScrollData['process'].scrollX = scrollX;
+          saveProcessScrollState(scrollX);
+          const progress = scrollX / maxScroll;
+          animateProcessCards('process', progress, cards);
+        }
+      }
+    }
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+
+  window.addEventListener('mouseup', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    gesturePointer = null;
+    gestureTypeLocal = null;
+    document.body.style.userSelect = '';
+  });
+
+  // Touch start
+  container.addEventListener('touchstart', function(e) {
+    if (e.touches.length !== 1) return;
+    isDragging = true;
+    gesturePointer = 'touch';
+    dragStartX = lastX = e.touches[0].clientX;
+    dragStartY = lastY = e.touches[0].clientY;
+    gestureTypeLocal = null;
+  }, { passive: true });
+
+  container.addEventListener('touchmove', function(e) {
+    if (!isDragging || gesturePointer !== 'touch' || e.touches.length !== 1) return;
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const dx = touchX - dragStartX;
+    const dy = touchY - dragStartY;
+    if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
+
+    if (!containerPinned) return;
+    
+    if (
+      isMobile() &&
+      containerPinned &&
+      projectsContainer.scrollTop === 0 &&
+      (touchY - lastY) > 8 // user dragged up by at least 8px
+    ) {
+      unpinContainer();
+    }
+
+    if (activeProjectId && activeProjectId !== 'process') {
+      if (gestureTypeLocal === 'horizontal') {
+        e.preventDefault();
+        let scrollDelta = touchX - lastX;
+        horizontalScrollData[activeProjectId].scrollX -= scrollDelta;
+        horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
+        saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
+        const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
+        const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
+        updateHorizontalAnimation(activeProjectId, progress, cards);
+      }
+    }
+    if (activeProjectId === 'process') {
+      if (gestureTypeLocal === 'vertical') {
+        const cards = Array.from(document.querySelectorAll(`#process .process-card`));
+        const maxScroll = horizontalScrollData['process'].maxScroll;
+        const prevScrollX = horizontalScrollData['process'].scrollX;
+        let scrollDelta = touchY - lastY;
+
+        // --- UNPIN ONLY IF: At max, and user is dragging DOWN ---
+        if (
+          prevScrollX >= maxScroll - 1 &&
+          scrollDelta > 0 // only on drag down
+        ) {
+          const rect = wrapper.getBoundingClientRect();
+          if (
+            rect.bottom >= window.innerHeight - SLACK_PX &&
+            rect.bottom <= window.innerHeight + SLACK_PX
+          ) {
+            unpinContainer();
+            lastX = touchX;
+            lastY = touchY;
+            return;
+          }
+        }
+
+        // Always allow user to scroll UP (or before max) to reverse progress
+        let scrollX = prevScrollX - scrollDelta;
+        scrollX = Math.max(0, Math.min(maxScroll, scrollX));
+        if (scrollX !== prevScrollX) {
+          e.preventDefault();
+          horizontalScrollData['process'].scrollX = scrollX;
+          saveProcessScrollState(scrollX);
+          const progress = scrollX / maxScroll;
+          animateProcessCards('process', progress, cards);
+        }
+      }
+    }
+    lastX = touchX;
+    lastY = touchY;
+  }, { passive: false });
+
+  container.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    gesturePointer = null;
+    gestureTypeLocal = null;
+  }, { passive: true });
+}
+
 ['.scroll-zone-left', '.scroll-zone-right'].forEach(sel => {
   const el = document.querySelector(sel);
   if (el) {
@@ -891,6 +1137,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCardScrollHandlers();
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);
+  setupGestureHandlers();
 });
 
 window.addEventListener('beforeunload', () => {
@@ -913,6 +1160,25 @@ document.addEventListener('DOMContentLoaded', () => {
       hasUserInitiatedScroll = true;
     }
   });
+
+  // Remove scroll zones on mobile completely
+  if (isMobile()) {
+    document.querySelectorAll('.scroll-zone-left, .scroll-zone-right').forEach(zone => {
+      zone.parentNode?.removeChild(zone);
+    });
+  }
+
+  if (isMobile()) {
+    const projectsContainer = document.querySelector('.projects-container');
+    if (projectsContainer) {
+      projectsContainer.addEventListener('scroll', function() {
+        if (containerPinned && projectsContainer.scrollTop === 0 && lastScrollTop > 0) {
+          unpinContainer();
+        }
+        lastScrollTop = projectsContainer.scrollTop;
+      });
+    }
+  }
 });
 
 window.addEventListener('beforeunload', () => {

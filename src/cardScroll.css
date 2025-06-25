@@ -157,6 +157,15 @@ body {
     z-index: 1;
 }
 
+@media (max-width: 768px) {
+  .projects-container { 
+    height: 100vh;     /* Ensures full height, but allows wrapper to scroll out */
+    max-height: none;      /* Remove any max-height constraints */
+    overflow-y: auto;      /* Scroll within when pinned */
+    overflow-x: hidden;
+  }
+}
+
 /* Individual project sections */
 .project-section {
     scroll-snap-align: start;

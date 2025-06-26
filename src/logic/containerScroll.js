@@ -92,13 +92,14 @@ function handleRightZoneScroll(e) {
   // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
   if (!containerPinned) {
     e.preventDefault();
+    e.stopPropagation();
     return
   };
-  
 
   // Use the current active project section ID
   if (activeProjectId) {
     onDesktopHorizontalScroll(activeProjectId, e);
+    e.stopPropagation();
   }
 }
 
@@ -543,82 +544,95 @@ function setupProcessCards() {
 }
 
 function animateProcessCards(sectionId, progress, cards) {
-    const isMobileDevice = window.innerWidth <= 768;
-    const deviceKey = isMobileDevice ? 'mobile' : 'desktop';
-    const positions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
+  const container = document.querySelector(`#${sectionId} .process-cards-container`);
+  if (!container) return;
 
-    const totalCards = cards.length;
-    const positionsCount = positions.length;
-    const progressPerCard = 0.9 / totalCards;
-    const vw = window.innerWidth / 100;
-    const vh = window.innerHeight / 100;
-    const screenCenterX = window.innerWidth / 2;
-    const screenCenterY = window.innerHeight / 2;
+  const isMobileDevice = window.innerWidth <= 768;
+  const deviceKey = isMobileDevice ? 'mobile' : 'desktop';
+  const positions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
 
-    // Use first card as a reference for offset (for consistent anchoring)
-    const cardHeight = cards[0]?.offsetHeight || 100;
-    const cardWidth = cards[0]?.offsetWidth || 100;
+  const totalCards = cards.length;
+  const positionsCount = positions.length;
+  const progressPerCard = 0.9 / totalCards;
 
-    cards.forEach((card, index) => {
-        const cardStart = index * progressPerCard;
-        const cardProgress = Math.min(1, Math.max(0, (progress - cardStart) / progressPerCard));
-        const posIndex = Math.min(index, positionsCount - 1);
-        const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
+  // Reference: the container, not the viewport!
+  const containerRect = container.getBoundingClientRect();
+  const containerWidth = containerRect.width;
+  const containerHeight = containerRect.height;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
 
-        // Precompute all anchor points
-        const finalX = parseFloat(finalPos.x) * vw;
-        const finalY = parseFloat(finalPos.y) * vh;
-        const finalScale = parseFloat(finalPos.scale);
-        const finalOpacity = parseFloat(finalPos.opacity);
-        const finalRotation = parseFloat(finalPos.rotation);
+  // Fallbacks for card size
+  const cardHeight = cards[0]?.offsetHeight || 100;
+  const cardWidth = cards[0]?.offsetWidth || 100;
 
-        if (cardProgress === 0) {
-            // Start below viewport, centered horizontally
-            gsap.set(card, {
-                x: screenCenterX - cardWidth / 2,
-                y: window.innerHeight + cardHeight / 2 - cardHeight / 2,
-                scale: 1,
-                opacity: 0,
-                rotation: 0,
-                force3D: true,
-            });
-        } else if (cardProgress <= 0.6) {
-            // Phase 1: slide from below to center (all cards animate to center)
-            const t = cardProgress / 0.6;
-            const startY = window.innerHeight + cardHeight / 2;
-            const endY = screenCenterY;
-            const currentY = startY + (endY - startY) * t;
-            gsap.set(card, {
-                x: screenCenterX - cardWidth / 2,
-                y: currentY - cardHeight / 2,
-                scale: 1,
-                opacity: t,
-                rotation: 0,
-                force3D: true,
-            });
-        } else {
-            // Phase 2: center to final position (relative to center!)
-            const t = (cardProgress - 0.6) / 0.4;
-            const startX = screenCenterX;
-            const startY = screenCenterY;
-            const endX = screenCenterX + finalX;
-            const endY = screenCenterY + finalY;
-            const currentX = startX + (endX - startX) * t;
-            const currentY = startY + (endY - startY) * t;
-            const currentScale = 1 + (finalScale - 1) * t;
-            const currentOpacity = 1 + (finalOpacity - 1) * t;
-            const currentRotation = 0 + (finalRotation - 0) * t;
+  cards.forEach((card, index) => {
+    gsap.set(card, { transformOrigin: "50% 50%" });
 
-            gsap.set(card, {
-                x: currentX - cardWidth / 2,
-                y: currentY - cardHeight / 2,
-                scale: currentScale,
-                opacity: currentOpacity,
-                rotation: currentRotation,
-                force3D: true,
-            });
-        }
-    });
+    // Always absolutely position (optional: use CSS instead)
+    card.style.position = 'absolute';
+    card.style.top = '0';
+    card.style.left = '0';
+
+    const cardStart = index * progressPerCard;
+    const cardProgress = Math.min(1, Math.max(0, (progress - cardStart) / progressPerCard));
+    const posIndex = Math.min(index, positionsCount - 1);
+    const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
+
+    // Relative to container
+    const finalX = parseFloat(finalPos.x) * (containerWidth / 100); // assumes x is % of container width
+    const finalY = parseFloat(finalPos.y) * (containerHeight / 100);
+    const finalScale = parseFloat(finalPos.scale);
+    const finalOpacity = parseFloat(finalPos.opacity);
+    const finalRotation = parseFloat(finalPos.rotation);
+
+    if (cardProgress === 0) {
+      // Start below container, centered horizontally
+      gsap.set(card, {
+        x: centerX - cardWidth / 2,
+        y: containerHeight + cardHeight, // below container bottom
+        scale: 1,
+        opacity: 0,
+        rotation: 0,
+        force3D: true,
+      });
+    } else if (cardProgress <= 0.6) {
+      // Slide from below to center (all cards to center)
+      const t = cardProgress / 0.6;
+      const startY = containerHeight + cardHeight;
+      const endY = centerY;
+      const currentY = startY + (endY - startY) * t;
+      gsap.set(card, {
+        x: centerX - cardWidth / 2,
+        y: currentY - cardHeight / 2,
+        scale: 1,
+        opacity: t,
+        rotation: 0,
+        force3D: true,
+      });
+    } else {
+      // Center to final position (relative to container)
+      const t = (cardProgress - 0.6) / 0.4;
+      const startX = centerX;
+      const startY = centerY;
+      const endX = centerX + finalX;
+      const endY = centerY + finalY;
+      const currentX = startX + (endX - startX) * t;
+      const currentY = startY + (endY - startY) * t;
+      const currentScale = 1 + (finalScale - 1) * t;
+      const currentOpacity = 1 + (finalOpacity - 1) * t;
+      const currentRotation = 0 + (finalRotation - 0) * t;
+
+      gsap.set(card, {
+        x: currentX - cardWidth / 2,
+        y: currentY - cardHeight / 2,
+        scale: currentScale,
+        opacity: currentOpacity,
+        rotation: currentRotation,
+        force3D: true,
+      });
+    }
+  });
 }
 
 function handleProcessScroll(sectionId, e) {

@@ -471,7 +471,7 @@ body.loaded section:not(#loading-screen) {
 
 .card {
   position: absolute;
-  transform-origin: center center;
+  transform-origin: center center !important;
   top:0;
   left:0;
   opacity: 0;
@@ -482,7 +482,7 @@ body.loaded section:not(#loading-screen) {
 
 @layer utilities {
     .card {
-      transform-origin: center;
+      transform-origin: center center !important;
       transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 }
@@ -498,6 +498,16 @@ body.loaded section:not(#loading-screen) {
     font-size: 2rem;
     color: white;
     background: #1e1e1e;
+}
+
+#process {
+  overflow: hidden;
+}
+
+.process-card {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .project-section {

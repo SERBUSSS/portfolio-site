@@ -151,6 +151,9 @@ function initScrollZones() {
       } else {
         onDesktopHorizontalScroll(activeProjectId, e);
       }
+      
+      // Always block native scroll!
+      e.preventDefault();
     }, { passive: false });
   }
   // Dedicated process section scroll (if user scrolls directly over it)
@@ -547,14 +550,14 @@ function animateProcessCards(sectionId, progress, cards) {
     const totalCards = cards.length;
     const positionsCount = positions.length;
     const progressPerCard = 0.9 / totalCards;
-
-    const sectionRect = processSection.getBoundingClientRect();
-    const startY = sectionRect.height + cards.offsetHeight / 2;
-
     const vw = window.innerWidth / 100;
     const vh = window.innerHeight / 100;
     const screenCenterX = window.innerWidth / 2;
     const screenCenterY = window.innerHeight / 2;
+
+    // Use first card as a reference for offset (for consistent anchoring)
+    const cardHeight = cards[0]?.offsetHeight || 100;
+    const cardWidth = cards[0]?.offsetWidth || 100;
 
     cards.forEach((card, index) => {
         const cardStart = index * progressPerCard;
@@ -562,6 +565,7 @@ function animateProcessCards(sectionId, progress, cards) {
         const posIndex = Math.min(index, positionsCount - 1);
         const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
 
+        // Precompute all anchor points
         const finalX = parseFloat(finalPos.x) * vw;
         const finalY = parseFloat(finalPos.y) * vh;
         const finalScale = parseFloat(finalPos.scale);
@@ -569,36 +573,36 @@ function animateProcessCards(sectionId, progress, cards) {
         const finalRotation = parseFloat(finalPos.rotation);
 
         if (cardProgress === 0) {
-            // Start below viewport
+            // Start below viewport, centered horizontally
             gsap.set(card, {
-                x: screenCenterX - card.offsetWidth / 2,
-                y: startY,
+                x: screenCenterX - cardWidth / 2,
+                y: window.innerHeight + cardHeight / 2 - cardHeight / 2,
                 scale: 1,
                 opacity: 0,
                 rotation: 0,
-                force3D: true
+                force3D: true,
             });
         } else if (cardProgress <= 0.6) {
-            // Phase 1: slide from below to center
+            // Phase 1: slide from below to center (all cards animate to center)
             const t = cardProgress / 0.6;
-            const startY = window.innerHeight + card.offsetHeight / 2;
+            const startY = window.innerHeight + cardHeight / 2;
             const endY = screenCenterY;
             const currentY = startY + (endY - startY) * t;
             gsap.set(card, {
-                x: screenCenterX - card.offsetWidth / 2,
-                y: currentY - card.offsetHeight / 2,
+                x: screenCenterX - cardWidth / 2,
+                y: currentY - cardHeight / 2,
                 scale: 1,
                 opacity: t,
                 rotation: 0,
-                force3D: true
+                force3D: true,
             });
         } else {
-            // Phase 2: center to final position (from data)
+            // Phase 2: center to final position (relative to center!)
             const t = (cardProgress - 0.6) / 0.4;
-            const startX = screenCenterX - card.offsetWidth / 2;
-            const startY = screenCenterY - card.offsetHeight / 2;
-            const endX = screenCenterX + finalX - card.offsetWidth / 2;
-            const endY = screenCenterY + finalY - card.offsetHeight / 2;
+            const startX = screenCenterX;
+            const startY = screenCenterY;
+            const endX = screenCenterX + finalX;
+            const endY = screenCenterY + finalY;
             const currentX = startX + (endX - startX) * t;
             const currentY = startY + (endY - startY) * t;
             const currentScale = 1 + (finalScale - 1) * t;
@@ -606,23 +610,28 @@ function animateProcessCards(sectionId, progress, cards) {
             const currentRotation = 0 + (finalRotation - 0) * t;
 
             gsap.set(card, {
-                x: currentX,
-                y: currentY,
+                x: currentX - cardWidth / 2,
+                y: currentY - cardHeight / 2,
                 scale: currentScale,
                 opacity: currentOpacity,
                 rotation: currentRotation,
-                force3D: true
+                force3D: true,
             });
         }
     });
 }
 
 function handleProcessScroll(sectionId, e) {
-  if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
+  if (!containerPinned || !horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) {
+    // Only allow default scroll when NOT pinned or not in process
+    return;
+  }
+  // Always block native scroll when pinned in process section!
   e.preventDefault();
+
   const delta = e.deltaY;
 
-  // If at END and scrolling further DOWN, unpin (bottom exit)
+  // unpin at the end
   if (
     containerPinned &&
     sectionId === 'process' &&
@@ -637,9 +646,11 @@ function handleProcessScroll(sectionId, e) {
       unpinContainer();
       return;
     }
+    // If not in slack, just block scroll, do nothing else!
+    return;
   }
 
-  // If at END and scrolling UP, or anywhere before END, always update progress
+  // Animate cards as normal:
   horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
   horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
   saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
@@ -983,6 +994,9 @@ function setupGestureHandlers() {
     // --- PROCESS ---
     if (activeProjectId === 'process') {
       if (gestureTypeLocal === 'vertical') {
+        // Always block vertical scroll while pinned on process!
+        e.preventDefault?.();
+
         const cards = Array.from(document.querySelectorAll(`#process .process-card`));
         const maxScroll = horizontalScrollData['process'].maxScroll;
         const prevScrollX = horizontalScrollData['process'].scrollX;
@@ -991,7 +1005,7 @@ function setupGestureHandlers() {
         // UNPIN ONLY IF: At max, and dragging down
         if (
           prevScrollX >= maxScroll - 1 &&
-          scrollDelta > 0
+          scrollDelta < 0
         ) {
           const rect = wrapper.getBoundingClientRect();
           if (
@@ -1009,7 +1023,6 @@ function setupGestureHandlers() {
         let scrollX = prevScrollX - scrollDelta;
         scrollX = Math.max(0, Math.min(maxScroll, scrollX));
         if (scrollX !== prevScrollX) {
-          e.preventDefault?.();
           horizontalScrollData['process'].scrollX = scrollX;
           saveProcessScrollState(scrollX);
           const progress = scrollX / maxScroll;
@@ -1081,7 +1094,7 @@ function setupGestureHandlers() {
         // --- UNPIN ONLY IF: At max, and user is dragging DOWN ---
         if (
           prevScrollX >= maxScroll - 1 &&
-          scrollDelta > 0 // only on drag down
+          scrollDelta < 0 // only on drag down
         ) {
           const rect = wrapper.getBoundingClientRect();
           if (

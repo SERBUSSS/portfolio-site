@@ -27,6 +27,7 @@ window.horizontalScrollData = window.horizontalScrollData || {};
 const horizontalScrollData = window.horizontalScrollData;
 const PROJECTS_SCROLL_SENSITIVITY = 100;
 const PROCESS_SCROLL_SENSITIVITY = 10;
+const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
 
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
@@ -376,14 +377,22 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
     return;
   }
 
-  // Fade calculation
+  // --- Fade calculation ---
   let opacity = 1;
-  if (cardProgress < 0.15) {
-    opacity = Math.max(0, cardProgress / 0.15);
-  } else if (cardProgress > 0.85) {
-    opacity = Math.max(0, (1 - cardProgress) / 0.15);
+  if (cardIndex === 0) {
+    if (cardProgress < 0.85) {
+      opacity = 1; // Always visible until almost done with card 0
+    } else {
+      opacity = Math.max(0, (1 - cardProgress) / 0.15); // Fade out near end
+    }
   } else {
-    opacity = 1;
+    if (cardProgress < 0.15) {
+      opacity = Math.max(0, cardProgress / 0.15); // Fade in for other cards
+    } else if (cardProgress > 0.85) {
+      opacity = Math.max(0, (1 - cardProgress) / 0.15); // Fade out
+    } else {
+      opacity = 1;
+    }
   }
   contentEl.style.opacity = opacity;
 
@@ -391,32 +400,19 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
     ? parseInt(tooltip.dataset.tooltipIndex, 10)
     : null;
 
-  // Grab content from your source
+  // --- Grab content from your source ---
   let cardContent = tooltipContent[projectId]?.cards?.[cardIndex];
-  console.log(
-    `[tooltip] project=${projectId}, cardIndex=${cardIndex}, lastIndex=${lastIndex}, opacity=${opacity.toFixed(2)}`,
-    `\n   > tooltipContent:`, tooltipContent[projectId],
-    `\n   > tooltipContent[${projectId}].cards:`, tooltipContent[projectId]?.cards,
-    `\n   > tooltipContent[${projectId}].cards[${cardIndex}]:`, cardContent,
-    `\n   > contentEl.textContent:`, contentEl.textContent
-  );
-
-  // Only update content if faded out and the card changed
+  // (log lines unchanged)
   if (lastIndex !== cardIndex) {
-    console.log(`[tooltip] SWAP CONTENT: [${lastIndex}] → [${cardIndex}]`);
     if (cardIndex === 0) {
       if (!tooltip.dataset.originalHtml) {
         tooltip.dataset.originalHtml = contentEl.innerHTML;
-        console.log(`[tooltip] Saved original HTML for card 0:`, tooltip.dataset.originalHtml);
       }
       contentEl.innerHTML = tooltip.dataset.originalHtml;
-      console.log(`[tooltip] Set content for card 0:`, tooltip.dataset.originalHtml);
     } else if (cardContent !== undefined && cardContent !== null && cardContent.trim() !== '') {
       contentEl.textContent = cardContent;
-      console.log(`[tooltip] Set content for card ${cardIndex}:`, cardContent);
     } else {
       contentEl.textContent = '(No content for this card)';
-      console.warn(`[tooltip] No content for card ${cardIndex} in project "${projectId}".`);
     }
     tooltip.dataset.tooltipIndex = cardIndex;
   }
@@ -798,17 +794,22 @@ function setZonesEnabled(enabled) {
 }
 
 function saveProjectScrollState(sectionId, scrollX) {
-  if (!window.projectScrollState) window.projectScrollState = {};
+  window.projectScrollState = window.projectScrollState || {};
   window.projectScrollState[sectionId] = scrollX;
-  sessionStorage.setItem(`projectScrollX_${sectionId}`, scrollX);
+  if (PERSIST_SCROLL_PROGRESS) {
+    sessionStorage.setItem(`projectScrollX_${sectionId}`, scrollX);
+  }
 }
 
 function restoreProjectScrollState(sectionId) {
   if (window.projectScrollState && window.projectScrollState[sectionId] !== undefined) {
     return window.projectScrollState[sectionId];
   }
-  const stored = sessionStorage.getItem(`projectScrollX_${sectionId}`);
-  return stored !== null ? Number(stored) : 0;
+  if (PERSIST_SCROLL_PROGRESS) {
+    const stored = sessionStorage.getItem(`projectScrollX_${sectionId}`);
+    return stored !== null ? Number(stored) : 0;
+  }
+  return 0;
 }
 
 // --- Project scroll handler (horizontal, for project1-4) ---
@@ -925,7 +926,7 @@ function getCardConfig(projectId, index) {
 }
 
 function updateHorizontalAnimation(sectionId, progress, cards) {
-    console.log('🔵 updateHorizontalAnimation running', sectionId, cards.length);
+    // console.log('🔵 updateHorizontalAnimation running', sectionId, cards.length);
     if (sectionId === 'process') return;
 
     const isMobile = window.innerWidth <= 768;

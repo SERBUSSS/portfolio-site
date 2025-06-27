@@ -3,7 +3,7 @@ export const tooltipContent = {
   'project-1': {
     projectName: 'Si Punct Media',
     cards: [
-      null, // Index 0 - no tooltip (brief card)
+      null, // Index 0 - device specific instructions
       'Brand logo and identity design',
       'Brand color palette showcase',
       'Typography selection',
@@ -23,7 +23,7 @@ export const tooltipContent = {
   'project-2': {
     projectName: 'EnergNature',
     cards: [
-      null, // Index 0 - no tooltip
+      null, // Index 0 - device specific instructions
       'Brand logomark',
       'Brand logo and identity design',
       'Typography selection',
@@ -47,7 +47,7 @@ export const tooltipContent = {
   'project-3': {
     projectName: 'A&D Performance',
     cards: [
-      null, // Index 0 - no tooltip
+      null, // Index 0 - device specific instructions
       'Header Navigation Menu Enhancement',
       'Shopping Cart Interface Redesign',
       'Checkout Process Optimization',
@@ -68,7 +68,7 @@ export const tooltipContent = {
   'project-4': {
     projectName: 'Casamare',
     cards: [
-      null, // Index 0 - no tooltip
+      null, // Index 0 - device specific instructions
       'Brand logo design',
       'Typography system and font selection',
       'Brand color palette showcase',

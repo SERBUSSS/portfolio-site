@@ -531,3 +531,13 @@ body.loaded section:not(#loading-screen) {
   overflow: hidden;
   pointer-events: none;
 }
+
+#nav-bar-cont {
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+  opacity: 1;
+  pointer-events: auto;
+}
+#nav-bar-cont.nav-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}

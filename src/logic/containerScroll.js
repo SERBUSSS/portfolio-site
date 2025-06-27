@@ -219,6 +219,7 @@ function pinContainer() {
   wrapperOffsetTop = wrapper.offsetTop;
   canRepin = false;
   console.log('[Pin] Pinning container. wrapperOffsetTop:', wrapperOffsetTop);
+  fadeOutNavBar();
   setZonesEnabled(true);
   setProjectsContainerScrollable(true);
   setPageScrollLocked(true);
@@ -236,6 +237,15 @@ function pinContainer() {
   if (!activeProjectId && bestSectionId) {
     setNavContext(bestSectionId);
     console.log('[PIN] Set activeProjectId to most visible:', bestSectionId);
+  }
+
+  // --- TOOLTIP FIX ---
+  if (bestSectionId && bestSectionId !== 'process') {
+    showProjectTooltip(bestSectionId);
+    // Find cards in that section
+    const cards = Array.from(document.querySelectorAll(`#${bestSectionId} .item.card`));
+    // Progress for first card (index 0)
+    updateTooltipContent(bestSectionId, 0, 0);
   }
 
   if (isMobile()) return;
@@ -282,6 +292,7 @@ function unpinContainer() {
   wrapperOffsetTop = null;
   canRepin = false;
   console.log('[Unpin] Unpinning container.');
+  fadeInNavBar();
   setZonesEnabled(false);
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);
@@ -316,6 +327,102 @@ function unpinContainer() {
 
   // placeholder removal
   console.log('   → removing placeholder');
+}
+
+// Utility functions
+function fadeOutNavBar() {
+  const navBarCont = document.getElementById('nav-bar-cont');
+  if (navBarCont && !navBarCont.classList.contains('nav-fade-out')) {
+    navBarCont.classList.add('nav-fade-out');
+  }
+}
+function fadeInNavBar() {
+  const navBarCont = document.getElementById('nav-bar-cont');
+  if (navBarCont && navBarCont.classList.contains('nav-fade-out')) {
+    navBarCont.classList.remove('nav-fade-out');
+  }
+}
+
+function showProjectTooltip(projectId) {
+  document.querySelectorAll('.project-tooltip-container').forEach(tooltip => {
+    tooltip.classList.remove('visible');
+    tooltip.style.display = 'none';
+    tooltip._lastTooltipIndex = undefined;
+  });
+  const tooltip = document.querySelector(`#tooltip-${projectId}`);
+  if (tooltip) {
+    tooltip.classList.add('visible');
+    tooltip.style.display = 'inline-flex';
+    tooltip._lastTooltipIndex = undefined; // <-- reset for new section
+  }
+}
+
+function hideAllProjectTooltips() {
+  document.querySelectorAll('.project-tooltip-container').forEach(tooltip => {
+    tooltip.classList.remove('visible');
+    tooltip.style.display = 'none';
+  });
+}
+
+function updateTooltipContent(projectId, cardIndex, cardProgress) {
+  const tooltip = document.querySelector(`#tooltip-${projectId}`);
+  if (!tooltip) {
+    console.warn(`[tooltip] Tooltip not found for projectId=${projectId}`);
+    return;
+  }
+  const contentEl = tooltip.querySelector('.tooltip-description');
+  if (!contentEl) {
+    console.warn(`[tooltip] .tooltip-description not found for projectId=${projectId}`);
+    return;
+  }
+
+  // Fade calculation
+  let opacity = 1;
+  if (cardProgress < 0.15) {
+    opacity = Math.max(0, cardProgress / 0.15);
+  } else if (cardProgress > 0.85) {
+    opacity = Math.max(0, (1 - cardProgress) / 0.15);
+  } else {
+    opacity = 1;
+  }
+  contentEl.style.opacity = opacity;
+
+  let lastIndex = tooltip.dataset.tooltipIndex !== undefined
+    ? parseInt(tooltip.dataset.tooltipIndex, 10)
+    : null;
+
+  // Grab content from your source
+  let cardContent = tooltipContent[projectId]?.cards?.[cardIndex];
+  console.log(
+    `[tooltip] project=${projectId}, cardIndex=${cardIndex}, lastIndex=${lastIndex}, opacity=${opacity.toFixed(2)}`,
+    `\n   > tooltipContent:`, tooltipContent[projectId],
+    `\n   > tooltipContent[${projectId}].cards:`, tooltipContent[projectId]?.cards,
+    `\n   > tooltipContent[${projectId}].cards[${cardIndex}]:`, cardContent,
+    `\n   > contentEl.textContent:`, contentEl.textContent
+  );
+
+  // Only update content if faded out and the card changed
+  if (lastIndex !== cardIndex) {
+    console.log(`[tooltip] SWAP CONTENT: [${lastIndex}] → [${cardIndex}]`);
+    if (cardIndex === 0) {
+      if (!tooltip.dataset.originalHtml) {
+        tooltip.dataset.originalHtml = contentEl.innerHTML;
+        console.log(`[tooltip] Saved original HTML for card 0:`, tooltip.dataset.originalHtml);
+      }
+      contentEl.innerHTML = tooltip.dataset.originalHtml;
+      console.log(`[tooltip] Set content for card 0:`, tooltip.dataset.originalHtml);
+    } else if (cardContent !== undefined && cardContent !== null && cardContent.trim() !== '') {
+      contentEl.textContent = cardContent;
+      console.log(`[tooltip] Set content for card ${cardIndex}:`, cardContent);
+    } else {
+      contentEl.textContent = '(No content for this card)';
+      console.warn(`[tooltip] No content for card ${cardIndex} in project "${projectId}".`);
+    }
+    tooltip.dataset.tooltipIndex = cardIndex;
+  }
+
+  // Always keep the dataset updated
+  tooltip.dataset.tooltipIndex = cardIndex;
 }
 
 // --- Helper to smoothly scroll page so wrapper's top aligns with viewport top ---
@@ -502,7 +609,7 @@ function initSectionObserver() {
       if (!containerPinned) return;
 
       if (entry.isIntersecting) {
-        if (tooltipContainer) tooltipContainer.classList.remove('hidden');
+        showProjectTooltip(sectionId);
         console.log('[SECTION OBSERVER] Section in view:', sectionId);
         initTooltip(sectionId);
         setNavContext(sectionId);
@@ -521,7 +628,7 @@ function initSectionObserver() {
           updateHorizontalAnimation(sectionId, progress, cards);
         }
       } else {
-        if (tooltipContainer) tooltipContainer.classList.add('hidden');
+        hideAllProjectTooltips();
         hideTooltip();
         // --- Save the project scroll state on exit! ---
         if (sectionId !== 'process') {
@@ -894,6 +1001,27 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
             });
         }
     });
+
+    if (sectionId !== 'process' && cards.length > 0) {
+      const progressPerCard = 0.9 / cards.length;
+      let activeCardIndex = 0, activeCardProgress = 0;
+      for (let i = 0; i < cards.length; i++) {
+        const cardStart = i * progressPerCard;
+        const cardEnd = cardStart + progressPerCard;
+        if (progress >= cardStart && progress < cardEnd) {
+          activeCardIndex = i;
+          activeCardProgress = (progress - cardStart) / progressPerCard;
+          break;
+        }
+        // If progress is at the end, last card:
+        if (progress >= (1 - progressPerCard)) {
+          activeCardIndex = cards.length - 1;
+          activeCardProgress = 1;
+          break;
+        }
+      }
+      updateTooltipContent(sectionId, activeCardIndex, activeCardProgress);
+    }
 }
 
 function updateCardProgress(sectionId, scrollValue) {

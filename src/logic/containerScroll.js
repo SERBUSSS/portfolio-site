@@ -30,6 +30,7 @@ const horizontalScrollData = window.horizontalScrollData;
 const PROJECTS_SCROLL_SENSITIVITY = 100;
 const PROCESS_SCROLL_SENSITIVITY = 10;
 const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
+const PREVIEW_WIDTH = 0.25;
 
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
@@ -81,31 +82,24 @@ function getCardSnapState(sectionId, totalCards) {
   if (!window.cardSnapState[sectionId]) {
     window.cardSnapState[sectionId] = {
       cardIndex: 0,
-      phase: 0,
+      phase: 0, // 0 = preview, 1 = center, 2 = final
       isPreview: true,
       animating: false
     };
-    console.log(`[getCardSnapState] INIT state for ${sectionId}:`, window.cardSnapState[sectionId]);
   }
-  let state = window.cardSnapState[sectionId];
   // Clamp for safety
-  const oldIndex = state.cardIndex, oldPhase = state.phase;
+  let state = window.cardSnapState[sectionId];
   state.cardIndex = Math.max(0, Math.min(state.cardIndex, totalCards - 1));
   state.phase = Math.max(0, Math.min(state.phase, 2));
-  if (oldIndex !== state.cardIndex || oldPhase !== state.phase) {
-    console.log(`[getCardSnapState] CLAMP for ${sectionId}:`, state);
-  }
   return state;
 }
 
 function setCardSnapState(sectionId, newState) {
-  console.log(`[setCardSnapState] BEFORE (${sectionId}):`, window.cardSnapState[sectionId]);
   window.cardSnapState[sectionId] = Object.assign(
     {},
     window.cardSnapState[sectionId] || {},
     newState
   );
-  console.log(`[setCardSnapState] AFTER (${sectionId}):`, window.cardSnapState[sectionId]);
 }
 
 // --- Persistence helpers for process scroll progress ---
@@ -432,12 +426,13 @@ function snapCardScroll(sectionId, direction, animationDuration, delta = 50) {
   const progressPerCard = 0.9 / totalCards;
   let targetProgress = 0;
 
-  if (state.phase === 0) {
+  if (state.cardIndex === 0 && state.phase === 0) {
+    // Use preview progress, NOT zero!
+    targetProgress = PREVIEW_WIDTH * progressPerCard;
+  } else {
     targetProgress = state.cardIndex * progressPerCard;
-  } else if (state.phase === 1) {
-    targetProgress = state.cardIndex * progressPerCard + 0.6 * progressPerCard;
-  } else if (state.phase === 2) {
-    targetProgress = state.cardIndex * progressPerCard + progressPerCard;
+    if (state.phase === 1) targetProgress += 0.6 * progressPerCard;
+    if (state.phase === 2) targetProgress += progressPerCard;
   }
 
   gsap.to(horizontalScrollData[sectionId], {
@@ -635,7 +630,6 @@ function initTooltip(projectId) {
 
 // logic/navControl.js
 function setNavContext(activeId) {
-  console.log(`[setNavContext] --- for ${activeId} ---`);
   projectId = activeId;
   cards = Array.from(document.querySelectorAll(`#${activeId} .card`));
   currentCard = 0;
@@ -653,12 +647,24 @@ function setNavContext(activeId) {
     horizontalScrollData[activeId].scrollX = savedScroll;
     const progress = savedScroll / horizontalScrollData[activeId].maxScroll;
     const itemCards = Array.from(document.querySelectorAll(`#${activeId} .item.card`));
-    console.log(`[setNavContext] savedScroll for ${activeId}:`, savedScroll);
+
     if (savedScroll === 0) {
-      // No preview: just set cards to their initial positions (offscreen right)
-      updateHorizontalAnimation(activeId, 0, itemCards);
+      // No previous progress: animate to preview position
+      const previewTarget = PREVIEW_WIDTH * (0.9 / cards.length) * horizontalScrollData[activeId].maxScroll;
+      gsap.to(horizontalScrollData[activeId], {
+        scrollX: previewTarget,
+        duration: 0.7,
+        ease: "power2.out",
+        onUpdate: () => {
+          updateHorizontalAnimation(
+            activeId,
+            horizontalScrollData[activeId].scrollX / horizontalScrollData[activeId].maxScroll,
+            itemCards
+          );
+        }
+      });
     } else {
-      console.log(`[setNavContext] Restoring scroll to saved progress for ${activeId}, progress:`, progress);
+      // Restore last scroll state
       updateHorizontalAnimation(activeId, progress, itemCards);
     }
   }
@@ -1008,15 +1014,10 @@ function initProjectScroll() {
     // Restore scroll state if available
     const restored = restoreProjectScrollState(sectionId);
     horizontalScrollData[sectionId].scrollX = restored;
-    const isFirstActive = (sectionId === getMostVisibleProjectSection()) && restored === 0;
-    console.log(`[initProjectScroll] Initializing ${sectionId}, restored:`, restored);
-
-    // Only animate if NOT the active section at 0 scroll (let setNavContext/GSAP handle preview)
-    if (!isFirstActive) {
-      const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
-      const progress = restored / horizontalScrollData[sectionId].maxScroll;
-      updateHorizontalAnimation(sectionId, progress, cards);
-    }
+    // Animate cards to initial/last position
+    const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+    const progress = restored / horizontalScrollData[sectionId].maxScroll;
+    updateHorizontalAnimation(sectionId, progress, cards);
     // Listen for wheel on right scroll zone ONLY for project sections
     const rightZone = document.querySelector('.scroll-zone-right');
     if (rightZone) {
@@ -1091,16 +1092,6 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
     // console.log('🔵 updateHorizontalAnimation running', sectionId, cards.length);
     if (sectionId === 'process') return;
 
-    // Only skip for project sections (not process)
-    if (sectionId !== 'process') {
-      const activeSection = getMostVisibleProjectSection();
-      if (sectionId === activeSection && progress === 0 && horizontalScrollData[sectionId]?.scrollX === 0) {
-        // This is the case where we want GSAP to animate in preview, so skip
-        // console.log(`[Guard] Skipping initial render for ${sectionId} at progress 0`);
-        return;
-      }
-    }
-
     const isMobile = window.innerWidth <= 768;
     const deviceKey = isMobile ? 'mobile' : 'desktop';
     const projectPositions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
@@ -1129,18 +1120,20 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
         // Calculate progress for this card
         const cardProgress = Math.max(0, Math.min(1, (progress - cardStartProgress) / progressPerCard));
 
-        if (index === 0 || index === 1) {
-          console.log('Card', index, {
-            cardProgress, 
-            x: card.style.x, 
-            offsetWidth: card.offsetWidth, 
-            screenCenterX, 
-            startX: window.innerWidth + card.offsetWidth / 2,
-            endX: screenCenterX,
+        if (index === 0 && progress < PREVIEW_WIDTH * progressPerCard) {
+          const t = progress / (PREVIEW_WIDTH * progressPerCard); // [0, 1]
+          const startX = window.innerWidth + card.offsetWidth / 2;
+          const previewX = screenCenterX - 220; // visually
+          gsap.set(card, {
+            x: startX + (previewX - startX) * t - card.offsetWidth / 2,
+            y: screenCenterY - card.offsetHeight / 2,
+            scale: 1,
+            opacity: t,
+            rotation: 0,
+            force3D: true,
           });
-        }
-
-        if (cardProgress <= 0.6) {
+          return;
+        } else if (cardProgress <= 0.6) {
             // PHASE 1: Slide from right to center of screen (not up/down)
             const slide = cardProgress / 0.6;
             const startX = window.innerWidth + card.offsetWidth / 2;

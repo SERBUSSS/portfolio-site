@@ -386,14 +386,11 @@ function snapCardScroll(sectionId, direction, animationDuration, delta = 50) {
   state.snapIndex = Math.max(-1, Math.min(state.snapIndex, totalCards - 1));
 
   const progressPerCard = 1.0 / totalCards;
-
   let targetProgress = 0;
   if (state.snapIndex === -1) {
-    // PREVIEW
-    targetProgress = 0;
+    targetProgress = 0; // Preview (before any card is centered)
   } else {
-    // Card N at center: progress = (N + 1) * progressPerCard
-    targetProgress = (state.snapIndex + 1) * progressPerCard;
+    targetProgress = (state.snapIndex + 1) * progressPerCard; // Card N at center
   }
 
   const animDuration = animationDuration ?? 1.0;
@@ -407,7 +404,8 @@ function snapCardScroll(sectionId, direction, animationDuration, delta = 50) {
       updateHorizontalAnimation(
         sectionId,
         horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll,
-        cards
+        cards,
+        state.snapIndex // <-- pass the snapIndex!
       );
     },
     onComplete: () => {
@@ -452,24 +450,8 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
     return;
   }
 
-  // --- Fade calculation ---
-  let opacity = 1;
-  if (cardIndex === 0) {
-    if (cardProgress < 0.85) {
-      opacity = 1; // Always visible until almost done with card 0
-    } else {
-      opacity = Math.max(0, (1 - cardProgress) / 0.15); // Fade out near end
-    }
-  } else {
-    if (cardProgress < 0.15) {
-      opacity = Math.max(0, cardProgress / 0.15); // Fade in for other cards
-    } else if (cardProgress > 0.85) {
-      opacity = Math.max(0, (1 - cardProgress) / 0.15); // Fade out
-    } else {
-      opacity = 1;
-    }
-  }
-  contentEl.style.opacity = opacity;
+  // In snap mode: always show content fully visible!
+  contentEl.style.opacity = '1';
 
   let lastIndex = tooltip.dataset.tooltipIndex !== undefined
     ? parseInt(tooltip.dataset.tooltipIndex, 10)
@@ -477,7 +459,6 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
 
   // --- Grab content from your source ---
   let cardContent = tooltipContent[projectId]?.cards?.[cardIndex];
-  // (log lines unchanged)
   if (lastIndex !== cardIndex) {
     if (cardIndex === 0) {
       if (!tooltip.dataset.originalHtml) {
@@ -1144,25 +1125,19 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
         });
     });
 
-    // Tooltip logic (unchanged)
+    // Tooltip logic (fixed: update only when snapIndex changes)
     if (sectionId !== 'process' && cards.length > 0) {
-        const progressPerCard = 0.9 / cards.length;
-        let activeCardIndex = 0, activeCardProgress = 0;
-        for (let i = 0; i < cards.length; i++) {
-            const cardStart = i * progressPerCard;
-            const cardEnd = cardStart + progressPerCard;
-            if (progress >= cardStart && progress < cardEnd) {
-                activeCardIndex = i;
-                activeCardProgress = (progress - cardStart) / progressPerCard;
-                break;
-            }
-            if (progress >= (1 - progressPerCard)) {
-                activeCardIndex = cards.length - 1;
-                activeCardProgress = 1;
-                break;
-            }
+        // Use snapIndex for tooltip; if -1, show card 0 content (preview)
+        let tooltipIndex = Math.max(0, Math.min(snapIndex, cards.length - 1));
+        let tooltipCardProgress = 0;
+        if (snapIndex === -1) {
+            // preview: progress between 0 and previewEnd
+            tooltipCardProgress = Math.min(1, progress / previewEnd);
+        } else {
+            // fully centered
+            tooltipCardProgress = 1;
         }
-        updateTooltipContent(sectionId, activeCardIndex, activeCardProgress);
+        updateTooltipContent(sectionId, tooltipIndex, tooltipCardProgress);
     }
 }
 

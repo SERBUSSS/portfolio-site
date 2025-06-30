@@ -28,6 +28,7 @@ let cards = [];
 window.horizontalScrollData = window.horizontalScrollData || {};
 const horizontalScrollData = window.horizontalScrollData;
 const PROJECTS_SCROLL_SENSITIVITY = 100;
+const MOBILE_SCROLL_SENSITIVITY = 1;
 const PROCESS_SCROLL_SENSITIVITY = 10;
 const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
 const PREVIEW_WIDTH = 0.25;
@@ -450,22 +451,32 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
     return;
   }
 
-  // In snap mode: always show content fully visible!
+  // Snap mode: always show content fully visible!
   contentEl.style.opacity = '1';
 
   let lastIndex = tooltip.dataset.tooltipIndex !== undefined
     ? parseInt(tooltip.dataset.tooltipIndex, 10)
     : null;
 
-  // --- Grab content from your source ---
-  let cardContent = tooltipContent[projectId]?.cards?.[cardIndex];
+  // --- Detect device type ---
+  const isMobile = window.innerWidth <= 768;
+  const deviceKey = isMobile ? 'mobile' : 'desktop';
+
+  // --- Get card content from tooltipContent ---
+  const section = tooltipContent[projectId];
+  let cardContent = '';
+
+  if (section && section.cards && section.cards[deviceKey]) {
+    cardContent = section.cards[deviceKey][cardIndex];
+  }
+
   if (lastIndex !== cardIndex) {
     if (cardIndex === 0) {
       if (!tooltip.dataset.originalHtml) {
         tooltip.dataset.originalHtml = contentEl.innerHTML;
       }
       contentEl.innerHTML = tooltip.dataset.originalHtml;
-    } else if (cardContent !== undefined && cardContent !== null && cardContent.trim() !== '') {
+    } else if (cardContent !== undefined && cardContent !== null && String(cardContent).trim() !== '') {
       contentEl.textContent = cardContent;
     } else {
       contentEl.textContent = '(No content for this card)';
@@ -1242,7 +1253,7 @@ function setupGestureHandlers() {
       if (gestureTypeLocal === 'horizontal') {
         e.preventDefault?.();
         let scrollDelta = e.clientX - lastX;
-        horizontalScrollData[activeProjectId].scrollX -= scrollDelta;
+        horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
         horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
         saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
         const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
@@ -1336,7 +1347,7 @@ function setupGestureHandlers() {
       if (gestureTypeLocal === 'horizontal') {
         e.preventDefault();
         let scrollDelta = touchX - lastX;
-        horizontalScrollData[activeProjectId].scrollX -= scrollDelta;
+        horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
         horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
         saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
         const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));

@@ -379,35 +379,55 @@ function snapCardScroll(sectionId, direction, animationDuration, delta = 50) {
   if (state.animating) return;
   state.animating = true;
 
+  // Support preview (-1) and final (totalCards)
   if (direction === "next") {
-    state.snapIndex++;
+    // If currently in preview (-1), go to card 0 (center), NOT beyond
+    if (state.cardIndex === -1) {
+      state.cardIndex = 0;
+    } else if (state.cardIndex < totalCards) {
+      state.cardIndex++;
+    }
   } else if (direction === "prev") {
-    state.snapIndex--;
+    if (state.cardIndex > -1) state.cardIndex--;
   }
-  state.snapIndex = Math.max(-1, Math.min(state.snapIndex, totalCards - 1));
 
-  const progressPerCard = 1.0 / totalCards;
-  let targetProgress = 0;
-  if (state.snapIndex === -1) {
-    targetProgress = 0; // Preview (before any card is centered)
+  // Compute progress for snap:
+  const isMobile = window.innerWidth <= 768;
+  const progressPerCard = 0.9 / totalCards;
+  const previewRatio = 0.15;
+  let targetProgress;
+
+  if (state.cardIndex === -1) {
+    // Snap to preview position (start)
+    targetProgress = 0;
+  } else if (state.cardIndex === 0 && direction === "next") {
+    // Special: first "next" from preview to card 0 center
+    // Bring to the center of first card (the default logic already does this)
+    targetProgress = 0.6 * progressPerCard;
+  } else if (state.cardIndex === totalCards) {
+    // Snap to final position (end)
+    targetProgress = 0.9;
   } else {
-    targetProgress = (state.snapIndex + 1) * progressPerCard; // Card N at center
+    // Snap to card "center"
+    targetProgress = state.cardIndex * progressPerCard + 0.6 * progressPerCard;
   }
 
-  const animDuration = animationDuration ?? 1.0;
+  // Clamp for safety
+  targetProgress = Math.max(0, Math.min(targetProgress, 0.9));
+
+  // Animate scrollX
+  const maxScroll = horizontalScrollData[sectionId].maxScroll;
+  const targetScrollX = targetProgress * maxScroll;
+  const animDuration = animationDuration ?? (delta > 120 ? 0.6 : 1.0);
   const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
 
   gsap.to(horizontalScrollData[sectionId], {
-    scrollX: targetProgress * horizontalScrollData[sectionId].maxScroll,
+    scrollX: targetScrollX,
     duration: animDuration,
     ease: easeType,
     onUpdate: () => {
-      updateHorizontalAnimation(
-        sectionId,
-        horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll,
-        cards,
-        state.snapIndex // <-- pass the snapIndex!
-      );
+      const p = horizontalScrollData[sectionId].scrollX / maxScroll;
+      updateHorizontalAnimation(sectionId, p, cards);
     },
     onComplete: () => {
       state.animating = false;
@@ -1048,107 +1068,121 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
     if (sectionId === 'process') return;
 
     const isMobile = window.innerWidth <= 768;
+    const previewRatio = isMobile ? 0.15 : 0.3;
+
     const deviceKey = isMobile ? 'mobile' : 'desktop';
     const projectPositions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
-    const isSectionActive = containerPinned && activeProjectId === sectionId;
-
     const totalCards = cards.length;
     const positionsCount = projectPositions.length;
-    const progressPerCard = 1.0 / totalCards;
+    const progressPerCard = 0.9 / totalCards;
     const vw = window.innerWidth / 100;
     const vh = window.innerHeight / 100;
-
-    // Centers
     const screenCenterX = window.innerWidth / 2;
     const screenCenterY = window.innerHeight / 2;
 
-    // Preview ratio (Card 0 only)
-    const previewRatio = isMobile ? 0.15 : 0.3;
-    const previewEnd = previewRatio * progressPerCard;
-
-    // Figure out which card is at center
-    let snapIndex = Math.round(progress / progressPerCard) - 1;
-
     cards.forEach((card, index) => {
-        const centerX = screenCenterX - card.offsetWidth / 2;
-        const centerY = screenCenterY - card.offsetHeight / 2;
+        const cardStartProgress = index * progressPerCard;
         const posIndex = Math.min(index, positionsCount - 1);
         const finalPos = projectPositions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
-        const targetX = centerX + parseFloat(finalPos.x) * vw;
-        const targetY = centerY + parseFloat(finalPos.y) * vh;
-        const targetScale = parseFloat(finalPos.scale);
-        const targetOpacity = parseFloat(finalPos.opacity);
-        const targetRotation = parseFloat(finalPos.rotation);
+        const finalX = parseFloat(finalPos.x) * vw;
+        const finalY = parseFloat(finalPos.y) * vh;
+        const finalScale = parseFloat(finalPos.scale);
+        const finalOpacity = parseFloat(finalPos.opacity);
+        const finalRotation = parseFloat(finalPos.rotation);
 
-        // PREVIEW: Card 0 only, before first scroll
-        if (index === 0 && progress < previewEnd) {
-            const t = progress / previewEnd;
-            const offscreenX = window.innerWidth;
-            const previewX = centerX + (offscreenX - centerX) * (1 - previewRatio);
-            const cardX = offscreenX + (previewX - offscreenX) * t;
+        // CARD 0: Special preview/phase1 logic
+        if (index === 0) {
+            const phase1Start = 0;
+            const phase1End = 0.6 * progressPerCard;
+            const previewEnd = previewRatio * (phase1End - phase1Start); // preview phase [0, previewEnd]
 
+            if (progress < previewEnd) {
+                // Preview phase: from initial position to preview point (15/30% of the way to center)
+                const t = progress / previewEnd;
+                const startX = window.innerWidth + card.offsetWidth / 2;
+                const previewX = startX + (screenCenterX - startX) * previewRatio;
+                gsap.set(card, {
+                    x: startX + (previewX - startX) * t - card.offsetWidth / 2,
+                    y: screenCenterY - card.offsetHeight / 2,
+                    scale: 1,
+                    opacity: t,
+                    rotation: 0,
+                    force3D: true,
+                });
+                return;
+            }
+            if (progress >= previewEnd && progress < phase1End) {
+                // Phase 1 remainder: from preview point to center
+                const t = (progress - previewEnd) / (phase1End - previewEnd);
+                const startX = window.innerWidth + card.offsetWidth / 2 + (screenCenterX - (window.innerWidth + card.offsetWidth / 2)) * previewRatio;
+                const endX = screenCenterX;
+                gsap.set(card, {
+                    x: startX + (endX - startX) * t - card.offsetWidth / 2,
+                    y: screenCenterY - card.offsetHeight / 2,
+                    scale: 1,
+                    opacity: 1,
+                    rotation: 0,
+                    force3D: true,
+                });
+                return;
+            }
+        }
+
+        // All cards (including card 0 after phase1): normal logic
+        const cardProgress = Math.max(0, Math.min(1, (progress - cardStartProgress) / progressPerCard));
+        if (cardProgress <= 0.6) {
+            // Phase 1: right to center
+            const t = cardProgress / 0.6;
+            const startX = window.innerWidth + card.offsetWidth / 2;
+            const endX = screenCenterX;
             gsap.set(card, {
-                x: cardX,
-                y: centerY,
+                x: startX + (endX - startX) * t - card.offsetWidth / 2,
+                y: screenCenterY - card.offsetHeight / 2,
                 scale: 1,
                 opacity: t,
                 rotation: 0,
                 force3D: true,
             });
-            return;
-        }
-
-        // Only one card at a time is centered (snapIndex)
-        if (index === snapIndex) {
-            // CENTER position
+        } else {
+            // Phase 2: center to final
+            const t = (cardProgress - 0.6) / 0.4;
+            const targetX = screenCenterX + finalX;
+            const targetY = screenCenterY + finalY;
+            const currentX = screenCenterX + (targetX - screenCenterX) * t - card.offsetWidth / 2;
+            const currentY = screenCenterY + (targetY - screenCenterY) * t - card.offsetHeight / 2;
+            const currentScale = 1 + (finalScale - 1) * t;
+            const currentOpacity = 1 + (finalOpacity - 1) * t;
+            const currentRotation = 0 + (finalRotation - 0) * t;
             gsap.set(card, {
-                x: centerX,
-                y: centerY,
-                scale: 1,
-                opacity: 1,
-                rotation: 0,
+                x: currentX,
+                y: currentY,
+                scale: currentScale,
+                opacity: currentOpacity,
+                rotation: currentRotation,
                 force3D: true,
             });
-            return;
         }
-
-        // If already passed, animate to final position
-        if (index < snapIndex) {
-            gsap.set(card, {
-                x: targetX,
-                y: targetY,
-                scale: targetScale,
-                opacity: targetOpacity,
-                rotation: targetRotation,
-                force3D: true,
-            });
-            return;
-        }
-
-        // Not yet active: offscreen right
-        gsap.set(card, {
-            x: window.innerWidth,
-            y: centerY,
-            scale: 1,
-            opacity: 0,
-            rotation: 0,
-            force3D: true,
-        });
     });
 
-    // Tooltip logic (fixed: update only when snapIndex changes)
+    // Tooltip logic unchanged
     if (sectionId !== 'process' && cards.length > 0) {
-        // Use snapIndex for tooltip; if -1, show card 0 content (preview)
-        let tooltipIndex = Math.max(0, Math.min(snapIndex, cards.length - 1));
-        let tooltipCardProgress = 0;
-        if (snapIndex === -1) {
-            // preview: progress between 0 and previewEnd
-            tooltipCardProgress = Math.min(1, progress / previewEnd);
-        } else {
-            // fully centered
-            tooltipCardProgress = 1;
+        const progressPerCard = 0.9 / cards.length;
+        let activeCardIndex = 0, activeCardProgress = 0;
+        for (let i = 0; i < cards.length; i++) {
+            const cardStart = i * progressPerCard;
+            const cardEnd = cardStart + progressPerCard;
+            if (progress >= cardStart && progress < cardEnd) {
+                activeCardIndex = i;
+                activeCardProgress = (progress - cardStart) / progressPerCard;
+                break;
+            }
+            if (progress >= (1 - progressPerCard)) {
+                activeCardIndex = cards.length - 1;
+                activeCardProgress = 1;
+                break;
+            }
         }
-        updateTooltipContent(sectionId, tooltipIndex, tooltipCardProgress);
+        updateTooltipContent(sectionId, activeCardIndex, activeCardProgress);
     }
 }
 
@@ -1245,60 +1279,52 @@ function setupGestureHandlers() {
     const dy = e.clientY - dragStartY;
     if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
 
-
     if (!containerPinned) return;
 
-    // --- PROJECTS ---
-    if (activeProjectId && activeProjectId !== 'process') {
-      if (gestureTypeLocal === 'horizontal') {
-        e.preventDefault?.();
-        let scrollDelta = e.clientX - lastX;
-        horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
-        horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
-        saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
-        const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
-        const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
-        updateHorizontalAnimation(activeProjectId, progress, cards);
-      }
+    // --- PROJECTS (horizontal drag progress on mobile) ---
+    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureTypeLocal === 'horizontal') {
+      e.preventDefault?.();
+      let scrollDelta = e.clientX - lastX;
+      horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
+      horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
+      saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
+      const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
+      const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
+      updateHorizontalAnimation(activeProjectId, progress, cards);
     }
 
-    // --- PROCESS ---
-    if (activeProjectId === 'process') {
-      if (gestureTypeLocal === 'vertical') {
-        // Always block vertical scroll while pinned on process!
-        e.preventDefault?.();
+    // --- PROCESS section (vertical) ---
+    if (activeProjectId === 'process' && gestureTypeLocal === 'vertical') {
+      e.preventDefault?.();
+      const cards = Array.from(document.querySelectorAll(`#process .process-card`));
+      const maxScroll = horizontalScrollData['process'].maxScroll;
+      const prevScrollX = horizontalScrollData['process'].scrollX;
+      let scrollDelta = e.clientY - lastY;
 
-        const cards = Array.from(document.querySelectorAll(`#process .process-card`));
-        const maxScroll = horizontalScrollData['process'].maxScroll;
-        const prevScrollX = horizontalScrollData['process'].scrollX;
-        let scrollDelta = e.clientY - lastY;
-
-        // UNPIN ONLY IF: At max, and dragging down
+      // UNPIN ONLY IF: At max, and dragging down
+      if (
+        prevScrollX >= maxScroll - 1 &&
+        scrollDelta < 0
+      ) {
+        const rect = wrapper.getBoundingClientRect();
         if (
-          prevScrollX >= maxScroll - 1 &&
-          scrollDelta < 0
+          rect.bottom >= window.innerHeight - SLACK_PX &&
+          rect.bottom <= window.innerHeight + SLACK_PX
         ) {
-          const rect = wrapper.getBoundingClientRect();
-          if (
-            rect.bottom >= window.innerHeight - SLACK_PX &&
-            rect.bottom <= window.innerHeight + SLACK_PX
-          ) {
-            unpinContainer();
-            lastX = e.clientX;
-            lastY = e.clientY;
-            return;
-          }
+          unpinContainer();
+          lastX = e.clientX;
+          lastY = e.clientY;
+          return;
         }
+      }
 
-        // Always allow reverse (up) or less than max
-        let scrollX = prevScrollX - scrollDelta;
-        scrollX = Math.max(0, Math.min(maxScroll, scrollX));
-        if (scrollX !== prevScrollX) {
-          horizontalScrollData['process'].scrollX = scrollX;
-          saveProcessScrollState(scrollX);
-          const progress = scrollX / maxScroll;
-          animateProcessCards('process', progress, cards);
-        }
+      let scrollX = prevScrollX - scrollDelta;
+      scrollX = Math.max(0, Math.min(maxScroll, scrollX));
+      if (scrollX !== prevScrollX) {
+        horizontalScrollData['process'].scrollX = scrollX;
+        saveProcessScrollState(scrollX);
+        const progress = scrollX / maxScroll;
+        animateProcessCards('process', progress, cards);
       }
     }
 
@@ -1333,7 +1359,7 @@ function setupGestureHandlers() {
     if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
 
     if (!containerPinned) return;
-    
+
     if (
       isMobile() &&
       containerPinned &&
@@ -1343,52 +1369,50 @@ function setupGestureHandlers() {
       unpinContainer();
     }
 
-    if (activeProjectId && activeProjectId !== 'process') {
-      if (gestureTypeLocal === 'horizontal') {
-        e.preventDefault();
-        let scrollDelta = touchX - lastX;
-        horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
-        horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
-        saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
-        const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
-        const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
-        updateHorizontalAnimation(activeProjectId, progress, cards);
-      }
+    // --- PROJECTS (horizontal drag progress on mobile) ---
+    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureTypeLocal === 'horizontal') {
+      e.preventDefault();
+      let scrollDelta = touchX - lastX;
+      horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
+      horizontalScrollData[activeProjectId].scrollX = Math.max(0, Math.min(horizontalScrollData[activeProjectId].scrollX, horizontalScrollData[activeProjectId].maxScroll));
+      saveProjectScrollState(activeProjectId, horizontalScrollData[activeProjectId].scrollX);
+      const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
+      const progress = horizontalScrollData[activeProjectId].scrollX / horizontalScrollData[activeProjectId].maxScroll;
+      updateHorizontalAnimation(activeProjectId, progress, cards);
     }
-    if (activeProjectId === 'process') {
-      if (gestureTypeLocal === 'vertical') {
-        const cards = Array.from(document.querySelectorAll(`#process .process-card`));
-        const maxScroll = horizontalScrollData['process'].maxScroll;
-        const prevScrollX = horizontalScrollData['process'].scrollX;
-        let scrollDelta = touchY - lastY;
 
-        // --- UNPIN ONLY IF: At max, and user is dragging DOWN ---
+    // --- PROCESS section (vertical) ---
+    if (activeProjectId === 'process' && gestureTypeLocal === 'vertical') {
+      const cards = Array.from(document.querySelectorAll(`#process .process-card`));
+      const maxScroll = horizontalScrollData['process'].maxScroll;
+      const prevScrollX = horizontalScrollData['process'].scrollX;
+      let scrollDelta = touchY - lastY;
+
+      // UNPIN ONLY IF: At max, and user is dragging DOWN
+      if (
+        prevScrollX >= maxScroll - 1 &&
+        scrollDelta < 0
+      ) {
+        const rect = wrapper.getBoundingClientRect();
         if (
-          prevScrollX >= maxScroll - 1 &&
-          scrollDelta < 0 // only on drag down
+          rect.bottom >= window.innerHeight - SLACK_PX &&
+          rect.bottom <= window.innerHeight + SLACK_PX
         ) {
-          const rect = wrapper.getBoundingClientRect();
-          if (
-            rect.bottom >= window.innerHeight - SLACK_PX &&
-            rect.bottom <= window.innerHeight + SLACK_PX
-          ) {
-            unpinContainer();
-            lastX = touchX;
-            lastY = touchY;
-            return;
-          }
+          unpinContainer();
+          lastX = touchX;
+          lastY = touchY;
+          return;
         }
+      }
 
-        // Always allow user to scroll UP (or before max) to reverse progress
-        let scrollX = prevScrollX - scrollDelta;
-        scrollX = Math.max(0, Math.min(maxScroll, scrollX));
-        if (scrollX !== prevScrollX) {
-          e.preventDefault();
-          horizontalScrollData['process'].scrollX = scrollX;
-          saveProcessScrollState(scrollX);
-          const progress = scrollX / maxScroll;
-          animateProcessCards('process', progress, cards);
-        }
+      let scrollX = prevScrollX - scrollDelta;
+      scrollX = Math.max(0, Math.min(maxScroll, scrollX));
+      if (scrollX !== prevScrollX) {
+        e.preventDefault();
+        horizontalScrollData['process'].scrollX = scrollX;
+        saveProcessScrollState(scrollX);
+        const progress = scrollX / maxScroll;
+        animateProcessCards('process', progress, cards);
       }
     }
     lastX = touchX;

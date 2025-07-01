@@ -2047,7 +2047,7 @@ const testSuccessState = () => {
 };
 
 const disableFormButtons = () => {
-    sessionStorage.setItem('formSubmittedThisSession', 'true');
+    localStorage.setItem('formSubmittedTime', Date.now().toString());
     
     document.querySelectorAll('.form-open-btn').forEach(button => {
         button.disabled = true;
@@ -2090,8 +2090,14 @@ const showSubmissionNotification = () => {
 };
 
 const checkSessionSubmission = () => {
-    if (sessionStorage.getItem('formSubmittedThisSession') === 'true') {
+    const submitTime = Number(localStorage.getItem('formSubmittedTime'));
+    const now = Date.now();
+
+    if (submitTime && (now - submitTime) < 60 * 60 * 1000) { // 1 hour in ms
         disableFormButtons();
+    } else {
+        // Optionally, remove expired time (cleanup)
+        localStorage.removeItem('formSubmittedTime');
     }
 };
 

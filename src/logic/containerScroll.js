@@ -68,137 +68,9 @@ let projectId = null;
 const tooltip = document.querySelector('.card-tooltip');
 const tooltipText = tooltip?.querySelector('.tooltip-text');
 
-// Gesture direction detection
-function getGestureDirection(dx, dy) {
-  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > HORIZONTAL_THRESHOLD) return 'horizontal';
-  if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > VERTICAL_THRESHOLD) return 'vertical';
-  return null;
-}
-
-console.log('[INFO] isMobile:', isMobile());
-console.log('[INFO] ontouchstart in window:', 'ontouchstart' in window);
-console.log('[INFO] window.innerWidth:', window.innerWidth);
-
-function getCardSnapState(sectionId, totalCards) {
-  if (!window.cardSnapState[sectionId]) {
-    window.cardSnapState[sectionId] = {
-      snapIndex: -1, // -1 = preview, 0...N-1 = snapped to card
-      animating: false
-    };
-  }
-  let state = window.cardSnapState[sectionId];
-  state.snapIndex = Math.max(-1, Math.min(state.snapIndex, totalCards - 1));
-  return state;
-}
-
-function setCardSnapState(sectionId, newState) {
-  window.cardSnapState[sectionId] = { ...window.cardSnapState[sectionId], ...newState };
-}
-
-// --- Persistence helpers for process scroll progress ---
-function saveProcessScrollState(scrollX) {
-  window.processScrollState = scrollX;
-  sessionStorage.setItem('processScrollX', scrollX);
-}
-
-function restoreProcessScrollState() {
-  if (window.processScrollState !== undefined) {
-    return window.processScrollState;
-  }
-  const stored = sessionStorage.getItem('processScrollX');
-  return stored !== null ? Number(stored) : 0;
-}
-
-function handleRightZoneScroll(e) {
-  // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
-  if (!containerPinned) {
-    e.preventDefault();
-    e.stopPropagation();
-    return
-  };
-
-  // Use the current active project section ID
-  if (activeProjectId) {
-    onDesktopHorizontalScroll(activeProjectId, e);
-    e.stopPropagation();
-  }
-}
-
-function setProjectsContainerScrollable(enabled) {
-  const projectsContainer = document.querySelector('.projects-container');
-  if (!projectsContainer) return;
-  projectsContainer.style.overflowY = enabled ? 'auto' : 'hidden';
-  projectsContainer.style.touchAction = enabled ? 'auto' : 'auto'; // for mobile
-}
-
-function handleLeftZoneScroll(e) {
-  if (!containerPinned) {
-    e.preventDefault();
-    return;
-  }
-
-  // BOTTOM EXIT: Only for process section, at 100% progress, scroll down
-  if (
-    activeProjectId === 'process' &&
-    isProcessScrollAtEnd() &&
-    e.deltaY > 0
-  ) {
-    // Only unpin if wrapper is in bottom slack zone
-    const rect = wrapper.getBoundingClientRect();
-    if (
-      rect.bottom >= window.innerHeight - SLACK_PX &&
-      rect.bottom <= window.innerHeight + SLACK_PX
-    ) {
-      unpinContainer();
-      return;
-    }
-  }
-
-  // Top exit: already handled by pinnedScrollHandler on wheel up at top
-  handleSectionSnap(e);
-}
-
-function initScrollZones() {
-  if (isMobile()) return;
-  const leftZone = document.querySelector('.scroll-zone-left');
-  const rightZone = document.querySelector('.scroll-zone-right');
-  if (leftZone) {
-    leftZone.addEventListener('wheel', handleLeftZoneScroll, { passive: false });
-  }
-  if (rightZone) {
-    rightZone.addEventListener('wheel', e => {
-      // Use process handler ONLY if process section is active
-      if (activeProjectId === 'process') {
-        handleProcessScroll('process', e);
-      } else {
-        onDesktopHorizontalScroll(activeProjectId, e);
-      }
-      
-      // Always block native scroll!
-      e.preventDefault();
-    }, { passive: false });
-  }
-  // Dedicated process section scroll (if user scrolls directly over it)
-  if (processSection) {
-    processSection.addEventListener('wheel', e => {
-      if (isMobile()) return;
-      // Only intercept scroll if process section is at the top of viewport (snapped)
-      const rect = processSection.getBoundingClientRect();
-      if (Math.abs(rect.top) <= 2) { // Allow 2px leeway
-        e.preventDefault();
-        handleProcessScroll('process', e);
-      }
-      // Otherwise, let default scroll snap finish first
-    }, { passive: false });
-  }
-
-  setZonesEnabled(false);
-}
-
-function isMobile() {
-  return window.innerWidth <= 768;
-}
-
+// ================================================
+// Container Pinning & Page Locking
+// ================================================
 function setPageScrollLocked(locked) {
   if (locked) {
     lastBodyScroll = window.scrollY;
@@ -215,20 +87,11 @@ function setPageScrollLocked(locked) {
   }
 }
 
-function enableUserScrollFlag() { hasUserInitiatedScroll = true; }
-
-function getMostVisibleProjectSection() {
-  let maxVisible = 0;
-  let bestSection = null;
-  document.querySelectorAll('.project-section').forEach(section => {
-    const rect = section.getBoundingClientRect();
-    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-    if (visibleHeight > maxVisible && visibleHeight > 0) {
-      maxVisible = visibleHeight;
-      bestSection = section;
-    }
-  });
-  return bestSection ? bestSection.getAttribute('id') : null;
+function setProjectsContainerScrollable(enabled) {
+  const projectsContainer = document.querySelector('.projects-container');
+  if (!projectsContainer) return;
+  projectsContainer.style.overflowY = enabled ? 'auto' : 'hidden';
+  projectsContainer.style.touchAction = enabled ? 'auto' : 'auto'; // for mobile
 }
 
 function pinContainer() {
@@ -350,93 +213,285 @@ function unpinContainer() {
   console.log('   → removing placeholder');
 }
 
-// Utility functions
-function fadeOutNavBar() {
-  const navBarCont = document.getElementById('nav-bar-cont');
-  if (navBarCont && !navBarCont.classList.contains('nav-fade-out')) {
-    navBarCont.classList.add('nav-fade-out');
+function checkContainerLock() {
+  if (!hasUserInitiatedScroll) return;
+  if (isAligningContainer) return;
+  const rect = wrapper.getBoundingClientRect();
+  const topSlack = SLACK_PX;
+  const bottomSlack = SLACK_PX;
+
+  // Top pin
+  if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
+    // 1. Align wrapper's top to viewport top (smooth scroll)
+    isAligningContainer = true;
+    alignWrapperToViewportTop(wrapper, topSlack);
+    // 2. Wait for scroll to finish, then pin and lock body scroll
+    setTimeout(() => {
+      // Confirm we are still in the zone after the scroll
+      const afterRect = wrapper.getBoundingClientRect();
+      if (afterRect.top >= -topSlack && afterRect.top <= topSlack) {
+        pinContainer();
+      }
+      isAligningContainer = false;
+    }, 350); // adjust duration to match smooth scroll
+    return;
   }
-}
-function fadeInNavBar() {
-  const navBarCont = document.getElementById('nav-bar-cont');
-  if (navBarCont && navBarCont.classList.contains('nav-fade-out')) {
-    navBarCont.classList.remove('nav-fade-out');
-  }
-}
 
-/**
- * Snap card scroll in given direction, updating phase and card index as needed.
- * @param {string} sectionId
- * @param {"next"|"prev"} direction
- * @param {number} [animationDuration=0.6]
- */
-function snapCardScroll(sectionId, direction, animationDuration, delta = 50) {
-  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
-  if (!cards.length) return;
-  const totalCards = cards.length;
-  let state = getCardSnapState(sectionId, totalCards);
-
-  if (state.animating) return;
-  state.animating = true;
-
-  // Support preview (-1) and final (totalCards)
-  if (direction === "next") {
-    // If currently in preview (-1), go to card 0 (center), NOT beyond
-    if (state.cardIndex === -1) {
-      state.cardIndex = 0;
-    } else if (state.cardIndex < totalCards) {
-      state.cardIndex++;
+  // Bottom pin
+  if (!containerPinned && canRepin && isWrapperBottomInSlack()) {
+    // 1. Align wrapper's bottom to viewport bottom (smooth scroll)
+    isAligningContainer = true;
+    const scrollOffset = rect.bottom - window.innerHeight;
+    if (Math.abs(scrollOffset) > 1) {
+      window.scrollTo({
+        top: (window.scrollY || document.documentElement.scrollTop) + scrollOffset,
+        behavior: 'smooth'
+      });
     }
-  } else if (direction === "prev") {
-    if (state.cardIndex > -1) state.cardIndex--;
+    // 2. Wait for scroll to finish, then pin and lock body scroll
+    setTimeout(() => {
+      const afterRect = wrapper.getBoundingClientRect();
+      if (
+        afterRect.bottom >= window.innerHeight - bottomSlack &&
+        afterRect.bottom <= window.innerHeight + bottomSlack
+      ) {
+        pinContainer();
+      }
+      isAligningContainer = false;
+    }, 350); // adjust as above
+    return;
   }
 
-  // Compute progress for snap:
-  const isMobile = window.innerWidth <= 768;
-  const progressPerCard = 0.9 / totalCards;
-  const previewRatio = 0.15;
-  let targetProgress;
-
-  if (state.cardIndex === -1) {
-    // Snap to preview position (start)
-    targetProgress = 0;
-  } else if (state.cardIndex === 0 && direction === "next") {
-    // Special: first "next" from preview to card 0 center
-    // Bring to the center of first card (the default logic already does this)
-    targetProgress = 0.6 * progressPerCard;
-  } else if (state.cardIndex === totalCards) {
-    // Snap to final position (end)
-    targetProgress = 0.9;
-  } else {
-    // Snap to card "center"
-    targetProgress = state.cardIndex * progressPerCard + 0.6 * progressPerCard;
+  // Out of slack: reset canRepin if fully out of zone
+  if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
+    canRepin = true;
   }
+}
 
-  // Clamp for safety
-  targetProgress = Math.max(0, Math.min(targetProgress, 0.9));
+// --- Helper to smoothly scroll page so wrapper's top aligns with viewport top ---
+function alignWrapperToViewportTop(wrapper, topSlackPx) {
+  const rect = wrapper.getBoundingClientRect();
+  // If wrapper top is not exactly at 0, scroll page so it is
+  if (Math.abs(rect.top) > 1) {
+    // Get current scroll position
+    const currentScroll = window.scrollY || document.documentElement.scrollTop;
+    // How much to scroll to bring wrapper top to viewport top (0)
+    const scrollOffset = rect.top;
+    // Only scroll if we’re not already locked
+    window.scrollTo({
+      top: currentScroll + scrollOffset,
+      behavior: 'smooth'
+    });
+    // You can use gsap.to(window, { scrollTo: ... }) if using GSAP scrollTo plugin
+  }
+}
 
-  // Animate scrollX
-  const maxScroll = horizontalScrollData[sectionId].maxScroll;
-  const targetScrollX = targetProgress * maxScroll;
-  const animDuration = animationDuration ?? (delta > 120 ? 0.6 : 1.0);
-  const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
-
-  gsap.to(horizontalScrollData[sectionId], {
-    scrollX: targetScrollX,
-    duration: animDuration,
-    ease: easeType,
-    onUpdate: () => {
-      const p = horizontalScrollData[sectionId].scrollX / maxScroll;
-      updateHorizontalAnimation(sectionId, p, cards);
-    },
-    onComplete: () => {
-      state.animating = false;
-      setCardSnapState(sectionId, state);
+function getMostVisibleProjectSection() {
+  let maxVisible = 0;
+  let bestSection = null;
+  document.querySelectorAll('.project-section').forEach(section => {
+    const rect = section.getBoundingClientRect();
+    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    if (visibleHeight > maxVisible && visibleHeight > 0) {
+      maxVisible = visibleHeight;
+      bestSection = section;
     }
   });
-
-  setCardSnapState(sectionId, state);
+  return bestSection ? bestSection.getAttribute('id') : null;
 }
+
+// --- Helper: get if we're near the bottom of the wrapper (for bottom enter) ---
+function isWrapperBottomInSlack() {
+  const rect = wrapper.getBoundingClientRect();
+  const slackZone = SLACK_PX;
+  return (
+    !containerPinned &&
+    rect.bottom >= window.innerHeight - slackZone &&
+    rect.bottom <= window.innerHeight + slackZone
+  );
+}
+
+// ================================================
+// Scroll Zone Logic
+// ================================================
+function initScrollZones() {
+  if (isMobile()) return;
+  const leftZone = document.querySelector('.scroll-zone-left');
+  const rightZone = document.querySelector('.scroll-zone-right');
+  if (leftZone) {
+    leftZone.addEventListener('wheel', handleLeftZoneScroll, { passive: false });
+  }
+  if (rightZone) {
+    rightZone.addEventListener('wheel', e => {
+      // Use process handler ONLY if process section is active
+      if (activeProjectId === 'process') {
+        handleProcessScroll('process', e);
+      } else {
+        onDesktopHorizontalScroll(activeProjectId, e);
+      }
+      
+      // Always block native scroll!
+      e.preventDefault();
+    }, { passive: false });
+  }
+  // Dedicated process section scroll (if user scrolls directly over it)
+  if (processSection) {
+    processSection.addEventListener('wheel', e => {
+      if (isMobile()) return;
+      // Only intercept scroll if process section is at the top of viewport (snapped)
+      const rect = processSection.getBoundingClientRect();
+      if (Math.abs(rect.top) <= 2) { // Allow 2px leeway
+        e.preventDefault();
+        handleProcessScroll('process', e);
+      }
+      // Otherwise, let default scroll snap finish first
+    }, { passive: false });
+  }
+
+  setZonesEnabled(false);
+}
+
+function handleLeftZoneScroll(e) {
+  if (!containerPinned) {
+    e.preventDefault();
+    return;
+  }
+
+  // BOTTOM EXIT: Only for process section, at 100% progress, scroll down
+  if (
+    activeProjectId === 'process' &&
+    isProcessScrollAtEnd() &&
+    e.deltaY > 0
+  ) {
+    // Only unpin if wrapper is in bottom slack zone
+    const rect = wrapper.getBoundingClientRect();
+    if (
+      rect.bottom >= window.innerHeight - SLACK_PX &&
+      rect.bottom <= window.innerHeight + SLACK_PX
+    ) {
+      unpinContainer();
+      return;
+    }
+  }
+
+  // Top exit: already handled by pinnedScrollHandler on wheel up at top
+  handleSectionSnap(e);
+}
+
+function handleRightZoneScroll(e) {
+  // console.log('RIGHT ZONE SCROLL DETECTED', e, 'activeProjectId:', activeProjectId);
+  if (!containerPinned) {
+    e.preventDefault();
+    e.stopPropagation();
+    return
+  };
+
+  // Use the current active project section ID
+  if (activeProjectId) {
+    onDesktopHorizontalScroll(activeProjectId, e);
+    e.stopPropagation();
+  }
+}
+
+function setZonesEnabled(enabled) {
+  if (isMobile()) return;
+
+  const leftZone = document.querySelector('.scroll-zone-left');
+  const rightZone = document.querySelector('.scroll-zone-right');
+  if (leftZone) {
+    leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
+    leftZone.style.opacity = enabled ? '1' : '0.4';
+    leftZone.style.cursor = enabled ? 'pointer' : 'default';
+  }
+  if (rightZone) {
+    rightZone.style.pointerEvents = enabled ? 'auto' : 'none';
+    rightZone.style.opacity = enabled ? '1' : '0.4';
+    rightZone.style.cursor = enabled ? 'pointer' : 'default';
+  }
+}
+
+// ================================================
+// Section Scrolling & Snap (Vertical Navigation)
+// ================================================
+function scrollToSection(index) {
+  if (index >= 0 && index < sections.length) {
+    sections[index].scrollIntoView({ behavior: 'smooth' });
+    currentSectionIndex = index;
+  }
+}
+
+function handleSectionSnap(event) {
+  const delta = event.deltaY;
+
+  if (Math.abs(delta) < 30) return; // prevent micro scrolls
+
+  if (delta > 0 && currentSectionIndex < sections.length - 1) {
+    scrollToSection(currentSectionIndex + 1);
+  } else if (delta < 0 && currentSectionIndex > 0) {
+    scrollToSection(currentSectionIndex - 1);
+  }
+}
+
+function initSectionObserver() {
+  const observerOptions = { threshold: 0.6 };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const section = entry.target;
+      const sectionId = section.getAttribute('id');
+
+      // --- Card fade in/out logic ---
+      let cardSelector = sectionId === 'process' ? '.process-card' : '.item.card';
+      let cards = Array.from(section.querySelectorAll(cardSelector));
+      if (cards.length) {
+        if (entry.isIntersecting) {
+          gsap.to(cards, { opacity: 1, duration: 1, overwrite: 'auto' });
+        } else {
+          gsap.to(cards, { opacity: 0, duration: 1, overwrite: 'auto' });
+        }
+      }
+
+      if (!containerPinned) return;
+
+      if (entry.isIntersecting) {
+        showProjectTooltip(sectionId);
+        console.log('[SECTION OBSERVER] Section in view:', sectionId);
+        initTooltip(sectionId);
+        setNavContext(sectionId);
+
+        if (sectionId === 'process') {
+          const scrollX = restoreProcessScrollState();
+          horizontalScrollData['process'].scrollX = scrollX;
+          const cards = Array.from(section.querySelectorAll('.process-card'));
+          const progress = scrollX / horizontalScrollData['process'].maxScroll;
+          animateProcessCards('process', progress, cards);
+        } else {
+          const scrollX = restoreProjectScrollState(sectionId);
+          horizontalScrollData[sectionId].scrollX = scrollX;
+          const cards = Array.from(section.querySelectorAll('.item.card'));
+          const progress = scrollX / horizontalScrollData[sectionId].maxScroll;
+          updateHorizontalAnimation(sectionId, progress, cards);
+        }
+      } else {
+        hideAllProjectTooltips();
+        hideTooltip();
+        // --- Save the project scroll state on exit! ---
+        if (sectionId !== 'process') {
+          saveProjectScrollState(sectionId, horizontalScrollData[sectionId]?.scrollX || 0);
+        }
+        // NO card animation/reset here: cards remain where they were, just faded out!
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.project-section').forEach(section => {
+    observer.observe(section);
+  });
+}
+
+// ================================================
+// Tooltip Management
+// ================================================
 
 function showProjectTooltip(projectId) {
   document.querySelectorAll('.project-tooltip-container').forEach(tooltip => {
@@ -508,80 +563,6 @@ function updateTooltipContent(projectId, cardIndex, cardProgress) {
   tooltip.dataset.tooltipIndex = cardIndex;
 }
 
-// --- Helper to smoothly scroll page so wrapper's top aligns with viewport top ---
-function alignWrapperToViewportTop(wrapper, topSlackPx) {
-  const rect = wrapper.getBoundingClientRect();
-  // If wrapper top is not exactly at 0, scroll page so it is
-  if (Math.abs(rect.top) > 1) {
-    // Get current scroll position
-    const currentScroll = window.scrollY || document.documentElement.scrollTop;
-    // How much to scroll to bring wrapper top to viewport top (0)
-    const scrollOffset = rect.top;
-    // Only scroll if we’re not already locked
-    window.scrollTo({
-      top: currentScroll + scrollOffset,
-      behavior: 'smooth'
-    });
-    // You can use gsap.to(window, { scrollTo: ... }) if using GSAP scrollTo plugin
-  }
-}
-
-function checkContainerLock() {
-  if (!hasUserInitiatedScroll) return;
-  if (isAligningContainer) return;
-  const rect = wrapper.getBoundingClientRect();
-  const topSlack = SLACK_PX;
-  const bottomSlack = SLACK_PX;
-
-  // Top pin
-  if (!containerPinned && canRepin && rect.top >= -topSlack && rect.top <= topSlack) {
-    // 1. Align wrapper's top to viewport top (smooth scroll)
-    isAligningContainer = true;
-    alignWrapperToViewportTop(wrapper, topSlack);
-    // 2. Wait for scroll to finish, then pin and lock body scroll
-    setTimeout(() => {
-      // Confirm we are still in the zone after the scroll
-      const afterRect = wrapper.getBoundingClientRect();
-      if (afterRect.top >= -topSlack && afterRect.top <= topSlack) {
-        pinContainer();
-      }
-      isAligningContainer = false;
-    }, 350); // adjust duration to match smooth scroll
-    return;
-  }
-
-  // Bottom pin
-  if (!containerPinned && canRepin && isWrapperBottomInSlack()) {
-    // 1. Align wrapper's bottom to viewport bottom (smooth scroll)
-    isAligningContainer = true;
-    const scrollOffset = rect.bottom - window.innerHeight;
-    if (Math.abs(scrollOffset) > 1) {
-      window.scrollTo({
-        top: (window.scrollY || document.documentElement.scrollTop) + scrollOffset,
-        behavior: 'smooth'
-      });
-    }
-    // 2. Wait for scroll to finish, then pin and lock body scroll
-    setTimeout(() => {
-      const afterRect = wrapper.getBoundingClientRect();
-      if (
-        afterRect.bottom >= window.innerHeight - bottomSlack &&
-        afterRect.bottom <= window.innerHeight + bottomSlack
-      ) {
-        pinContainer();
-      }
-      isAligningContainer = false;
-    }, 350); // adjust as above
-    return;
-  }
-
-  // Out of slack: reset canRepin if fully out of zone
-  if (!containerPinned && (rect.top < -topSlack || rect.top > topSlack)) {
-    canRepin = true;
-  }
-}
-
-// logic/tooltipManager.js
 function updateTooltip(projectId, index) {
   const content = tooltipContent[projectId]?.cards[index];
   if (tooltipText && content) {
@@ -604,7 +585,9 @@ function initTooltip(projectId) {
   updateTooltip(projectId, 0); // preview first card
 }
 
-// logic/navControl.js
+// ================================================
+// Navigation Control (Card Navigation)
+// ================================================
 function setNavContext(activeId) {
   projectId = activeId;
   cards = Array.from(document.querySelectorAll(`#${activeId} .card`));
@@ -623,6 +606,14 @@ function setNavContext(activeId) {
     horizontalScrollData[activeId].scrollX = savedScroll;
     const progress = savedScroll / horizontalScrollData[activeId].maxScroll;
     const itemCards = Array.from(document.querySelectorAll(`#${activeId} .item.card`));
+
+    if (isMobile()) {
+    const wrapper = document.querySelector(`#${activeId} .card-wrapper`);
+    if (wrapper) {
+      wrapper.scrollLeft = horizontalScrollData[activeId].scrollX;
+      console.log('[MOBILE] setNavContext restores scrollLeft:', horizontalScrollData[activeId].scrollX);
+    }
+  }
 
     if (savedScroll === 0) {
       // No previous progress: animate to preview position
@@ -694,261 +685,119 @@ function initNavButtons() {
   }));
 }
 
-// logic/sectionScrollLogic.js
-function scrollToSection(index) {
-  if (index >= 0 && index < sections.length) {
-    sections[index].scrollIntoView({ behavior: 'smooth' });
-    currentSectionIndex = index;
-  }
-}
-
-function handleSectionSnap(event) {
-  const delta = event.deltaY;
-
-  if (Math.abs(delta) < 30) return; // prevent micro scrolls
-
-  if (delta > 0 && currentSectionIndex < sections.length - 1) {
-    scrollToSection(currentSectionIndex + 1);
-  } else if (delta < 0 && currentSectionIndex > 0) {
-    scrollToSection(currentSectionIndex - 1);
-  }
-}
-
-function initSectionObserver() {
-  const observerOptions = { threshold: 0.6 };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const section = entry.target;
-      const sectionId = section.getAttribute('id');
-      const tooltipContainer = document.querySelector(`#tooltip-${sectionId}`);
-
-      if (!containerPinned) return;
-
-      if (entry.isIntersecting) {
-        showProjectTooltip(sectionId);
-        console.log('[SECTION OBSERVER] Section in view:', sectionId);
-        initTooltip(sectionId);
-        setNavContext(sectionId);
-
-        if (sectionId === 'process') {
-          const scrollX = restoreProcessScrollState();
-          horizontalScrollData['process'].scrollX = scrollX;
-          const cards = Array.from(section.querySelectorAll('.process-card'));
-          const progress = scrollX / horizontalScrollData['process'].maxScroll;
-          animateProcessCards('process', progress, cards);
-        } else {
-          const scrollX = restoreProjectScrollState(sectionId);
-          horizontalScrollData[sectionId].scrollX = scrollX;
-          const cards = Array.from(section.querySelectorAll('.item.card'));
-          const progress = scrollX / horizontalScrollData[sectionId].maxScroll;
-          updateHorizontalAnimation(sectionId, progress, cards);
-        }
-      } else {
-        hideAllProjectTooltips();
-        hideTooltip();
-        // --- Save the project scroll state on exit! ---
-        if (sectionId !== 'process') {
-          saveProjectScrollState(sectionId, horizontalScrollData[sectionId]?.scrollX || 0);
-        }
-
-        if (sectionId !== 'process') {
-          const cards = Array.from(section.querySelectorAll('.item.card'));
-          if (cards.length) {
-            gsap.to(horizontalScrollData[sectionId], {
-              scrollX: 0,
-              duration: 0.5,
-              onUpdate: () => {
-                updateHorizontalAnimation(
-                  sectionId,
-                  horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll,
-                  cards
-                );
-              }
-            });
-            setCardSnapState(sectionId, { cardIndex: 0, phase: 0, isPreview: true, animating: false });
-          }
-        }
-      }
-    });
-  }, observerOptions);
-
-  document.querySelectorAll('.project-section').forEach(section => {
-    observer.observe(section);
-  });
-}
-
-function setupProcessCards() {
-  const container = processSection?.querySelector('.process-cards-container');
-  if (!container) return;
-  processCards = Array.from(container.querySelectorAll('.process-card'));
-  processScrollValue = 0;
-}
-
-function animateProcessCards(sectionId, progress, cards) {
-  const container = document.querySelector(`#${sectionId} .process-cards-container`);
-  if (!container) return;
-
-  const isMobileDevice = window.innerWidth <= 768;
-  const deviceKey = isMobileDevice ? 'mobile' : 'desktop';
-  const positions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
-
+// ================================================
+// Horizontal Scroll & Card Snap (Projects)
+// ================================================
+// Snap card scroll in given direction, updating phase and card index as needed.
+function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 50) {
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+  if (!cards.length) return;
   const totalCards = cards.length;
-  const positionsCount = positions.length;
+  let state = getCardSnapState(sectionId, totalCards);
+
+  if (state.animating) return;
+  state.animating = true;
+
+  // Work with latest scrollX to derive current index/progress
+  const maxScroll = horizontalScrollData[sectionId].maxScroll;
+  let currentProgress = horizontalScrollData[sectionId].scrollX / maxScroll;
+  const isMobile = window.innerWidth <= 768;
   const progressPerCard = 0.9 / totalCards;
+  const previewRatio = isMobile ? 0.15 : 0.3;
+  const phase1End = 0.6 * progressPerCard;
+  const previewEnd = previewRatio * phase1End;
 
-  // Reference: the container, not the viewport!
-  const containerRect = container.getBoundingClientRect();
-  const containerWidth = containerRect.width;
-  const containerHeight = containerRect.height;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
+  // Figure out the current snap index based on scrollX (not stale state)
+  let cardIndex = Math.round((currentProgress - phase1End) / progressPerCard);
+  cardIndex = Math.max(-1, Math.min(cardIndex, totalCards - 1));
+  // (you may want to refine this logic further for edge cases)
 
-  // Fallbacks for card size
-  const cardHeight = cards[0]?.offsetHeight || 100;
-  const cardWidth = cards[0]?.offsetWidth || 100;
+  // Use state.cardIndex or cardIndex from scroll, whichever is higher
+  state.cardIndex = typeof state.cardIndex === 'number' ? state.cardIndex : cardIndex;
 
-  cards.forEach((card, index) => {
-    gsap.set(card, { transformOrigin: "50% 50%" });
+  // --- SNAP NAVIGATION LOGIC ---
+  if (direction === "next") {
+    if (state.cardIndex === -1) {
+      state.cardIndex = 0;
+    } else if (state.cardIndex < totalCards) {
+      state.cardIndex++;
+    }
+  } else if (direction === "prev") {
+    if (state.cardIndex > -1) state.cardIndex--;
+  }
 
-    // Always absolutely position (optional: use CSS instead)
-    card.style.position = 'absolute';
-    card.style.top = '0';
-    card.style.left = '0';
+  // ---- Mobile-specific: Also sync .card-wrapper scrollLeft if on mobile
+  if (isMobile) {
+    const wrapper = document.querySelector(`#${sectionId} .card-wrapper`);
+    if (wrapper) {
+      wrapper.scrollLeft = targetScrollX;
+      console.log('[MOBILE] snapCardScroll sets wrapper.scrollLeft:', targetScrollX);
+    }
+  }
 
-    const cardStart = index * progressPerCard;
-    const cardProgress = Math.min(1, Math.max(0, (progress - cardStart) / progressPerCard));
-    const posIndex = Math.min(index, positionsCount - 1);
-    const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
+  // --- CALCULATE THE SNAP TARGET PROGRESS ---
+  let targetProgress;
+  if (state.cardIndex === -1) {
+    targetProgress = previewEnd;
+  } else if (state.cardIndex === 0) {
+    targetProgress = phase1End;
+  } else if (state.cardIndex >= totalCards) {
+    targetProgress = 0.9;
+  } else {
+    targetProgress = state.cardIndex * progressPerCard + phase1End;
+  }
+  targetProgress = Math.max(0, Math.min(targetProgress, 0.9));
+  const targetScrollX = targetProgress * maxScroll;
+  const animDuration = animationDuration ?? (delta > 120 ? 0.6 : 1.0);
+  const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
 
-    // Relative to container
-    const finalX = parseFloat(finalPos.x) * (containerWidth / 100); // assumes x is % of container width
-    const finalY = parseFloat(finalPos.y) * (containerHeight / 100);
-    const finalScale = parseFloat(finalPos.scale);
-    const finalOpacity = parseFloat(finalPos.opacity);
-    const finalRotation = parseFloat(finalPos.rotation);
+  // ---- ALWAYS UPDATE horizontalScrollData BEFORE GSAP for instant sync
+  horizontalScrollData[sectionId].scrollX = targetScrollX;
+  saveProjectScrollState(sectionId, targetScrollX);
 
-    if (cardProgress === 0) {
-      // Start below container, centered horizontally
-      gsap.set(card, {
-        x: centerX - cardWidth / 2,
-        y: containerHeight + cardHeight, // below container bottom
-        scale: 1,
-        opacity: 0,
-        rotation: 0,
-        force3D: true,
-      });
-    } else if (cardProgress <= 0.6) {
-      // Slide from below to center (all cards to center)
-      const t = cardProgress / 0.6;
-      const startY = containerHeight + cardHeight;
-      const endY = centerY;
-      const currentY = startY + (endY - startY) * t;
-      gsap.set(card, {
-        x: centerX - cardWidth / 2,
-        y: currentY - cardHeight / 2,
-        scale: 1,
-        opacity: t,
-        rotation: 0,
-        force3D: true,
-      });
-    } else {
-      // Center to final position (relative to container)
-      const t = (cardProgress - 0.6) / 0.4;
-      const startX = centerX;
-      const startY = centerY;
-      const endX = centerX + finalX;
-      const endY = centerY + finalY;
-      const currentX = startX + (endX - startX) * t;
-      const currentY = startY + (endY - startY) * t;
-      const currentScale = 1 + (finalScale - 1) * t;
-      const currentOpacity = 1 + (finalOpacity - 1) * t;
-      const currentRotation = 0 + (finalRotation - 0) * t;
-
-      gsap.set(card, {
-        x: currentX - cardWidth / 2,
-        y: currentY - cardHeight / 2,
-        scale: currentScale,
-        opacity: currentOpacity,
-        rotation: currentRotation,
-        force3D: true,
-      });
+  gsap.to(horizontalScrollData[sectionId], {
+    scrollX: targetScrollX,
+    duration: animDuration,
+    ease: easeType,
+    onUpdate: () => {
+      const p = horizontalScrollData[sectionId].scrollX / maxScroll;
+      updateHorizontalAnimation(sectionId, p, cards);
+      saveProjectScrollState(sectionId, horizontalScrollData[sectionId].scrollX);
+    },
+    onComplete: () => {
+      horizontalScrollData[sectionId].scrollX = targetScrollX;
+      saveProjectScrollState(sectionId, targetScrollX);
+      // Update state.cardIndex and animating flag
+      setCardSnapState(sectionId, { cardIndex: state.cardIndex, animating: false });
     }
   });
-}
 
-function handleProcessScroll(sectionId, e) {
-  if (!containerPinned || !horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) {
-    // Only allow default scroll when NOT pinned or not in process
-    return;
-  }
-  // Always block native scroll when pinned in process section!
-  e.preventDefault();
-
-  const delta = e.deltaY;
-
-  // unpin at the end
-  if (
-    containerPinned &&
-    sectionId === 'process' &&
-    isProcessScrollAtEnd() &&
-    delta > 0
-  ) {
-    const rect = wrapper.getBoundingClientRect();
-    if (
-      rect.bottom >= window.innerHeight - SLACK_PX &&
-      rect.bottom <= window.innerHeight + SLACK_PX
-    ) {
-      unpinContainer();
-      return;
+  // ---- Mobile-specific: Also sync .card-wrapper scrollLeft if on mobile
+  if (isMobile) {
+    const wrapper = document.querySelector(`#${sectionId} .card-wrapper`);
+    if (wrapper) {
+      wrapper.scrollLeft = targetScrollX;
+      console.log('[MOBILE] snapCardScroll sets wrapper.scrollLeft:', targetScrollX);
     }
-    // If not in slack, just block scroll, do nothing else!
-    return;
   }
 
-  // Animate cards as normal:
-  horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
-  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
-  saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
-  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
-  const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
-  animateProcessCards(sectionId, progress, cards);
+  setCardSnapState(sectionId, state);
 }
 
-function setZonesEnabled(enabled) {
-  if (isMobile()) return;
-
-  const leftZone = document.querySelector('.scroll-zone-left');
-  const rightZone = document.querySelector('.scroll-zone-right');
-  if (leftZone) {
-    leftZone.style.pointerEvents = enabled ? 'auto' : 'none';
-    leftZone.style.opacity = enabled ? '1' : '0.4';
-    leftZone.style.cursor = enabled ? 'pointer' : 'default';
+function getCardSnapState(sectionId, totalCards) {
+  if (!window.cardSnapState[sectionId]) {
+    window.cardSnapState[sectionId] = {
+      snapIndex: -1, // -1 = preview, 0...N-1 = snapped to card
+      animating: false
+    };
   }
-  if (rightZone) {
-    rightZone.style.pointerEvents = enabled ? 'auto' : 'none';
-    rightZone.style.opacity = enabled ? '1' : '0.4';
-    rightZone.style.cursor = enabled ? 'pointer' : 'default';
-  }
+  let state = window.cardSnapState[sectionId];
+  state.snapIndex = Math.max(-1, Math.min(state.snapIndex, totalCards - 1));
+  return state;
 }
 
-function saveProjectScrollState(sectionId, scrollX) {
-  window.projectScrollState = window.projectScrollState || {};
-  window.projectScrollState[sectionId] = scrollX;
-  if (PERSIST_SCROLL_PROGRESS) {
-    sessionStorage.setItem(`projectScrollX_${sectionId}`, scrollX);
-  }
-}
-
-function restoreProjectScrollState(sectionId) {
-  if (window.projectScrollState && window.projectScrollState[sectionId] !== undefined) {
-    return window.projectScrollState[sectionId];
-  }
-  if (PERSIST_SCROLL_PROGRESS) {
-    const stored = sessionStorage.getItem(`projectScrollX_${sectionId}`);
-    return stored !== null ? Number(stored) : 0;
-  }
-  return 0;
+function setCardSnapState(sectionId, newState) {
+  window.cardSnapState[sectionId] = { ...window.cardSnapState[sectionId], ...newState };
 }
 
 // --- Project scroll handler (horizontal, for project1-4) ---
@@ -958,10 +807,11 @@ function handleProjectScroll(sectionId, e) {
   if (!horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) return;
   e.preventDefault();
 
-  // Scroll delta (mousewheel or trackpad)
-  const delta = e.deltaX || e.deltaY; // Use X for horizontal devices, else fallback
+  // Use the GSAP scrollX as source of truth for progress
+  const delta = e.deltaX || e.deltaY;
   horizontalScrollData[sectionId].scrollX += delta / PROJECTS_SCROLL_SENSITIVITY;
   horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
+  saveProjectScrollState(sectionId, horizontalScrollData[sectionId].scrollX);
 
   // Save for refresh/session
   saveProjectScrollState(sectionId, horizontalScrollData[sectionId].scrollX);
@@ -970,98 +820,6 @@ function handleProjectScroll(sectionId, e) {
   const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
   const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
   updateHorizontalAnimation(sectionId, progress, cards);
-}
-
-// --- Initialize state for all projects (run on DOMContentLoaded) ---
-function initProjectScroll() {
-  document.querySelectorAll('.project-section').forEach(section => {
-    const sectionId = section.getAttribute('id');
-    if (sectionId === 'process') return;
-    // Initialize state
-    if (!horizontalScrollData[sectionId]) {
-      horizontalScrollData[sectionId] = {
-        isActive: true,
-        scrollX: 0,
-        maxScroll: 1000 // Tune as needed!
-      };
-    } else {
-      horizontalScrollData[sectionId].isActive = true;
-    }
-    // Restore scroll state if available
-    const restored = restoreProjectScrollState(sectionId);
-    horizontalScrollData[sectionId].scrollX = restored;
-    // Animate cards to initial/last position
-    const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
-    const progress = restored / horizontalScrollData[sectionId].maxScroll;
-    updateHorizontalAnimation(sectionId, progress, cards);
-    // Listen for wheel on right scroll zone ONLY for project sections
-    const rightZone = document.querySelector('.scroll-zone-right');
-    if (rightZone) {
-      // Remove previous listener (prevents stacking)
-      rightZone.removeEventListener('wheel', rightZone._projectScrollHandler);
-      // Handler must use this section's id
-      rightZone._projectScrollHandler = function(e) {
-        // Only if this section is active
-        if (activeProjectId === sectionId) {
-          handleProjectScroll(sectionId, e);
-        }
-      };
-      rightZone.addEventListener('wheel', rightZone._projectScrollHandler, { passive: false });
-    }
-  });
-}
-
-function initProcessScroll() {
-  setupProcessCards();
-  if (!processSection) return;
-
-  if (!horizontalScrollData['process']) {
-    horizontalScrollData['process'] = {
-      isActive: true,
-      scrollX: 0,
-      maxScroll: 1000 // or whatever feels right for your process card count!
-    };
-  } else {
-    horizontalScrollData['process'].isActive = true;
-  }
-
-  // --- Restore process scroll state ---
-  const restored = restoreProcessScrollState();
-  horizontalScrollData['process'].scrollX = restored;
-  const cards = Array.from(document.querySelectorAll('#process .process-card'));
-  const progress = restored / horizontalScrollData['process'].maxScroll;
-  animateProcessCards('process', progress, cards);
-
-  // Listen for scroll
-  processSection.addEventListener('wheel', (e) => {
-    if (isMobile()) return;
-    e.preventDefault();
-    handleProcessScroll('process', e);
-  });
-}
-
-// --- Helper: get if we're near the bottom of the wrapper (for bottom enter) ---
-function isWrapperBottomInSlack() {
-  const rect = wrapper.getBoundingClientRect();
-  const slackZone = SLACK_PX;
-  return (
-    !containerPinned &&
-    rect.bottom >= window.innerHeight - slackZone &&
-    rect.bottom <= window.innerHeight + slackZone
-  );
-}
-
-// --- Helper: get if we're at the bottom of process scroll (for exit) ---
-function isProcessScrollAtEnd() {
-  if (!horizontalScrollData['process']) return false;
-  // allow some floating point slack
-  return horizontalScrollData['process'].scrollX >= horizontalScrollData['process'].maxScroll - 1;
-}
-
-// animations/cardAnimator.js
-function getCardConfig(projectId, index) {
-  const device = isMobile() ? 'mobile' : 'desktop';
-  return positions[projectId]?.[device]?.[index];
 }
 
 function updateHorizontalAnimation(sectionId, progress, cards) {
@@ -1227,15 +985,291 @@ function onMobileHorizontalScroll() {
   if (!isMobile() || !activeProjectId) return;
 
   const wrapper = document.querySelector(`#${activeProjectId} .card-wrapper`);
+  if (!wrapper) return;
   const scrollLeft = wrapper.scrollLeft;
-  const cardWidth = wrapper.clientWidth;
 
-  cards.forEach((card, index) => {
-    const relProgress = (scrollLeft / cardWidth) - index;
-    const progress = Math.max(0, Math.min(1, relProgress));
-    updateCardProgress(card, activeProjectId, index, progress);
+  // Sync to state for snap/nav consistency
+  horizontalScrollData[activeProjectId].scrollX = scrollLeft;
+  saveProjectScrollState(activeProjectId, scrollLeft);
+
+  // Calculate progress for card animation
+  const maxScroll = horizontalScrollData[activeProjectId].maxScroll;
+  const progress = scrollLeft / maxScroll;
+
+  const cards = Array.from(document.querySelectorAll(`#${activeProjectId} .item.card`));
+  // Log scroll positions and data
+  console.log('[MOBILE] onMobileHorizontalScroll', {
+    scrollLeft,
+    maxScroll,
+    progress,
+    horizontalScrollData: { ...horizontalScrollData[activeProjectId] }
+  });
+
+  updateHorizontalAnimation(activeProjectId, progress, cards);
+}
+
+// --- Initialize state for all projects (run on DOMContentLoaded) ---
+function initProjectScroll() {
+  document.querySelectorAll('.project-section').forEach(section => {
+    const sectionId = section.getAttribute('id');
+    if (sectionId === 'process') return;
+    // Initialize state
+    if (!horizontalScrollData[sectionId]) {
+      horizontalScrollData[sectionId] = {
+        isActive: true,
+        scrollX: 0,
+        maxScroll: 1000 // Tune as needed!
+      };
+    } else {
+      horizontalScrollData[sectionId].isActive = true;
+    }
+    // Restore scroll state if available
+    const restored = restoreProjectScrollState(sectionId);
+    horizontalScrollData[sectionId].scrollX = restored;
+    // Animate cards to initial/last position
+    const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
+    const progress = restored / horizontalScrollData[sectionId].maxScroll;
+    updateHorizontalAnimation(sectionId, progress, cards);
+    // Listen for wheel on right scroll zone ONLY for project sections
+    const rightZone = document.querySelector('.scroll-zone-right');
+    if (rightZone) {
+      // Remove previous listener (prevents stacking)
+      rightZone.removeEventListener('wheel', rightZone._projectScrollHandler);
+      // Handler must use this section's id
+      rightZone._projectScrollHandler = function(e) {
+        // Only if this section is active
+        if (activeProjectId === sectionId) {
+          handleProjectScroll(sectionId, e);
+        }
+      };
+      rightZone.addEventListener('wheel', rightZone._projectScrollHandler, { passive: false });
+    }
   });
 }
+
+// ================================================
+// Process Card Animation
+// ================================================
+function setupProcessCards() {
+  const container = processSection?.querySelector('.process-cards-container');
+  if (!container) return;
+  processCards = Array.from(container.querySelectorAll('.process-card'));
+  processScrollValue = 0;
+}
+
+function animateProcessCards(sectionId, progress, cards) {
+  const container = document.querySelector(`#${sectionId} .process-cards-container`);
+  if (!container) return;
+
+  const isMobileDevice = window.innerWidth <= 768;
+  const deviceKey = isMobileDevice ? 'mobile' : 'desktop';
+  const positions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
+
+  const totalCards = cards.length;
+  const positionsCount = positions.length;
+  const progressPerCard = 0.9 / totalCards;
+
+  // Reference: the container, not the viewport!
+  const containerRect = container.getBoundingClientRect();
+  const containerWidth = containerRect.width;
+  const containerHeight = containerRect.height;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  // Fallbacks for card size
+  const cardHeight = cards[0]?.offsetHeight || 100;
+  const cardWidth = cards[0]?.offsetWidth || 100;
+
+  cards.forEach((card, index) => {
+    gsap.set(card, { transformOrigin: "50% 50%" });
+
+    // Always absolutely position (optional: use CSS instead)
+    card.style.position = 'absolute';
+    card.style.top = '0';
+    card.style.left = '0';
+
+    const cardStart = index * progressPerCard;
+    const cardProgress = Math.min(1, Math.max(0, (progress - cardStart) / progressPerCard));
+    const posIndex = Math.min(index, positionsCount - 1);
+    const finalPos = positions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
+
+    // Relative to container
+    const finalX = parseFloat(finalPos.x) * (containerWidth / 100); // assumes x is % of container width
+    const finalY = parseFloat(finalPos.y) * (containerHeight / 100);
+    const finalScale = parseFloat(finalPos.scale);
+    const finalOpacity = parseFloat(finalPos.opacity);
+    const finalRotation = parseFloat(finalPos.rotation);
+
+    if (cardProgress === 0) {
+      // Start below container, centered horizontally
+      gsap.set(card, {
+        x: centerX - cardWidth / 2,
+        y: containerHeight + cardHeight, // below container bottom
+        scale: 1,
+        opacity: 0,
+        rotation: 0,
+        force3D: true,
+      });
+    } else if (cardProgress <= 0.6) {
+      // Slide from below to center (all cards to center)
+      const t = cardProgress / 0.6;
+      const startY = containerHeight + cardHeight;
+      const endY = centerY;
+      const currentY = startY + (endY - startY) * t;
+      gsap.set(card, {
+        x: centerX - cardWidth / 2,
+        y: currentY - cardHeight / 2,
+        scale: 1,
+        opacity: t,
+        rotation: 0,
+        force3D: true,
+      });
+    } else {
+      // Center to final position (relative to container)
+      const t = (cardProgress - 0.6) / 0.4;
+      const startX = centerX;
+      const startY = centerY;
+      const endX = centerX + finalX;
+      const endY = centerY + finalY;
+      const currentX = startX + (endX - startX) * t;
+      const currentY = startY + (endY - startY) * t;
+      const currentScale = 1 + (finalScale - 1) * t;
+      const currentOpacity = 1 + (finalOpacity - 1) * t;
+      const currentRotation = 0 + (finalRotation - 0) * t;
+
+      gsap.set(card, {
+        x: currentX - cardWidth / 2,
+        y: currentY - cardHeight / 2,
+        scale: currentScale,
+        opacity: currentOpacity,
+        rotation: currentRotation,
+        force3D: true,
+      });
+    }
+  });
+}
+
+function handleProcessScroll(sectionId, e) {
+  if (!containerPinned || !horizontalScrollData[sectionId] || !horizontalScrollData[sectionId].isActive) {
+    // Only allow default scroll when NOT pinned or not in process
+    return;
+  }
+  // Always block native scroll when pinned in process section!
+  e.preventDefault();
+
+  const delta = e.deltaY;
+
+  // unpin at the end
+  if (
+    containerPinned &&
+    sectionId === 'process' &&
+    isProcessScrollAtEnd() &&
+    delta > 0
+  ) {
+    const rect = wrapper.getBoundingClientRect();
+    if (
+      rect.bottom >= window.innerHeight - SLACK_PX &&
+      rect.bottom <= window.innerHeight + SLACK_PX
+    ) {
+      unpinContainer();
+      return;
+    }
+    // If not in slack, just block scroll, do nothing else!
+    return;
+  }
+
+  // Animate cards as normal:
+  horizontalScrollData[sectionId].scrollX += delta / PROCESS_SCROLL_SENSITIVITY;
+  horizontalScrollData[sectionId].scrollX = Math.max(0, Math.min(horizontalScrollData[sectionId].scrollX, horizontalScrollData[sectionId].maxScroll));
+  saveProcessScrollState(horizontalScrollData[sectionId].scrollX);
+  const progress = horizontalScrollData[sectionId].scrollX / horizontalScrollData[sectionId].maxScroll;
+  const cards = Array.from(document.querySelectorAll(`#${sectionId} .process-card`));
+  animateProcessCards(sectionId, progress, cards);
+}
+
+function initProcessScroll() {
+  setupProcessCards();
+  if (!processSection) return;
+
+  if (!horizontalScrollData['process']) {
+    horizontalScrollData['process'] = {
+      isActive: true,
+      scrollX: 0,
+      maxScroll: 1000 // or whatever feels right for your process card count!
+    };
+  } else {
+    horizontalScrollData['process'].isActive = true;
+  }
+
+  // --- Restore process scroll state ---
+  const restored = restoreProcessScrollState();
+  horizontalScrollData['process'].scrollX = restored;
+  const cards = Array.from(document.querySelectorAll('#process .process-card'));
+  const progress = restored / horizontalScrollData['process'].maxScroll;
+  animateProcessCards('process', progress, cards);
+
+  // Listen for scroll
+  processSection.addEventListener('wheel', (e) => {
+    if (isMobile()) return;
+    e.preventDefault();
+    handleProcessScroll('process', e);
+  });
+}
+
+// --- Helper: get if we're at the bottom of process scroll (for exit) ---
+function isProcessScrollAtEnd() {
+  if (!horizontalScrollData['process']) return false;
+  // allow some floating point slack
+  return horizontalScrollData['process'].scrollX >= horizontalScrollData['process'].maxScroll - 1;
+}
+
+// ================================================
+// Scroll State Persistence
+// ================================================
+function saveProjectScrollState(sectionId, scrollX) {
+  window.projectScrollState = window.projectScrollState || {};
+  window.projectScrollState[sectionId] = scrollX;
+  if (PERSIST_SCROLL_PROGRESS) {
+    sessionStorage.setItem(`projectScrollX_${sectionId}`, scrollX);
+  }
+}
+
+function restoreProjectScrollState(sectionId) {
+  if (window.projectScrollState && window.projectScrollState[sectionId] !== undefined) {
+    return window.projectScrollState[sectionId];
+  }
+  if (PERSIST_SCROLL_PROGRESS) {
+    const stored = sessionStorage.getItem(`projectScrollX_${sectionId}`);
+    return stored !== null ? Number(stored) : 0;
+  }
+  return 0;
+}
+
+// --- Persistence helpers for process scroll progress ---
+function saveProcessScrollState(scrollX) {
+  window.processScrollState = scrollX;
+  sessionStorage.setItem('processScrollX', scrollX);
+}
+
+function restoreProcessScrollState() {
+  if (window.processScrollState !== undefined) {
+    return window.processScrollState;
+  }
+  const stored = sessionStorage.getItem('processScrollX');
+  return stored !== null ? Number(stored) : 0;
+}
+
+// ================================================
+// Gesture & Input Handling
+// ================================================
+// Gesture direction detection
+function getGestureDirection(dx, dy) {
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > HORIZONTAL_THRESHOLD) return 'horizontal';
+  if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > VERTICAL_THRESHOLD) return 'vertical';
+  return null;
+}
+
+function enableUserScrollFlag() { hasUserInitiatedScroll = true; }
 
 function initCardScrollHandlers() {
   if (isMobile()) {
@@ -1435,6 +1469,37 @@ function setupGestureHandlers() {
     }, { passive: true });
   }
 });
+
+// ================================================
+// Utility Functions
+// ================================================
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function fadeOutNavBar() {
+  const navBarCont = document.getElementById('nav-bar-cont');
+  if (navBarCont && !navBarCont.classList.contains('nav-fade-out')) {
+    navBarCont.classList.add('nav-fade-out');
+  }
+}
+
+function fadeInNavBar() {
+  const navBarCont = document.getElementById('nav-bar-cont');
+  if (navBarCont && navBarCont.classList.contains('nav-fade-out')) {
+    navBarCont.classList.remove('nav-fade-out');
+  }
+}
+
+console.log('[INFO] isMobile:', isMobile());
+console.log('[INFO] ontouchstart in window:', 'ontouchstart' in window);
+console.log('[INFO] window.innerWidth:', window.innerWidth);
+
+// animations/cardAnimator.js
+function getCardConfig(projectId, index) {
+  const device = isMobile() ? 'mobile' : 'desktop';
+  return positions[projectId]?.[device]?.[index];
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavButtons();

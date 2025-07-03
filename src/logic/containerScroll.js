@@ -709,7 +709,8 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
 
   // Figure out the current snap index based on scrollX (not stale state)
   let cardIndex = Math.round((currentProgress - phase1End) / progressPerCard);
-  cardIndex = Math.max(-1, Math.min(cardIndex, totalCards - 1));
+  // Allow one extra position before preview (-2)
+  cardIndex = Math.max(-2, Math.min(cardIndex, totalCards - 1));
   // (you may want to refine this logic further for edge cases)
 
   // Use state.cardIndex or cardIndex from scroll, whichever is higher
@@ -717,13 +718,9 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
 
   // --- SNAP NAVIGATION LOGIC ---
   if (direction === "next") {
-    if (state.cardIndex === -1) {
-      state.cardIndex = 0;
-    } else if (state.cardIndex < totalCards) {
-      state.cardIndex++;
-    }
+    if (state.cardIndex < totalCards - 1) state.cardIndex++;
   } else if (direction === "prev") {
-    if (state.cardIndex > -1) state.cardIndex--;
+    if (state.cardIndex > -2) state.cardIndex--;
   }
 
   // ---- Mobile-specific: Also sync .card-wrapper scrollLeft if on mobile
@@ -737,7 +734,9 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
 
   // --- CALCULATE THE SNAP TARGET PROGRESS ---
   let targetProgress;
-  if (state.cardIndex === -1) {
+  if (state.cardIndex === -2) {
+    targetProgress = 0; // fully out (background visible)
+  } else if (state.cardIndex === -1) {
     targetProgress = previewEnd;
   } else if (state.cardIndex === 0) {
     targetProgress = phase1End;
@@ -746,6 +745,7 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
   } else {
     targetProgress = state.cardIndex * progressPerCard + phase1End;
   }
+
   targetProgress = Math.max(0, Math.min(targetProgress, 0.9));
   const targetScrollX = targetProgress * maxScroll;
   const animDuration = animationDuration ?? (delta > 120 ? 0.6 : 1.0);

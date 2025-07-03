@@ -20,6 +20,7 @@
     "@supabase/supabase-js": "^2.49.8",
     "@tailwindcss/cli": "^4.0.17",
     "framer-motion": "^11.18.2",
+    "glsl-canvas-js": "^0.2.9",
     "gsap": "^3.13.0",
     "ogl": "^1.0.11",
     "react": "^19.1.0",

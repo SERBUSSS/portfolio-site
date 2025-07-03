@@ -36,7 +36,7 @@
         <header id="nav-bar-cont" class="w-[100vw] min-[70rem]:h-32 max-[70rem]:h-[6.5rem] h-auto flex fixed justify-center top-0 left-0">
             <div id="nav-bar" class="w-full inline-flex items-center justify-between mt-4 lg:max-w-[1200px]">
                 <!-- Mobile layout (existing) -->
-                <div id="mobile-bar" class="min-[70rem]:hidden w-full p-4 mx-4 bg-[#262728]/70 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm inline-flex justify-between items-center">
+                <div id="mobile-bar" class="shiny-border min-[70rem]:hidden w-full p-4 mx-4 bg-[#262728]/70 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm inline-flex justify-between items-center">
                     <div class="basis-1/2 h-auto flex justify-start">
                         <a href="#" class="w-full h-auto flex justify-start items-center">
                             <svg id="head-logo" width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +58,7 @@
                 </div>
 
                 <!-- Desktop layout -->
-                <div class="hidden min-[70rem]:inline-flex w-full bg-[#262728]/70 rounded outline-2 outline-offset-[-2px] outline-[#7f8385] backdrop-blur-sm justify-between items-center py-6 px-6 md:max-[70rem]:px-16 lg:my-0 lg:mx-auto lg:max-w-[1200px] lg:px-4 lg:py-4">
+                <div class="hidden min-[70rem]:inline-flex w-full bg-[#262728]/70 rounded-md outline outline-[#7f8385] outline-offset-[-2px] backdrop-blur-sm justify-between items-center py-6 px-6 md:max-[70rem]:px-16 lg:my-0 lg:mx-auto lg:max-w-[1200px] lg:px-4 lg:py-4">
                     <!-- Logo -->
                     <div class=" w-auto h-auto lg:pl-2 lg:pr-32" >
                         <a href="#" class="w-full h-auto">
@@ -79,7 +79,7 @@
                     </nav>
                     
                     <!-- CTA Button -->
-                    <div class="w-auto h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover:bg-[#333435]/95 rounded backdrop-blur-sm lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                    <div class="shiny-border-btn w-auto h-auto px-6 py-4 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover:bg-[#333435]/95 backdrop-blur-sm lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                         <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6 lg:text-[1.2rem]">Start a Project</button>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <div class="w-full flex flex-col items-center justify-center gap-2">
-                            <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
+                            <div class="shiny-border-btn w-full h-auto px-6 py-4 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm">
                                 <button data-open-form="true" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
                             </div>
                             <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">Answer a few questions, it only takes 3-4 minutes.</p>
@@ -327,7 +327,7 @@
                         <div class="project-tooltip-container card-tooltip hidden justify-center items-center gap-4 mt-8 z-10" id="tooltip-project-1" data-project-id="project-1">
 
                             <!-- Desktop Prev Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-prev"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-prev"
                                 aria-label="Previous card">
                                 <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                 <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -337,7 +337,7 @@
                             </div>
 
                             <!-- Tooltip Text -->
-                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
+                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
                                 <div class="tooltip-name text-center justify-start text-[#FFFDFF] text-xl font-mono xl:text-[1.2rem] 2xl:text-2xl">Si Punct Media</div>
                                 <p class="tooltip-description self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 xl:text-[1.4rem] xl:leading-7 2xl:text-2xl">
                                 <!-- tooltipManager.js will populate this dynamically -->
@@ -346,7 +346,7 @@
                             </div>                        
                             
                             <!-- Desktop Next Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-next"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-next"
                                 aria-label="Next card">
                                 <div class="w-8 h-8 relative overflow-hidden">
                                     <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -357,7 +357,7 @@
 
                             <!-- Mobile Navigation Row -->
                             <div class="project-nav-btns card-nav absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                                <div class="btn-prev p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-prev shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Previous card">
                                     <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -370,7 +370,7 @@
                                 you can also drag left/right to explore
                                 </div>
 
-                                <div class="btn-next p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-next shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Next card">
                                     <div class="w-8 h-8 relative overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -902,7 +902,7 @@
                         data-project-id="project-2">
 
                             <!-- Desktop Prev Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-prev"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-prev"
                                 aria-label="Previous card">
                                 <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                 <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -912,7 +912,7 @@
                             </div>
 
                             <!-- Tooltip Text -->
-                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
+                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
                                 <div class="tooltip-name text-center justify-start text-[#FFFDFF] text-xl font-mono xl:text-[1.2rem]">EnergNature</div>
                                 <p class="tooltip-description self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 xl:text-[1.4rem] xl:leading-7 2xl:text-2xl">
                                 <!-- tooltipManager.js will populate this dynamically -->
@@ -921,7 +921,7 @@
                             </div>                        
                             
                             <!-- Desktop Next Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-next"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-next"
                                 aria-label="Next card">
                                 <div class="w-8 h-8 relative overflow-hidden">
                                     <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -932,7 +932,7 @@
 
                             <!-- Mobile Navigation Row -->
                             <div class="project-nav-btns card-nav absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                                <div class="btn-prev p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-prev shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Previous card">
                                     <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -945,7 +945,7 @@
                                 you can also drag left/right to explore
                                 </div>
 
-                                <div class="btn-next p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-next shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Next card">
                                     <div class="w-8 h-8 relative overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1615,7 +1615,7 @@
                         data-project-id="project-3">
 
                             <!-- Desktop Prev Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-prev"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-prev"
                                 aria-label="Previous card">
                                 <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                 <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1625,7 +1625,7 @@
                             </div>
 
                             <!-- Tooltip Text -->
-                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
+                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
                                 <div class="tooltip-name text-center justify-start text-[#FFFDFF] text-xl font-mono xl:text-[1.2rem] 2xl:text-2xl">A&D Performance</div>
                                 <p class="tooltip-description self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 xl:text-[1.4rem] xl:leading-7 2xl:text-2xl">
                                 <!-- tooltipManager.js will populate this dynamically --> 
@@ -1634,7 +1634,7 @@
                             </div>                        
                             
                             <!-- Desktop Next Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-next"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-next"
                                 aria-label="Next card">
                                 <div class="w-8 h-8 relative overflow-hidden">
                                     <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1645,7 +1645,7 @@
 
                             <!-- Mobile Navigation Row -->
                             <div class="project-nav-btns card-nav absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                                <div class="btn-prev p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-prev shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Previous card">
                                     <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1658,7 +1658,7 @@
                                 you can also drag left/right to explore
                                 </div>
 
-                                <div class="btn-next p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-next shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Next card">
                                     <div class="w-8 h-8 relative overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2221,7 +2221,7 @@
                         data-project-id="project-4">
 
                             <!-- Desktop Prev Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-prev"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-prev"
                                 aria-label="Previous card">
                                 <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                 <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2231,7 +2231,7 @@
                             </div>
 
                             <!-- Tooltip Text -->
-                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
+                            <div class="tooltip-content shiny-border w-[90vw] h-auto px-6 py-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] inline-flex flex-col justify-start items-center gap-2 md:w-[32rem] xl:w-[42rem] xl:py-6">
                                 <div class="tooltip-name text-center justify-start text-[#FFFDFF] text-xl font-mono xl:text-[1.2rem] 2xl:text-2xl">Casamare</div>
                                 <p class="tooltip-description self-stretch text-center justify-start text-[#FFFDFF] text-lg font-normal font-sans leading-6 xl:text-[1.4rem] xl:leading-7 2xl:text-2xl">
                                 <!-- tooltipManager.js will populate this dynamically --> 
@@ -2240,7 +2240,7 @@
                             </div>                        
                             
                             <!-- Desktop Next Button -->
-                            <div class="hidden md:flex p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] card-nav btn-next"
+                            <div class="hidden shiny-border-nav-btn md:flex p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] card-nav btn-next"
                                 aria-label="Next card">
                                 <div class="w-8 h-8 relative overflow-hidden">
                                     <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2251,7 +2251,7 @@
 
                             <!-- Mobile Navigation Row -->
                             <div class="project-nav-btns card-nav absolute bottom-0 left-0 right-0 md:hidden inline-flex px-4 pb-16 justify-start items-center gap-4">
-                                <div class="btn-prev p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-prev shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Previous card">
                                     <div class="w-8 h-8 relative rotate-180 overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2264,7 +2264,7 @@
                                 you can also drag left/right to explore
                                 </div>
 
-                                <div class="btn-next p-4 bg-[#262728]/60 rounded outline-2 outline-offset-[-2px] outline-[#777777] backdrop-blur-[2px] flex justify-start items-center gap-10"
+                                <div class="btn-next shiny-border-nav-btn p-4 bg-[#262728]/60 outline outline-[#777777] outline-offset-[-2px] rounded-xs backdrop-blur-[2px] flex justify-start items-center gap-10"
                                     aria-label="Next card">
                                     <div class="w-8 h-8 relative overflow-hidden">
                                         <svg width="32" height="32" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2891,7 +2891,7 @@
                 </section> 
 
                 <!-- Process - Unified Section -->
-                <section id="process" class="section project-section process w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+                <section id="process" class="section project-section process w-full h-screen flex flex-col justify-center items-center gap-4 pr-4 pl-4 ">
                     <div class="background-content w-full h-screen flex">
                         <div class="absolute w-screen h-screen flex flex-inline justify-between items-start flex-wrap content-end lg:flex-nowrap lg:content-normal">
                             <svg class="hidden lg:block w-[30vw] h-screen" viewBox="0 0 741 1494" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3007,7 +3007,7 @@
                                 </defs>
                             </svg>
                         </div>
-                        <div class="w-full flex flex-col items-center justify-between py-40 md:py-20">
+                        <div class="w-full flex flex-col items-center justify-between py-40 md:py-20 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                             <div class="w-full h-auto flex justify-center md:h-16"></div>
                             <div class="px-4 inline-flex flex-col justify-center items-center gap-2 lg:gap-4 lg:px-20 xl:px-42 xl:gap-3 lg:max-w-[1200px]">
                                 <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-4xl font-normal font-mono leading-12 md:text-3xl md:leading-10 lg:text-[2.5rem] lg:leading-12 xl:text-[2.7rem] xl:leading-[3.4rem]">Working with me</h3>
@@ -3154,7 +3154,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 lg:flex lg:flex-col-reverse lg:gap-2">
                                 <p class="basis-1/2 justify-start text-[#b2b5b6] text-sm font-sans leading-5 lg:justify-center lg:text-center">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm lg:self-stretch">
+                                <div class="shiny-border-btn basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm lg:self-stretch">
                                     <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-lg font-bold font-sans leading-6">Start a Project</button>
                                 </div>
                             </div>
@@ -3192,7 +3192,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 lg:flex lg:flex-col-reverse lg:gap-2">
                                 <p class="basis-1/2 justify-start text-[#b2b5b6] text-sm font-sans leading-5 lg:justify-center lg:text-center">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm lg:self-stretch">
+                                <div class="shiny-border-btn basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm lg:self-stretch">
                                     <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-lg font-bold font-sans leading-6">Start a Project</button>
                                 </div>
                             </div>
@@ -3231,7 +3231,7 @@
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 lg:flex lg:flex-col-reverse lg:gap-2">
                                 <p class="basis-1/2 justify-start text-[#b2b5b6] text-sm font-sans leading-5 lg:justify-center lg:text-center">start a project by filling out the inquiry form!</p>
-                                <div class="basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm lg:self-stretch">
+                                <div class="shiny-border-btn basis-1/2 h-auto px-3 py-3 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm lg:self-stretch">
                                     <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-lg font-bold font-sans leading-6">Start a Project</button>
                                 </div>
                             </div>
@@ -3439,7 +3439,7 @@
                                 </p>
                             </div>
                             <div class="w-full flex flex-col items-center justify-center gap-2 pb-6">
-                                <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
+                                <div class="shiny-border-btn w-full h-auto px-6 py-4 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm">
                                     <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6">Start a Project</button>
                                 </div>
                                 <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5">fill out the 5-min inquiry form!</p>
@@ -3453,7 +3453,7 @@
             </div>
         </section>
 
-        <section id="form-entry" class="">
+        <section id="form-entry">
             <div class="absolute w-screen h-screen flex flex-inline justify-between items-start content-end lg:content-normal">
                 <svg class="hidden lg:block w-[30vw] h-screen" viewBox="0 0 672 627" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_650_854)">
@@ -3576,7 +3576,7 @@
                     </p>
                 </div>
                 <div class="fade-reveal-element w-full flex flex-col items-center justify-center gap-2 pb-6 z-10 md:w-[50vw] xl:gap-3">
-                    <div class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm">
+                    <div class="shiny-border-btn w-full h-auto px-6 py-4 bg-[#262728]/90 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm">
                         <button data-open-form="true" id="open-form-btn-1" type="button" class="form-open-btn text-[#fffdff] text-xl font-bold font-sans leading-6 xl:text-[1.4rem]">Start a Project</button>
                     </div>
                     <p class="self-stretch text-center justify-start text-[#d2d2d2] text-sm font-normal font-sans leading-5 xl:text-base">Answer a few questions, it only takes 3-4 minutes.</p>

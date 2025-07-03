@@ -541,3 +541,121 @@ body.loaded section:not(#loading-screen) {
   opacity: 0;
   pointer-events: none;
 }
+
+.shiny-border {
+  position: relative;
+  z-index: 0;
+  border-radius: 6px; /* Or match your element */
+  overflow: hidden;
+}
+
+.shiny-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px; /* Border thickness */
+  background: linear-gradient(
+    150deg,
+    rgba(255,255,255,0) 40%,
+    rgb(93, 93, 93) 50%,
+    rgba(255,255,255,0) 60%
+  );
+  background-size: 200% 100%;
+  animation: shine 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Your main element's background/foreground */
+.shiny-border > * {
+  position: relative;
+  z-index: 2;
+}
+
+.shiny-border-btn {
+  position: relative;
+  z-index: 0;
+  border-radius: 4px; /* Or match your element */
+  overflow: hidden;
+}
+
+.shiny-border-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px; /* Border thickness */
+  background: linear-gradient(
+    50deg,
+    rgba(255,255,255, 0) 40%,
+    rgb(237, 237, 237) 50%,
+    rgba(255,255,255, 0) 60%
+  );
+  background-size: 200% 100%;
+  animation: shine 5s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Your main element's background/foreground */
+.shiny-border-btn > * {
+  position: relative;
+  z-index: 2;
+}
+
+.shiny-border-nav-btn {
+  position: relative;
+  z-index: 0;
+  border-radius: 4px; /* Or match your element */
+  overflow: hidden;
+}
+
+.shiny-border-nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px; /* Border thickness */
+  background: linear-gradient(
+    50deg,
+    rgba(255,255,255, 0) 40%,
+    rgb(200, 200, 200) 50%,
+    rgba(255,255,255, 0) 60%
+  );
+  background-size: 200% 100%;
+  animation: shine 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Your main element's background/foreground */
+.shiny-border-nav-btn > * {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+

@@ -19,7 +19,7 @@ const cardProps = {
   status: "Available for projects",                 // Status message
   contactText: "Let's Talk",                        // Contact button text
   showUserInfo: true,                               // Show/hide user info at the bottom
-  onContactClick: () => alert("Contact clicked!"),  // Handler for contact button
+  onContactClick: () => window.open("https://www.instagram.com/bustiuc.s/", "_blank"),  // Handler for contact button
 };
 
 // Mount ProfileCard in the designated root

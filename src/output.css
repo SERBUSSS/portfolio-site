@@ -480,6 +480,9 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
+  }
   .w-\[2\.5rem\] {
     width: 2.5rem;
   }
@@ -1348,6 +1351,11 @@
       height: 6.5rem;
     }
   }
+  .md\:mb-8 {
+    @media (width >= 48rem) {
+      margin-bottom: calc(var(--spacing) * 8);
+    }
+  }
   .md\:flex {
     @media (width >= 48rem) {
       display: flex;
@@ -1361,6 +1369,11 @@
   .md\:h-6 {
     @media (width >= 48rem) {
       height: calc(var(--spacing) * 6);
+    }
+  }
+  .md\:h-10 {
+    @media (width >= 48rem) {
+      height: calc(var(--spacing) * 10);
     }
   }
   .md\:h-16 {
@@ -1396,6 +1409,16 @@
   .md\:w-8 {
     @media (width >= 48rem) {
       width: calc(var(--spacing) * 8);
+    }
+  }
+  .md\:w-10 {
+    @media (width >= 48rem) {
+      width: calc(var(--spacing) * 10);
+    }
+  }
+  .md\:w-14 {
+    @media (width >= 48rem) {
+      width: calc(var(--spacing) * 14);
     }
   }
   .md\:w-\[32rem\] {
@@ -1436,6 +1459,11 @@
   .md\:w-full {
     @media (width >= 48rem) {
       width: 100%;
+    }
+  }
+  .md\:max-w-\[38rem\] {
+    @media (width >= 48rem) {
+      max-width: 38rem;
     }
   }
   .md\:scale-60\! {
@@ -1486,6 +1514,11 @@
       align-self: center;
     }
   }
+  .md\:p-4 {
+    @media (width >= 48rem) {
+      padding: calc(var(--spacing) * 4);
+    }
+  }
   .md\:px-8 {
     @media (width >= 48rem) {
       padding-inline: calc(var(--spacing) * 8);
@@ -1514,6 +1547,11 @@
   .md\:pb-10 {
     @media (width >= 48rem) {
       padding-bottom: calc(var(--spacing) * 10);
+    }
+  }
+  .md\:text-center {
+    @media (width >= 48rem) {
+      text-align: center;
     }
   }
   .md\:text-2xl {
@@ -1580,10 +1618,22 @@
       line-height: 1.5rem;
     }
   }
+  .md\:leading-\[1\.6rem\] {
+    @media (width >= 48rem) {
+      --tw-leading: 1.6rem;
+      line-height: 1.6rem;
+    }
+  }
   .md\:leading-\[2\.3rem\] {
     @media (width >= 48rem) {
       --tw-leading: 2.3rem;
       line-height: 2.3rem;
+    }
+  }
+  .md\:font-medium {
+    @media (width >= 48rem) {
+      --tw-font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-medium);
     }
   }
   .md\:font-normal {

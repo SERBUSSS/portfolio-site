@@ -3568,7 +3568,7 @@
                     </defs>
                 </svg>
             </div>
-            <div class="section w-full h-screen flex pr-4 pl-4 flex-col items-center justify-between py-55 md:max-lg:px-16 lg:px-36 lg:py-60 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+            <div class="section w-full h-screen flex pr-4 pl-4 flex-col items-center justify-center gap-8 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
                 <div class="w-full h-auto flex justify-center"></div>
                 <div class="px-4 inline-flex flex-col justify-center items-center gap-2 md:gap-3 lg:gap-4 xl:gap-6 lg:px-20 xl:px-42">
                     <h3 class="blur-reveal-title self-stretch text-center justify-start text-[#FFFDFF] text-2xl font-normal font-mono md:text-3xl md:leading-12 lg:text-[2.5rem] lg:leading-12 xl:text-[2.7rem] xl:leading-[3.4rem]">Ready to talk things into reality?</h3>
@@ -3596,12 +3596,12 @@
                 <!-- Security token field (if needed for CSRF protection) -->
                 <input type="hidden" name="_csrf" value="">
                 
-                <div id="step-0" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-0" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button (invisible on first step) -->
                         <button type="button" class="prev-button invisible" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -3657,9 +3657,9 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Before we start</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Before we start</h2>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 Completing this form, you will provide basic information about you, your business, 
                                 services needed, and your vision and budget for the project.
                             </p>
@@ -3668,14 +3668,14 @@
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
                             <div class="form-field">
-                                <label for="fullName" class="flex text-base font-extrabold text-[#fffdff] mb-2">Enter Full Name:</label>
+                                <label for="fullName" class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Full Name:</label>
                                 <div class="relative">
                                     <input 
                                         type="text" 
                                         name="fullName" 
                                         id="fullName" 
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="John Doe"
                                         autocomplete="name"
                                     >
@@ -3695,14 +3695,14 @@
                             </div>
 
                             <div class="form-field">
-                                <label for="email" class="flex text-base font-extrabold text-[#fffdff] mb-2">Enter your email:</label>
+                                <label for="email" class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Your Email:</label>
                                 <div class="relative">
                                     <input 
                                         type="email" 
                                         name="email" 
                                         id="email" 
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="example@email.com"
                                         autocomplete="email"
                                     >
@@ -3726,25 +3726,25 @@
                         <!-- Tip section -->
                         <div class="mb-6">
                             <div class="w-full inline-flex items-center gap-4 mb-2">
-                                <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
+                                <div class="w-full h-0.5 bg-[#969696] opacity-50">&nbsp;</div>
                                 <h3 class="text-xl font-medium text-center text-[#fffdff] font-sans">Tip!</h3>
-                                <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
+                                <div class="w-full h-0.5 bg-[#969696] opacity-50">&nbsp;</div>
                             </div>
                             <p class="text-[#fffdff] text-base font-light font-sans leading-5 mb-4">
                                 You'll be asked to share a mood board or any sources of inspiration. 
                                 You can do it at a later date too, if you don't have one right now.
                             </p>
-                            <div class="w-full h-0.5 bg-[#969696]">&nbsp;</div>
+                            <div class="w-full h-0.5 bg-[#969696] opacity-50">&nbsp;</div>
                         </div>
                     </div>
                     
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Contact Details</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Next: Contact Details</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -3752,12 +3752,12 @@
                 </div>
                 
                 <!-- Step 1: Contact Details -->
-                <div id="step-1" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-1" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem] md:min-height-[34rem] md:justify-between">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button  -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -3813,9 +3813,9 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Your Contact Details</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Your Contact Details</h2>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 This step collects basic information about your business.
                             </p>
                         </div>
@@ -3823,19 +3823,19 @@
                         <!-- Form fields -->
                         <div class="space-y-4 mb-6">
                             <div>
-                                <label for="businessName" class="flex text-base font-extrabold text-[#fffdff] mb-2">Business Name:</label>
+                                <label for="businessName" class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Business Name:</label>
                                 <input 
                                     type="text" 
                                     name="businessName" 
                                     id="businessName" 
                                     required 
-                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                     placeholder="Your Business Name"
                                 >
                             </div>
                             
                             <div>
-                                <label class="flex text-base font-extrabold text-[#fffdff] mb-2">Social Media Profiles:</label>
+                                <label class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Social Media Profiles:</label>
                                 
                                 <div class="social-media-fields">
                                     <!-- Initial social media field -->
@@ -3854,7 +3854,7 @@
                                                 type="text" 
                                                 name="social-media-profile-0"
                                                 required 
-                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE]" 
+                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE] md:p-4 md:text-lg" 
                                                 placeholder="e.g. @username"
                                             >
                                         </div>
@@ -3884,10 +3884,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Your Business</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Next: Your Business</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -3895,7 +3895,7 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
                     <div class="w-full flex items-center justify-between mb-4 ">
                         <!-- Back button  -->
@@ -3956,7 +3956,7 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">About Your Business</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">About Your Business</h2>
                             
                             <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
                                 In this step, we focus on understanding the nature and context of your business.
@@ -3967,7 +3967,7 @@
                         <div class="space-y-4 mb-6">
                             <!-- Business description field -->
                             <div class="question-container">
-                                <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                     Describe your business: What products or services do you offer?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -4008,7 +4008,7 @@
                             
                             <!-- Business challenges field -->
                             <div class="question-container">
-                                <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                <label for="businessChallenges" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                     What are the main challenges of your business? What aspects do you want to improve?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -4063,7 +4063,7 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
                     <div class="w-full flex items-center justify-between mb-4 ">
                         <!-- Back button  -->
@@ -4124,7 +4124,7 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Project Objectives</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Project Objectives</h2>
                             
                             <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
                                 Here you choose which services you are interested in and clarify your objectives.
@@ -4135,7 +4135,7 @@
                         <div class="space-y-4 mb-6">
                             <!-- Services selection -->
                             <div>
-                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Desired Services:</label>
+                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">Desired Services:</label>
                                 <p class="text-[#969696] mb-3 text-sm">Select one or more options:</p>
                                 
                                 <div class="space-y-4">
@@ -4256,7 +4256,7 @@
                             
                             <!-- Project objectives -->
                             <div class="question-container">
-                                <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                     What objectives do you want to achieve with this project?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -4276,7 +4276,7 @@
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
-                                    <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                    <label for="projectObjectives" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                         What objectives do you want to achieve with this project?
                                     </label>
                                     <textarea 
@@ -4311,7 +4311,7 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
                     <div class="w-full flex items-center justify-between mb-4 ">
                         <!-- Back button -->
@@ -4372,7 +4372,7 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Vision and Budget</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Vision and Budget</h2>
 
                             <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
                                 Last step!
@@ -4387,7 +4387,7 @@
                         <div class="space-y-4 mb-6">
                             <!-- Vision textarea -->
                             <div class="question-container">
-                                <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                     What is your vision for the new website/branding?
                                 </label>
                                 <!-- This will show when the question is answered -->
@@ -4407,7 +4407,7 @@
                                 </div>
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
-                                    <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                    <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                         What is your vision for the new website/branding?
                                     </label>
                                     <textarea 
@@ -4428,7 +4428,7 @@
                             
                             <!-- Budget selection -->
                             <div>
-                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">Project investment:</label>
+                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">Project investment:</label>
                                 <p class="text-[#969696] mb-3 text-sm">Select one:</p>
                                 
                                 <div class="space-y-4">
@@ -4546,7 +4546,7 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
                     <div class="w-full flex items-center justify-between mb-4 ">
                         <!-- Back button -->
@@ -4607,7 +4607,7 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Completed!</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Form Completed!</h2>
 
                             <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
                                 Ready to be sent!
@@ -4648,7 +4648,7 @@
                             
                             <!-- Optional question content - hidden initially -->
                             <div id="optional-question-container" class="hidden question-container">
-                                <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                     How did you hear about me? Why do you want to collaborate with me?
                                 </label>
                                 
@@ -4665,7 +4665,7 @@
                                 
                                 <!-- "Mark as done" view - hidden by default -->
                                 <div class="editing-view hidden">
-                                    <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2">
+                                    <label for="referralSource" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
                                         How did you hear about me? Why do you want to collaborate with me?
                                     </label>
                                     <textarea 
@@ -4699,9 +4699,9 @@
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <div class="inline-flex justify-between w-full mb-4">
-                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Form Sent!</h2>
+                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Form Sent!</h2>
                         <button type="button" class="close-button">
                             <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
@@ -4731,10 +4731,10 @@
                 </div>
 
                 <!-- Error Message (Hidden by default) -->
-                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <div class="flex flex-col items-center">
                         <div class="inline-flex justify-between w-full mb-4">
-                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Oopss...</h3>
+                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Oopss...</h3>
                             <button type="button" class="close-button" aria-label="Close form">
                                 <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
@@ -4759,11 +4759,11 @@
                 </div>
 
                 <!-- Existing email state -->
-                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden">
+                <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
                     <div class="w-full flex items-center justify-between mb-4">
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg class="back-arrow" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="back-arrow w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -4815,29 +4815,35 @@
                         </button>
                     </div>
 
-                    <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
-                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono">Great!</h2>
+                    <div class="self-stretch inline-flex flex-col justify-start items-center gap-2">
+                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Great!</h2>
                         
                         <div class="space-y-6 mb-8">
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">It seems like you completed this already. If I haven't replied to you after 48h of you completing the enquiry form, please reach out on my socials mentioning your email.</p>
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">It seems like you completed this already. If I haven't replied to you after 48h of you completing the enquiry form, please reach out on my socials mentioning your email.</p>
                             
                             <div class="space-y-4">
-                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">If we worked in the past...</p>
-                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">...great to hear from you again. Please reach out through our last communication platform. Can't wait to hear from you!</p>
+                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">If we worked in the past...</p>
+                                <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">...great to hear from you again. Please reach out through our last communication platform. Can't wait to hear from you!</p>
                             </div>
                         </div>
                         
                         <div class="space-y-4">
-                            <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
+                            <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans md:text-lg">While you wait, check out my socials:</p>
                             <div class="flex justify-center items-center space-x-8">
                                 <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
+                                    <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 6C10.486 6 6 10.486 6 16V32C6 37.514 10.486 42 16 42H32C37.514 42 42 37.514 42 32V16C42 10.486 37.514 6 32 6H16ZM16 10H32C35.308 10 38 12.692 38 16V32C38 35.308 35.308 38 32 38H16C12.692 38 10 35.308 10 32V16C10 12.692 12.692 10 16 10ZM34 12C33.4696 12 32.9609 12.2107 32.5858 12.5858C32.2107 12.9609 32 13.4696 32 14C32 14.5304 32.2107 15.0391 32.5858 15.4142C32.9609 15.7893 33.4696 16 34 16C34.5304 16 35.0391 15.7893 35.4142 15.4142C35.7893 15.0391 36 14.5304 36 14C36 13.4696 35.7893 12.9609 35.4142 12.5858C35.0391 12.2107 34.5304 12 34 12ZM24 14C18.486 14 14 18.486 14 24C14 29.514 18.486 34 24 34C29.514 34 34 29.514 34 24C34 18.486 29.514 14 24 14ZM24 18C27.308 18 30 20.692 30 24C30 27.308 27.308 30 24 30C20.692 30 18 27.308 18 24C18 20.692 20.692 18 24 18Z" fill="#FFFDFF"/>
+                                    </svg>
                                 </a>
                                 <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-12 h-auto">
+                                    <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M42.192 41.5999L28.12 21.0847L28.144 21.1039L40.832 6.3999H36.592L26.256 18.3679L18.048 6.3999H6.92801L20.0656 25.5535L20.064 25.5519L6.20801 41.5999H10.448L21.9392 28.2847L31.072 41.5999H42.192ZM16.368 9.5999L36.112 38.3999H32.752L12.992 9.5999H16.368Z" fill="#FFFDFF"/>
+                                    </svg>
                                 </a>
                                 <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                    <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-12 h-auto">
+                                    <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0.96 8.63989C0.43008 8.63989 0 9.06997 0 9.59989V23.1505C0 29.0651 4.49567 34.2061 10.4006 34.5411C16.0617 34.8618 20.878 30.8892 21.885 25.5843C22.4322 26.3235 22.9884 27.0104 23.55 27.6411L20.1619 42.0205C20.0956 42.3066 20.1623 42.6048 20.3438 42.8361C20.5271 43.0646 20.8037 43.1999 21.0975 43.1999H26.0119C26.4573 43.1999 26.841 42.8997 26.9438 42.4668C27.5399 39.9506 28.4745 36.0077 29.3213 32.4336L30.195 32.9399C32.2734 34.0161 34.3824 34.5599 36.48 34.5599C43.3843 34.5599 48.889 28.4553 47.88 21.3599C47.2118 16.6597 43.5975 12.7855 38.9569 11.7861C33.553 10.6217 28.3443 13.3911 26.1056 17.9943C26.1056 17.9943 25.8572 18.5457 25.6575 19.0968C24.0735 16.3646 23.1433 13.5302 22.6556 11.4768C22.478 10.728 22.212 9.37225 22.1813 9.28489C22.0478 8.89801 21.6855 8.63989 21.2756 8.63989H16.32C15.7901 8.63989 15.36 9.06997 15.36 9.59989V23.3286C15.36 25.5837 13.7157 27.6004 11.4713 27.8193C8.89653 28.0708 6.72 26.0447 6.72 23.5199V9.59989C6.72 9.06997 6.28992 8.63989 5.76 8.63989H0.96ZM36.48 18.2399C39.1267 18.2399 41.28 20.3932 41.28 23.0399C41.28 25.6866 39.1267 27.8399 36.48 27.8399C34.344 27.8399 32.365 26.5518 30.9788 25.4286C31.4847 23.2926 31.8242 21.862 31.83 21.838C32.3753 19.7193 34.2883 18.2399 36.48 18.2399Z" fill="#FFFDFF"/>
+                                    </svg>
                                 </a>
                             </div>
                         </div>

@@ -2055,6 +2055,12 @@ const disableFormButtons = () => {
         button.style.opacity = '0.6';
         button.style.cursor = 'not-allowed';
         
+        // Remove the class from the parent <div>
+        const parent = button.closest('.shiny-border-btn');
+        if (parent) {
+            parent.classList.remove('shiny-border-btn');
+        }
+        
         // Show notification on click
         button.addEventListener('click', (e) => {
             e.preventDefault();

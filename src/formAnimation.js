@@ -156,7 +156,7 @@ const FormAnimation = {
   
   unstackCard(element, stepIndex) {
     element.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-    element.style.transform = 'translateX(0) scale(1) rotate(0deg)';
+    element.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
     element.style.opacity = '1';
     element.style.zIndex = '10';
     

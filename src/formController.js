@@ -907,8 +907,10 @@ const goToPrevStep = () => {
     duration: animDurations.cardStack,
     scale: activeCardScale,
     rotation: 0,
-    x: 0,  // Reset to original position
-    y: 0,  // Reset to original position
+    x: 0,
+    y: 0,
+    xPercent: -50,
+    yPercent: -50,
     ease: 'power2.out',
     onComplete: () => {
       // Re-enable interaction with the previous card
@@ -1109,6 +1111,8 @@ const goBackFromExistingEmail = () => {
       rotation: 0,
       x: 0,
       y: 0,
+      xPercent: -50,
+      yPercent: -50,
       ease: 'power2.out',
       onComplete: () => {
         // Re-enable interaction with the first step

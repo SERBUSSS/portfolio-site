@@ -1272,17 +1272,17 @@ const addSocialMediaField = () => {
       <div class="flex rounded-xl border border-[#4c4f50] bg-[#333435] overflow-hidden">
         <div class="self-stretch bg-[#4c4f50] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] inline-flex justify-start items-center px-2">
           <select name="social-media-type-${index}" class="border-none focus:ring-0 bg-[#4c4f50] text-[#fffdff] social-media-type">
-            <option value="instagram" class="text-[#fffdff] bg-[#4c4f50]">Instagram</option>
-            <option value="facebook" class="text-[#fffdff] bg-[#4c4f50]">Facebook</option>
-            <option value="twitter" class="text-[#fffdff] bg-[#4c4f50]">Twitter</option>
-            <option value="linkedin" class="text-[#fffdff] bg-[#4c4f50]">LinkedIn</option>
-            <option value="website" class="text-[#fffdff] bg-[#4c4f50]">Website</option>
+            <option value="instagram" class="text-[#fffdff] bg-[#4c4f50] md:text-lg">Instagram</option>
+            <option value="facebook" class="text-[#fffdff] bg-[#4c4f50] md:text-lg">Facebook</option>
+            <option value="twitter" class="text-[#fffdff] bg-[#4c4f50] md:text-lg">Twitter</option>
+            <option value="linkedin" class="text-[#fffdff] bg-[#4c4f50] md:text-lg">LinkedIn</option>
+            <option value="website" class="text-[#fffdff] bg-[#4c4f50] md:text-lg">Website</option>
           </select>
         </div>
         <input 
           type="text" 
           name="social-media-profile-${index}"
-          class="form-input flex-grow min-w-0 px-4 py-3 social-media-profile rounded-l-none shadow-none! placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE]" 
+          class="form-input flex-grow min-w-0 px-4 py-3 social-media-profile rounded-l-none shadow-none! placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE] md:p-4 md:text-lg md:placeholder:text-lg" 
           placeholder="e.g. @username"
         >
         <button 

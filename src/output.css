@@ -480,9 +480,6 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
-  .w-96 {
-    width: calc(var(--spacing) * 96);
-  }
   .w-\[2\.5rem\] {
     width: 2.5rem;
   }
@@ -819,9 +816,6 @@
   }
   .py-40 {
     padding-block: calc(var(--spacing) * 40);
-  }
-  .py-55 {
-    padding-block: calc(var(--spacing) * 55);
   }
   .pt-3 {
     padding-top: calc(var(--spacing) * 3);
@@ -1351,6 +1345,11 @@
       height: 6.5rem;
     }
   }
+  .md\:mb-1 {
+    @media (width >= 48rem) {
+      margin-bottom: calc(var(--spacing) * 1);
+    }
+  }
   .md\:mb-8 {
     @media (width >= 48rem) {
       margin-bottom: calc(var(--spacing) * 8);
@@ -1369,6 +1368,11 @@
   .md\:h-6 {
     @media (width >= 48rem) {
       height: calc(var(--spacing) * 6);
+    }
+  }
+  .md\:h-7 {
+    @media (width >= 48rem) {
+      height: calc(var(--spacing) * 7);
     }
   }
   .md\:h-10 {
@@ -1404,6 +1408,11 @@
   .md\:w-6 {
     @media (width >= 48rem) {
       width: calc(var(--spacing) * 6);
+    }
+  }
+  .md\:w-7 {
+    @media (width >= 48rem) {
+      width: calc(var(--spacing) * 7);
     }
   }
   .md\:w-8 {
@@ -1509,6 +1518,15 @@
       gap: calc(var(--spacing) * 6);
     }
   }
+  .md\:space-y-6 {
+    @media (width >= 48rem) {
+      :where(& > :not(:last-child)) {
+        --tw-space-y-reverse: 0;
+        margin-block-start: calc(calc(var(--spacing) * 6) * var(--tw-space-y-reverse));
+        margin-block-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-y-reverse)));
+      }
+    }
+  }
   .md\:self-center {
     @media (width >= 48rem) {
       align-self: center;
@@ -1583,6 +1601,11 @@
       font-size: 1.2rem;
     }
   }
+  .md\:text-\[1\.3rem\] {
+    @media (width >= 48rem) {
+      font-size: 1.3rem;
+    }
+  }
   .md\:text-\[2rem\] {
     @media (width >= 48rem) {
       font-size: 2rem;
@@ -1640,6 +1663,14 @@
     @media (width >= 48rem) {
       --tw-font-weight: var(--font-weight-normal);
       font-weight: var(--font-weight-normal);
+    }
+  }
+  .md\:placeholder\:text-lg {
+    @media (width >= 48rem) {
+      &::placeholder {
+        font-size: var(--text-lg);
+        line-height: var(--tw-leading, var(--text-lg--line-height));
+      }
     }
   }
   .md\:max-\[70rem\]\:px-16 {
@@ -1856,11 +1887,6 @@
   .lg\:py-20 {
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 20);
-    }
-  }
-  .lg\:py-60 {
-    @media (width >= 64rem) {
-      padding-block: calc(var(--spacing) * 60);
     }
   }
   .lg\:pr-32 {
@@ -2277,7 +2303,6 @@
 .form-input {
   background: #333435;
   color: #B2B5B6;
-  box-shadow: inset 0 0 0 1px #4C4F50;
   border: none;
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;

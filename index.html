@@ -3666,7 +3666,7 @@
                         </div>
                         
                         <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
+                        <div class="space-y-4 mb-6 md:space-y-6">
                             <div class="form-field">
                                 <label for="fullName" class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Full Name:</label>
                                 <div class="relative">
@@ -3821,7 +3821,7 @@
                         </div>
                         
                         <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
+                        <div class="space-y-4 mb-6 md:space-y-6">
                             <div>
                                 <label for="businessName" class="flex text-base font-extrabold text-[#fffdff] mb-2 md:font-medium">Business Name:</label>
                                 <input 
@@ -3829,7 +3829,7 @@
                                     name="businessName" 
                                     id="businessName" 
                                     required 
-                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
+                                    class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg md:placeholder:text-lg" 
                                     placeholder="Your Business Name"
                                 >
                             </div>
@@ -3843,18 +3843,18 @@
                                         <div class="flex rounded-xl border border-[#4c4f50] bg-[#333435] overflow-hidden">
                                             <div class="self-stretch bg-[#4c4f50] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] inline-flex justify-start items-center px-2">
                                                 <select name="social-media-type-0" class="border-none focus:ring-0 bg-[#4c4f50] text-[#fffdff]">
-                                                    <option value="instagram" selected class="text-[#fffdff]">Instagram</option>
-                                                    <option value="facebook" class="text-[#fffdff]">Facebook</option>
-                                                    <option value="twitter" class="text-[#fffdff]">Twitter</option>
-                                                    <option value="linkedin" class="text-[#fffdff]">LinkedIn</option>
-                                                    <option value="website" class="text-[#fffdff]">Website</option>
+                                                    <option value="instagram" selected class="text-[#fffdff] md:text-lg">Instagram</option>
+                                                    <option value="facebook" class="text-[#fffdff] md:text-lg">Facebook</option>
+                                                    <option value="twitter" class="text-[#fffdff] md:text-lg">Twitter</option>
+                                                    <option value="linkedin" class="text-[#fffdff] md:text-lg">LinkedIn</option>
+                                                    <option value="website" class="text-[#fffdff] md:text-lg">Website</option>
                                                 </select>
                                             </div>
                                             <input 
                                                 type="text" 
                                                 name="social-media-profile-0"
                                                 required 
-                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE] md:p-4 md:text-lg" 
+                                                class="form-input flex-grow pl-4 py-3 gap-2 placeholder:text-[#b2b5b6] placeholder:text-base placeholder:font-medium placeholder:font-sans text-[#CCCDCE] md:p-4 md:text-lg md:placeholder:text-lg" 
                                                 placeholder="e.g. @username"
                                             >
                                         </div>
@@ -3895,12 +3895,12 @@
                 </div>
 
                 <!-- Step 2: About Your Business -->
-                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
+                <div id="step-2" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem] md:min-height-[34rem] md:justify-between">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button  -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -3956,15 +3956,15 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">About Your Business</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">About Your Business</h2>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 In this step, we focus on understanding the nature and context of your business.
                             </p>
                         </div>
                         
                         <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
+                        <div class="space-y-4 mb-6 md:space-y-6">
                             <!-- Business description field -->
                             <div class="question-container">
                                 <label for="businessDescription" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
@@ -3981,7 +3981,7 @@
                                         id="businessDescription" 
                                         rows="3"
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
                                 </div>
@@ -3994,7 +3994,7 @@
                                         name="businessDescription-editing" 
                                         id="businessDescription-editing" 
                                         rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="We offer [...] products/services to [...] ..."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
@@ -4022,7 +4022,7 @@
                                         id="businessChallenges" 
                                         rows="3"
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg"  
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
                                 </div>
@@ -4035,7 +4035,7 @@
                                         name="businessChallenges-editing" 
                                         id="businessChallenges-editing" 
                                         rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="We are currently facing [problem] ..."
                                     ></textarea>
                                     <button type="button" class="mark-as-done mt-3 text-[#fffdff] font-medium flex items-center justify-center w-full py-2">
@@ -4052,10 +4052,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Project Objectives</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Next: Project Objectives</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -4063,12 +4063,12 @@
                 </div>
 
                 <!-- Step 3: Project Objectives -->
-                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
+                <div id="step-3" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem] md:min-height-[34rem] md:justify-between">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button  -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -4124,18 +4124,18 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Project Objectives</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Project Objectives</h2>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 Here you choose which services you are interested in and clarify your objectives.
                             </p>
                         </div>
                         
                         <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
+                        <div class="space-y-4 mb-6 md:space-y-6">
                             <!-- Services selection -->
                             <div>
-                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">Desired Services:</label>
+                                <label class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium md:mb-1">Desired Services:</label>
                                 <p class="text-[#969696] mb-3 text-sm">Select one or more options:</p>
                                 
                                 <div class="space-y-4">
@@ -4143,7 +4143,7 @@
                                     <div class="inline-flex gap-4">
                                         <!-- Web Design checkbox -->
                                         <div class="flex items-center">
-                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
+                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container md:w-10">
                                                 <input 
                                                     type="checkbox" 
                                                     id="webDesign" 
@@ -4159,12 +4159,12 @@
                                                     <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                                 </svg>
                                             </div>
-                                            <label for="webDesign" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Web Design</label>
+                                            <label for="webDesign" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">Web Design</label>
                                         </div>
 
                                         <!-- Development checkbox (initially disabled) -->
                                         <div class="flex items-center">
-                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container">
+                                            <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center checkbox-container md:w-10">
                                                 <input 
                                                     type="checkbox" 
                                                     id="development" 
@@ -4185,13 +4185,13 @@
                                                     <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333ZM11.6667 18.3333H28.3333V21.6667H11.6667V18.3333Z" fill="#969696"/>
                                                 </svg>
                                             </div>
-                                            <label for="development" class="text-[1.1rem]  font-bold font-sans text-[#969696] cursor-not-allowed pt-[2px]">Development</label>
+                                            <label for="development" class="text-[1.1rem] font-bold font-sans text-[#969696] cursor-not-allowed pt-[2px] md:text-[1.3rem]">Development</label>
                                         </div>
                                     </div>
 
                                     <!-- Brand Strategy checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container md:w-10">
                                             <input 
                                                 type="checkbox" 
                                                 id="brandStrategy" 
@@ -4207,12 +4207,12 @@
                                                 <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="brandStrategy" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Brand Strategy</label>
+                                        <label for="brandStrategy" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">Brand Strategy</label>
                                     </div>
                                     
                                     <!-- Rebranding checkbox -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container md:w-10">
                                             <input 
                                                 type="checkbox" 
                                                 id="rebranding" 
@@ -4228,12 +4228,12 @@
                                                 <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="rebranding" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Rebranding</label>
+                                        <label for="rebranding" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">Rebranding</label>
                                     </div>
                                     
                                     <!-- Other checkbox -->
                                     <div class="flex items-center mb-2">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center checkbox-container md:w-10">
                                             <input 
                                                 type="checkbox" 
                                                 id="other" 
@@ -4249,7 +4249,7 @@
                                                 <path d="M6.66667 5H33.3333C34.2538 5 35 5.7462 35 6.66667V33.3333C35 34.2538 34.2538 35 33.3333 35H6.66667C5.7462 35 5 34.2538 5 33.3333V6.66667C5 5.7462 5.7462 5 6.66667 5ZM8.33333 8.33333V31.6667H31.6667V8.33333H8.33333Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="other" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Other <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
+                                        <label for="other" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">Other <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -4270,7 +4270,7 @@
                                         id="projectObjectives" 
                                         rows="3"
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="For example: increasing the number of clients, improving online presence, etc."
                                     ></textarea>
                                 </div>
@@ -4300,10 +4300,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Next: Vision and Budget</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Next: Vision and Budget</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -4311,12 +4311,12 @@
                 </div>
 
                 <!-- Step 4: Vision and Budget -->
-                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
+                <div id="step-4" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem] md:min-height-[34rem] md:justify-between">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -4372,19 +4372,19 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Vision and Budget</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Vision and Budget</h2>
 
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-center">
                                 Last step!
                             </p>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 The last step focuses on your vision for the project and the details of the collaboration.
                             </p>
                         </div>
                         
                         <!-- Form fields -->
-                        <div class="space-y-4 mb-6">
+                        <div class="space-y-4 mb-6 md:space-y-6">
                             <!-- Vision textarea -->
                             <div class="question-container">
                                 <label for="projectVision" class="flex text-base font-extrabold leading-[1.25rem] text-[#fffdff] mb-2 md:font-medium">
@@ -4401,7 +4401,7 @@
                                         id="projectVision" 
                                         rows="3"
                                         required 
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="Attach links to a Pinterest board or other sources of inspiration, if you have any at the moment."
                                     ></textarea>
                                 </div>
@@ -4434,7 +4434,7 @@
                                 <div class="space-y-4">
                                     <!-- $100 - $500 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5 relative flex items-center justify-center radio-container md:w-10">
                                             <input 
                                                 type="radio" 
                                                 id="budget1" 
@@ -4451,12 +4451,12 @@
                                                 <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="budget1" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$100 - $500</label>
+                                        <label for="budget1" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">$100 - $500</label>
                                     </div>
                                     
                                     <!-- $501 - $1000 radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container md:w-10">
                                             <input 
                                                 type="radio" 
                                                 id="budget2" 
@@ -4472,12 +4472,12 @@
                                                 <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="budget2" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$501 - $1000</label>
+                                        <label for="budget2" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">$501 - $1000</label>
                                     </div>
                                     
                                     <!-- $1001 - $5000+ radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container md:w-10">
                                             <input 
                                                 type="radio" 
                                                 id="budget3" 
@@ -4493,12 +4493,12 @@
                                                 <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="budget3" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">$1001 - $5000+</label>
+                                        <label for="budget3" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">$1001 - $5000+</label>
                                     </div>
                                     
                                     <!-- Custom radio option -->
                                     <div class="flex items-center">
-                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container">
+                                        <div class="w-8 h-8 mr-2.5  relative flex items-center justify-center radio-container md:w-10">
                                             <input 
                                                 type="radio" 
                                                 id="budgetCustom" 
@@ -4514,7 +4514,7 @@
                                                 <path d="M6.66683 20.0002C6.66683 12.6364 12.6364 6.66683 20.0002 6.66683C27.364 6.66683 33.3335 12.6364 33.3335 20.0002C33.3335 27.364 27.364 33.3335 20.0002 33.3335C12.6364 33.3335 6.66683 27.364 6.66683 20.0002ZM20.0002 3.3335C10.7954 3.3335 3.3335 10.7954 3.3335 20.0002C3.3335 29.2048 10.7954 36.6668 20.0002 36.6668C29.2048 36.6668 36.6668 29.2048 36.6668 20.0002C36.6668 10.7954 29.2048 3.3335 20.0002 3.3335ZM29.0953 15.762L26.7383 13.405L18.3335 21.8098L13.6787 17.155L11.3216 19.512L18.3335 26.5238L29.0953 15.762Z" fill="#FFFDFF"/>
                                             </svg>
                                         </div>
-                                        <label for="budgetCustom" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px]">Custom <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
+                                        <label for="budgetCustom" class="text-[1.1rem] cursor-pointer text-[#fffdff] font-bold font-sans pt-[2px] md:text-[1.3rem]">Custom <span class="text-[#969696] font-normal text-base">(specify below)</span></label>
                                     </div>
                                     
                                     <!-- Custom amount input (hidden by default) -->
@@ -4523,7 +4523,7 @@
                                             type="text" 
                                             id="customBudget" 
                                             name="customBudget" 
-                                            class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                            class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                             placeholder="$200 - $750"
                                         >
                                     </div>
@@ -4535,10 +4535,10 @@
                     <!-- Next button -->
                     <button 
                         type="button" 
-                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="next-button w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                         disabled
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Review and Submit</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Review and Submit</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#fffdff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -4546,12 +4546,12 @@
                 </div>
 
                 <!-- Step 5: Pre-Submit Review -->
-                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
+                <div id="step-5" class="step w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem] md:min-height-[34rem] md:justify-between">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4 ">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <!-- Back button -->
                         <button type="button" class="prev-button" aria-label="Previous step">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>
                             </svg>
                         </button>
@@ -4607,28 +4607,28 @@
                     <div id="card-content">
                         <div class="self-stretch inline-flex flex-col justify-start items-start gap-2">
                             <!-- Step title and description -->
-                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Form Completed!</h2>
+                            <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Form Completed!</h2>
 
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-center">
                                 Ready to be sent!
                             </p>
                             
-                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">
                                 Congrats! Now you have all the information necessary to get in touch with me. All you have to do is hit the "Submit Form" button and the form will be sent. I will review it and will get back to you as soon as possible.
                             </p>
                         </div>
                         
                         <!-- Optional question section -->
                         <div class="mb-6">
-                            <p class="text-[#fffdff] text-base font-light font-sans leading-5 mb-2">P.S. You would do me a huge favor if you answer the question below. <span class="text-[#969696]">(optional)</span></p>
+                            <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">P.S. You would do me a huge favor if you answer the question below. <span class="text-[#969696] font-normal text-base">(optional)</span></p>
                             
                             <!-- Toggle question button - shown when question is hidden -->
                             <button 
                                 type="button" 
                                 id="show-question-button" 
-                                class="flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
+                                class="flex items-center text-[#fffdff] text-base font-medium font-sans mb-4 md:text-[1.3rem]"
                             >
-                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-5 h-5 mr-2 md:w-7 md:h-7" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M8.28549 15.6517L6.67561 15.2203L7.33184 12.7713C6.34091 12.4063 5.43043 11.875 4.63422 11.2113L2.83978 13.0057L1.66127 11.8272L3.45571 10.0328C2.46309 8.84208 1.7667 7.39571 1.47974 5.80698L3.1198 5.50879C3.75233 9.01066 6.81601 11.6669 10.5001 11.6669C14.1842 11.6669 17.2479 9.01066 17.8804 5.50879L19.5205 5.80698C19.2335 7.39571 18.5371 8.84208 17.5445 10.0328L19.3389 11.8272L18.1604 13.0057L16.366 11.2113C15.5698 11.875 14.6593 12.4063 13.6683 12.7713L14.3246 15.2203L12.7148 15.6517L12.0583 13.2017C11.5518 13.2884 11.0313 13.3336 10.5001 13.3336C9.969 13.3336 9.44834 13.2884 8.942 13.2017L8.28549 15.6517Z" fill="#FFFDFF"/>
                                 </svg>
                                 Show question
@@ -4638,9 +4638,9 @@
                             <button 
                                 type="button" 
                                 id="hide-question-button" 
-                                class="hidden flex items-center text-[#fffdff] text-base font-medium font-sans mb-4"
+                                class="hidden flex items-center text-[#fffdff] text-base font-medium font-sans mb-4 md:text-[1.3rem]"
                             >
-                                <svg class="w-5 h-5 mr-2" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-5 h-5 mr-2 md:w-7 md:h-7" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.5004 2.5C14.9938 2.5 18.7322 5.73313 19.5159 10C18.7322 14.2668 14.9938 17.5 10.5004 17.5C6.00693 17.5 2.26862 14.2668 1.48486 10C2.26862 5.73313 6.00693 2.5 10.5004 2.5ZM10.5004 15.8333C14.0301 15.8333 17.0504 13.3767 17.8149 10C17.0504 6.62336 14.0301 4.16667 10.5004 4.16667C6.97066 4.16667 3.95035 6.62336 3.18581 10C3.95035 13.3767 6.97066 15.8333 10.5004 15.8333ZM10.5004 13.75C8.42931 13.75 6.75038 12.0711 6.75038 10C6.75038 7.92893 8.42931 6.25 10.5004 6.25C12.5714 6.25 14.2504 7.92893 14.2504 10C14.2504 12.0711 12.5714 13.75 10.5004 13.75ZM10.5004 12.0833C11.651 12.0833 12.5837 11.1506 12.5837 10C12.5837 8.84942 11.651 7.91667 10.5004 7.91667C9.34983 7.91667 8.41705 8.84942 8.41705 10C8.41705 11.1506 9.34983 12.0833 10.5004 12.0833Z" fill="#FFFDFF"/>
                                 </svg>
                                 Hide question
@@ -4658,7 +4658,7 @@
                                         name="referralSource" 
                                         id="referralSource" 
                                         rows="3"
-                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE]" 
+                                        class="form-input w-full px-4 py-3 pr-12 bg-[#333435] rounded-lg outline-2 outline-offset-[-2px] outline-[#4c4f50] shadow-sm focus:border-[#4c4f50] focus:ring focus:ring-[#4c4f50] focus:ring-opacity-50 inline-flex justify-start items-center gap-2 placeholder:text-[#B2B5B6] text-[#CCCDCE] md:p-4 md:text-lg" 
                                         placeholder="(Instagram, TikTok, Facebook, YouTube, Referral, Pinterest, etc. What attracts you to my services?)"
                                     ></textarea>
                                 </div>
@@ -4689,9 +4689,9 @@
                     <!-- Submit button -->
                     <button 
                         type="submit" 
-                        class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed md:p-4"
                     >
-                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6">Submit Form</span>
+                        <span class="text-[#fffdff] text-base font-bold font-sans leading-6 md:text-xl">Submit Form</span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.0001 22.0003L11.0002 22.0005V5.82859L7.05044 9.77829L5.63623 8.36409L12.0002 2.00009L18.3642 8.36409L16.9499 9.77829L13.0002 5.82849L13.0001 22.0003Z" fill="#FFFDFF"/>
                         </svg>
@@ -4700,8 +4700,8 @@
                 
                 <!-- Success Message (Hidden by default) -->
                 <div id="success-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
-                    <div class="inline-flex justify-between w-full mb-4">
-                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Form Sent!</h2>
+                    <div class="inline-flex justify-between w-full mb-4 md:mb-8">
+                        <h2 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Form Sent!</h2>
                         <button type="button" class="close-button">
                             <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
@@ -4710,21 +4710,27 @@
                     </div>
                     
                     <div class="text-center mb-10">
-                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">Congrats, your form was sent successfully!</p>
-                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px]">I will review it and will get back to you as soon as possible. Thank you!</p>
+                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">Congrats, your form was sent successfully!</p>
+                        <p class="self-stretch justify-start text-[#fffdff] text-base font-light font-['Onest'] leading-5 mb-[12px] md:text-xl md:leading-[1.6rem]">I will review it and will get back to you as soon as possible. Thank you!</p>
                     </div>
                     
                     <div class="space-y-4">
-                        <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans">While you wait, check out my socials:</p>
+                        <p class="self-stretch text-center justify-start text-[#fffdff] text-base font-extrabold font-sans md:text-lg">While you wait, check out my socials:</p>
                         <div class="flex justify-center items-center space-x-8">
                             <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-instagram.svg" alt="Instagram icon by Icons8" class="w-12 h-auto">
+                                <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 6C10.486 6 6 10.486 6 16V32C6 37.514 10.486 42 16 42H32C37.514 42 42 37.514 42 32V16C42 10.486 37.514 6 32 6H16ZM16 10H32C35.308 10 38 12.692 38 16V32C38 35.308 35.308 38 32 38H16C12.692 38 10 35.308 10 32V16C10 12.692 12.692 10 16 10ZM34 12C33.4696 12 32.9609 12.2107 32.5858 12.5858C32.2107 12.9609 32 13.4696 32 14C32 14.5304 32.2107 15.0391 32.5858 15.4142C32.9609 15.7893 33.4696 16 34 16C34.5304 16 35.0391 15.7893 35.4142 15.4142C35.7893 15.0391 36 14.5304 36 14C36 13.4696 35.7893 12.9609 35.4142 12.5858C35.0391 12.2107 34.5304 12 34 12ZM24 14C18.486 14 14 18.486 14 24C14 29.514 18.486 34 24 34C29.514 34 34 29.514 34 24C34 18.486 29.514 14 24 14ZM24 18C27.308 18 30 20.692 30 24C30 27.308 27.308 30 24 30C20.692 30 18 27.308 18 24C18 20.692 20.692 18 24 18Z" fill="#FFFDFF"/>
+                                </svg>
                             </a>
                             <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-twitter.svg" alt="Twitter icon by Icons8" class="w-12 h-auto">
+                                <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M42.192 41.5999L28.12 21.0847L28.144 21.1039L40.832 6.3999H36.592L26.256 18.3679L18.048 6.3999H6.92801L20.0656 25.5535L20.064 25.5519L6.20801 41.5999H10.448L21.9392 28.2847L31.072 41.5999H42.192ZM16.368 9.5999L36.112 38.3999H32.752L12.992 9.5999H16.368Z" fill="#FFFDFF"/>
+                                </svg>
                             </a>
                             <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social-link hover:opacity-80 transition-opacity">
-                                <img src="/src/icons/icons8-upwork.svg" alt="UpWork icon by Icons8" class="w-12 h-auto">
+                                <svg class="w-12 h-auto md:w-14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.96 8.63989C0.43008 8.63989 0 9.06997 0 9.59989V23.1505C0 29.0651 4.49567 34.2061 10.4006 34.5411C16.0617 34.8618 20.878 30.8892 21.885 25.5843C22.4322 26.3235 22.9884 27.0104 23.55 27.6411L20.1619 42.0205C20.0956 42.3066 20.1623 42.6048 20.3438 42.8361C20.5271 43.0646 20.8037 43.1999 21.0975 43.1999H26.0119C26.4573 43.1999 26.841 42.8997 26.9438 42.4668C27.5399 39.9506 28.4745 36.0077 29.3213 32.4336L30.195 32.9399C32.2734 34.0161 34.3824 34.5599 36.48 34.5599C43.3843 34.5599 48.889 28.4553 47.88 21.3599C47.2118 16.6597 43.5975 12.7855 38.9569 11.7861C33.553 10.6217 28.3443 13.3911 26.1056 17.9943C26.1056 17.9943 25.8572 18.5457 25.6575 19.0968C24.0735 16.3646 23.1433 13.5302 22.6556 11.4768C22.478 10.728 22.212 9.37225 22.1813 9.28489C22.0478 8.89801 21.6855 8.63989 21.2756 8.63989H16.32C15.7901 8.63989 15.36 9.06997 15.36 9.59989V23.3286C15.36 25.5837 13.7157 27.6004 11.4713 27.8193C8.89653 28.0708 6.72 26.0447 6.72 23.5199V9.59989C6.72 9.06997 6.28992 8.63989 5.76 8.63989H0.96ZM36.48 18.2399C39.1267 18.2399 41.28 20.3932 41.28 23.0399C41.28 25.6866 39.1267 27.8399 36.48 27.8399C34.344 27.8399 32.365 26.5518 30.9788 25.4286C31.4847 23.2926 31.8242 21.862 31.83 21.838C32.3753 19.7193 34.2883 18.2399 36.48 18.2399Z" fill="#FFFDFF"/>
+                                </svg>
                             </a>
                         </div>
                     </div>
@@ -4733,8 +4739,8 @@
                 <!-- Error Message (Hidden by default) -->
                 <div id="error-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <div class="flex flex-col items-center">
-                        <div class="inline-flex justify-between w-full mb-4">
-                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center">Oopss...</h3>
+                        <div class="inline-flex justify-between w-full mb-4 md:mb-8">
+                            <h3 class="self-stretch text-start text-[#fffdff] text-xl font-mono md:text-center md:text-2xl">Oopss...</h3>
                             <button type="button" class="close-button" aria-label="Close form">
                                 <svg class="close-x-btn" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.9882 16.3452L1 3.35702L3.35702 1L16.3452 13.9881L29.3334 1L31.6904 3.35702L18.7022 16.3452L31.6904 29.3333L29.3334 31.6904L16.3452 18.7022L3.35702 31.6904L1 29.3333L13.9882 16.3452Z" fill="#FFFDFF"/>
@@ -4744,13 +4750,13 @@
                         </div>
                         <div class="flex flex-col gap-2 self-stretch justify-start mb-[12px]">
                             <p class="form-error-exp text-[#fffdff] text-base font-light font-['Onest'] leading-5"></p>
-                            <p class="text-[#fffdff] text-base font-light font-['Onest'] leading-5">Please try again later or contact me directly via email at <a href="mailto:sergiu@bustiuc.digital" class="no-underline text-[#fffdff] text-base font-normal font-sans">sergiu@bustiuc.digital</a></p>
+                            <p class="text-[#fffdff] text-base font-light font-['Onest'] leading-5 md:text-xl md:leading-[1.6rem]">Please try again later or contact me directly via email at <a href="mailto:sergiu@bustiuc.digital" class="no-underline text-[#fffdff] text-base font-normal font-sans md:text-xl md:leading-[1.6rem]">sergiu@bustiuc.digital</a></p>
                         </div>
                         <div class="w-full mt-4">
                             <button 
                                 type="button" 
                                 id="try-again-button"
-                                class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-[#fffdff] text-base font-bold font-sans leading-6"
+                                class="w-full h-auto px-6 py-4 bg-[#262728]/90 border-2 border-[#4c4f50] inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 rounded backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-[#fffdff] text-base font-bold font-sans leading-6 md:p-4 md:text-xl"
                             >
                                 Try Again
                             </button>
@@ -4761,7 +4767,7 @@
                 <!-- Existing email state -->
                 <div id="existing-email-message" class="step hidden w-full max-w-xl lg:max-w-2xl p-4 pb-6 lg:p-8 lg:pb-8 rounded bg-[#262728]/95 shadow-[0px_0px_14px_4px_rgba(0,_0,_0,_0.1)] outline-1 outline-offset-[-1px] outline-[#777777] backdrop-blur-[2px] flex flex-col justify-start items-start gap-2 overflow-hidden md:max-w-[38rem]">
                     <!-- Progress navigation -->
-                    <div class="w-full flex items-center justify-between mb-4">
+                    <div class="w-full flex items-center justify-between mb-4 md:mb-8">
                         <button type="button" class="prev-button" aria-label="Previous step">
                             <svg class="back-arrow w-8 h-8 md:w-10 md:h-10" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M29.3337 17.3336L29.3339 14.6671H7.77133L13.0376 9.40075L11.152 7.51514L2.66666 16.0004L11.152 24.4858L13.0376 22.6L7.7712 17.3338L29.3337 17.3336Z" fill="#FFFDFF"/>

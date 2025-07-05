@@ -27,8 +27,8 @@ let activeProjectId = null;
 let cards = [];
 window.horizontalScrollData = window.horizontalScrollData || {};
 const horizontalScrollData = window.horizontalScrollData;
-const PROJECTS_SCROLL_SENSITIVITY = 100;
-const MOBILE_SCROLL_SENSITIVITY = 1;
+const PROJECTS_SCROLL_SENSITIVITY = 200;
+const MOBILE_SCROLL_SENSITIVITY = 10;
 const PROCESS_SCROLL_SENSITIVITY = 10;
 const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
 const PREVIEW_WIDTH = 0.25;
@@ -608,12 +608,12 @@ function setNavContext(activeId) {
     const itemCards = Array.from(document.querySelectorAll(`#${activeId} .item.card`));
 
     if (isMobile()) {
-    const wrapper = document.querySelector(`#${activeId} .card-wrapper`);
-    if (wrapper) {
-      wrapper.scrollLeft = horizontalScrollData[activeId].scrollX;
-      console.log('[MOBILE] setNavContext restores scrollLeft:', horizontalScrollData[activeId].scrollX);
+      const wrapper = document.querySelector(`#${activeId} .card-wrapper`);
+      if (wrapper) {
+        wrapper.scrollLeft = horizontalScrollData[activeId].scrollX;
+        console.log('[MOBILE] setNavContext restores scrollLeft:', horizontalScrollData[activeId].scrollX);
+      }
     }
-  }
 
     if (savedScroll === 0) {
       // No previous progress: animate to preview position
@@ -645,6 +645,7 @@ function setNavContext(activeId) {
   } else {
     horizontalScrollData[projectId].isActive = true;
   }
+
   Object.keys(horizontalScrollData).forEach(id => {
     if (id !== projectId) horizontalScrollData[id].isActive = false;
   });
@@ -741,14 +742,14 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
   } else if (state.cardIndex === 0) {
     targetProgress = phase1End;
   } else if (state.cardIndex >= totalCards) {
-    targetProgress = 0.9;
+    targetProgress = 1;
   } else {
     targetProgress = state.cardIndex * progressPerCard + phase1End;
   }
 
-  targetProgress = Math.max(0, Math.min(targetProgress, 0.9));
+  targetProgress = Math.max(0, Math.min(targetProgress, 1.0));
   const targetScrollX = targetProgress * maxScroll;
-  const animDuration = animationDuration ?? (delta > 120 ? 0.6 : 1.0);
+  const animDuration = animationDuration ?? (delta > 120 ? 2.0 : 4.0);
   const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
 
   // ---- ALWAYS UPDATE horizontalScrollData BEFORE GSAP for instant sync

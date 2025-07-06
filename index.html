@@ -19,7 +19,7 @@
 
             <!-- Logo -->
             <div class="loading-logo">
-                <svg width="100" height="100" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-16 h-16 lg:w-24 lg:h-24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M38.1268 64L12.5251 0H31.7266L57.329 64H38.1268Z" fill="#FFFDFF"/>
                     <path d="M4.83555 19.2L0 38.5307L33.7341 61.0183L17.0055 19.2H4.83555Z" fill="#FFFDFF"/>
                     <path d="M64 19.3115L59.2367 38.4H50.288L35.9105 2.45894L64 19.3115Z" fill="#FFFDFF"/>
@@ -297,6 +297,47 @@
         </section> 
 
         <div class="projects-wrapper">
+            <div id="projects-overlay" class="opacity-0 pointer-events-none transition-opacity duration-500 hidden lg:flex w-full h-screen pr-4 pl-4 items-center justify-center gap-8 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px] z-20">
+                <div class="w-full h-full flex flex-col items-center justify-center">
+                    <div class="middle-divider fixed w-px h-full bg-gradient-to-b from-[#5d5d5d]/0 via-[#5d5d5d] to-[#5d5d5d]/0">&nbsp;</div>
+                    <div class="w-full inline-flex flex-col justify-start items-center gap-14">
+                        <div class="self-stretch inline-flex justify-center items-center">
+                            <div class="w-1/2 h-full flex">
+                                <div class="flex flex-col justify-start items-center gap-4 mx-auto">
+                                    <svg class="w-8 h-auto rotate-270" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                    </svg>
+                                    <p class="w-82 text-center justify-start text-[#fffdff] text-2xl font-normal font-['Onest']">
+                                        Hover here when scrolling to navigate through projects
+                                    </p>
+                                    <svg class="w-8 h-auto rotate-90" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="fixed w-[3px] h-48 bg-gradient-to-b from-[#fffdff]/0 via-[#fffdff] to-[#fffdff]/0">
+                                &nbsp;
+                            </div>
+                            <div class="w-1/2 h-full flex">
+                                <div class="flex justify-start items-center gap-4 mx-auto">
+                                    <svg class="w-8 h-auto rotate-180" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                    </svg>
+                                    <p class="w-82 text-center justify-start text-[#fffdff] text-2xl font-normal font-['Onest']">
+                                        Hover here when scrolling to explore the project
+                                    </p>
+                                    <svg class="w-8 h-auto" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.49977 13.0001L2.49963 11.0002H18.6715L14.7218 7.05044L16.136 5.63623L22.5 12.0002L16.136 18.3642L14.7218 16.9499L18.6716 13.0002L2.49977 13.0001Z" fill="#FFFDFF"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="shiny-border-btn w-[20vw] h-auto px-6 py-4 bg-[#262728]/50 outline outline-[#4c4f50] outline-offset-[-2px] rounded-xs inline-flex justify-center items-center gap-2 hover::bg-[#333435]/95 backdrop-blur-sm">
+                            <button data-open-form="close-project-overlay" type="button" class="close-project-overlay text-[#fffdff] text-xl font-bold font-sans leading-6">Got it!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Scroll trigger zones -->
             <div class="scroll-zone-left" style="position: fixed; top: 15vh; left: 0; width: 50vw; height: 80vh; z-index: 10;"></div>
             <div class="scroll-zone-right" style="position: fixed; top: 15vh; right: 0; width: 50vw; height: 80vh; z-index: 10;"></div>
@@ -3146,10 +3187,8 @@
                         </div>
                         <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-7">
                             <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I create websites that not only look good, but are also easy to navigate for your customers.</p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">If you need additional functionality, I can offer you the web development option – all integrated into one package.
-                                </p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I don’t let your website “break down” – I help you keep it updated, fast and secure, so you can focus on your business.
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I create websites that don’t just look great—they’re intuitive, fast, and easy to navigate for your customers. Need extra features or advanced functionality? I offer flexible web development as part of an integrated package.</p>
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">Your website shouldn’t “break down” or slow you down. I handle ongoing updates, performance, and security, so you can stay focused on your business.
                                 </p>
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 md:hidden">
@@ -3184,10 +3223,8 @@
                         </div>
                         <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-7">
                             <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I'll build a unique brand identity that reflects your business values ​​and differentiates you in the market.</p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">From logos to promotional materials, everything is designed to clearly and attractively communicate your business message.
-                                </p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I'll help you manage your presence on social networks, ensuring that your messages reach the right customers and that interaction is constant.
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I’ll build a brand identity that’s true to your vision and helps you stand out in any market. From logos to marketing materials, everything is designed to clearly and memorably communicate your message.</p>
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">Need a consistent brand presence online? I’ll help you manage your image across all platforms, making sure you reach the right audience and keep them engaged.
                                 </p>
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 md:hidden">
@@ -3222,11 +3259,9 @@
                         </div>
                         <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-7">
                             <div class="w-full h-auto self-stretch inline-flex flex-col justify-start items-start gap-2">
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I'll develop communication and promotion strategies on social media, adapted to the local audience and the specifics of the Moldovan market.
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I develop social media strategies and campaigns tailored to your business and audience—wherever you are in the world. From attention-grabbing posts to effective ad campaigns, I help you connect and grow.
                                 </p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I'll create posts and campaigns that capture attention and communicate your brand values.
-                                </p>
-                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I'll ensure a unified visual presence, both online and offline, to strengthen brand recognition.
+                                <p class="self-stretch justify-start text-[#FFFDFF] text-base font-light font-sans leading-5.5">I make sure your visual identity and brand message stay consistent across all platforms, boosting recognition and building real engagement online and offline.
                                 </p>
                             </div>
                             <div class="w-full h-auto self-stretch inline-flex justify-between items-center gap-6 md:hidden">
@@ -3468,6 +3503,7 @@
 
         <section id="form-entry">
             <div class="absolute w-screen h-screen flex flex-inline justify-between items-start content-end lg:content-normal">
+                <div class="hidden lg:block w-full h-[25%] top-[75%] absolute bg-gradient-to-b from-[#070b0d]/0 to-[#070b0d]"></div>
                 <svg class="hidden lg:block w-[30vw] h-screen" viewBox="0 0 672 627" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_650_854)">
                     <path d="M-211.316 1433L346.902 37H-71.7665L-630 1433H-211.316Z" stroke="url(#paint0_linear_650_854)" shape-rendering="crispEdges"/>
@@ -3524,9 +3560,9 @@
                     </linearGradient>
                     </defs>
                 </svg>
-                <svg class="lg:hidden mt-auto" width="198" height="334" viewBox="0 0 198 334" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="lg:hidden mt-auto mb-[-20vh]" width="198" height="543" viewBox="0 0 198 543" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_652_865)">
-                    <path d="M-120.021 482L58.6087 37H-75.3653L-254 482H-120.021Z" stroke="url(#paint0_linear_652_865)" shape-rendering="crispEdges"/>
+                    <path d="M-120.021 482L58.6087 37H-75.3652L-254 482H-120.021Z" stroke="url(#paint0_linear_652_865)" shape-rendering="crispEdges"/>
                     <path d="M112.261 170.5L146 304.909L-89.372 461.268L27.3481 170.5H112.261Z" stroke="url(#paint1_linear_652_865)" shape-rendering="crispEdges"/>
                     </g>
                     <defs>
@@ -3552,7 +3588,7 @@
                     </linearGradient>
                     </defs>
                 </svg>
-                <svg class="lg:hidden mt-auto" width="192" height="334" viewBox="0 0 192 334" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="lg:hidden mt-auto mb-[-20vh]" width="192" height="543" viewBox="0 0 192 543" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_652_864)">
                     <path d="M312.021 482L133.391 37H267.365L446 482H312.021Z" stroke="url(#paint0_linear_652_864)" shape-rendering="crispEdges"/>
                     <path d="M79.7389 170.5L46 304.909L281.372 461.268L164.652 170.5H79.7389Z" stroke="url(#paint1_linear_652_864)" shape-rendering="crispEdges"/>
@@ -4870,6 +4906,54 @@
                 </div>
             </form>
         </div>
+
+        <section id="footer" class="section">
+            <div class="section w-full h-auto flex pr-4 pl-4 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px]">
+                <div class="w-full flex flex-col items-center justify-between pt-10 pb-20">
+                    <video class="w-32 h-auto lg:w-44" poster="/src/icons/LOGOMARK-II.svg" autoplay loop muted >
+                        <source src="/logoSpinner.webm" type="video/webm">
+                    </video>
+                    <div class="w-full h-auto inline-flex flex-col justify-between items-start md:w-[50vw] xl:max-w-[30vw]">
+                        <div class="w-full h-auto inline-flex flex-col justify-start items-start gap-8">
+                            <div class="w-full h-auto inline-flex flex-col justify-center items-center gap-4">
+                                <div class="w-full inline-flex gap-1">
+                                    <a href="#project-1" data-scroll-to="project-1" class="w-full self-stretch text-center text-[#FFFDFF] text-2xl font-bold font-sans leading-snug">Projects</a>
+                                </div>
+                                <div class="w-full inline-flex gap-1">
+                                    <a href="#process" data-scroll-to="process" class="w-full self-stretch text-center text-[#FFFDFF] text-2xl font-bold font-sans leading-snug">My Process</a>
+                                </div>
+                                <div class="w-full inline-flex gap-1">
+                                    <a href="#services" data-scroll-to="services" class="w-full self-stretch text-center text-[#FFFDFF] text-2xl font-bold font-sans leading-snug">Services</a>
+                                </div>
+                                <div class="w-full inline-flex gap-1">
+                                    <a href="#faq" data-scroll-to="faq" class="w-full self-stretch text-center text-[#FFFDFF] text-2xl font-bold font-sans leading-snug">FAQ</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="self-stretch inline-flex flex-col justify-start items-center gap-6 mt-16">
+                            <p class="w-full self-stretch text-center justify-start text-[#FFFDFF] text-base font-normal font-sans leading-5">Find me on:</p>
+                            <div class="self-stretch inline-flex justify-evenly items-center">
+                                <a href="https://www.instagram.com/bustiuc.s/" target="_blank" rel="noopener noreferrer" class="social 1">
+                                    <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="40px" height="40px"> 
+                                        <path d="M 8 3 C 5.243 3 3 5.243 3 8 L 3 16 C 3 18.757 5.243 21 8 21 L 16 21 C 18.757 21 21 18.757 21 16 L 21 8 C 21 5.243 18.757 3 16 3 L 8 3 z M 8 5 L 16 5 C 17.654 5 19 6.346 19 8 L 19 16 C 19 17.654 17.654 19 16 19 L 8 19 C 6.346 19 5 17.654 5 16 L 5 8 C 5 6.346 6.346 5 8 5 z M 17 6 A 1 1 0 0 0 16 7 A 1 1 0 0 0 17 8 A 1 1 0 0 0 18 7 A 1 1 0 0 0 17 6 z M 12 7 C 9.243 7 7 9.243 7 12 C 7 14.757 9.243 17 12 17 C 14.757 17 17 14.757 17 12 C 17 9.243 14.757 7 12 7 z M 12 9 C 13.654 9 15 10.346 15 12 C 15 13.654 13.654 15 12 15 C 10.346 15 9 13.654 9 12 C 9 10.346 10.346 9 12 9 z" fill="#FFFDFF"/>
+                                    </svg>
+                                </a>
+                                <a href="https://x.com/SergiuB7" target="_blank" rel="noopener noreferrer" class="social 2">
+                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="40px" height="40px">
+                                        <path d="M26.37,26l-8.795-12.822l0.015,0.012L25.52,4h-2.65l-6.46,7.48L11.28,4H4.33l8.211,11.971L12.54,15.97L3.88,26h2.65 l7.182-8.322L19.42,26H26.37z M10.23,6l12.34,18h-2.1L8.12,6H10.23z" fill="#FFFDFF"/>
+                                    </svg>
+                                </a>
+                                <a href="https://www.upwork.com/freelancers/~016961b25529420429?viewMode=1" target="_blank" rel="noopener noreferrer" class="social 3">
+                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="40px" height="40px">
+                                        <path d="M 1 9 C 0.448 9 0 9.448 0 10 L 0 24.115234 C 0 30.276234 4.6829844 35.631469 10.833984 35.980469 C 16.730984 36.314469 21.747875 32.176391 22.796875 26.650391 C 23.366875 27.420391 23.94625 28.135969 24.53125 28.792969 L 21.001953 43.771484 C 20.932953 44.069484 21.002406 44.380094 21.191406 44.621094 C 21.382406 44.859094 21.670563 45 21.976562 45 L 27.095703 45 C 27.559703 45 27.959406 44.687328 28.066406 44.236328 C 28.687406 41.615328 29.660969 37.508156 30.542969 33.785156 L 31.453125 34.3125 C 33.618125 35.4335 35.815 36 38 36 C 45.192 36 50.926 29.641 49.875 22.25 C 49.179 17.354 45.414078 13.318344 40.580078 12.277344 C 34.951078 11.064344 29.525359 13.949141 27.193359 18.744141 C 27.193359 18.744141 26.934562 19.318578 26.726562 19.892578 C 25.076563 17.046578 24.107609 14.094078 23.599609 11.955078 C 23.414609 11.175078 23.137469 9.762875 23.105469 9.671875 C 22.966469 9.268875 22.589109 9 22.162109 9 L 17 9 C 16.448 9 16 9.448 16 10 L 16 24.300781 C 16 26.649781 14.287219 28.750516 11.949219 28.978516 C 9.2672187 29.240516 7 27.13 7 24.5 L 7 10 C 7 9.448 6.552 9 6 9 L 1 9 z M 38 19 C 40.757 19 43 21.243 43 24 C 43 26.757 40.757 29 38 29 C 35.775 29 33.713531 27.658281 32.269531 26.488281 C 32.796531 24.263281 33.15025 22.773047 33.15625 22.748047 C 33.72425 20.541047 35.717 19 38 19 z" fill="#FFFDFF"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

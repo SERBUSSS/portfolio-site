@@ -107,6 +107,7 @@ function pinContainer() {
   setZonesEnabled(true);
   setProjectsContainerScrollable(true);
   setPageScrollLocked(true);
+  showProjectsOverlayIfNeeded();
   // if (wrapper) wrapper.classList.add('pinned');
 
   if (activeProjectId === 'process' && isWrapperBottomInSlack()) {
@@ -309,6 +310,58 @@ function isWrapperBottomInSlack() {
     rect.bottom >= window.innerHeight - slackZone &&
     rect.bottom <= window.innerHeight + slackZone
   );
+}
+
+// ================================================
+// Scroll Zone Overlay Logic
+// ================================================
+function shouldShowProjectsOverlay() {
+  const lastSeen = localStorage.getItem('seenProjectsOverlayTime');
+  if (!lastSeen) return true;
+  const last = parseInt(lastSeen, 10);
+  const now = Date.now();
+  // 24 hours = 86400000 ms
+  return (now - last) > 86400000;
+}
+
+function setScrollZonesPointer(enabled) {
+  document.querySelectorAll('.scroll-zone-left, .scroll-zone-right').forEach(zone => {
+    zone.style.pointerEvents = enabled ? 'auto' : 'none';
+  });
+}
+
+function showProjectsOverlayIfNeeded() {
+  const overlay = document.getElementById('projects-overlay');
+  if (!overlay) return;
+
+  if (!shouldShowProjectsOverlay()) {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('opacity-100');
+    overlay.classList.add('opacity-0', 'pointer-events-none');
+    setScrollZonesPointer(true); // Enable when overlay is hidden
+    return;
+  }
+
+  overlay.classList.remove('hidden');
+  setTimeout(() => {
+    overlay.classList.remove('opacity-0', 'pointer-events-none');
+    overlay.classList.add('opacity-100');
+  }, 50);
+  setScrollZonesPointer(false); // Disable when overlay is visible
+}
+
+function setupProjectsOverlayLogic() {
+  document.querySelectorAll('.close-project-overlay').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const overlay = document.getElementById('projects-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => overlay.classList.add('hidden'), 500);
+      localStorage.setItem('seenProjectsOverlayTime', Date.now().toString());
+      setScrollZonesPointer(true); // Re-enable scroll zones after close
+    });
+  });
 }
 
 // ================================================
@@ -1553,6 +1606,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);
   setupGestureHandlers();
+  setupProjectsOverlayLogic();
 });
 
 window.addEventListener('beforeunload', () => {

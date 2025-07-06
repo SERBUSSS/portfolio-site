@@ -28,7 +28,7 @@ let cards = [];
 window.horizontalScrollData = window.horizontalScrollData || {};
 const horizontalScrollData = window.horizontalScrollData;
 const PROJECTS_SCROLL_SENSITIVITY = 200;
-const MOBILE_SCROLL_SENSITIVITY = 10;
+const MOBILE_SCROLL_SENSITIVITY = 5;
 const PROCESS_SCROLL_SENSITIVITY = 10;
 const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
 const PREVIEW_WIDTH = 0.25;
@@ -690,7 +690,7 @@ function initNavButtons() {
 // Horizontal Scroll & Card Snap (Projects)
 // ================================================
 // Snap card scroll in given direction, updating phase and card index as needed.
-function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 50) {
+function snapCardScroll(sectionId, direction, animationDuration = 5.0, delta = 10) {
   const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
   if (!cards.length) return;
   const totalCards = cards.length;
@@ -749,7 +749,7 @@ function snapCardScroll(sectionId, direction, animationDuration = 0.8, delta = 5
 
   targetProgress = Math.max(0, Math.min(targetProgress, 1.0));
   const targetScrollX = targetProgress * maxScroll;
-  const animDuration = animationDuration ?? (delta > 120 ? 2.0 : 4.0);
+  const animDuration = animationDuration ?? (delta > 120 ? 5.0 : 10.0);
   const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
 
   // ---- ALWAYS UPDATE horizontalScrollData BEFORE GSAP for instant sync

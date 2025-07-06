@@ -690,7 +690,7 @@ function initNavButtons() {
 // Horizontal Scroll & Card Snap (Projects)
 // ================================================
 // Snap card scroll in given direction, updating phase and card index as needed.
-function snapCardScroll(sectionId, direction, animationDuration = 5.0, delta = 10) {
+function snapCardScroll(sectionId, direction, animationDuration = 1.0, delta = 20) {
   const cards = Array.from(document.querySelectorAll(`#${sectionId} .item.card`));
   if (!cards.length) return;
   const totalCards = cards.length;
@@ -715,7 +715,8 @@ function snapCardScroll(sectionId, direction, animationDuration = 5.0, delta = 1
   // (you may want to refine this logic further for edge cases)
 
   // Use state.cardIndex or cardIndex from scroll, whichever is higher
-  state.cardIndex = typeof state.cardIndex === 'number' ? state.cardIndex : cardIndex;
+  const previousCardIndex = cardIndex; // or use state.cardIndex before change
+  const newCardIndex = (direction === "prev") ? state.cardIndex - 1 : state.cardIndex + 1;
 
   // --- SNAP NAVIGATION LOGIC ---
   if (direction === "next") {
@@ -749,7 +750,7 @@ function snapCardScroll(sectionId, direction, animationDuration = 5.0, delta = 1
 
   targetProgress = Math.max(0, Math.min(targetProgress, 1.0));
   const targetScrollX = targetProgress * maxScroll;
-  const animDuration = animationDuration ?? (delta > 120 ? 5.0 : 10.0);
+  const animDuration = animationDuration ?? (delta > 50 ? 1.0 : 1.5);
   const easeType = direction === "prev" ? "power2.inOut" : "power2.out";
 
   // ---- ALWAYS UPDATE horizontalScrollData BEFORE GSAP for instant sync
@@ -762,13 +763,12 @@ function snapCardScroll(sectionId, direction, animationDuration = 5.0, delta = 1
     ease: easeType,
     onUpdate: () => {
       const p = horizontalScrollData[sectionId].scrollX / maxScroll;
-      updateHorizontalAnimation(sectionId, p, cards);
+      updateHorizontalAnimation(sectionId, p, cards, direction); // <-- pass direction
       saveProjectScrollState(sectionId, horizontalScrollData[sectionId].scrollX);
     },
     onComplete: () => {
       horizontalScrollData[sectionId].scrollX = targetScrollX;
       saveProjectScrollState(sectionId, targetScrollX);
-      // Update state.cardIndex and animating flag
       setCardSnapState(sectionId, { cardIndex: state.cardIndex, animating: false });
     }
   });
@@ -823,12 +823,11 @@ function handleProjectScroll(sectionId, e) {
   updateHorizontalAnimation(sectionId, progress, cards);
 }
 
-function updateHorizontalAnimation(sectionId, progress, cards) {
+function updateHorizontalAnimation(sectionId, progress, cards, direction = "next") {
     if (sectionId === 'process') return;
 
     const isMobile = window.innerWidth <= 768;
     const previewRatio = isMobile ? 0.15 : 0.3;
-
     const deviceKey = isMobile ? 'mobile' : 'desktop';
     const projectPositions = (cardPositions[sectionId] && cardPositions[sectionId][deviceKey]) || [];
     const totalCards = cards.length;
@@ -839,7 +838,52 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
     const screenCenterX = window.innerWidth / 2;
     const screenCenterY = window.innerHeight / 2;
 
+    // Find which card is currently at center based on progress
+    let activeCardIndex = 0, activeCardProgress = 0;
+    for (let i = 0; i < cards.length; i++) {
+        const cardStart = i * progressPerCard;
+        const cardEnd = cardStart + progressPerCard;
+        if (progress >= cardStart && progress < cardEnd) {
+            activeCardIndex = i;
+            activeCardProgress = (progress - cardStart) / progressPerCard;
+            break;
+        }
+        if (progress >= (1 - progressPerCard)) {
+            activeCardIndex = cards.length - 1;
+            activeCardProgress = 1;
+            break;
+        }
+    }
+
+    // --- New: animate outgoing card on backward snap (reverse phase 1) ---
+    let handledOutgoing = false;
+    if (direction === "prev") {
+        const outgoingIndex = activeCardIndex + 1;
+        if (outgoingIndex < cards.length) {
+            const card = cards[outgoingIndex];
+            const phase1End = 0.6 * progressPerCard;
+            const outgoingStart = outgoingIndex * progressPerCard;
+            const outgoingEnd = outgoingStart + phase1End;
+            if (progress >= outgoingStart && progress < outgoingEnd) {
+                const t = (progress - outgoingStart) / phase1End;
+                const startX = window.innerWidth + card.offsetWidth / 2;
+                const endX = screenCenterX;
+                gsap.set(card, {
+                    x: startX + (endX - startX) * t - card.offsetWidth / 2,
+                    y: screenCenterY - card.offsetHeight / 2,
+                    scale: 1,
+                    opacity: t,
+                    rotation: 0,
+                    force3D: true,
+                });
+                handledOutgoing = outgoingIndex;
+            }
+        }
+    }
+
+    // --- Normal animation logic for all cards except outgoing ---
     cards.forEach((card, index) => {
+        if (handledOutgoing === index) return; // Don't override outgoing card!
         const cardStartProgress = index * progressPerCard;
         const posIndex = Math.min(index, positionsCount - 1);
         const finalPos = projectPositions[posIndex] || { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 };
@@ -849,14 +893,12 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
         const finalOpacity = parseFloat(finalPos.opacity);
         const finalRotation = parseFloat(finalPos.rotation);
 
-        // CARD 0: Special preview/phase1 logic
+        // CARD 0: Special preview/phase1 logic (unchanged)
         if (index === 0) {
             const phase1Start = 0;
             const phase1End = 0.6 * progressPerCard;
-            const previewEnd = previewRatio * (phase1End - phase1Start); // preview phase [0, previewEnd]
-
+            const previewEnd = previewRatio * (phase1End - phase1Start);
             if (progress < previewEnd) {
-                // Preview phase: from initial position to preview point (15/30% of the way to center)
                 const t = progress / previewEnd;
                 const startX = window.innerWidth + card.offsetWidth / 2;
                 const previewX = startX + (screenCenterX - startX) * previewRatio;
@@ -871,7 +913,6 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
                 return;
             }
             if (progress >= previewEnd && progress < phase1End) {
-                // Phase 1 remainder: from preview point to center
                 const t = (progress - previewEnd) / (phase1End - previewEnd);
                 const startX = window.innerWidth + card.offsetWidth / 2 + (screenCenterX - (window.innerWidth + card.offsetWidth / 2)) * previewRatio;
                 const endX = screenCenterX;
@@ -887,7 +928,7 @@ function updateHorizontalAnimation(sectionId, progress, cards) {
             }
         }
 
-        // All cards (including card 0 after phase1): normal logic
+        // Normal phase 1 and 2 logic (unchanged)
         const cardProgress = Math.max(0, Math.min(1, (progress - cardStartProgress) / progressPerCard));
         if (cardProgress <= 0.6) {
             // Phase 1: right to center
@@ -978,7 +1019,7 @@ function onDesktopHorizontalScroll(sectionId, e) {
   if (delta < 30) return;
 
   const direction = (e.deltaX || e.deltaY) > 0 ? "next" : "prev";
-  let animDuration = delta > 120 ? 0.35 : 0.9;
+  let animDuration = delta > 50 ? 1.0 : 1.5;
   snapCardScroll(sectionId, direction, animDuration);
 }
 

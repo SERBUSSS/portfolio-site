@@ -319,6 +319,8 @@ function isWrapperBottomInSlack() {
 // Scroll Zone Overlay Logic
 // ================================================
 function shouldShowProjectsOverlay() {
+  // Only show overlay if NOT mobile
+  if (isMobile()) return false;
   const lastSeen = localStorage.getItem('seenProjectsOverlayTime');
   if (!lastSeen) return true;
   const last = parseInt(lastSeen, 10);

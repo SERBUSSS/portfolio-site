@@ -297,7 +297,7 @@
         </section> 
 
         <div class="projects-wrapper">
-            <div id="projects-overlay" class="opacity-0 pointer-events-none transition-opacity duration-500 hidden lg:flex w-full h-screen pr-4 pl-4 items-center justify-center gap-8 md:max-lg:px-16 lg:px-36 xl:my-0 xl:mx-auto xl:max-w-[1500px] z-20">
+            <div id="projects-overlay" class="opacity-0 pointer-events-none transition-opacity duration-500 hidden lg:flex pr-4 pl-4 items-center justify-center gap-8 fixed inset-0 w-screen h-screen bg-[#070b0d]/80 backdrop-blur-[6px] z-20">
                 <div class="w-full h-full flex flex-col items-center justify-center">
                     <div class="middle-divider fixed w-px h-full bg-gradient-to-b from-[#5d5d5d]/0 via-[#5d5d5d] to-[#5d5d5d]/0">&nbsp;</div>
                     <div class="w-full inline-flex flex-col justify-start items-center gap-14">
@@ -339,8 +339,8 @@
                 </div>
             </div>
             <!-- Scroll trigger zones -->
-            <div class="scroll-zone-left" style="position: fixed; top: 15vh; left: 0; width: 50vw; height: 80vh; z-index: 10;"></div>
-            <div class="scroll-zone-right" style="position: fixed; top: 15vh; right: 0; width: 50vw; height: 80vh; z-index: 10;"></div>
+            <div class="scroll-zone scroll-zone-left" style="position: fixed; top: 15vh; left: 0; width: 50vw; height: 80vh; z-index: 10; display: none;"></div>
+            <div class="scroll-zone scroll-zone-right" style="position: fixed; top: 15vh; right: 0; width: 50vw; height: 80vh; z-index: 10; display: none;"></div>
 
             <div class="projects-container">
                 <!-- Project 1 - Unified Section -->

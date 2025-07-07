@@ -33,6 +33,10 @@ const PROCESS_SCROLL_SENSITIVITY = 10;
 const PERSIST_SCROLL_PROGRESS = false; // set to true for persistence
 const PREVIEW_WIDTH = 0.25;
 
+const HORIZONTAL_THRESHOLD = 10; // px before horizontal drag locks
+const VERTICAL_THRESHOLD = 10;   // px before vertical drag locks
+const HORIZONTAL_TOLERANCE = 0.38; // tan(21.5deg) angular tolerance
+
 // logic/sectionScrollLogic.js
 const sections = document.querySelectorAll('.project-section');
 const projectsContainer = document.querySelector('.projects-container');
@@ -57,8 +61,6 @@ let touchLastX = 0;
 let touchLastY = 0;
 let touchActive = false;
 let gestureType = null; // 'horizontal' | 'vertical' | null
-const HORIZONTAL_THRESHOLD = 10; // px
-const VERTICAL_THRESHOLD = 10;   // px
 
 // logic/navControl.js
 let currentCard = 0;
@@ -181,6 +183,7 @@ function unpinContainer() {
   setZonesEnabled(false);
   setProjectsContainerScrollable(false);
   setPageScrollLocked(false);
+  setScrollZonesVisible(true);
   // if (wrapper) wrapper.classList.remove('pinned');
 
   if (activeProjectId === 'process' && isProcessScrollAtEnd()) {
@@ -324,6 +327,16 @@ function shouldShowProjectsOverlay() {
   return (now - last) > 86400000;
 }
 
+function setScrollZonesVisible(visible) {
+  document.querySelectorAll('.scroll-zone').forEach(zone => {
+    if (visible) {
+      zone.style.display = 'block';
+    } else {
+      zone.style.display = 'none';
+    }
+  });
+}
+
 function setScrollZonesPointer(enabled) {
   document.querySelectorAll('.scroll-zone-left, .scroll-zone-right').forEach(zone => {
     zone.style.pointerEvents = enabled ? 'auto' : 'none';
@@ -338,7 +351,7 @@ function showProjectsOverlayIfNeeded() {
     overlay.classList.add('hidden');
     overlay.classList.remove('opacity-100');
     overlay.classList.add('opacity-0', 'pointer-events-none');
-    setScrollZonesPointer(true); // Enable when overlay is hidden
+    setScrollZonesVisible(true); // ENABLE scroll zones
     return;
   }
 
@@ -347,7 +360,7 @@ function showProjectsOverlayIfNeeded() {
     overlay.classList.remove('opacity-0', 'pointer-events-none');
     overlay.classList.add('opacity-100');
   }, 50);
-  setScrollZonesPointer(false); // Disable when overlay is visible
+  setScrollZonesVisible(false); // HIDE scroll zones while overlay is visible
 }
 
 function setupProjectsOverlayLogic() {
@@ -357,9 +370,11 @@ function setupProjectsOverlayLogic() {
       if (!overlay) return;
       overlay.classList.remove('opacity-100');
       overlay.classList.add('opacity-0', 'pointer-events-none');
-      setTimeout(() => overlay.classList.add('hidden'), 500);
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        setScrollZonesVisible(true); // <-- MOVE THIS HERE!
+      }, 500); // match transition duration
       localStorage.setItem('seenProjectsOverlayTime', Date.now().toString());
-      setScrollZonesPointer(true); // Re-enable scroll zones after close
     });
   });
 }
@@ -1383,11 +1398,12 @@ function setupGestureHandlers() {
   let gesturePointer = null; // 'mouse' | 'touch'
   let dragStartX = 0, dragStartY = 0, lastX = 0, lastY = 0;
   let gestureTypeLocal = null;
+  let gestureLocked = null; // NEW: "horizontal" | "vertical" | null
 
-  // Unify gesture detection
+  // Updated detection: allows for slop/tolerance
   function detectGesture(dx, dy) {
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > HORIZONTAL_THRESHOLD) return 'horizontal';
-    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > VERTICAL_THRESHOLD) return 'vertical';
+    if (Math.abs(dx) > HORIZONTAL_THRESHOLD && Math.abs(dy / dx) < HORIZONTAL_TOLERANCE) return "horizontal";
+    if (Math.abs(dy) > VERTICAL_THRESHOLD && Math.abs(dx / dy) < HORIZONTAL_TOLERANCE) return "vertical";
     return null;
   }
 
@@ -1399,6 +1415,7 @@ function setupGestureHandlers() {
     dragStartX = lastX = e.clientX;
     dragStartY = lastY = e.clientY;
     gestureTypeLocal = null;
+    gestureLocked = null;
     document.body.style.userSelect = 'none';
   });
 
@@ -1406,12 +1423,12 @@ function setupGestureHandlers() {
     if (!isDragging || gesturePointer !== 'mouse') return;
     const dx = e.clientX - dragStartX;
     const dy = e.clientY - dragStartY;
-    if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
-
+    if (!gestureLocked) {
+      gestureLocked = detectGesture(dx, dy);
+    }
     if (!containerPinned) return;
 
-    // --- PROJECTS (horizontal drag progress on mobile) ---
-    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureTypeLocal === 'horizontal') {
+    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureLocked === "horizontal") {
       e.preventDefault?.();
       let scrollDelta = e.clientX - lastX;
       horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
@@ -1422,8 +1439,7 @@ function setupGestureHandlers() {
       updateHorizontalAnimation(activeProjectId, progress, cards);
     }
 
-    // --- PROCESS section (vertical) ---
-    if (activeProjectId === 'process' && gestureTypeLocal === 'vertical') {
+    if (activeProjectId === 'process' && gestureLocked === "vertical") {
       e.preventDefault?.();
       const cards = Array.from(document.querySelectorAll(`#process .process-card`));
       const maxScroll = horizontalScrollData['process'].maxScroll;
@@ -1456,7 +1472,6 @@ function setupGestureHandlers() {
         animateProcessCards('process', progress, cards);
       }
     }
-
     lastX = e.clientX;
     lastY = e.clientY;
   });
@@ -1466,6 +1481,7 @@ function setupGestureHandlers() {
     isDragging = false;
     gesturePointer = null;
     gestureTypeLocal = null;
+    gestureLocked = null;
     document.body.style.userSelect = '';
   });
 
@@ -1477,6 +1493,7 @@ function setupGestureHandlers() {
     dragStartX = lastX = e.touches[0].clientX;
     dragStartY = lastY = e.touches[0].clientY;
     gestureTypeLocal = null;
+    gestureLocked = null;
   }, { passive: true });
 
   container.addEventListener('touchmove', function(e) {
@@ -1485,7 +1502,9 @@ function setupGestureHandlers() {
     const touchY = e.touches[0].clientY;
     const dx = touchX - dragStartX;
     const dy = touchY - dragStartY;
-    if (!gestureTypeLocal) gestureTypeLocal = detectGesture(dx, dy);
+    if (!gestureLocked) {
+      gestureLocked = detectGesture(dx, dy);
+    }
 
     if (!containerPinned) return;
 
@@ -1499,7 +1518,7 @@ function setupGestureHandlers() {
     }
 
     // --- PROJECTS (horizontal drag progress on mobile) ---
-    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureTypeLocal === 'horizontal') {
+    if (activeProjectId && activeProjectId !== 'process' && isMobile() && gestureLocked === "horizontal") {
       e.preventDefault();
       let scrollDelta = touchX - lastX;
       horizontalScrollData[activeProjectId].scrollX -= scrollDelta / MOBILE_SCROLL_SENSITIVITY;
@@ -1511,7 +1530,8 @@ function setupGestureHandlers() {
     }
 
     // --- PROCESS section (vertical) ---
-    if (activeProjectId === 'process' && gestureTypeLocal === 'vertical') {
+    if (activeProjectId === 'process' && gestureLocked === "vertical") {
+      e.preventDefault();
       const cards = Array.from(document.querySelectorAll(`#process .process-card`));
       const maxScroll = horizontalScrollData['process'].maxScroll;
       const prevScrollX = horizontalScrollData['process'].scrollX;
@@ -1537,13 +1557,14 @@ function setupGestureHandlers() {
       let scrollX = prevScrollX - scrollDelta;
       scrollX = Math.max(0, Math.min(maxScroll, scrollX));
       if (scrollX !== prevScrollX) {
-        e.preventDefault();
         horizontalScrollData['process'].scrollX = scrollX;
         saveProcessScrollState(scrollX);
         const progress = scrollX / maxScroll;
         animateProcessCards('process', progress, cards);
       }
     }
+    // else: do nothing, ignore ambiguous/diagonal gestures
+
     lastX = touchX;
     lastY = touchY;
   }, { passive: false });
@@ -1553,6 +1574,7 @@ function setupGestureHandlers() {
     isDragging = false;
     gesturePointer = null;
     gestureTypeLocal = null;
+    gestureLocked = null;
   }, { passive: true });
 }
 

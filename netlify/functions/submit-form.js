@@ -109,43 +109,41 @@ exports.handler = async (event, context) => {
       <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
 
-    const response = await fetch('https://api.mailersend.com/v1/email', {
+    const emailPayload = {
+      from: {
+        email: 'sergiu@bustiuc.digital',
+        name: 'Sergiu Buștiuc'
+      },
+      to: [
+        { email: data.email, name: data.fullName },
+        { email: 's1.bustiuc@gmail.com', name: 'Sergiu B.' }
+      ],
+      subject: 'New Project Inquiry',
+      html: `
+        <p>Hello ${data.fullName},</p>
+        <p>Thanks for submitting your project! I’ll be reviewing your inquiry and will get back to you soon.</p>
+        <hr />
+        ${formattedDetails}
+        <p>— Sergiu Buștiuc<br><a href="https://bustiuc.digital">bustiuc.digital</a></p>
+      `
+    };
+
+    const mailerResponse = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.MAILERSEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        from: {
-          email: 'sergiu@bustiuc.digital',
-          name: 'Sergiu Buștiuc'
-        },
-        to: [
-          { email: data.email, name: data.fullName },
-          { email: 's1.bustiuc@gmail.com', name: 'Sergiu B.' }
-        ],
-        subject: 'New Project Inquiry',
-        html: `
-          <p>Hello ${data.fullName},</p>
-          <p>Thanks for submitting your project! I’ll be reviewing your inquiry and will get back to you soon.</p>
-          <hr />
-          ${formattedDetails}
-          <p>— Sergiu Buștiuc<br><a href="https://bustiuc.digital">bustiuc.digital</a></p>
-        `
-      })
+      body: JSON.stringify(emailPayload)
     });
 
-    const mailerResponseText = await response.text();
+    const responseText = await mailerResponse.text();
 
-    if (!response.ok) {
-      throw new Error(`MailerSend error: ${mailerResponseText}`);
-    }
+    console.log('📤 MailerSend status:', mailerResponse.status);
+    console.log('📤 MailerSend response:', responseText);
 
-    console.log('MailerSend response:', mailerResponseText);
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`MailerSend error: ${error}`);
+    if (!mailerResponse.ok) {
+      throw new Error(`MailerSend error: ${responseText}`);
     }
 
     return {

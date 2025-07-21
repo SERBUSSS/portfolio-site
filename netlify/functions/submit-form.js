@@ -135,6 +135,14 @@ exports.handler = async (event, context) => {
       })
     });
 
+    const mailerResponseText = await response.text();
+
+    if (!response.ok) {
+      throw new Error(`MailerSend error: ${mailerResponseText}`);
+    }
+
+    console.log('MailerSend response:', mailerResponseText);
+
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`MailerSend error: ${error}`);

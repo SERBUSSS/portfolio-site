@@ -1,4 +1,4 @@
-const sgMail = require('@sendgrid/mail');
+const fetch = require('node-fetch');
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
     );
 
     const data = JSON.parse(event.body);
-    
+
     if (!data.fullName || !data.email) {
       return {
         statusCode: 400,
@@ -36,9 +36,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Honeypot check
     if (data.website) {
-      console.log("Bot submission detected");
       return {
         statusCode: 200,
         headers,
@@ -46,22 +44,19 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Process form data
     const servicesChecked = Array.from(data.services || []).join(', ');
-    
+
     const socialMediaProfiles = [];
     let index = 0;
     while (data[`social-media-type-${index}`]) {
       const type = data[`social-media-type-${index}`];
       const profile = data[`social-media-profile-${index}`];
-      
       if (profile && profile.trim()) {
         socialMediaProfiles.push(`${type}: ${profile}`);
       }
       index++;
     }
 
-    // Direct database insertion (no RPC functions)
     const { data: insertResult, error: insertError } = await supabase
       .from('form_submissions')
       .insert([{
@@ -78,13 +73,9 @@ exports.handler = async (event, context) => {
         custom_budget: data.customBudget || '',
         referral_source: data.referralSource || '',
         submitted_at: new Date().toISOString()
-      }])
-      .select();
+      }]);
 
     if (insertError) {
-      console.error('Database insertion error:', insertError);
-      
-      // Check for duplicate email
       if (insertError.code === '23505') {
         return {
           statusCode: 409,
@@ -95,20 +86,13 @@ exports.handler = async (event, context) => {
           })
         };
       }
-      
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ 
-          message: 'Form submission failed',
-          error: 'SUBMISSION_ERROR'
-        })
+        body: JSON.stringify({ message: 'Submission failed', error: 'SUBMISSION_ERROR' })
       };
     }
 
-    // Send emails (your existing email logic continues...)
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    
     const formattedDetails = `
       <h2>Project Inquiry Details</h2>
       <p><strong>Name:</strong> ${data.fullName}</p>
@@ -124,52 +108,53 @@ exports.handler = async (event, context) => {
       ${data.customBudget ? `<p><strong>Custom Budget:</strong> ${data.customBudget}</p>` : ''}
       <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
-    
-    const emailToYou = {
-      to: 's1.bustiuc@gmail.com',
-      from: 'sergiu@bustiuc.digital',
-      subject: `New Project Inquiry from ${data.fullName}`,
-      html: `<h1>New Project Inquiry</h1>${formattedDetails}`
-    };
-    
-    const emailToClient = {
-      to: data.email,
-      from: 'sergiu@bustiuc.digital',
-      subject: 'Thank you for your project inquiry!',
-      html: `
-        <h1>Thank You for Your Project Inquiry</h1>
-        <p>Hello ${data.fullName},</p>
-        <p>I've received your project inquiry and will review it shortly. 
-           I'll be in touch within 2 business days to discuss the next steps.</p>
-        <p>For your reference, here's a copy of the information you submitted:</p>
-        ${formattedDetails}
-        <p>Best regards,</p>
-        <p>Sergiu Buștiuc</p>
-        <p><a href="https://bustiuc.digital">bustiuc.digital</a></p>
-      `
-    };
-    
-    await sgMail.send(emailToYou);
-    await sgMail.send(emailToClient);
-    
+
+    const response = await fetch('https://api.mailersend.com/v1/email', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MAILERSEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: {
+          email: 'sergiu@bustiuc.digital',
+          name: 'Sergiu Buștiuc'
+        },
+        to: [
+          { email: data.email, name: data.fullName },
+          { email: 's1.bustiuc@gmail.com', name: 'Sergiu B.' }
+        ],
+        subject: 'New Project Inquiry',
+        html: `
+          <p>Hello ${data.fullName},</p>
+          <p>Thanks for submitting your project! I’ll be reviewing your inquiry and will get back to you soon.</p>
+          <hr />
+          ${formattedDetails}
+          <p>— Sergiu Buștiuc<br><a href="https://bustiuc.digital">bustiuc.digital</a></p>
+        `
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`MailerSend error: ${error}`);
+    }
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        message: 'Form submitted successfully',
+        message: 'Form submitted and emails sent successfully',
         success: true
       })
     };
 
-  } catch (error) {
-    console.error('Function error:', error);
+  } catch (err) {
+    console.error('Function error:', err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ 
-        message: 'Server error',
-        error: 'INTERNAL_ERROR'
-      })
+      body: JSON.stringify({ message: 'Internal error', error: err.message })
     };
   }
 };

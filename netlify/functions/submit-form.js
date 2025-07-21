@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
+  console.log("🚀 Netlify function submit-form STARTED");
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -156,11 +157,12 @@ exports.handler = async (event, context) => {
     };
 
   } catch (err) {
-    console.error('Function error:', err);
+    console.error("🔥 Final function-level error:", err.message);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ message: 'Internal error', error: err.message })
+      
     };
   }
 };

@@ -100,6 +100,8 @@ exports.handler = async (event, context) => {
       };
     }
 
+    console.log('✅ Supabase insert succeeded — proceeding to MailerSend');
+
     const formattedDetails = `
       <h2>Project Inquiry Details</h2>
       <p><strong>Name:</strong> ${data.fullName}</p>

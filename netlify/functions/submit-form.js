@@ -77,6 +77,8 @@ exports.handler = async (event, context) => {
       }]);
 
     if (insertError) {
+      console.error('❌ Supabase insert error:', insertError);
+
       if (insertError.code === '23505') {
         return {
           statusCode: 409,
@@ -87,10 +89,14 @@ exports.handler = async (event, context) => {
           })
         };
       }
+
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ message: 'Submission failed', error: 'SUBMISSION_ERROR' })
+        body: JSON.stringify({
+          message: 'Submission failed',
+          error: insertError.message || 'SUBMISSION_ERROR'
+        })
       };
     }
 

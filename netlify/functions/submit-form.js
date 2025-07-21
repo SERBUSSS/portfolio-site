@@ -137,6 +137,8 @@ exports.handler = async (event, context) => {
       `
     };
 
+    console.log('📤 Sending email with MailerSend...');
+
     const mailerResponse = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
@@ -146,12 +148,12 @@ exports.handler = async (event, context) => {
       body: JSON.stringify(emailPayload)
     });
 
-    const responseText = await mailerResponse.text();
-
     console.log('📤 MailerSend status:', mailerResponse.status);
+    const responseText = await mailerResponse.text();
     console.log('📤 MailerSend response:', responseText);
 
     if (!mailerResponse.ok) {
+      console.error('❌ MailerSend email failed:', responseText);
       throw new Error(`MailerSend error: ${responseText}`);
     }
 

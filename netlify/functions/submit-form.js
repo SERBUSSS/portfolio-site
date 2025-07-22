@@ -2,7 +2,6 @@ const fetch = require('node-fetch');
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
-  console.log("🚀 Netlify function submit-form STARTED");
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -58,7 +57,7 @@ exports.handler = async (event, context) => {
       index++;
     }
 
-    const { data: insertResult, error: insertError } = await supabase
+    const { error: insertError } = await supabase
       .from('form_submissions')
       .insert([{
         full_name: data.fullName,
@@ -77,8 +76,6 @@ exports.handler = async (event, context) => {
       }]);
 
     if (insertError) {
-      console.error('❌ Supabase insert error:', insertError);
-
       if (insertError.code === '23505') {
         return {
           statusCode: 409,
@@ -89,18 +86,12 @@ exports.handler = async (event, context) => {
           })
         };
       }
-
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({
-          message: 'Submission failed',
-          error: insertError.message || 'SUBMISSION_ERROR'
-        })
+        body: JSON.stringify({ message: 'Submission failed', error: insertError.message })
       };
     }
-
-    console.log('✅ Supabase insert succeeded — proceeding to MailerSend');
 
     const formattedDetails = `
       <h2>Project Inquiry Details</h2>
@@ -118,44 +109,45 @@ exports.handler = async (event, context) => {
       <p><strong>Referral Source:</strong> ${data.referralSource || 'Not specified'}</p>
     `;
 
-    const emailPayload = {
-      from: {
-        email: 'sergiu@bustiuc.digital',
-        name: 'Sergiu Buștiuc'
-      },
-      to: [
-        { email: data.email, name: data.fullName },
-        { email: 's1.bustiuc@gmail.com', name: 'Sergiu B.' }
-      ],
-      subject: 'New Project Inquiry',
-      html: `
-        <p>Hello ${data.fullName},</p>
-        <p>Thanks for submitting your project! I’ll be reviewing your inquiry and will get back to you soon.</p>
-        <hr />
-        ${formattedDetails}
-        <p>— Sergiu Buștiuc<br><a href="https://bustiuc.digital">bustiuc.digital</a></p>
-      `
+    const sendEmail = async (toEmail, toName, subject, htmlContent) => {
+      const payload = {
+        from: {
+          email: 'sergiu@bustiuc.digital',
+          name: 'Sergiu Buștiuc'
+        },
+        to: [{ email: toEmail, name: toName }],
+        subject,
+        html: htmlContent
+      };
+
+      const response = await fetch('https://api.mailersend.com/v1/email', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.MAILERSEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`MailerSend failed: ${errorText}`);
+      }
     };
 
-    console.log('📤 Sending email with MailerSend...');
+    await sendEmail(
+      data.email,
+      data.fullName,
+      'Thank you for your project inquiry!',
+      `<h1>Thank You for Your Project Inquiry</h1><p>Hello ${data.fullName},</p><p>Thanks for submitting your project! I’ll be reviewing your inquiry and will get back to you soon.</p><hr />${formattedDetails}<p>— Sergiu Buștiuc<br><a href="https://bustiuc.digital">bustiuc.digital</a></p>`
+    );
 
-    const mailerResponse = await fetch('https://api.mailersend.com/v1/email', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.MAILERSEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(emailPayload)
-    });
-
-    console.log('📤 MailerSend status:', mailerResponse.status);
-    const responseText = await mailerResponse.text();
-    console.log('📤 MailerSend response:', responseText);
-
-    if (!mailerResponse.ok) {
-      console.error('❌ MailerSend email failed:', responseText);
-      throw new Error(`MailerSend error: ${responseText}`);
-    }
+    await sendEmail(
+      's1.bustiuc@gmail.com',
+      'Sergiu B.',
+      `New Project Inquiry from ${data.fullName}`,
+      `<h1>New Project Inquiry</h1>${formattedDetails}`
+    );
 
     return {
       statusCode: 200,
@@ -167,12 +159,11 @@ exports.handler = async (event, context) => {
     };
 
   } catch (err) {
-    console.error("🔥 Final function-level error:", err.message);
+    console.error("🔥 Error:", err);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ message: 'Internal error', error: err.message })
-      
     };
   }
 };

@@ -1200,6 +1200,9 @@
   .lowercase {
     text-transform: lowercase;
   }
+  .uppercase {
+    text-transform: uppercase;
+  }
   .no-underline {
     text-decoration-line: none;
   }

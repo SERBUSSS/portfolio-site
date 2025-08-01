@@ -1197,8 +1197,17 @@ const handleSubmit = async (e) => {
   const originalButtonText = submitButton.innerHTML;
   submitButton.innerHTML = '<span class="text-xl">Sending...</span>';
   submitButton.disabled = true;
-  
+
   console.log('🚀 Sending form data to server...');
+
+  await fetch('/.netlify/functions/submit-form', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formDataJson)
+  })
+  .then(response => response.json())
+  .then(data => console.log('✅ Form submission result:', data))
+  .catch(error => console.error('❌ Form submission failed:', error));
   
   try {
     const { data, error } = await globalSupabase.rpc('submit_form_secure', {

@@ -20,12 +20,12 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body);
-    const { name, email, audience_type } = body;
+    const { name, email, job_title } = body;
 
     console.log("✅ Parsed body:", body);
 
-    if (!name || !email || !audience_type) {
-      console.error("🚫 Missing fields:", { name, email, audience_type });
+    if (!name || !email || !job_title) {
+      console.error("🚫 Missing fields:", { name, email, job_title });
       return {
         statusCode: 400,
         headers,
@@ -39,7 +39,7 @@ exports.handler = async (event) => {
       email,
       attributes: {
         FIRSTNAME: name,
-        TAG: audience_type
+        TAG: job_title
       },
       listIds: [5], // ID-ul tău din Brevo
       updateEnabled: true

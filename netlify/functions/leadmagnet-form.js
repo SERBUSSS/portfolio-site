@@ -7,26 +7,41 @@ exports.handler = async (event) => {
     'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 
+  console.log("📩 Request received:", event.httpMethod);
+
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
+    console.warn("❌ Method not allowed:", event.httpMethod);
     return { statusCode: 405, headers, body: 'Method not allowed' };
   }
 
   try {
-    const { name, email, audience_type } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { name, email, audience_type } = body;
+
+    console.log("✅ Parsed body:", body);
+
+    if (!name || !email || !audience_type) {
+      console.error("🚫 Missing fields:", { name, email, audience_type });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ message: 'Missing required fields' })
+      };
+    }
 
     const brevoApiKey = process.env.BREVO_API_KEY;
 
     const response = await axios.post('https://api.brevo.com/v3/contacts', {
-      email: email,
+      email,
       attributes: {
         FIRSTNAME: name,
         TAG: audience_type
       },
-      listIds: [5], // ← înlocuiește cu ID-ul real din Brevo
+      listIds: [5], // ID-ul tău din Brevo
       updateEnabled: true
     }, {
       headers: {
@@ -36,6 +51,8 @@ exports.handler = async (event) => {
       }
     });
 
+    console.log("✅ Contact added:", response.data);
+
     return {
       statusCode: 200,
       headers,
@@ -43,11 +60,11 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error(error.response?.data || error.message);
+    console.error("❌ Error from Brevo:", error.response?.data || error.message);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ message: 'Failed to add contact' })
+      body: JSON.stringify({ message: 'Failed to add contact', error: error.message })
     };
   }
 };
